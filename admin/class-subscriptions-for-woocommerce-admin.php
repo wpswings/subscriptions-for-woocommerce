@@ -442,6 +442,14 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 	}
 
+	/**
+	 * This function is used Subscription type checkobox for simple products
+	 *
+	 * @name mwb_sfw_create_subscription_product_type
+	 * @since    1.0.0
+	 * @param    Array $products_type Products type.
+	 * @return   Array  $products_type
+	 */
 	public function mwb_sfw_create_subscription_product_type( $products_type ) {
 		$products_type['mwb_sfw_product'] = array(
 				'id'            => '_mwb_sfw_product',
@@ -454,12 +462,15 @@ class Subscriptions_For_Woocommerce_Admin {
 			
 	}
 
-	public function mwb_sfw_save_custom_fields_for_single_products( $post_id) {
 
-		$mwb_sfw_product = isset( $_POST['_mwb_sfw_product'] ) ? 'yes' : 'no';
-    	update_post_meta( $post_id, '_mwb_sfw_product', $mwb_sfw_product );
-	}
-
+	/**
+	 * This function is used to add subscription settings for product.
+	 *
+	 * @name mwb_sfw_custom_product_tab_for_subscription
+	 * @since    1.0.0
+	 * @param    Array $tabs Products tabs array.
+	 * @return   Array  $tabs
+	 */
 	public function mwb_sfw_custom_product_tab_for_subscription( $tabs ){
 		$tabs['mwb_sfw_product'] = array(
 			'label'    => __('Subscriptions Settings','subscriptions-for-woocommerce'),
@@ -470,15 +481,29 @@ class Subscriptions_For_Woocommerce_Admin {
 		return $tabs;
 	}
 
+	/**
+	 * This function is used to add subscription intervals.
+	 *
+	 * @name mwb_sfw_subscription_period
+	 * @since    1.0.0
+	 * @return   Array  $subscription_interval
+	 */
 	public function mwb_sfw_subscription_period( ) {
 		$subscription_interval = array(
 			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
-			'week' => __( 'Week', 'subscriptions-for-woocommerce' ),
-			'month' => __( 'Month', 'subscriptions-for-woocommerce' ),
-			'year' => __( 'Year', 'subscriptions-for-woocommerce' ),
+			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
+			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
 		);
 		return apply_filters( 'mwb_sfw_subscription_intervals', $subscription_interval );
 	}
+
+	/**
+	 * This function is used to add custom fileds for subscription products.
+	 *
+	 * @name mwb_sfw_custom_product_fields_for_subscription
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_custom_product_fields_for_subscription(){
 		global $post;
 		$post_id = $post->ID;
@@ -504,7 +529,10 @@ class Subscriptions_For_Woocommerce_Admin {
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_interval, true ) ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
-		 <?php //echo wc_help_tip('test'); ?>
+		 <?php 
+		 	$description_text = __('Choose the subscriptions time inteval for the product "for example 10 days"','subscriptions-for-woocommerce');
+		 	echo wc_help_tip( $description_text ); 
+		 ?>
 		</p>
 		<p class="form-field mwb_sfw_subscription_expiry_field ">
 			<label for="mwb_sfw_subscription_expiry_number">
@@ -516,7 +544,10 @@ class Subscriptions_For_Woocommerce_Admin {
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_expiry_interval, true ) ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
-		 <?php //echo wc_help_tip('test'); ?>
+		 <?php 
+			$description_text = __('Choose the subscriptions expiry time inteval for the product "leave empty for unlimited"','subscriptions-for-woocommerce');
+		 	echo wc_help_tip( $description_text ); 
+		 ?>
 		</p>
 		<p class="form-field mwb_sfw_subscription_initial_signup_field ">
 			<label for="mwb_sfw_subscription_initial_signup_price">
@@ -524,7 +555,10 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="text" class="short wc_input_price"  name="mwb_sfw_subscription_initial_signup_price" id="mwb_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $mwb_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e('Enter signup fee','subscriptions-for-woocommerce');?>"> 
 			
-		 <?php //echo wc_help_tip('test'); ?>
+		 <?php 
+		 $description_text = __('Choose the subscriptions initial fee for product "leave empty for not any initial fee"','subscriptions-for-woocommerce');
+		 echo wc_help_tip( $description_text ); 
+		 ?>
 		</p>
 		<p class="form-field mwb_sfw_subscription_free_trial_field ">
 			<label for="mwb_sfw_subscription_free_trial_number">
@@ -536,28 +570,90 @@ class Subscriptions_For_Woocommerce_Admin {
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_free_trial_interval, true ) ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
-		 <?php //echo wc_help_tip('test'); ?>
+		 <?php 
+		 $description_text = __('Choose the trial period for subscription"leave empty for not any trial period"','subscriptions-for-woocommerce');
+		 echo wc_help_tip( $description_text ); 
+		 ?>
 		</p>
 		</div>
 		<?php 
 	}
 
+	/**
+	 * This function is used to save custom fields for subscription products.
+	 *
+	 * @name mwb_sfw_save_custom_product_fields_data_for_subscription
+	 * @since    1.0.0
+	 * @param    int $post_id Post ID.
+	 * @param   object  $post
+	 */
 	public function mwb_sfw_save_custom_product_fields_data_for_subscription( $post_id, $post ) {
-		$mwb_sfw_subscription_number = isset( $_POST['mwb_sfw_subscription_number'] ) ? $_POST['mwb_sfw_subscription_number'] : '';
-		$mwb_sfw_subscription_interval = isset( $_POST['mwb_sfw_subscription_interval'] ) ? $_POST['mwb_sfw_subscription_interval'] : '';
-		$mwb_sfw_subscription_expiry_number = isset( $_POST['mwb_sfw_subscription_expiry_number'] ) ? $_POST['mwb_sfw_subscription_expiry_number'] : '';
-		$mwb_sfw_subscription_expiry_interval = isset( $_POST['mwb_sfw_subscription_expiry_interval'] ) ? $_POST['mwb_sfw_subscription_expiry_interval'] : '';
-		$mwb_sfw_subscription_initial_signup_price = isset( $_POST['mwb_sfw_subscription_initial_signup_price'] ) ? $_POST['mwb_sfw_subscription_initial_signup_price'] : '';
-		$mwb_sfw_subscription_free_trial_number = isset( $_POST['mwb_sfw_subscription_free_trial_number'] ) ? $_POST['mwb_sfw_subscription_free_trial_number'] : '';
-		$mwb_sfw_subscription_free_trial_interval = isset( $_POST['mwb_sfw_subscription_free_trial_interval'] ) ? $_POST['mwb_sfw_subscription_free_trial_interval'] : '';
+		
+		if( isset( $_POST['_mwb_sfw_product'] ) && ! empty( $_POST['_mwb_sfw_product'] ) ) {
+			
+			$mwb_sfw_product = isset( $_POST['_mwb_sfw_product'] ) ? 'yes' : 'no';
+    		update_post_meta( $post_id, '_mwb_sfw_product', $mwb_sfw_product );
+			
+			$mwb_sfw_subscription_number = isset( $_POST['mwb_sfw_subscription_number'] ) ? $_POST['mwb_sfw_subscription_number'] : '';
+			$mwb_sfw_subscription_interval = isset( $_POST['mwb_sfw_subscription_interval'] ) ? $_POST['mwb_sfw_subscription_interval'] : '';
+			$mwb_sfw_subscription_expiry_number = isset( $_POST['mwb_sfw_subscription_expiry_number'] ) ? $_POST['mwb_sfw_subscription_expiry_number'] : '';
+			$mwb_sfw_subscription_expiry_interval = isset( $_POST['mwb_sfw_subscription_expiry_interval'] ) ? $_POST['mwb_sfw_subscription_expiry_interval'] : '';
+			$mwb_sfw_subscription_initial_signup_price = isset( $_POST['mwb_sfw_subscription_initial_signup_price'] ) ? $_POST['mwb_sfw_subscription_initial_signup_price'] : '';
+			$mwb_sfw_subscription_free_trial_number = isset( $_POST['mwb_sfw_subscription_free_trial_number'] ) ? $_POST['mwb_sfw_subscription_free_trial_number'] : '';
+			$mwb_sfw_subscription_free_trial_interval = isset( $_POST['mwb_sfw_subscription_free_trial_interval'] ) ? $_POST['mwb_sfw_subscription_free_trial_interval'] : '';
 
-		update_post_meta( $post_id,'mwb_sfw_subscription_number', $mwb_sfw_subscription_number );
-		update_post_meta( $post_id,'mwb_sfw_subscription_interval', $mwb_sfw_subscription_interval );
-		update_post_meta( $post_id,'mwb_sfw_subscription_expiry_number', $mwb_sfw_subscription_expiry_number );
-		update_post_meta( $post_id,'mwb_sfw_subscription_expiry_interval', $mwb_sfw_subscription_expiry_interval );
-		update_post_meta( $post_id,'mwb_sfw_subscription_initial_signup_price', $mwb_sfw_subscription_initial_signup_price );
-		update_post_meta( $post_id,'mwb_sfw_subscription_free_trial_number', $mwb_sfw_subscription_free_trial_number );
-		update_post_meta( $post_id,'mwb_sfw_subscription_free_trial_interval', $mwb_sfw_subscription_free_trial_interval );
+			update_post_meta( $post_id,'mwb_sfw_subscription_number', $mwb_sfw_subscription_number );
+			update_post_meta( $post_id,'mwb_sfw_subscription_interval', $mwb_sfw_subscription_interval );
+			update_post_meta( $post_id,'mwb_sfw_subscription_expiry_number', $mwb_sfw_subscription_expiry_number );
+			update_post_meta( $post_id,'mwb_sfw_subscription_expiry_interval', $mwb_sfw_subscription_expiry_interval );
+			update_post_meta( $post_id,'mwb_sfw_subscription_initial_signup_price', $mwb_sfw_subscription_initial_signup_price );
+			update_post_meta( $post_id,'mwb_sfw_subscription_free_trial_number', $mwb_sfw_subscription_free_trial_number );
+			update_post_meta( $post_id,'mwb_sfw_subscription_free_trial_interval', $mwb_sfw_subscription_free_trial_interval );
+		}
+		
+	}
+
+	public function mwb_sfw_create_custom_subscription_post_type(){
+		$labels = array(
+			'name'               => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+			'singular_name'      => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+			'menu_name'          => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+			'name_admin_bar'     => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+			'add_new'            => esc_html__( 'Add New', 'subscriptions-for-woocommerce' ),
+			'add_new_item'       => esc_html__( 'Add New Subscriptions', 'subscriptions-for-woocommerce' ),
+			'new_item'           => esc_html__( 'New Subscriptions', 'subscriptions-for-woocommerce' ),
+			'edit_item'          => esc_html__( 'Edit Subscriptions', 'subscriptions-for-woocommerce' ),
+			'view_item'          => esc_html__( 'View Subscriptions', 'subscriptions-for-woocommerce' ),
+			'all_items'          => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+			'search_items'       => esc_html__( 'Search subscriptions', 'subscriptions-for-woocommerce' ),
+			'parent_item_colon'  => esc_html__( 'Parent subscriptions:', 'subscriptions-for-woocommerce' ),
+			'not_found'          => esc_html__( 'No subscriptions found.', 'subscriptions-for-woocommerce' ),
+			'not_found_in_trash' => esc_html__( 'No subscriptions found in Trash.', 'subscriptions-for-woocommerce' ),
+		);
+		$mwb_sfw_capability = array(
+			'create_posts' => false,
+			'edit_post'    => 'edit_subscription',
+			'delete_post'  => 'delete_subscription',
+		);
+		$args = array(
+			'label'				=> __('mwb_subscriptions','subscriptions-for-woocommerce'),
+			'labels'             => $labels,
+			'description'        => esc_html__( 'Description.', 'subscriptions-for-woocommerce' ),
+			'public'             => false,
+			'publicly_queryable' => false,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => 'mwb_subscriptions' ),
+			'capability_type'    => 'post',
+			'capabilities'       => $mwb_sfw_capability,
+			'map_meta_cap'       => true,
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => array( 'title', 'editor', 'thumbnail' ),
+		);
+		register_post_type( 'mwb_subscriptions', $args );
 	}
 
 	

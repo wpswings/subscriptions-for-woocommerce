@@ -200,13 +200,19 @@ class Subscriptions_For_Woocommerce {
 
 		$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'mwb_sfw_create_subscription_product_type' );
 		
-		$this->loader->add_action( 'woocommerce_process_product_meta_simple', $sfw_plugin_admin, 'mwb_sfw_save_custom_fields_for_single_products');
+		
 		
 		$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'mwb_sfw_custom_product_tab_for_subscription');
 		
 		$this->loader->add_action('woocommerce_product_data_panels',$sfw_plugin_admin,'mwb_sfw_custom_product_fields_for_subscription');
 		
 		$this->loader->add_action('woocommerce_process_product_meta',$sfw_plugin_admin,'mwb_sfw_save_custom_product_fields_data_for_subscription',10,2);
+		
+		$this->loader->add_action('init',$sfw_plugin_admin,'mwb_sfw_create_custom_subscription_post_type');
+		
+		
+		
+		
 		
 	}
 
@@ -224,6 +230,34 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'sfw_public_enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'sfw_public_enqueue_scripts' );
 
+		$this->loader->add_filter('woocommerce_get_price_html', $sfw_plugin_public, 'mwb_sfw_price_html_subscription_product',10,2);
+		$this->loader->add_filter('woocommerce_product_single_add_to_cart_text', $sfw_plugin_public, 'mwb_sfw_product_add_to_cart_text',10,2);
+		$this->loader->add_filter('woocommerce_product_add_to_cart_text', $sfw_plugin_public, 'mwb_sfw_product_add_to_cart_text',10,2);
+		$this->loader->add_filter('woocommerce_order_button_text', $sfw_plugin_public, 'mwb_sfw_woocommerce_order_button_text');
+
+		
+		$this->loader->add_filter('woocommerce_cart_item_price', $sfw_plugin_public, 'mwb_sfw_show_subscription_price_on_cart',10,3);
+
+		
+		
+		//$this->loader->add_filter('woocommerce_order_formatted_line_subtotal', $sfw_plugin_public, 'mwb_sfw_show_subscription_subtotal_on_view_order',10,3);
+		
+		$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'mwb_sfw_add_subscription_price_and_sigup_fee' );
+
+		$this->loader->add_action('woocommerce_checkout_order_processed',$sfw_plugin_public,'mwb_sfw_process_checkout',99,2);
+		
+		$this->loader->add_action('woocommerce_available_payment_gateways',$sfw_plugin_public,'mwb_sfw_unset_offline_payment_gateway_for_subscription');
+
+		$this->loader->add_action('init',$sfw_plugin_public,'mwb_sfw_add_subscription_tab_on_myaccount_page' );
+
+		$this->loader->add_filter('query_vars',$sfw_plugin_public,'mwb_sfw_custom_endpoint_query_vars');
+		$this->loader->add_filter('woocommerce_account_menu_items',$sfw_plugin_public, 'mwb_sfw_add_subscription_dashboard_on_myaccount_page');
+		
+		$this->loader->add_action('woocommerce_account_mwb_subscriptions_endpoint',$sfw_plugin_public, 'mwb_sfw_subscription_dashboard_content');
+
+
+
+		
 	}
 
 
