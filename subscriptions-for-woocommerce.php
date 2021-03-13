@@ -166,8 +166,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function mwb_sfw_flush_rewrite_rules() {
 		add_rewrite_endpoint( 'mwb_subscriptions', EP_PAGES );
+		add_rewrite_endpoint( 'show-subscription', EP_PAGES );
+		add_rewrite_endpoint( 'mwb-add-payment-method', EP_PAGES );
 		flush_rewrite_rules();
 	}
+
+
 
 }
 else{

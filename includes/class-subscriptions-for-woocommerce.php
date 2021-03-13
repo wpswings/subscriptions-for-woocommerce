@@ -90,9 +90,9 @@ class Subscriptions_For_Woocommerce {
 		$this->subscriptions_for_woocommerce_locale();
 		if ( is_admin() ) {
 			$this->subscriptions_for_woocommerce_admin_hooks();
-		} else {
-			$this->subscriptions_for_woocommerce_public_hooks();
 		}
+		$this->subscriptions_for_woocommerce_public_hooks();
+		
 
 		$this->subscriptions_for_woocommerce_api_hooks();
 
@@ -141,16 +141,25 @@ class Subscriptions_For_Woocommerce {
 			if ( class_exists( 'Subscriptions_For_Woocommerce_Onboarding_Steps' ) ) {
 				$sfw_onboard_steps = new Subscriptions_For_Woocommerce_Onboarding_Steps();
 			}
-		} else {
+		} 
 
-			// The class responsible for defining all actions that occur in the public-facing side of the site.
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-subscriptions-for-woocommerce-public.php';
+		// The class responsible for defining all actions that occur in the public-facing side of the site.
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-subscriptions-for-woocommerce-public.php';
 
-		}
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'package/rest-api/class-subscriptions-for-woocommerce-rest-api.php';
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/subscriptions-for-woocommerce-common-function.php';
+		
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php';
+
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
+
+		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-order.php';
+		
+
+
+		
 
 	}
 
@@ -191,7 +200,7 @@ class Subscriptions_For_Woocommerce {
 
 		// All admin actions and filters after License Validation goes here.
 		$this->loader->add_filter( 'mwb_add_plugins_menus_array', $sfw_plugin_admin, 'sfw_admin_submenu_page', 15 );
-		$this->loader->add_filter( 'sfw_template_settings_array', $sfw_plugin_admin, 'sfw_admin_template_settings_page', 10 );
+		
 		$this->loader->add_filter( 'sfw_general_settings_array', $sfw_plugin_admin, 'sfw_admin_general_settings_page', 10 );
 		$this->loader->add_filter( 'sfw_supprot_tab_settings_array', $sfw_plugin_admin, 'sfw_admin_support_settings_page', 10 );
 
@@ -210,9 +219,16 @@ class Subscriptions_For_Woocommerce {
 		
 		$this->loader->add_action('init',$sfw_plugin_admin,'mwb_sfw_create_custom_subscription_post_type');
 		
+		$this->loader->add_action('init',$sfw_plugin_admin,'mwb_sfw_admin_cancel_susbcription');
 		
+
+		$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_admin_create_order_scheduler' );
 		
+		//$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_expired_renewal_subscription_callback' );
 		
+		$this->loader->add_action( 'mwb_sfw_create_renewal_order_schedule', $sfw_plugin_admin, 'mwb_sfw_renewal_order_on_scheduler' );
+		
+		$this->loader->add_action( 'mwb_sfw_expired_renewal_subscription', $sfw_plugin_admin, 'mwb_sfw_expired_renewal_subscription_callback' );
 		
 	}
 
@@ -255,7 +271,27 @@ class Subscriptions_For_Woocommerce {
 		
 		$this->loader->add_action('woocommerce_account_mwb_subscriptions_endpoint',$sfw_plugin_public, 'mwb_sfw_subscription_dashboard_content');
 
+		$this->loader->add_action('woocommerce_before_checkout_form',$sfw_plugin_public, 'mwb_sfw_subscription_before_checkout_form');
+		
+		$this->loader->add_action('mwb_sfw_display_susbcription_recerring_total_account_page',$sfw_plugin_public, 'mwb_sfw_display_susbcription_recerring_total_account_page_callback');
 
+		$this->loader->add_action('woocommerce_account_show-subscription_endpoint',$sfw_plugin_public, 'mwb_sfw_shwo_subscription_details');
+		
+		$this->loader->add_action('init',$sfw_plugin_public, 'mwb_sfw_cancel_susbcription');
+		
+
+		$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'mwb_sfw_woocommerce_order_status_changed', 99, 3 );
+		
+		//$this->loader->add_action( 'after_woocommerce_pay', $sfw_plugin_public, 'mwb_sfw_after_woocommerce_pay', 99);
+		//$this->loader->add_action( 'init', $sfw_plugin_public, 'mwb_sfw_after_woocommerce_pay', 99);
+		
+
+		$this->loader->add_action('woocommerce_account_mwb-add-payment-method_endpoint',$sfw_plugin_public, 'mwb_sfw_mwb_add_payment_method' );
+
+
+
+
+		
 
 		
 	}
