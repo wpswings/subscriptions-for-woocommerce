@@ -493,7 +493,13 @@ class Subscriptions_For_Woocommerce_Admin {
 		
 	}
 
+	/**
+	 * This function is used to create custom post type for subscription.
+	 * @name mwb_sfw_create_custom_subscription_post_type
+	 * @since 1.0.0
+	 */
 	public function mwb_sfw_create_custom_subscription_post_type(){
+		
 		$labels = array(
 			'name'               => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
 			'singular_name'      => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
@@ -534,7 +540,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			'supports'           => array( 'title', 'editor', 'thumbnail' ),
 		);
 		register_post_type( 'mwb_subscriptions', $args );
-		
 	}
 
 	/**
@@ -602,7 +607,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						$billing_details = $parent_order->get_address( 'billing' );
 						$shipping_details = $parent_order->get_address( 'shipping' );
 						
-						$new_status = 'on-hold';
+						$new_status = 'wc-mwb_renewal';
 						
 						$user_id = $subscription->mwb_customer_id;
 						$product_id = $subscription->product_id;
@@ -641,11 +646,12 @@ class Subscriptions_For_Woocommerce_Admin {
 						/*update next payment date*/
 						$mwb_next_payment_date = mwb_sfw_next_payment_date( $susbcription_id, $current_time, 0 );
 
-						update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
+						//update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
 
 						if ( $payment_method == 'stripe' ) {
 							$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
 							$result = $mwb_stripe->mwb_sfw_process_renewal_payment( $order_id, $parent_order_id );
+							mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 						}
 						/*if ( $payment_method == 'paypal' ) {
 							$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
@@ -716,6 +722,23 @@ class Subscriptions_For_Woocommerce_Admin {
 					}
 				}
 			}
+	}
+
+	public function mwb_sfw_register_new_order_statuses(){
+		register_post_status( 'wc-mwb_renewal', array(
+	        'label'                     => _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
+	        'public'                    => true,
+	        'exclude_from_search'       => false,
+	        'show_in_admin_all_list'    => true,
+	        'show_in_admin_status_list' => true,
+	        'label_count'               => _n_noop( 'Mwb Renewal <span class="count">(%s)</span>', 'Mwb Renewal<span class="count">(%s)</span>', 'subscriptions-for-woocommerce' )
+	    ) );
+	}
+
+	public function mwb_sfw_new_wc_order_statuses( $order_statuses ) {
+	    $order_statuses['wc-mwb_renewal'] = _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' );
+
+	    return $order_statuses;
 	}
 
 }

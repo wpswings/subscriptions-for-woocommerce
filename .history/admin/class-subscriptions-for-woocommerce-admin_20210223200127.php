@@ -193,7 +193,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function sfw_admin_general_settings_page( $sfw_settings_general ) {
 
 		$sfw_settings_general = array(
-			
+
 			array(
 				'title' => __( 'Enable/Disable Subscription', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
@@ -236,7 +236,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			),
 		);
 		return apply_filters( 'mwb_sfw_add_general_settings_fields', $sfw_settings_general );
-		
+
 	}
 
 	/**
@@ -387,14 +387,14 @@ class Subscriptions_For_Woocommerce_Admin {
 	}
 
 	/**
-	* Subscriptions For Woocommerce save tab settings.
-	*
-	* @since 1.0.0
-	*/
+	 * Subscriptions For Woocommerce save tab settings.
+	 *
+	 * @since 1.0.0
+	 */
 	public function sfw_admin_save_tab_settings() {
 		global $sfw_mwb_sfw_obj;
 		if ( isset( $_POST['mwb_sfw_save_general_settings'] ) ) {
-			
+
 			$mwb_sfw_gen_flag = false;
 			$sfw_genaral_settings = apply_filters( 'sfw_general_settings_array', array() );
 			$sfw_button_index = array_search( 'submit', array_column( $sfw_genaral_settings, 'type' ) );
@@ -402,20 +402,19 @@ class Subscriptions_For_Woocommerce_Admin {
 				$sfw_button_index = array_search( 'button', array_column( $sfw_genaral_settings, 'type' ) );
 			}
 			if ( isset( $sfw_button_index ) && '' !== $sfw_button_index ) {
-				
-				
-				unset( $sfw_genaral_settings[$sfw_button_index] );
+
+				unset( $sfw_genaral_settings[ $sfw_button_index ] );
 				if ( is_array( $sfw_genaral_settings ) && ! empty( $sfw_genaral_settings ) ) {
 					foreach ( $sfw_genaral_settings as $sfw_genaral_setting ) {
 						if ( isset( $sfw_genaral_setting['id'] ) && '' !== $sfw_genaral_setting['id'] ) {
 							print_r( $sfw_genaral_setting['id'] );
-							
-							if ( isset( $_POST[$sfw_genaral_setting['id']] ) ) {
-								update_option( $sfw_genaral_setting['id'], $_POST[$sfw_genaral_setting['id']] );
+
+							if ( isset( $_POST[ $sfw_genaral_setting['id'] ] ) ) {
+								update_option( $sfw_genaral_setting['id'], $_POST[ $sfw_genaral_setting['id'] ] );
 							} else {
 								update_option( $sfw_genaral_setting['id'], '' );
 							}
-						}else{
+						} else {
 							$mwb_sfw_gen_flag = true;
 						}
 					}
@@ -423,7 +422,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				if ( $mwb_sfw_gen_flag ) {
 					$mwb_sfw_error_text = esc_html__( 'Id of some field is missing', 'subscriptions-for-woocommerce' );
 					$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'error' );
-				}else{
+				} else {
 					$mwb_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
 					$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
 				}

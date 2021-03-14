@@ -448,6 +448,13 @@ class Subscriptions_For_Woocommerce_Public {
 		
 	}
 
+	/**
+	 * This function is used to get ruccuring data.
+	 *
+	 * @name mwb_sfw_get_subscription_recurring_data
+	 * @param int $product_id product_id.
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_get_subscription_recurring_data( $product_id ) {
 			    	
     	$mwb_recurring_data = array();
@@ -780,14 +787,11 @@ class Subscriptions_For_Woocommerce_Public {
   
 	}
 
-	public function mwb_sfw_after_woocommerce_pay(){
-		if ( isset( $_GET['mwb_subscription_id'] ) && isset( $_GET['mwb_payment_method'] ) && $_GET['mwb_payment_method'] == 'mwb_add_method') {
-			$mwb_subscription_id = $_GET['mwb_subscription_id'];
-			//print_r( $subscription_id );
-			wc_get_template( 'myaccount/mwb_add_new_payment_details.php', array( 'mwb_subscription_id' => $mwb_subscription_id ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
-			//die('-->>');
-		}
-	}
+	/**
+	 * This function is used to add payment method.
+	 * @name mwb_sfw_mwb_add_payment_method
+	 * @since 1.0.0
+	 */
 	public function mwb_sfw_mwb_add_payment_method( $mwb_subscription_id ) {
 		if ( ! mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
 			echo '<div class="woocommerce-error mwb_sfw_invalid_subscription">' . esc_html__( 'Not a valid subscription', 'subscriptions-for-woocommerce' ) . '</div>';

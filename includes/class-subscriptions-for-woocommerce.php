@@ -153,9 +153,9 @@ class Subscriptions_For_Woocommerce {
 		
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php';
 
+		
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
 
-		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-order.php';
 		
 
 
@@ -224,11 +224,13 @@ class Subscriptions_For_Woocommerce {
 
 		$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_admin_create_order_scheduler' );
 		
-		//$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_expired_renewal_subscription_callback' );
-		
 		$this->loader->add_action( 'mwb_sfw_create_renewal_order_schedule', $sfw_plugin_admin, 'mwb_sfw_renewal_order_on_scheduler' );
 		
 		$this->loader->add_action( 'mwb_sfw_expired_renewal_subscription', $sfw_plugin_admin, 'mwb_sfw_expired_renewal_subscription_callback' );
+		
+		$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_register_new_order_statuses' );
+		
+		$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'mwb_sfw_new_wc_order_statuses' );
 		
 	}
 
@@ -281,12 +283,8 @@ class Subscriptions_For_Woocommerce {
 		
 
 		$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'mwb_sfw_woocommerce_order_status_changed', 99, 3 );
-		
-		//$this->loader->add_action( 'after_woocommerce_pay', $sfw_plugin_public, 'mwb_sfw_after_woocommerce_pay', 99);
-		//$this->loader->add_action( 'init', $sfw_plugin_public, 'mwb_sfw_after_woocommerce_pay', 99);
-		
 
-		$this->loader->add_action('woocommerce_account_mwb-add-payment-method_endpoint',$sfw_plugin_public, 'mwb_sfw_mwb_add_payment_method' );
+		//$this->loader->add_action('woocommerce_account_mwb-add-payment-method_endpoint',$sfw_plugin_public, 'mwb_sfw_mwb_add_payment_method' );
 
 
 

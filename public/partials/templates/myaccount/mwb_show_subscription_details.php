@@ -55,19 +55,13 @@ function mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status ) {
 			<?php 
 				$mwb_next_payment_date = get_post_meta( $mwb_subscription_id, 'payment_method',true );
 					if ( empty( $mwb_next_payment_date ) ) {
-						//$subscriptions = wc_get_order($mwb_subscription_id);
-						//print_r($subscriptions->get_checkout_payment_url());
-						//die();
-						//$order = new WC_Order($mwb_subscription_id);
-						//print_r($order);
-						//die();
 							$mwb_sfw_add_payment_url = wc_get_endpoint_url( 'mwb-add-payment-method', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) )
 							?>
-							<tr>
+							<!-- <tr>
 								<td>
-									<a href="<?php echo esc_url( $mwb_sfw_add_payment_url ); ?>" class="button mwb_sfw_add_payment_url"><?php esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' );  ?></a>
+									<a href="<?php //echo esc_url( $mwb_sfw_add_payment_url ); ?>" class="button mwb_sfw_add_payment_url"><?php //esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' );  ?></a>
 						    	</td>
-						    </tr>
+						    </tr> -->
 						<?php
 						 
 					}
