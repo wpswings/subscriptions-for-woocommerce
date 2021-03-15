@@ -20,7 +20,7 @@ $sfw_template_settings = apply_filters( 'sfw_template_settings_array', array() )
 <!--  template file for admin settings. -->
 <div class="sfw-section-wrap">
 	<?php
-		$sfw_template_html = $sfw_mwb_sfw_obj->mwb_sfw_plug_generate_html( $sfw_template_settings );
-		echo esc_html( $sfw_template_html );
+
+		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php';
 	?>
 </div>
