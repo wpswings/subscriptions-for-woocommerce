@@ -33,8 +33,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins') ) ) ) {
-	
+if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+
 	/**
 	 * Define plugin constants.
 	 *
@@ -170,15 +170,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		add_rewrite_endpoint( 'mwb-add-payment-method', EP_PAGES );
 		flush_rewrite_rules();
 	}
-
-
-
-}
-else{
+} else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'mwb_sfw_activation_failure' );
 
-	// Deactivate this plugin.
+	/**
+	 * Deactivate this plugin.
+	 *
+	 * @name mwb_sfw_activation_failure
+	 * @since 1.0.0.
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
 	function mwb_sfw_activation_failure() {
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );
@@ -187,18 +190,25 @@ else{
 	// Add admin error notice.
 	add_action( 'admin_notices', 'mwb_sfw_activation_failure_admin_notice' );
 
-	// This function is used to display admin error notice when WooCommerce is not active.
+	/**
+	 * This function is used to display admin error notice when WooCommerce is not active.
+	 *
+	 * @name mwb_sfw_activation_failure_admin_notice
+	 * @since 1.0.0.
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
 	function mwb_sfw_activation_failure_admin_notice() {
 
 		// to hide Plugin activated notice.
 		unset( $_GET['activate'] );
 
-	    ?>
+		?>
 
-	    <div class="notice notice-error is-dismissible">
-	        <p><?php esc_html_e( 'WooCommerce is not activated, Please activate WooCommerce first to activate Subscriptions for Woocommerce.','subscriptions-for-woocommerce' ); ?></p>
-	    </div>
+		<div class="notice notice-error is-dismissible">
+			<p><?php esc_html_e( 'WooCommerce is not activated, Please activate WooCommerce first to activate Subscriptions for Woocommerce.', 'subscriptions-for-woocommerce' ); ?></p>
+		</div>
 
-	    <?php
+		<?php
 	}
 }
