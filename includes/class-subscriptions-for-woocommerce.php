@@ -95,6 +95,7 @@ class Subscriptions_For_Woocommerce {
 		
 
 		$this->subscriptions_for_woocommerce_api_hooks();
+		$this->init();
 
 	}
 
@@ -156,11 +157,10 @@ class Subscriptions_For_Woocommerce {
 		
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
 
-		
+	}
 
-
-		
-
+	public function init(){
+		add_filter( 'woocommerce_email_classes', array($this, 'mwb_sfw_woocommerce_email_classes' ));
 	}
 
 	/**
@@ -286,15 +286,15 @@ class Subscriptions_For_Woocommerce {
 
 		//$this->loader->add_action('woocommerce_account_mwb-add-payment-method_endpoint',$sfw_plugin_public, 'mwb_sfw_mwb_add_payment_method' );
 
-
-
-
-		
-
-		
 	}
 
 
+	public function mwb_sfw_woocommerce_email_classes( $emails ) {
+		$emails['mwb_sfw_cancel_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
+		$emails['mwb_sfw_expired_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
+		
+        return $emails;
+	}
 	/**
 	 * Register all of the hooks related to the api functionality
 	 * of the plugin.

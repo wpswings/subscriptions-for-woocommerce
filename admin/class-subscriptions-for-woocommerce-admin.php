@@ -549,11 +549,12 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function mwb_sfw_admin_cancel_susbcription() {
 
-		if ( isset( $_GET['mwb_subscription_sStripe Transaction Failedtatus_admin']) && isset( $_GET['mwb_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+		if ( isset( $_GET['mwb_subscription_status_admin']) && isset( $_GET['mwb_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
 			$mwb_status   = wc_clean( $_GET['mwb_subscription_status_admin'] );
 			$mwb_subscription_id = $_GET['mwb_subscription_id'];
 			if ( mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
 				 update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
+				 mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
 				$redirect_url = admin_url().'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );
 				exit;
@@ -646,7 +647,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						/*update next payment date*/
 						$mwb_next_payment_date = mwb_sfw_next_payment_date( $susbcription_id, $current_time, 0 );
 
-						//update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
+						update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
 
 						if ( $payment_method == 'stripe' ) {
 							$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
@@ -718,13 +719,20 @@ class Subscriptions_For_Woocommerce_Admin {
 					$susbcription_id = $value->ID;
 
 					if ( mwb_sfw_check_valid_subscription( $susbcription_id ) ) { 
+						//Send expired email notification.
+						mwb_sfw_send_email_for_expired_susbcription( $susbcription_id );
 						update_post_meta( $susbcription_id, 'mwb_subscription_status','expired');
 					}
 				}
 			}
 	}
 
-	public function mwb_sfw_register_new_order_statuses(){
+	/**
+	 * This function is used to custom order status for susbcription.
+	 * @name mwb_sfw_register_new_order_statuses
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_register_new_order_statuses() {
 		register_post_status( 'wc-mwb_renewal', array(
 	        'label'                     => _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
 	        'public'                    => true,
@@ -735,6 +743,12 @@ class Subscriptions_For_Woocommerce_Admin {
 	    ) );
 	}
 
+	/**
+	 * This function is used to custom order status for susbcription.
+	 * @name mwb_sfw_new_wc_order_statuses.
+	 * @since 1.0.0
+	 * @param array $order_statuses order_statuses.
+	 */
 	public function mwb_sfw_new_wc_order_statuses( $order_statuses ) {
 	    $order_statuses['wc-mwb_renewal'] = _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' );
 

@@ -722,6 +722,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_status == 'active' && $mwb_customer_id == $user_id ) {
 			
 			update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
+			mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) );
 			wp_safe_redirect( $redirect_url );
 			exit;
