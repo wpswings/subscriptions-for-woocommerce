@@ -156,7 +156,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function sfw_admin_submenu_page( $menus = array() ) {
 		$menus[] = array(
-			'name'            => __( 'Subscriptions For Woocommerce', 'subscriptions-for-woocommerce' ),
+			'name'            => __( 'Subscriptions For WooCommerce', 'subscriptions-for-woocommerce' ),
 			'slug'            => 'subscriptions_for_woocommerce_menu',
 			'menu_link'       => 'subscriptions_for_woocommerce_menu',
 			'instance'        => $this,
@@ -494,66 +494,18 @@ class Subscriptions_For_Woocommerce_Admin {
 	}
 
 	/**
-	 * This function is used to create custom post type for subscription.
-	 * @name mwb_sfw_create_custom_subscription_post_type
-	 * @since 1.0.0
-	 */
-	public function mwb_sfw_create_custom_subscription_post_type(){
-		
-		$labels = array(
-			'name'               => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
-			'singular_name'      => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
-			'menu_name'          => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
-			'name_admin_bar'     => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
-			'add_new'            => esc_html__( 'Add New', 'subscriptions-for-woocommerce' ),
-			'add_new_item'       => esc_html__( 'Add New Subscriptions', 'subscriptions-for-woocommerce' ),
-			'new_item'           => esc_html__( 'New Subscriptions', 'subscriptions-for-woocommerce' ),
-			'edit_item'          => esc_html__( 'Edit Subscriptions', 'subscriptions-for-woocommerce' ),
-			'view_item'          => esc_html__( 'View Subscriptions', 'subscriptions-for-woocommerce' ),
-			'all_items'          => esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
-			'search_items'       => esc_html__( 'Search subscriptions', 'subscriptions-for-woocommerce' ),
-			'parent_item_colon'  => esc_html__( 'Parent subscriptions:', 'subscriptions-for-woocommerce' ),
-			'not_found'          => esc_html__( 'No subscriptions found.', 'subscriptions-for-woocommerce' ),
-			'not_found_in_trash' => esc_html__( 'No subscriptions found in Trash.', 'subscriptions-for-woocommerce' ),
-		);
-		$mwb_sfw_capability = array(
-			'create_posts' => false,
-			'edit_post'    => 'edit_subscription',
-			'delete_post'  => 'delete_subscription',
-		);
-		$args = array(
-			'label'				=> __('mwb_subscriptions','subscriptions-for-woocommerce'),
-			'labels'             => $labels,
-			'description'        => esc_html__( 'Description.', 'subscriptions-for-woocommerce' ),
-			'public'             => false,
-			'publicly_queryable' => false,
-			'show_ui'            => true,
-			'show_in_menu'       => false,
-			'query_var'          => true,
-			'rewrite'            => array( 'slug' => 'mwb_subscriptions' ),
-			'capability_type'    => 'post',
-			'capabilities'       => $mwb_sfw_capability,
-			'map_meta_cap'       => true,
-			'has_archive'        => true,
-			'hierarchical'       => false,
-			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'thumbnail' ),
-		);
-		register_post_type( 'mwb_subscriptions', $args );
-	}
-
-	/**
 	 * This function is used to cancel susbcription.
 	 * @name mwb_sfw_admin_cancel_susbcription
 	 * @since 1.0.0
 	 */
 	public function mwb_sfw_admin_cancel_susbcription() {
 
-		if ( isset( $_GET['mwb_subscription_sStripe Transaction Failedtatus_admin']) && isset( $_GET['mwb_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+		if ( isset( $_GET['mwb_subscription_status_admin']) && isset( $_GET['mwb_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
 			$mwb_status   = wc_clean( $_GET['mwb_subscription_status_admin'] );
 			$mwb_subscription_id = $_GET['mwb_subscription_id'];
 			if ( mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
 				 update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
+				 mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
 				$redirect_url = admin_url().'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );
 				exit;
@@ -573,7 +525,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		$args = array(
 			  'numberposts' => -1,
 			  'post_type'   => 'mwb_subscriptions',
-			  'post_status'   =>'publish',
+			  'post_status'   =>'wc-mwb_renewal',
 			  'meta_query' => array(
 			  		'relation' => 'AND',
 			        array(
@@ -595,27 +547,30 @@ class Subscriptions_For_Woocommerce_Admin {
 			    )
 			);
 		$mwb_subscriptions = get_posts( $args );
+		
 		if ( isset( $mwb_subscriptions ) && !empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 				foreach ($mwb_subscriptions as $key => $value ) { 
 					$susbcription_id = $value->ID;
 
 					if ( mwb_sfw_check_valid_subscription( $susbcription_id ) ) {
-
+						
 						$subscription = get_post( $susbcription_id );
 						$parent_order_id  = $subscription->mwb_parent_order;
 						$parent_order = wc_get_order( $parent_order_id );
 						$billing_details = $parent_order->get_address( 'billing' );
 						$shipping_details = $parent_order->get_address( 'shipping' );
 						
+
 						$new_status = 'wc-mwb_renewal';
 						
 						$user_id = $subscription->mwb_customer_id;
 						$product_id = $subscription->product_id;
 						$product_qty = $subscription->product_qty;
-						$payment_method = $subscription->payment_method;
-						$payment_method_title = $subscription->payment_method_title;
+						$payment_method = $subscription->_payment_method;
+						$payment_method_title = $subscription->_payment_method_title;
 						
-
+						$mwb_old_payment_method = get_post_meta( $parent_order_id,'_payment_method', true );
+						
 						$mwb_new_order = wc_create_order( $args = array(
 							'status'      => $new_status,
 							'customer_id' => $user_id
@@ -643,10 +598,14 @@ class Subscriptions_For_Woocommerce_Admin {
 						update_post_meta( $order_id,'mwb_sfw_subscription',$susbcription_id );
 						update_post_meta( $order_id,'mwb_sfw_parent_order_id',$parent_order_id );
 
+						/*if trial period enable*/
+						if ( $mwb_old_payment_method == '' ) {
+							$parent_order_id = $susbcription_id;
+						}
 						/*update next payment date*/
 						$mwb_next_payment_date = mwb_sfw_next_payment_date( $susbcription_id, $current_time, 0 );
 
-						//update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
+						update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
 
 						if ( $payment_method == 'stripe' ) {
 							$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
@@ -691,7 +650,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		$args = array(
 			  'numberposts' => -1,
 			  'post_type'   => 'mwb_subscriptions',
-			  'post_status'   =>'publish',
+			  'post_status'   =>'wc-mwb_renewal',
 			  'meta_query' => array(
 			  		'relation' => 'AND',
 			        array(
@@ -718,13 +677,20 @@ class Subscriptions_For_Woocommerce_Admin {
 					$susbcription_id = $value->ID;
 
 					if ( mwb_sfw_check_valid_subscription( $susbcription_id ) ) { 
+						//Send expired email notification.
+						mwb_sfw_send_email_for_expired_susbcription( $susbcription_id );
 						update_post_meta( $susbcription_id, 'mwb_subscription_status','expired');
 					}
 				}
 			}
 	}
 
-	public function mwb_sfw_register_new_order_statuses(){
+	/**
+	 * This function is used to custom order status for susbcription.
+	 * @name mwb_sfw_register_new_order_statuses
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_register_new_order_statuses() {
 		register_post_status( 'wc-mwb_renewal', array(
 	        'label'                     => _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
 	        'public'                    => true,
@@ -735,6 +701,12 @@ class Subscriptions_For_Woocommerce_Admin {
 	    ) );
 	}
 
+	/**
+	 * This function is used to custom order status for susbcription.
+	 * @name mwb_sfw_new_wc_order_statuses.
+	 * @since 1.0.0
+	 * @param array $order_statuses order_statuses.
+	 */
 	public function mwb_sfw_new_wc_order_statuses( $order_statuses ) {
 	    $order_statuses['wc-mwb_renewal'] = _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' );
 

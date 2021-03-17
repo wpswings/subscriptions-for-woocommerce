@@ -11,6 +11,7 @@ $user_id = get_current_user_id();
 	$args = array(
 	  'numberposts' => -1,
 	  'post_type'   => 'mwb_subscriptions',
+	  'post_status' =>'wc-mwb_renewal',
 	  'meta_query' => array(
 	        array(
 	            'key'   => 'mwb_customer_id',
@@ -21,6 +22,7 @@ $user_id = get_current_user_id();
 	);
  
 	$mwb_subscriptions = get_posts( $args );
+	
 
 	?>
 	<div class="mwb_sfw_account_wrap">

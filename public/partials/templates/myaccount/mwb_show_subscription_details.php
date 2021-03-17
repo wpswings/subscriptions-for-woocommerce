@@ -52,16 +52,33 @@ function mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status ) {
 				?>
 				</td>
 			</tr>
+			<?php $mwb_trail_date = get_post_meta( $mwb_subscription_id, 'mwb_susbcription_trial_end',true ); 
+
+			if ( !empty( $mwb_trail_date ) ) {
+			?>
+				<tr>
+					<td><?php esc_html_e( 'Trial End Date', 'subscriptions-for-woocommerce' ); ?></td>
+					<td>
+					<?php 
+						echo esc_html( mwb_sfw_get_the_wordpress_date_format( $mwb_trail_date ) ); 
+					?>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+			
 			<?php 
-				$mwb_next_payment_date = get_post_meta( $mwb_subscription_id, 'payment_method',true );
+				$mwb_next_payment_date = get_post_meta( $mwb_subscription_id, '_payment_method',true );
 					if ( empty( $mwb_next_payment_date ) ) {
-							$mwb_sfw_add_payment_url = wc_get_endpoint_url( 'mwb-add-payment-method', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) )
+							$subscription = wc_get_order( $mwb_subscription_id );
+							$mwb_sfw_add_payment_url = wp_nonce_url( add_query_arg( array( 'mwb_add_payment_method' => $mwb_subscription_id ), $subscription->get_checkout_payment_url() ) );
 							?>
-							<!-- <tr>
+							<tr>
 								<td>
-									<a href="<?php //echo esc_url( $mwb_sfw_add_payment_url ); ?>" class="button mwb_sfw_add_payment_url"><?php //esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' );  ?></a>
+									<a href="<?php echo esc_url( $mwb_sfw_add_payment_url ); ?>" class="button mwb_sfw_add_payment_url"><?php esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' );  ?></a>
 						    	</td>
-						    </tr> -->
+						    </tr>
 						<?php
 						 
 					}
