@@ -282,6 +282,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		$args = array(
 		  'numberposts' => -1,
 		  'post_type'   => 'mwb_subscriptions',
+		  'post_status' =>'wc-mwb_renewal',
 		  'meta_query' => array(
 		        array(
 		            'key'   => 'mwb_customer_id',

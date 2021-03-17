@@ -167,6 +167,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_sfw_subscription_number == 1 ) {
 			$mwb_sfw_subscription_number = ' ';
 		}
+		$mwb_price_html = '';
 		switch( $mwb_sfw_subscription_interval ){
 			case 'day':
 				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
@@ -261,7 +262,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_woocommerce_order_button_text( $text ){
-		$mwb_sfw_place_order_button_text = $this->mwb_sfw_get_add_to_cart_button_text();
+		$mwb_sfw_place_order_button_text = $this->mwb_sfw_get_place_order_button_text();
 		if( isset( $mwb_sfw_place_order_button_text ) && ! empty( $mwb_sfw_place_order_button_text ) &&  $this->mwb_sfw_check_cart_has_subscription_product() ) {
 			$text = $mwb_sfw_place_order_button_text;
 		}
@@ -518,8 +519,8 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( isset( $mwb_enabled_gateways[$posted_data['payment_method']] ) ) {
 					$mwb_payment_method = $mwb_enabled_gateways[$posted_data['payment_method']];
 					$mwb_payment_method->validate_fields();
-					$mwb_args['payment_method']       = $mwb_payment_method->id;
-					$mwb_args['payment_method_title'] = $mwb_payment_method->get_title();
+					$mwb_args['_payment_method']       = $mwb_payment_method->id;
+					$mwb_args['_payment_method_title'] = $mwb_payment_method->get_title();
 				}
 			}
 			$mwb_args['mwb_order_currency'] = $order->get_currency();
@@ -532,29 +533,158 @@ class Subscriptions_For_Woocommerce_Public {
 			
 			$mwb_subscription_data = array();
 			$mwb_subscription_data['post_type']     = 'mwb_subscriptions';
-			$mwb_subscription_data['post_status']   = 'publish';
+			
+			$mwb_subscription_data['post_status']   = 'wc-mwb_renewal';
 			$mwb_subscription_data['post_author']   = 1;
 			$mwb_subscription_data['post_parent']   = $order_id;
 			$mwb_subscription_data['post_title']    = sprintf( _x( 'MWB Subscription &ndash; %s', 'Subscription post title', 'subscriptions-for-woocommerce' ), $post_title_date );
 			$mwb_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );
 			$mwb_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );
-			$mwb_subscription_data['post_password'] = uniqid( 'order_' );
-
+			
 			$subscription_id = wp_insert_post( $mwb_subscription_data, true );
+
 			if ( is_wp_error( $subscription_id ) ) {
 				return $subscription_id;
 			}
 			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', '' );
 			update_post_meta( $subscription_id, 'mwb_susbcription_end', '' );
 			update_post_meta( $subscription_id, 'mwb_next_payment_date', '' );
+			update_post_meta( $subscription_id, '_order_key', wc_generate_order_key() );
 			
-			/*update meta value*/
+			/*if free trial*/
+			if ( isset( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) && !empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
+				
+				$new_order = new WC_Order( $subscription_id );
+				
+				$billing_details = $order->get_address( 'billing' );
+				$shipping_details = $order->get_address( 'shipping' );
+				
+				$new_order->set_address( $billing_details, 'billing' );
+				$new_order->set_address( $shipping_details, 'shipping' );
+				
+				$_product = wc_get_product( $mwb_args['product_id'] );
+
+				$item_id = $new_order->add_product(
+					$_product,
+					$mwb_args['product_qty']
+				);
+				$new_order->update_taxes();
+				$new_order->calculate_totals();
+				$new_order->save();
+			}
 			mwb_sfw_update_meta_key_for_susbcription( $subscription_id, $mwb_args );
 			
 			return $subscription_id;
 			
 		}
 		
+	}
+
+	public function mwb_sfw_after_woocommerce_pay(){
+		global $wp;
+		$valid_request = false;
+		
+		if ( ! isset( $wp->query_vars['order-pay'] ) || ! mwb_sfw_check_valid_subscription( absint( $wp->query_vars['order-pay'] ) ) )  {
+			return;
+		}
+		
+		ob_clean();
+		echo '<div class="woocommerce">';
+
+		$mwb_subscription  = wc_get_order( absint( $_GET['mwb_add_payment_method'] ) );
+		foreach ( array( 'country', 'state', 'postcode' ) as $address_property ) {
+			$subscription_address = $mwb_subscription->{"get_billing_$address_property"}();
+
+			if ( $subscription_address ) {
+				WC()->customer->{"set_billing_$address_property"}( $subscription_address );
+			}
+		}
+
+		do_action( 'before_woocommerce_pay' );
+		wc_get_template( 'myaccount/mwb_add_new_payment_details.php', array( 'mwb_subscription' => $mwb_subscription ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+
+		
+	}
+
+	public function mwb_sfw_change_payment_method_form(){
+		if ( ! isset( $_POST['_mwb_sfw_nonce'] ) || ! wp_verify_nonce( $_POST['_mwb_sfw_nonce'], 'mwb_sfw__change_payment_method' ) ) {
+			return;
+		}
+
+		$subscription_id = absint( $_POST['mwb_change_change_payment'] );
+		$mwb_subscription = wc_get_order( $subscription_id );
+
+		ob_start();
+
+		if ( $mwb_subscription->get_order_key() == $_GET['key'] ) {
+
+			$subscription_billing_country  = $mwb_subscription->get_billing_country();
+			$subscription_billing_state    = $mwb_subscription->get_billing_state();
+			$subscription_billing_postcode = $mwb_subscription->get_billing_postcode();
+			$subscription_billing_city     = $mwb_subscription->get_billing_postcode();
+
+			
+			if ( $subscription_billing_country ) {
+				$setter = is_callable( array( WC()->customer, 'set_billing_country' ) ) ? 'set_billing_country' : 'set_country';
+				WC()->customer->$setter( $subscription_billing_country );
+			}
+			if ( $subscription_billing_state ) {
+				$setter = is_callable( array( WC()->customer, 'set_billing_state' ) ) ? 'set_billing_state' : 'set_state';
+				WC()->customer->$setter( $subscription_billing_state );
+			}
+			if ( $subscription_billing_postcode ) {
+				$setter = is_callable( array( WC()->customer, 'set_billing_postcode' ) ) ? 'set_billing_postcode' : 'set_postcode';
+				WC()->customer->$setter( $subscription_billing_postcode );
+			}
+			if ( $subscription_billing_city ) {
+				$setter = is_callable( array( WC()->customer, 'set_billing_city' ) ) ? 'set_billing_city' : 'set_city';
+				WC()->customer->$setter( $subscription_billing_city );
+			}
+
+			// Update payment method
+			$new_payment_method = wc_clean( $_POST['payment_method'] );
+
+			$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+
+			
+			$available_gateways[ $new_payment_method ]->validate_fields();
+			$payment_method_title = $available_gateways[ $new_payment_method ]->get_title();
+			
+			if ( wc_notice_count( 'error' ) == 0 ) {
+
+				$result = $available_gateways[ $new_payment_method ]->process_payment( $mwb_subscription->get_id(), false, true );
+
+				if ( 'success' == $result['result'] ) {
+					$result['redirect'] = wc_get_endpoint_url( 'show-subscription', $mwb_subscription->get_id(), wc_get_page_permalink( 'myaccount' ) );
+						update_post_meta( $mwb_subscription->get_id(),'_payment_method',$new_payment_method );
+						update_post_meta( $mwb_subscription->get_id(),'_payment_method_title',$payment_method_title );
+				}
+
+				if ( 'success' != $result['result'] ) {
+					return;
+				}
+				$mwb_subscription->save();
+				wc_add_notice( $notice );
+				wp_redirect( $result['redirect'] );
+				exit;
+			}
+		}
+
+		ob_get_clean();
+	}
+
+	public function mwb_sfw_set_susbcription_total( $total, $mwb_subscription ) {
+
+		global $wp;
+
+		if ( ! empty( $_POST['_mwb_sfw_nonce'] ) && wp_verify_nonce( $_POST['_mwb_sfw_nonce'], 'mwb_sfw__change_payment_method' ) && isset( $_POST['mwb_change_change_payment'] )  && $mwb_subscription->get_order_key() == $_GET['key'] && $mwb_subscription->get_id() == absint( $_POST['mwb_change_change_payment'] ) ) {
+			$total = 0;
+		} elseif ( isset( $wp->query_vars['order-pay'] ) && mwb_sfw_check_valid_subscription( absint( $wp->query_vars['order-pay'] ) ) ) {
+			
+			$total = 0;
+		}
+
+		return $total;
 	}
 
 	/**
@@ -750,7 +880,7 @@ class Subscriptions_For_Woocommerce_Public {
 						$args = array(
 						  'numberposts' => -1,
 						  'post_type'   => 'mwb_subscriptions',
-						  'post_status'   =>'publish',
+						  'post_status'   =>'wc-mwb_renewal',
 						  'meta_query' => array(
 						  		'relation' => 'AND',
 						        array(

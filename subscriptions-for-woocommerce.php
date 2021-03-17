@@ -12,7 +12,7 @@
  * @package           Subscriptions_For_Woocommerce
  *
  * @wordpress-plugin
- * Plugin Name:       Subscriptions For Woocommerce
+ * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://makewebbetter.com/product/subscriptions-for-woocommerce/
  * Description:       This plugin is use to provide the subscriptions option for any type of services
  * Version:           1.0.0
@@ -169,6 +169,60 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		add_rewrite_endpoint( 'show-subscription', EP_PAGES );
 		add_rewrite_endpoint( 'mwb-add-payment-method', EP_PAGES );
 		flush_rewrite_rules();
+	}
+
+	add_action('init','mwb_register_custom_order_types');
+
+	/**
+	 * This function is used to create custom post type for subscription.
+	 * @name mwb_register_custom_order_types
+	 * @since 1.0.0
+	 */
+	function mwb_register_custom_order_types() {
+		wc_register_order_type(
+			'mwb_subscriptions',
+			apply_filters( 'mwb_sfw_register_custom_order_types',
+				array(
+					'labels'                           => array(
+						'name'               => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+						'singular_name'      => __( 'Subscription', 'subscriptions-for-woocommerce' ),
+						'add_new'            => __( 'Add Subscription', 'subscriptions-for-woocommerce' ),
+						'add_new_item'       => __( 'Add New Subscription', 'subscriptions-for-woocommerce' ),
+						'edit'               => __( 'Edit', 'subscriptions-for-woocommerce' ),
+						'edit_item'          => __( 'Edit Subscription', 'subscriptions-for-woocommerce' ),
+						'new_item'           => __( 'New Subscription', 'subscriptions-for-woocommerce' ),
+						'view'               => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
+						'view_item'          => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
+						'search_items'       => __( 'Search Subscriptions', 'subscriptions-for-woocommerce' ),
+						'not_found'          => __('Not Found','subscriptions-for-woocommerce'),
+						'not_found_in_trash' => __( 'No Subscriptions found in trash', 'subscriptions-for-woocommerce' ),
+						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
+						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+					),
+					'description'                      => __( 'This subscriptions are stored.', 'subscriptions-for-woocommerce' ),
+					'public'                           => false,
+					'show_ui'                          => true,
+					'capability_type'                  => 'shop_order',
+					'map_meta_cap'                     => true,
+					'publicly_queryable'               => false,
+					'exclude_from_search'              => true,
+					'show_in_menu'                     => false,
+					'hierarchical'                     => false,
+					'show_in_nav_menus'                => false,
+					'rewrite'                          => false,
+					'query_var'                        => false,
+					'supports'                         => array( 'title', 'comments', 'custom-fields' ),
+					'has_archive'                      => false,
+					'exclude_from_orders_screen'       => true,
+					'add_order_meta_boxes'             => true,
+					'exclude_from_order_count'         => true,
+					'exclude_from_order_views'         => true,
+					'exclude_from_order_webhooks'      => true,
+					'exclude_from_order_reports'       => true,
+					'exclude_from_order_sales_reports' => true,
+				)
+			)
+		);
 	}
 
 

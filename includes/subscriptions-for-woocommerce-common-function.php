@@ -307,5 +307,40 @@ if ( ! function_exists( 'mwb_sfw_email_subscriptions_details' ) ) {
 	}
 }
 
+if ( ! function_exists( 'mwb_sfw_check_plugin_enable' ) ) { 
+	/**
+	 * This function is used to check plugin is enable.
+	 * @name mwb_sfw_check_plugin_enable
+	 * @since 1.0.0
+	 
+	 */
+	function mwb_sfw_check_plugin_enable() { 
+		$is_enable = false;
+		$mwb_sfw_enable_plugin = get_option( 'mwb_sfw_enable_plugin', '' );
+		if ( $mwb_sfw_enable_plugin == 'on' ) {
+			$is_enable = true;
+		}
+		return $is_enable;
+	}
+}
+
+function validate_change_payment_request( $mwb_subscription ) {
+		$result = true;
+
+		if ( wp_verify_nonce( $_GET['_wpnonce'] ) === false ) {
+			$result = false;
+			wc_add_notice( __( 'There was an error with your request.', 'subscriptions-for-woocommerce' ), 'error' );
+		} 
+		elseif ( empty( $mwb_subscription ) ) {
+			$result = false;
+			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
+		}
+		 elseif ( $mwb_subscription->get_order_key() !== $_GET['key'] ) {
+			$result = false;
+			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
+		}
+		return $result;
+	}
+
 						    
 
