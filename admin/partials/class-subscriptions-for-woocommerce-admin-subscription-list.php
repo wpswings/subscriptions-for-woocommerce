@@ -58,7 +58,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			'recurring_amount'              => __( 'Recurring Amount', 'subscriptions-for-woocommerce' ),
 			'user_name'                     => __( 'User Name', 'subscriptions-for-woocommerce' ),
 			'next_payment_date'             => __( 'Next Payment Date', 'subscriptions-for-woocommerce' ),
-			'subscriptions_expiry_date'     => __( 'Subscriptions Expiry Date', 'subscriptions-for-woocommerce' ),
+			'subscriptions_expiry_date'     => __( 'Subscription Expiry Date', 'subscriptions-for-woocommerce' ),
 
 		);
 		return $columns;

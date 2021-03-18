@@ -220,7 +220,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			array(
 				'title' => __( 'Place order text', 'subscriptions-for-woocommerce' ),
 				'type'  => 'text',
-				'description'  => __( 'Use this option to place order button text.', 'subscriptions-for-woocommerce' ),
+				'description'  => __( 'Use this option to change place order button text.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'mwb_sfw_place_order_button_text',
 				'value' => get_option( 'mwb_sfw_place_order_button_text', '' ),
 				'class' => 'sfw-text-class',
@@ -402,7 +402,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<label for="mwb_sfw_subscription_number">
 			<?php esc_html_e( 'Subscriptions Per Interval', 'subscriptions-for-woocommerce' ); ?>
 			</label>
-			<input type="number" class="short wc_input_number"  name="mwb_sfw_subscription_number" id="mwb_sfw_subscription_number" value="<?php echo esc_attr( $mwb_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
+			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_number" id="mwb_sfw_subscription_number" value="<?php echo esc_attr( $mwb_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_interval" name="mwb_sfw_subscription_interval" class="mwb_sfw_subscription_interval" >
 				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
@@ -417,7 +417,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<label for="mwb_sfw_subscription_expiry_number">
 			<?php esc_html_e( 'Subscriptions Expiry Interval', 'subscriptions-for-woocommerce' ); ?>
 			</label>
-			<input type="number" class="short wc_input_number"  name="mwb_sfw_subscription_expiry_number" id="mwb_sfw_subscription_expiry_number" value="<?php echo esc_attr( $mwb_sfw_subscription_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
+			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_expiry_number" id="mwb_sfw_subscription_expiry_number" value="<?php echo esc_attr( $mwb_sfw_subscription_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_expiry_interval" name="mwb_sfw_subscription_expiry_interval" class="mwb_sfw_subscription_expiry_interval" >
 				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
@@ -435,7 +435,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			echo esc_html( '(' . get_woocommerce_currency_symbol() . ')' );
 			?>
 			</label>
-			<input type="text" class="short wc_input_price"  name="mwb_sfw_subscription_initial_signup_price" id="mwb_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $mwb_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e( 'Enter signup fee', 'subscriptions-for-woocommerce' ); ?>"> 
+			<input type="number" class="short wc_input_price"  min="1" step="any" name="mwb_sfw_subscription_initial_signup_price" id="mwb_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $mwb_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e( 'Enter signup fee', 'subscriptions-for-woocommerce' ); ?>"> 
 			
 		 <?php
 			$description_text = __( 'Choose the subscriptions initial fee for product "leave empty for not any initial fee"', 'subscriptions-for-woocommerce' );
@@ -446,7 +446,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<label for="mwb_sfw_subscription_free_trial_number">
 			<?php esc_html_e( 'Free trial interval', 'subscriptions-for-woocommerce' ); ?>
 			</label>
-			<input type="number" class="short wc_input_number"  name="mwb_sfw_subscription_free_trial_number" id="mwb_sfw_subscription_free_trial_number" value="<?php echo esc_attr( $mwb_sfw_subscription_free_trial_number ); ?>" placeholder="<?php esc_html_e( 'Enter free trial interval', 'subscriptions-for-woocommerce' ); ?>"> 
+			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_free_trial_number" id="mwb_sfw_subscription_free_trial_number" value="<?php echo esc_attr( $mwb_sfw_subscription_free_trial_number ); ?>" placeholder="<?php esc_html_e( 'Enter free trial interval', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_free_trial_interval" name="mwb_sfw_subscription_free_trial_interval" class="mwb_sfw_subscription_free_trial_interval" >
 				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_free_trial_interval, true ); ?>><?php echo esc_html( $label ); ?></option>

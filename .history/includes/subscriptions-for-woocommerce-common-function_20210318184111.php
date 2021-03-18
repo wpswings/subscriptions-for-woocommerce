@@ -52,7 +52,7 @@ if ( ! function_exists( 'mwb_sfw_next_payment_date' ) ) {
 		$mwb_recurring_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_number', true );
 		$mwb_recurring_interval = get_post_meta( $subscription_id, 'mwb_sfw_subscription_interval', true );
 
-		if ( 0 != $mwb_susbcription_trial_end ) {
+		if ( $mwb_susbcription_trial_end != 0 ) {
 
 			$mwb_sfw_next_pay_date = $mwb_susbcription_trial_end;
 		} else {
@@ -213,7 +213,7 @@ if ( ! function_exists( 'mwb_sfw_send_email_for_renewal_susbcription' ) ) {
 		$order = wc_get_order( $order_id );
 		if ( isset( $order ) && is_object( $order ) ) {
 			$mailer = WC()->mailer()->get_emails();
-			// Send the "processing" notification.
+			// Send the "processing" notification
 			if ( isset( $mailer['WC_Email_New_Order'] ) ) {
 				 $mailer['WC_Email_New_Order']->trigger( $order_id );
 			}
@@ -239,7 +239,7 @@ if ( ! function_exists( 'mwb_sfw_send_email_for_cancel_susbcription' ) ) {
 
 		if ( isset( $mwb_subscription_id ) && ! empty( $mwb_subscription_id ) ) {
 			$mailer = WC()->mailer()->get_emails();
-			// Send the "cancel" notification.
+			// Send the "cancel" notification
 			if ( isset( $mailer['mwb_sfw_cancel_subscription'] ) ) {
 				 $mailer['mwb_sfw_cancel_subscription']->trigger( $mwb_subscription_id );
 			}
@@ -259,7 +259,7 @@ if ( ! function_exists( 'mwb_sfw_send_email_for_expired_susbcription' ) ) {
 
 		if ( isset( $mwb_subscription_id ) && ! empty( $mwb_subscription_id ) ) {
 			$mailer = WC()->mailer()->get_emails();
-			// Send the "expired" notification.
+			// Send the "expired" notification
 			if ( isset( $mailer['mwb_sfw_expired_subscription'] ) ) {
 				 $mailer['mwb_sfw_expired_subscription']->trigger( $mwb_subscription_id );
 			}
@@ -326,7 +326,7 @@ if ( ! function_exists( 'mwb_sfw_check_plugin_enable' ) ) {
 	function mwb_sfw_check_plugin_enable() {
 		$is_enable = false;
 		$mwb_sfw_enable_plugin = get_option( 'mwb_sfw_enable_plugin', '' );
-		if ( 'on' == $mwb_sfw_enable_plugin ) {
+		if ( $mwb_sfw_enable_plugin == 'on' ) {
 			$is_enable = true;
 		}
 		return $is_enable;
@@ -343,15 +343,14 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 	 */
 	function mwb_sfw_validate_payment_request( $mwb_subscription ) {
 		$result = true;
-		$order_key = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
-		$mwb_nonce = isset( $_GET['_mwb_sfw_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_mwb_sfw_nonce'] ) ) : '';
-		if ( wp_verify_nonce( $mwb_nonce ) === false ) {
+
+		if ( wp_verify_nonce( $_GET['_mwb_sfw_nonce'] ) === false ) {
 			$result = false;
 			wc_add_notice( __( 'There was an error with your request.', 'subscriptions-for-woocommerce' ), 'error' );
 		} elseif ( empty( $mwb_subscription ) ) {
 			$result = false;
 			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
-		} elseif ( $mwb_subscription->get_order_key() !== $order_key ) {
+		} elseif ( $mwb_subscription->get_order_key() !== $_GET['key'] ) {
 			$result = false;
 			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}

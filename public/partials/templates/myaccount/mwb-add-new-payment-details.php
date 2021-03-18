@@ -47,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
 		if ( $available_gateways ) {
 			?>
-			<ul class="payment_methods methods">
+			<ul class="payment_methods methods mwb_payment_method">
 				<?php
 
 				if ( count( $available_gateways ) ) {
@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				foreach ( $available_gateways as $key => $gateway ) :
 
-					if ( 'stripe' != $key && 'paypal' != $key ) {
+					if ( 'stripe' != $key ) {
 						continue;
 					}
 
