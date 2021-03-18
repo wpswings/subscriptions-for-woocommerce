@@ -328,6 +328,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 	/**
 	 * This function is used to check plugin is enable.
 	 * @name mwb_sfw_check_plugin_enable
+	 * @param Object $mwb_subscription mwb_subscription.
 	 * @since 1.0.0
 	 
 	 */
