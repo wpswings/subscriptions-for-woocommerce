@@ -275,7 +275,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 	/**
 	* Subscriptions For Woocommerce save tab settings.
-	*
+	* @param sfw_admin_save_tab_settings.
 	* @since 1.0.0
 	*/
 	public function sfw_admin_save_tab_settings() {
@@ -328,7 +328,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @name mwb_sfw_create_subscription_product_type
 	 * @since    1.0.0
 	 * @param    Array $products_type Products type.
-	 * @return   Array  $products_type
+	 * @return   Array  $products_type.
 	 */
 	public function mwb_sfw_create_subscription_product_type( $products_type ) {
 		$products_type['mwb_sfw_product'] = array(
@@ -465,7 +465,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @name mwb_sfw_save_custom_product_fields_data_for_subscription
 	 * @since    1.0.0
 	 * @param    int $post_id Post ID.
-	 * @param   object  $post
+	 * @param    object  $post
 	 */
 	public function mwb_sfw_save_custom_product_fields_data_for_subscription( $post_id, $post ) {
 		

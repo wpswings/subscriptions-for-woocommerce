@@ -349,6 +349,13 @@ class Subscriptions_For_Woocommerce_Public {
 		return $subtotal;
 	}
 
+	/**
+	 * This function is used to add susbcription price.
+	 *
+	 * @name mwb_sfw_add_subscription_price_and_sigup_fee
+	 * @param object $cart cart.
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_add_subscription_price_and_sigup_fee( $cart ) {
 
 		if ( isset( $cart ) && !empty( $cart ) ) {
@@ -381,16 +388,38 @@ class Subscriptions_For_Woocommerce_Public {
 
 	}
 
+	/**
+	 * This function is used to add susbcription price.
+	 *
+	 * @name mwb_sfw_get_subscription_trial_period_number
+	 * @param int $product_id product_id.
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_get_subscription_trial_period_number( $product_id ) {
 		$mwb_sfw_subscription_free_trial_number = get_post_meta( $product_id,'mwb_sfw_subscription_free_trial_number', true );
 		return $mwb_sfw_subscription_free_trial_number;
 	}
 
+	/**
+	 * This function is used to add initial singup price.
+	 *
+	 * @name mwb_sfw_get_subscription_initial_signup_price
+	 * @param int $product_id product_id.
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_get_subscription_initial_signup_price( $product_id ) {
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $product_id,'mwb_sfw_subscription_initial_signup_price', true );
 		return $mwb_sfw_subscription_initial_signup_price;
 	}
 
+	/**
+	 * This function is used to process checkout.
+	 *
+	 * @name mwb_sfw_process_checkout
+	 * @param int $order_id order_id.
+	 * @param array $posted_data posted_data.
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_process_checkout( $order_id, $posted_data ) {
 		
 		$order = wc_get_order( $order_id );
@@ -445,8 +474,6 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 			}
 		}
-		
-		
 	}
 
 	/**
@@ -499,6 +526,8 @@ class Subscriptions_For_Woocommerce_Public {
 	 *
 	 * @name mwb_sfw_create_subscription
 	 * @param object $order order.
+	 * @param array $posted_data posted_data.
+	 * @param array $mwb_recurring_data mwb_recurring_data.
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_create_subscription( $order, $posted_data, $mwb_recurring_data ) {
@@ -580,7 +609,13 @@ class Subscriptions_For_Woocommerce_Public {
 		
 	}
 
-	public function mwb_sfw_after_woocommerce_pay(){
+	/**
+	 * This function is used to add payment method form.
+	 *
+	 * @name mwb_sfw_after_woocommerce_pay
+	 * @since    1.0.0
+	 */
+	public function mwb_sfw_after_woocommerce_pay() {
 		global $wp;
 		$valid_request = false;
 		
@@ -592,21 +627,29 @@ class Subscriptions_For_Woocommerce_Public {
 		echo '<div class="woocommerce">';
 
 		$mwb_subscription  = wc_get_order( absint( $_GET['mwb_add_payment_method'] ) );
-		foreach ( array( 'country', 'state', 'postcode' ) as $address_property ) {
-			$subscription_address = $mwb_subscription->{"get_billing_$address_property"}();
-
-			if ( $subscription_address ) {
-				WC()->customer->{"set_billing_$address_property"}( $subscription_address );
-			}
-		}
-
-		do_action( 'before_woocommerce_pay' );
-		wc_get_template( 'myaccount/mwb_add_new_payment_details.php', array( 'mwb_subscription' => $mwb_subscription ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
-
+		$mwb_valid_request = mwb_sfw_validate_payment_request( $mwb_subscription );
 		
+		if ( $mwb_valid_request ) {
+			foreach ( array( 'country', 'state', 'postcode' ) as $address_property ) {
+				$subscription_address = $mwb_subscription->{"get_billing_$address_property"}();
+
+				if ( $subscription_address ) {
+					WC()->customer->{"set_billing_$address_property"}( $subscription_address );
+				}
+			}
+
+			do_action( 'before_woocommerce_pay' );
+			wc_get_template( 'myaccount/mwb_add_new_payment_details.php', array( 'mwb_subscription' => $mwb_subscription ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+		}
 	}
 
-	public function mwb_sfw_change_payment_method_form(){
+	/**
+	 * This function is used to process payment method form.
+	 *
+	 * @name mwb_sfw_change_payment_method_form
+	 * @since    1.0.0
+	 */
+	public function mwb_sfw_change_payment_method_form() {
 		if ( ! isset( $_POST['_mwb_sfw_nonce'] ) || ! wp_verify_nonce( $_POST['_mwb_sfw_nonce'], 'mwb_sfw__change_payment_method' ) ) {
 			return;
 		}
@@ -618,27 +661,27 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( $mwb_subscription->get_order_key() == $_GET['key'] ) {
 
-			$subscription_billing_country  = $mwb_subscription->get_billing_country();
-			$subscription_billing_state    = $mwb_subscription->get_billing_state();
-			$subscription_billing_postcode = $mwb_subscription->get_billing_postcode();
-			$subscription_billing_city     = $mwb_subscription->get_billing_postcode();
+			$mwb_subscription_billing_country  = $mwb_subscription->get_billing_country();
+			$mwb_subscription_billing_state    = $mwb_subscription->get_billing_state();
+			$mwb_subscription_billing_postcode = $mwb_subscription->get_billing_postcode();
+			$mwb_subscription_billing_city     = $mwb_subscription->get_billing_postcode();
 
 			
-			if ( $subscription_billing_country ) {
-				$setter = is_callable( array( WC()->customer, 'set_billing_country' ) ) ? 'set_billing_country' : 'set_country';
-				WC()->customer->$setter( $subscription_billing_country );
+			if ( $mwb_subscription_billing_country ) {
+				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_country' ) ) ? 'set_billing_country' : 'set_country';
+				WC()->customer->$mwb_setter( $mwb_subscription_billing_country );
 			}
-			if ( $subscription_billing_state ) {
-				$setter = is_callable( array( WC()->customer, 'set_billing_state' ) ) ? 'set_billing_state' : 'set_state';
-				WC()->customer->$setter( $subscription_billing_state );
+			if ( $mwb_subscription_billing_state ) {
+				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_state' ) ) ? 'set_billing_state' : 'set_state';
+				WC()->customer->$mwb_setter( $mwb_subscription_billing_state );
 			}
-			if ( $subscription_billing_postcode ) {
-				$setter = is_callable( array( WC()->customer, 'set_billing_postcode' ) ) ? 'set_billing_postcode' : 'set_postcode';
-				WC()->customer->$setter( $subscription_billing_postcode );
+			if ( $mwb_subscription_billing_postcode ) {
+				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_postcode' ) ) ? 'set_billing_postcode' : 'set_postcode';
+				WC()->customer->$mwb_setter( $mwb_subscription_billing_postcode );
 			}
-			if ( $subscription_billing_city ) {
-				$setter = is_callable( array( WC()->customer, 'set_billing_city' ) ) ? 'set_billing_city' : 'set_city';
-				WC()->customer->$setter( $subscription_billing_city );
+			if ( $mwb_subscription_billing_city ) {
+				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_city' ) ) ? 'set_billing_city' : 'set_city';
+				WC()->customer->$mwb_setter( $mwb_subscription_billing_city );
 			}
 
 			// Update payment method
@@ -664,15 +707,23 @@ class Subscriptions_For_Woocommerce_Public {
 					return;
 				}
 				$mwb_subscription->save();
-				wc_add_notice( $notice );
+				$mwb_notice = __('Payment Method Added Sucessfully');
+				wc_add_notice( $mwb_notice );
 				wp_redirect( $result['redirect'] );
 				exit;
 			}
 		}
-
 		ob_get_clean();
 	}
 
+	/**
+	 * This function is used to process payment method form.
+	 *
+	 * @name mwb_sfw_set_susbcription_total.
+	 * @param int $total total.
+	 * @param object $mwb_subscription mwb_subscription
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_set_susbcription_total( $total, $mwb_subscription ) {
 
 		global $wp;
@@ -721,6 +772,11 @@ class Subscriptions_For_Woocommerce_Public {
 	    return $available_gateways;
 	}
 
+	/**
+	 * Register the endpoints on my_account page.
+	 *@name mwb_sfw_add_subscription_tab_on_myaccount_page
+	 * @since    1.0.0
+	 */
 	public function mwb_sfw_add_subscription_tab_on_myaccount_page() {
 		add_rewrite_endpoint( 'mwb_subscriptions', EP_PAGES );
 		add_rewrite_endpoint( 'show-subscription', EP_PAGES );
@@ -729,7 +785,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 	/**
 	 * Register the endpoints on my_account page.
-	 *@name mwb_sfw_custom_endpoint_query_vars
+	 *@name mwb_sfw_custom_endpoint_query_vars.
+	 *@param array $vars vars.
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_custom_endpoint_query_vars($vars) {
@@ -743,7 +800,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to add MWb susbcriptions Tab in MY ACCOUNT Page
 	 * @name mwb_sfw_add_subscription_dashboard_on_myaccount_page
 	 * @since 1.0.0
-	 * @param $items items.
+	 * @param array $items items.
 	 */
 	public function mwb_sfw_add_subscription_dashboard_on_myaccount_page( $items ) {
 		
@@ -770,7 +827,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to restrict guest user for subscription product.
 	 * @name mwb_sfw_subscription_before_checkout_form
 	 * @since 1.0.0
-	 * @param $checkout checkout.
+	 * @param object $checkout checkout.
 	 */
 	public function mwb_sfw_subscription_before_checkout_form( $checkout = '' ) {
 		
@@ -787,7 +844,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to show recurring price on account page.
 	 * @name mwb_sfw_display_susbcription_recerring_total_account_page_callback
 	 * @since 1.0.0
-	 * @param $subscription_id subscription_id.
+	 * @param int $subscription_id subscription_id.
 	 */
 	public function mwb_sfw_display_susbcription_recerring_total_account_page_callback( $subscription_id ) {
 		$mwb_recurring_total = get_post_meta( $subscription_id, 'mwb_recurring_total', true );
@@ -804,7 +861,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to include subscription details template on account page.
 	 * @name mwb_sfw_shwo_subscription_details
 	 * @since 1.0.0
-	 * @param $mwb_subscription_id mwb_subscription_id.
+	 * @param int $mwb_subscription_id mwb_subscription_id.
 	 */
 	public function mwb_sfw_shwo_subscription_details( $mwb_subscription_id ) {
 		
@@ -841,9 +898,9 @@ class Subscriptions_For_Woocommerce_Public {
 	/**
 	 * This function is used to cancel susbcription.
 	 * @name mwb_sfw_cancel_susbcription_order_by_customer
-	 * @param $mwb_subscription_id mwb_subscription_id.
-	 * @param $mwb_status mwb_status.
-	 * @param $user_id user_id.
+	 * @param int $mwb_subscription_id mwb_subscription_id.
+	 * @param string $mwb_status mwb_status.
+	 * @param int $user_id user_id.
 	 * @since 1.0.0
 	 */
 	public function mwb_sfw_cancel_susbcription_order_by_customer( $mwb_subscription_id, $mwb_status, $user_id ) {
@@ -862,9 +919,9 @@ class Subscriptions_For_Woocommerce_Public {
 	/**
 	 * This function is used to update susbcription.
 	 * @name mwb_sfw_woocommerce_order_status_changed
-	 * @param $order_id order_id.
-	 * @param $old_status old_status.
-	 * @param $new_status new_status.
+	 * @param int $order_id order_id.
+	 * @param string $old_status old_status.
+	 * @param string $new_status new_status.
 	 * @since 1.0.0
 	 */
 	public function mwb_sfw_woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
@@ -920,7 +977,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 	/**
 	 * This function is used to add payment method.
-	 * @name mwb_sfw_mwb_add_payment_method
+	 * @name mwb_sfw_mwb_add_payment_method.
+	 * @param int mwb_subscription_id mwb_subscription_id.
 	 * @since 1.0.0
 	 */
 	public function mwb_sfw_mwb_add_payment_method( $mwb_subscription_id ) {

@@ -324,10 +324,17 @@ if ( ! function_exists( 'mwb_sfw_check_plugin_enable' ) ) {
 	}
 }
 
-function validate_change_payment_request( $mwb_subscription ) {
+if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) { 
+	/**
+	 * This function is used to check plugin is enable.
+	 * @name mwb_sfw_check_plugin_enable
+	 * @since 1.0.0
+	 
+	 */
+	function mwb_sfw_validate_payment_request( $mwb_subscription ) {
 		$result = true;
 
-		if ( wp_verify_nonce( $_GET['_wpnonce'] ) === false ) {
+		if ( wp_verify_nonce( $_GET['_mwb_sfw_nonce'] ) === false ) {
 			$result = false;
 			wc_add_notice( __( 'There was an error with your request.', 'subscriptions-for-woocommerce' ), 'error' );
 		} 
@@ -341,6 +348,8 @@ function validate_change_payment_request( $mwb_subscription ) {
 		}
 		return $result;
 	}
+
+}
 
 						    
 
