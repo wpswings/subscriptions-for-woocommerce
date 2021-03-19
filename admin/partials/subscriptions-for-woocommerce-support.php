@@ -29,7 +29,7 @@ $sfw_support_settings = apply_filters( 'sfw_supprot_tab_settings_array', array()
 						<p><?php echo esc_html( $sfw_support_setting['description'] ); ?></p>
 					</div>
 					<div class="mdc-button mdc-button--raised mwb-cta-btn"><span class="mdc-button__ripple"></span>
-						<a href="#" class="mwb-btn mwb-btn-primary"><?php echo esc_html( $sfw_support_setting['link-text'] ); ?></a>
+						<a href="<?php echo esc_url( $sfw_support_setting['link'] ); ?>" class="mwb-btn mwb-btn-primary"><?php echo esc_html( $sfw_support_setting['link-text'] ); ?></a>
 					</div>
 				</div>
 			</div>

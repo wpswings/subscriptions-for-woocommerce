@@ -28,9 +28,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * This is variable which is used for the store all the data.
 	 *
 	 * @var array $example_data variable for store data.
-	 * @var array $mwb_total_count variable for store data.
 	 */
 	public $example_data;
+
+	/**
+	 * This is variable which is used for the total count.
+	 *
+	 * @var array $mwb_total_count variable for total count.
+	 */
 	public $mwb_total_count;
 
 
@@ -45,15 +50,15 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	public function get_columns() {
 
 		$columns = array(
-			'cb'             				=> '<input type="checkbox" />',
-			'subscription_id'      			=> __( 'Subscription ID', 'subscriptions-for-woocommerce' ),
-			'parent_order_id'      			=> __( 'Parent Order ID', 'subscriptions-for-woocommerce' ),
-			'status'     					=> __( 'Status', 'subscriptions-for-woocommerce' ),
-			'product_name'    				=> __( 'Product Name', 'subscriptions-for-woocommerce' ),
-			'recurring_amount'           	=> __( 'Recurring Amount', 'subscriptions-for-woocommerce' ),
-			'user_name' 					=> __( 'User Name', 'subscriptions-for-woocommerce' ),
-			'next_payment_date'         	=> __( 'Next Payment Date', 'subscriptions-for-woocommerce' ),
-			'subscriptions_expiry_date'     => __( 'Subscriptions Expiry Date', 'subscriptions-for-woocommerce' ),
+			'cb'                            => '<input type="checkbox" />',
+			'subscription_id'               => __( 'Subscription ID', 'subscriptions-for-woocommerce' ),
+			'parent_order_id'               => __( 'Parent Order ID', 'subscriptions-for-woocommerce' ),
+			'status'                        => __( 'Status', 'subscriptions-for-woocommerce' ),
+			'product_name'                  => __( 'Product Name', 'subscriptions-for-woocommerce' ),
+			'recurring_amount'              => __( 'Recurring Amount', 'subscriptions-for-woocommerce' ),
+			'user_name'                     => __( 'User Name', 'subscriptions-for-woocommerce' ),
+			'next_payment_date'             => __( 'Next Payment Date', 'subscriptions-for-woocommerce' ),
+			'subscriptions_expiry_date'     => __( 'Subscription Expiry Date', 'subscriptions-for-woocommerce' ),
 
 		);
 		return $columns;
@@ -64,22 +69,24 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 *
 	 * @name mwb_sfw_cancel_url.
 	 * @since      1.0.0
+	 * @param int    $subscription_id subscription_id.
+	 * @param String $status status.
 	 * @author makewebbetter<ticket@makewebbetter.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function mwb_sfw_cancel_url( $subscription_id, $status ) {
 		$mwb_link = add_query_arg(
-						array(
-							'mwb_subscription_id'        		=> $subscription_id,
-							'mwb_subscription_status_admin' 	=> $status,
-						)
-					);
-				
+			array(
+				'mwb_subscription_id'               => $subscription_id,
+				'mwb_subscription_status_admin'     => $status,
+			)
+		);
+
 		$mwb_link = wp_nonce_url( $mwb_link, $subscription_id . $status );
 		$actions = array(
-					'mwb_sfw_cancel' => '<a href="' . $mwb_link . '">' . __( 'Cancel', 'subscriptions-for-woocommerce' ) . '</a>',
+			'mwb_sfw_cancel' => '<a href="' . $mwb_link . '">' . __( 'Cancel', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				);
+		);
 		return $actions;
 	}
 	/**
@@ -104,7 +111,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$actions = apply_filters( 'mwb_sfw_add_action_details', $actions, $item['subscription_id'] );
 				return $item[ $column_name ] . $this->row_actions( $actions );
 			case 'parent_order_id':
-				$html = '<a href="' . esc_url( get_edit_post_link( $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>'; 
+				$html = '<a href="' . esc_url( get_edit_post_link( $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
 				return $html;
 			case 'status':
 				return '<b>' . $item[ $column_name ] . '</b>';
@@ -203,7 +210,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		$this->example_data = $this->mwb_sfw_get_subscription_list();
 		$data               = $this->example_data;
 		usort( $data, array( $this, 'mwb_sfw_usort_reorder' ) );
-		$data = array_slice($data,(($current_page-1)*$per_page),$per_page);
+		$data = array_slice( $data, ( ( $current_page - 1 ) * $per_page ), $per_page );
 		$total_items = $this->mwb_total_count;
 		$this->items  = $data;
 		$this->set_pagination_args(
@@ -229,11 +236,10 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @param array $cloumnb column of the susbcriptions.
 	 */
 	public function mwb_sfw_usort_reorder( $cloumna, $cloumnb ) {
-		
 
 		$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'subscription_id';
 		$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'desc';
-		
+
 		if ( is_numeric( $cloumna[ $orderby ] ) && is_numeric( $cloumnb[ $orderby ] ) ) {
 			if ( $cloumna[ $orderby ] == $cloumnb[ $orderby ] ) {
 				return 0;
@@ -267,7 +273,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		);
 	}
 
-	
+
 	/**
 	 * This function used to get all susbcriptions list.
 	 *
@@ -278,74 +284,70 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function mwb_sfw_get_subscription_list() {
-		
+
 		$args = array(
-		  'numberposts' => -1,
-		  'post_type'   => 'mwb_subscriptions',
-		  'post_status' =>'wc-mwb_renewal',
-		  'meta_query' => array(
-		        array(
-		            'key'   => 'mwb_customer_id',
-		            'compare' => 'EXISTS',
-		        )
-		     )
+			'numberposts' => -1,
+			'post_type'   => 'mwb_subscriptions',
+			'post_status' => 'wc-mwb_renewal',
+			'meta_query' => array(
+				array(
+					'key'   => 'mwb_customer_id',
+					'compare' => 'EXISTS',
+				),
+			),
 		);
- 		
- 		if ( isset( $_REQUEST['s'] ) && !empty( $_REQUEST['s'] ) ) {
+
+		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 			$args['meta_query'] = array(
-		        array(
-		           'key'   => 'mwb_parent_order',
-		           'value' => $data,
-		           'compare' => 'LIKE',
-		        )
-		     );
+				array(
+					'key'   => 'mwb_parent_order',
+					'value' => $data,
+					'compare' => 'LIKE',
+				),
+			);
 		}
 
 		$mwb_subscriptions = get_posts( $args );
-		
+
 		$total_count = count( $mwb_subscriptions );
-		
+
 		$mwb_subscriptions_data = array();
 
-		if ( isset( $mwb_subscriptions ) && !empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+		if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 			foreach ( $mwb_subscriptions as $key => $value ) {
-				
+
 				$parent_order_id   = get_post_meta( $value->ID, 'mwb_parent_order', true );
 				$mwb_subscription_status   = get_post_meta( $value->ID, 'mwb_subscription_status', true );
 				$product_name   = get_post_meta( $value->ID, 'product_name', true );
 				$mwb_recurring_total   = get_post_meta( $value->ID, 'mwb_recurring_total', true );
 				$mwb_next_payment_date   = get_post_meta( $value->ID, 'mwb_next_payment_date', true );
 				$mwb_susbcription_end   = get_post_meta( $value->ID, 'mwb_susbcription_end', true );
-				
+
 				$mwb_customer_id   = get_post_meta( $value->ID, 'mwb_customer_id', true );
 				$user = get_user_by( 'id', $mwb_customer_id );
-				$user_nicename =  $user->user_nicename;
+				$user_nicename = $user->user_nicename;
 				$mwb_subscriptions_data[] = array(
-					'subscription_id' 			=> $value->ID,
-					'parent_order_id'   		=> $parent_order_id,
-					'status'  					=> $mwb_subscription_status,
-					'product_name' 				=> $product_name,
-					'recurring_amount' 			=> wc_price( $mwb_recurring_total ),
-					'user_name' 				=> $user_nicename,
-					'next_payment_date' 		=> mwb_sfw_get_the_wordpress_date_format( $mwb_next_payment_date ),
+					'subscription_id'           => $value->ID,
+					'parent_order_id'           => $parent_order_id,
+					'status'                    => $mwb_subscription_status,
+					'product_name'              => $product_name,
+					'recurring_amount'          => wc_price( $mwb_recurring_total ),
+					'user_name'                 => $user_nicename,
+					'next_payment_date'         => mwb_sfw_get_the_wordpress_date_format( $mwb_next_payment_date ),
 					'subscriptions_expiry_date' => mwb_sfw_get_the_wordpress_date_format( $mwb_susbcription_end ),
 				);
 			}
 		}
-		
+
 		$this->mwb_total_count = $total_count;
 		return $mwb_subscriptions_data;
 	}
 }
 
-	?>
+?>
 	<h3 class="wp-heading-inline" id="mwb_sfw_heading"><?php esc_html_e( 'Subscriptions', 'subscriptions-for-woocommerce' ); ?></h3>
-	<?php
-	
-	
-	?>
-	<form method="post">
+		<form method="post">
 		<input type="hidden" name="page" value="<?php esc_html_e( 'susbcription_list_table', 'subscriptions-for-woocommerce' ); ?>">
 		<?php wp_nonce_field( 'susbcription_list_table', 'susbcription_list_table' ); ?>
 		<?php

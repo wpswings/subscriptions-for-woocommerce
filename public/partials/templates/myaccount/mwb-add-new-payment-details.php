@@ -1,6 +1,16 @@
 <?php
+/**
+ * The add new payment.
+ *
+ * @link       https://makewebbetter.com/
+ * @since      1.0.0
+ *
+ * @package    Subscriptions_For_Woocommerce
+ * @subpackage Subscriptions_For_Woocommerce/public
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 ?>
 <div>
@@ -32,11 +42,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</tbody>
 	</table>
 	<div id="payment">
-		<?php 
+		<?php
 		$button_text = __( 'Add payment method', 'subscriptions-for-woocommerce' );
-		if ( $available_gateways = WC()->payment_gateways->get_available_payment_gateways() ){
+		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+		if ( $available_gateways ) {
 			?>
-			<ul class="payment_methods methods">
+			<ul class="payment_methods methods mwb_payment_method">
 				<?php
 
 				if ( count( $available_gateways ) ) {
@@ -44,10 +55,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				}
 
 				foreach ( $available_gateways as $key => $gateway ) :
-					
-					if ('stripe' != $key && 'paypal' != $key ) {
-	    				continue;
-	    			}
+
+					if ( 'stripe' != $key ) {
+						continue;
+					}
 
 					?>
 					<li class="wc_payment_method payment_method_<?php echo esc_attr( $gateway->id ); ?>">
@@ -63,14 +74,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</li>
 				<?php endforeach; ?>
 			</ul>
-		<?php
-		?>
-			<div class="form-row mwb_sfw_from_row">
+						<div class="form-row mwb_sfw_from_row">
 			<?php wp_nonce_field( 'mwb_sfw__change_payment_method', '_mwb_sfw_nonce', true, true ); ?>
-			<input type="submit" class="button alt" id="place_order" value="<?php echo esc_attr( $button_text );?>">
+			<input type="submit" class="button alt" id="place_order" value="<?php echo esc_attr( $button_text ); ?>">
 			<input type="hidden" name="mwb_change_change_payment" value="<?php echo esc_attr( $mwb_subscription->get_id() ); ?>" />
 		</div>
-		<?php
+			<?php
 		}
 		?>
 	</div>
