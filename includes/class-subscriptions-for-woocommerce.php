@@ -374,6 +374,10 @@ class Subscriptions_For_Woocommerce {
 
 		$sfw_default_tabs = array();
 
+		$sfw_default_tabs['subscriptions-for-woocommerce-overview'] = array(
+			'title'       => esc_html__( 'Overview', 'subscriptions-for-woocommerce' ),
+			'name'        => 'subscriptions-for-woocommerce-overview',
+		);
 		$sfw_default_tabs['subscriptions-for-woocommerce-general'] = array(
 			'title'       => esc_html__( 'General Setting', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-general',

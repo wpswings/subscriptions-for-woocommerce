@@ -112,6 +112,21 @@ class Subscriptions_For_Woocommerce_Admin {
 		if ( isset( $screen->id ) && 'product' == $screen->id ) {
 			wp_register_script( 'mwb-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/js/subscription-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'mwb-sfw-admin-single-product-js' );
+			
+			$mwb_sfw_data = array(
+									'ajaxurl' => admin_url( 'admin-ajax.php' ),
+									'reloadurl' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ),
+									'day' => __('Days','subscriptions-for-woocommerce'),
+									'week' => __('Weeks','subscriptions-for-woocommerce'),
+									'month' => __('Months','subscriptions-for-woocommerce'),
+									'year' => __('Years','subscriptions-for-woocommerce'),
+									'expiry_notice' => __('Expiry Interval must be greater than subscription interval','subscriptions-for-woocommerce'),
+								);
+			wp_localize_script(
+				'mwb-sfw-admin-single-product-js',
+				'sfw_product_param',
+				$mwb_sfw_data
+			);
 		}
 	}
 
@@ -260,13 +275,13 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'User Guide', 'subscriptions-for-woocommerce' ),
 				'description' => __( 'View the detailed guides and documentation to set up your plugin.', 'subscriptions-for-woocommerce' ),
 				'link-text' => __( 'VIEW', 'subscriptions-for-woocommerce' ),
-				'link' => '',
+				'link' => '#',
 			),
 			array(
 				'title' => __( 'Free Support', 'subscriptions-for-woocommerce' ),
 				'description' => __( 'Please submit a ticket , our team will respond within 24 hours.', 'subscriptions-for-woocommerce' ),
 				'link-text' => __( 'SUBMIT', 'subscriptions-for-woocommerce' ),
-				'link' => '',
+				'link' => 'https://makewebbetter.com/submit-query/',
 			),
 		);
 
@@ -389,7 +404,14 @@ class Subscriptions_For_Woocommerce_Admin {
 		$product = wc_get_product( $post_id );
 
 		$mwb_sfw_subscription_number = get_post_meta( $post_id, 'mwb_sfw_subscription_number', true );
+		if ( empty( $mwb_sfw_subscription_number ) ) {
+			$mwb_sfw_subscription_number = 1;
+		}
 		$mwb_sfw_subscription_interval = get_post_meta( $post_id, 'mwb_sfw_subscription_interval', true );
+		if ( empty( $mwb_sfw_subscription_interval ) ) {
+			$mwb_sfw_subscription_interval = 'day';
+		}
+
 		$mwb_sfw_subscription_expiry_number = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_number', true );
 		$mwb_sfw_subscription_expiry_interval = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_interval', true );
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $post_id, 'mwb_sfw_subscription_initial_signup_price', true );
@@ -402,7 +424,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<label for="mwb_sfw_subscription_number">
 			<?php esc_html_e( 'Subscriptions Per Interval', 'subscriptions-for-woocommerce' ); ?>
 			</label>
-			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_number" id="mwb_sfw_subscription_number" value="<?php echo esc_attr( $mwb_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
+			<input type="number" class="short wc_input_number"  min="1" required name="mwb_sfw_subscription_number" id="mwb_sfw_subscription_number" value="<?php echo esc_attr( $mwb_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_interval" name="mwb_sfw_subscription_interval" class="mwb_sfw_subscription_interval" >
 				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
@@ -419,7 +441,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_expiry_number" id="mwb_sfw_subscription_expiry_number" value="<?php echo esc_attr( $mwb_sfw_subscription_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_expiry_interval" name="mwb_sfw_subscription_expiry_interval" class="mwb_sfw_subscription_expiry_interval" >
-				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
+				<?php foreach ( $this->mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
@@ -461,6 +483,36 @@ class Subscriptions_For_Woocommerce_Admin {
 		<?php
 		wp_nonce_field( 'mwb_sfw_edit_nonce', 'mwb_sfw_edit_nonce_filed' );
 		do_action( 'mwb_sfw_product_edit_field', $post_id );
+	}
+
+	/**
+	 * This function is used to add subscription intervals for expiry.
+	 *
+	 * @name mwb_sfw_subscription_expiry_period
+	 * @since    1.0.0
+	 * @return   string  $mwb_sfw_subscription_interval
+	 */
+	public function mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) {
+		
+		$subscription_interval = array(
+			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
+			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
+			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
+		);
+		if ( $mwb_sfw_subscription_interval == 'week' ) {
+			unset( $subscription_interval['day'] );
+		}
+		elseif ( $mwb_sfw_subscription_interval == 'month' ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['week'] );
+		}
+		elseif ( $mwb_sfw_subscription_interval == 'year' ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['week'] );
+			unset( $subscription_interval['month'] );
+		}
+		return apply_filters( 'mwb_sfw_subscription_expiry_intervals', $subscription_interval );
 	}
 
 	/**
