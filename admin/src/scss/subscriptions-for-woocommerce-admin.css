@@ -2,4 +2,187 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
- 
+ /*=====  End of system-status-table-section  ======*/
+
+ /* Overview page css */
+
+ .sfw-overview__content-description h1 {
+ 	color: #163062;
+ 	font-size: 56px;
+ 	font-weight: 700;
+ 	margin-bottom: 20px;
+ }
+
+ .sfw-overview__features h2 {
+ 	margin: 0 0 15px 0;
+ }
+
+ .sfw-overview__wrapper h2,
+ .sfw-overview__wrapper h3 {
+ 	font-weight: 600;
+ }
+
+ .sfw-overview__wrapper p {
+ 	color: #565857;
+ 	letter-spacing: 0.5px;
+ }
+
+ .sfw-overview__content-description p {
+ 	font-size: 16px;
+ }
+
+ .sfw-overview__wrapper {
+ 	width: calc(100% - 20px);
+ }
+
+ .sfw-overview__features {
+ 	margin-top: 70px;
+ }
+
+ .sfw-overview__features h2 {
+ 	margin-bottom: 20px;
+ }
+
+ .sfw-overview__features p {
+ 	margin: 0 0 15px 0;
+ }
+
+ .sfw-overview__features-list {
+ 	list-style: none;
+ }
+
+ .sfw-overview__features-list li::before {
+ 	color: #1a3365;
+ 	content: "⚬";
+ 	font-size: 20px;
+ 	font-weight: 400;
+ 	vertical-align: middle;
+ }
+
+ .sfw-overview__features-list li {
+ 	color: #565857;
+ 	font-size: 16px;
+ 	letter-spacing: 0.5px;
+ 	line-height: 24px;
+ }
+
+ .sfw-overview__content-description,.sfw-overview__keywords-wrap {
+ 	background-color: #ffffff;
+ 	margin-bottom: 30px;
+ 	padding: 20px 40px;
+ 	text-align: left;
+ }
+
+ .sfw-overview__content h2 {
+ 	color: #163062;
+ 	font-size: 30px;
+ 	letter-spacing: 0.5px;
+ 	line-height: 150%;
+ 	text-align: left;
+ }
+
+ .sfw-overview__wrapper h3 {
+ 	color: #163062;
+ 	font-size: 18px;
+ 	letter-spacing: 0.3px;
+ 	margin-bottom: 15px;
+ 	margin-top: 25px;
+ }
+
+ .sfw-overview__keywords-wrap h2 {
+ 	margin: 0 0 30px 0;
+ }
+
+ .sfw-overview__keywords {
+ 	display: flex;
+ 	flex-wrap: wrap;
+ 	justify-content: space-between;
+ }
+
+ .sfw-overview__keywords-item {
+ 	background: #ffffff;
+ 	border-bottom: 3px solid #163062;
+ 	border-radius: 5px;
+ 	box-shadow: 0 5px 20px rgb(0 0 0 / 15%);
+ 	flex: 0 0 calc(33.85% - 40px);
+ 	margin-bottom: 40px;
+ 	margin-right: 15px;
+ 	max-width: calc(33.85% - 40px);
+ 	padding: 30px 30px;
+ 	transition: 0.3s linear all;
+ }
+
+ .sfw-overview__keywords-item:hover {
+ 	transform: translateY(-16px);
+ 	transition: 0.3s linear all;
+ }
+
+ .sfw-overview__keywords-item:nth-child(3n) {
+ 	margin-right: 0;
+ }
+
+ .sfw-overview__keywords-heading {
+ 	color: #163062;
+ 	font-size: 18px;
+ 	font-weight: 600;
+ 	line-height: 1.5;
+ 	margin: 0 0 15px 0;
+ }
+
+ .sfw-overview__keywords-description {
+ 	font-size: 14px;
+ }
+
+ /* Media Queries */
+
+ @media only screen and (max-width: 992px) {
+ 	.sfw-overview__keywords-item {
+ 		flex: 0 0 100%;
+ 		max-width: 100%;
+ 	}
+ }
+ @media only screen and (max-width: 600px) {
+ 	.sfw-overview__content-description,.sfw-overview__keywords-wrap {
+ 		padding: 15px 15px;
+ 	}
+ 	.sfw-overview__content-description h1 {
+ 		font-size: 30px;
+ 	}
+ 	.sfw-overview__content h2 {
+ 		font-size: 24px;
+ 	}
+ 	.sfw-overview__features {
+ 		margin-top: 60px;
+ 	}
+ }
+
+ /* Media Query Ends */
+
+ /* overview page css ends */
+
+ /* General Settings */
+
+ .mwb-form-group:nth-child(5) .mwb-form-group__label {
+    display: none;
+}
+
+ @media only screen and (max-width: 767px) {
+	.mwb-sfw-gen-section-form .mwb-form-group__label {
+ 		flex: 0 0 100%;
+ 		max-width: 100%;
+ 		margin-bottom: 15px;
+ 	}
+ 	.mwb-sfw-gen-section-form .mwb-form-group__control {
+ 		flex: 0 0 100%;
+ 		max-width: 100%
+ 	}
+ 	.mwb-sfw-gen-section-form .mwb-form-group__control label {
+ 		display: block;
+ 	}
+ 	.mwb-sfw-gen-section-form .mwb-form-group__control .mdc-text-field-helper-line {
+ 		margin-top: 10px;
+ 	}
+
+ }
+
+
