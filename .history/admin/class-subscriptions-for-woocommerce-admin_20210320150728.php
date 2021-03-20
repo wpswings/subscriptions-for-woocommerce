@@ -495,7 +495,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 *
 	 * @name mwb_sfw_subscription_expiry_period
 	 * @since    1.0.0
-	 * @param   string $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
+	 * @param   string  $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
 	 */
 	public function mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) {
 

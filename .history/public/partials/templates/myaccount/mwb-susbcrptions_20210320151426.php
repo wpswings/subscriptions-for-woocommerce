@@ -12,7 +12,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-?>
+	?>
 	<div class="mwb_sfw_account_wrap">
 		<?php
 		if ( ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
@@ -72,19 +72,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</tbody>
 				</table>
 				<?php
-				if ( 1 < $mwb_num_pages ) {
-					?>
+				 if ( 1 < $mwb_num_pages ) { ?>
 			<div class="mwb_sfw_pagination woocommerce-pagination woocommerce-pagination--without-numbers woocommerce-Pagination">
-					<?php if ( 1 !== $mwb_current_page ) { ?>
+			<?php if ( 1 !== $mwb_current_page ) { ?>
 				<a class="woocommerce-button woocommerce-button--previous woocommerce-Button woocommerce-Button--previous button" href="<?php echo esc_url( wc_get_endpoint_url( 'mwb_subscriptions', $mwb_current_page - 1 ) ); ?>"><?php esc_html_e( 'Previous', 'subscriptions-for-woocommerce' ); ?></a>
 			<?php } ?>
 
-					<?php if ( intval( $mwb_num_pages ) !== $mwb_current_page ) { ?>
+			<?php if ( intval( $mwb_num_pages ) !== $mwb_current_page ) { ?>
 				<a class="woocommerce-button woocommerce-button--next woocommerce-Button woocommerce-Button--next button" href="<?php echo esc_url( wc_get_endpoint_url( 'mwb_subscriptions', $mwb_current_page + 1 ) ); ?>"><?php esc_html_e( 'Next', 'subscriptions-for-woocommerce' ); ?></a>
 			<?php } ?>
 			</div>
 		<?php } ?>
-			<?php
+	<?php
 		} else {
 			esc_html_e( 'You have not any active subscriptions.', 'subscriptions-for-woocommerce' );
 		}

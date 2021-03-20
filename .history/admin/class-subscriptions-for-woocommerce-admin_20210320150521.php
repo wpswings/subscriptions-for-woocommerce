@@ -495,7 +495,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 *
 	 * @name mwb_sfw_subscription_expiry_period
 	 * @since    1.0.0
-	 * @param   string $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
+	 * @return   string  $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
 	 */
 	public function mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) {
 
@@ -505,12 +505,12 @@ class Subscriptions_For_Woocommerce_Admin {
 			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
 			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
 		);
-		if ( 'week' == $mwb_sfw_subscription_interval ) {
+		if ( $mwb_sfw_subscription_interval == 'week' ) {
 			unset( $subscription_interval['day'] );
-		} elseif ( 'month' == $mwb_sfw_subscription_interval ) {
+		} elseif ( $mwb_sfw_subscription_interval == 'month' ) {
 			unset( $subscription_interval['day'] );
 			unset( $subscription_interval['week'] );
-		} elseif ( 'year' == $mwb_sfw_subscription_interval ) {
+		} elseif ( $mwb_sfw_subscription_interval == 'year' ) {
 			unset( $subscription_interval['day'] );
 			unset( $subscription_interval['week'] );
 			unset( $subscription_interval['month'] );

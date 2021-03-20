@@ -125,7 +125,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_subscription_product_get_price_html( $price, $product ) {
-		
+
 		if ( is_object( $product ) ) {
 			$product_id = $product->get_id();
 			$mwb_sfw_subscription_number = get_post_meta( $product_id, 'mwb_sfw_subscription_number', true );
@@ -138,13 +138,13 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_price_html = $this->mwb_sfw_get_time_interval( $mwb_sfw_subscription_expiry_number, $mwb_sfw_subscription_expiry_interval );
 				$mwb_price = $this->mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 				/* translators: %s: search term */
-				$price .= sprintf( esc_html__( ' / %s  For %s ', 'subscriptions-for-woocommerce' ), $mwb_price, $mwb_price_html );
+				$price .= sprintf( esc_html__( ' / %1$s  For %2$s ', 'subscriptions-for-woocommerce' ), $mwb_price, $mwb_price_html );
 
 				$price = $this->mwb_sfw_get_free_trial_period_html( $product_id, $price );
 				$price = $this->mwb_sfw_get_initial_signup_fee_html( $product_id, $price );
 			} elseif ( isset( $mwb_sfw_subscription_number ) && ! empty( $mwb_sfw_subscription_number ) ) {
 				$mwb_price_html = $this->mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
-				
+
 				/* translators: %s: search term */
 				$price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
 				$price = $this->mwb_sfw_get_free_trial_period_html( $product_id, $price );
@@ -164,9 +164,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_get_time_interval( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
-		/*if ( 1 == $mwb_sfw_subscription_number ) {
-			$mwb_sfw_subscription_number = '';
-		}*/
+
 		$mwb_price_html = '';
 		switch ( $mwb_sfw_subscription_interval ) {
 			case 'day':
@@ -199,32 +197,34 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
+		$mwb_number = $mwb_sfw_subscription_number;
 		if ( 1 == $mwb_sfw_subscription_number ) {
 			$mwb_sfw_subscription_number = '';
 		}
+
 		$mwb_price_html = '';
 		switch ( $mwb_sfw_subscription_interval ) {
 			case 'day':
 				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'week':
 				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'month':
 				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'year':
 				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 		}
 		return $mwb_price_html;
 
 	}
-	
+
 
 	/**
 	 * This function is used to show initial signup fee on subscription product page.
@@ -842,13 +842,43 @@ class Subscriptions_For_Woocommerce_Public {
 	/**
 	 * This function is used to add my account page template
 	 *
-	 * @name mwb_sfw_subscription_dashboard_content
+	 * @name mwb_sfw_subscription_dashboard_content.
+	 * @param int $mwb_current_page current page.
 	 * @since 1.0.0
 	 */
-	public function mwb_sfw_subscription_dashboard_content() {
+	public function mwb_sfw_subscription_dashboard_content( $mwb_current_page = 1 ) {
 
-		wc_get_template( 'myaccount/mwb-susbcrptions.php', array( 'current_page' => 1 ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+		$user_id = get_current_user_id();
 
+		$args = array(
+			'numberposts' => -1,
+			'post_type'   => 'mwb_subscriptions',
+			'post_status' => 'wc-mwb_renewal',
+			'meta_query' => array(
+				array(
+					'key'   => 'mwb_customer_id',
+					'value' => $user_id,
+				),
+			),
+
+		);
+		$mwb_subscriptions = get_posts( $args );
+
+		$mwb_per_page = get_option( 'posts_per_page', 10 );
+		$mwb_current_page = empty( $mwb_current_page ) ? 1 : absint( $mwb_current_page );
+		$mwb_num_pages = ceil( count( $mwb_subscriptions ) / $mwb_per_page );
+		$subscriptions = array_slice( $mwb_subscriptions, ( $mwb_current_page - 1 ) * $mwb_per_page, $mwb_per_page );
+		wc_get_template(
+			'myaccount/mwb-susbcrptions.php',
+			array(
+				'mwb_subscriptions' => $subscriptions,
+				'mwb_current_page'  => $mwb_current_page,
+				'mwb_num_pages' => $mwb_num_pages,
+				'paginate'      => true,
+			),
+			'',
+			SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/'
+		);
 	}
 
 	/**
@@ -1012,13 +1042,13 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to set single quantity for susbcription product.
 	 *
 	 * @name mwb_sfw_hide_quantity_fields_for_subscription
-	 * @param bool    $return return.
+	 * @param bool   $return return.
 	 * @param object $product product.
 	 * @since 1.0.0
 	 */
 	public function mwb_sfw_hide_quantity_fields_for_subscription( $return, $product ) {
-		
-		if( mwb_sfw_check_plugin_enable() && $this->mwb_sfw_check_product_is_subscription( $product ) ) {
+
+		if ( mwb_sfw_check_plugin_enable() && $this->mwb_sfw_check_product_is_subscription( $product ) ) {
 			$return = true;
 		}
 		return $return;
