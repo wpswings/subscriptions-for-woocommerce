@@ -16,7 +16,7 @@
  * Plugin URI:        https://makewebbetter.com/product/subscriptions-for-woocommerce/
  * Description:       This plugin is use to provide the subscriptions option for any type of services
  * Version:           1.0.0
- * Author:            makewebbetter
+ * Author:            MakeWebBetter
  * Author URI:        https://makewebbetter.com/
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
