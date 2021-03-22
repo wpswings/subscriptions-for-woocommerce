@@ -19,7 +19,7 @@ global $sfw_mwb_sfw_obj;
 ?>
 <!--  template file for admin settings. -->
 <div class="sfw-section-wrap">
-	<div class="mwb_wgm_table_wrapper mwb_wgm_overview-wrapper">
+	<div class="mwb_sfw_table_wrapper mwb_sfw_overview-wrapper">
 		<div class="sfw-overview__wrapper">
 			<div class="sfw-overview__content">
 				<div class="sfw-overview__content-description">
