@@ -725,9 +725,17 @@ class Subscriptions_For_Woocommerce_Admin {
 						'compare' => 'EXISTS',
 					),
 					array(
-						'key'   => 'mwb_susbcription_end',
-						'value' => $current_time,
-						'compare' => '<',
+						'relation' => 'AND',
+						array(
+							'key'   => 'mwb_susbcription_end',
+							'value' => $current_time,
+							'compare' => '<',
+						),
+						array(
+							'key'   => 'mwb_susbcription_end',
+							'value' => 0,
+							'compare' => '!=',
+						),
 					),
 				),
 			),
@@ -741,6 +749,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					// Send expired email notification.
 					mwb_sfw_send_email_for_expired_susbcription( $susbcription_id );
 					update_post_meta( $susbcription_id, 'mwb_subscription_status', 'expired' );
+					update_post_meta( $susbcription_id, 'mwb_next_payment_date', '' );
 				}
 			}
 		}
