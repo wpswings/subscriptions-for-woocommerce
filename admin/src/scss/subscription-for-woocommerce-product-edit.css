@@ -1,0 +1,13 @@
+/**
+ * All of the product edit page CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+
+  @media only screen and (max-width: 1248px) {
+  	.woocommerce_options_panel select {
+  		margin-top: 15px !important;
+  		width: 80%;
+  	}
+
+  }
