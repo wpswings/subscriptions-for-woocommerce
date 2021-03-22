@@ -13,6 +13,8 @@ jQuery(document).ready(function($) {
         return new MDCSwitch(el);
     });
 
+    const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
+
     /*if device is mobile*/
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         jQuery('body').addClass('mobile-device');
@@ -105,9 +107,6 @@ jQuery(document).ready(function($) {
 
     /* Open Popup */
     function mwb_sfw_show_onboard_popup() {
-        const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
-        // jQuery( '.mwb-sfw-onboarding-section' ).show();
-        // jQuery( '.mwb-sfw-on-boarding-wrapper-background' ).addClass( 'mwb-sfw-onboard-popup-show' );
         dialog.open();
         if (!jQuery('body').hasClass('mobile-device')) {
             jQuery('body').addClass('mwb-on-boarding-wrapper-control');
@@ -116,8 +115,10 @@ jQuery(document).ready(function($) {
 
     /* Close Popup */
     function mwb_sfw_hide_onboard_popup() {
-        // jQuery( '.mwb-sfw-on-boarding-wrapper-background' ).removeClass( 'mwb-sfw-onboard-popup-show' );
-        // jQuery( '.mwb-sfw-onboarding-section' ).hide();
+        // jQuery( '.mwb-on-boarding-wrapper-background' ).removeClass( 'onboard-popup-show' );
+		// jQuery( '.mwb-onboarding-section' ).hide();
+        // const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
+        dialog.close();
         if (!jQuery('body').hasClass('mobile-device')) {
             jQuery('body').removeClass('mwb-on-boarding-wrapper-control');
         }
