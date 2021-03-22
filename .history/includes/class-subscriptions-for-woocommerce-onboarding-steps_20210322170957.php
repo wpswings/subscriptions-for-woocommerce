@@ -170,7 +170,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		if ( $this->mwb_sfw_valid_page_screen_check() || $is_valid ) {
 			// comment the line of code Only when your plugin doesn't uses the Select2.
 			wp_enqueue_style( 'mwb-sfw-onboarding-select2-style', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), time(), 'all' );
-
+			
 			wp_enqueue_style( 'mwb-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), time(), 'all' );
 			wp_enqueue_style( 'mwb-sfw-meterial-css2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.css', array(), time(), 'all' );
 			wp_enqueue_style( 'mwb-sfw-meterial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.css', array(), time(), 'all' );
@@ -253,7 +253,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 */
 	public function mwb_sfw_skip_onboarding_popup() {
 
-		$get_skipped_timstamp = update_option( 'mwb_sfw_onboarding_data_skipped', time() );
+	 $get_skipped_timstamp = update_option( 'mwb_sfw_onboarding_data_skipped', time() );
 		echo json_encode( 'true' );
 		wp_die();
 	}
@@ -484,7 +484,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 
 			rand() => array(
 				'id' => 'mwb-sfw-deactivation-reason-text',
-				/* translators: %s: search term */
+				
 				'title' => sprintf( esc_html__( ' Let us know why you are deactivating %s so we can improve the plugin', 'subscriptions-for-woocommerce' ), self::$mwb_sfw_plugin_name_label ),
 				'type' => 'textarea',
 				'description' => '',
@@ -819,7 +819,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_show_onboarding_popup_check() {
-
+		
 		$mwb_sfw_is_already_sent = get_option( 'mwb_sfw_onboarding_data_sent', false );
 
 		// Already submitted the data.
