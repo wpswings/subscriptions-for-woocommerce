@@ -162,15 +162,51 @@
 
  /* General Settings */
 
- .mwb-form-group:nth-child(5) .mwb-form-group__label {
+ .mwb-form-group:last-of-type .mwb-form-group__label {
     display: none;
 }
 
+.makewebbetter_page_subscriptions_for_woocommerce_menu .updates-table tbody td.check-column, .widefat tbody th.check-column, .widefat tfoot td.check-column, .widefat thead td.check-column {
+   	padding: 9px 0 0 3px;
+}
+
+
+@media screen and (max-width: 782px) {
+	.makewebbetter_page_subscriptions_for_woocommerce_menu .updates-table tbody td.check-column, .widefat tbody th.check-column, .widefat tfoot td.check-column, .widefat thead td.check-column {
+   		padding: 5px 0 0 3px;
+	}
+	.makewebbetter_page_subscriptions_for_woocommerce_menu .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
+		margin-bottom: 5px;
+	}
+	.search-box {
+    	bottom: -30px !important;
+    	float: none;
+    	height: 90px;
+    	left: 0;
+    	margin-bottom: 20px;
+    	max-width: 98%;
+    	position: absolute;
+    	width: 100% !important;
+	}
+	.makewebbetter_page_subscriptions_for_woocommerce_menu .wp-list-table .toggle-row:focus:before {
+		box-shadow: none;
+		color: #4f94d4;
+	}
+	.makewebbetter_page_subscriptions_for_woocommerce_menu .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+		font-weight: 700;
+	}
+	.makewebbetter_page_subscriptions_for_woocommerce_menu td b {
+		font-weight: 400;
+	}
+	.makewebbetter_page_subscriptions_for_woocommerce_menu .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
+    	padding: 3px 8px 3px 52%;
+	}
+}
  @media only screen and (max-width: 767px) {
 	.mwb-sfw-gen-section-form .mwb-form-group__label {
  		flex: 0 0 100%;
- 		max-width: 100%;
  		margin-bottom: 15px;
+ 		max-width: 100%;
  	}
  	.mwb-sfw-gen-section-form .mwb-form-group__control {
  		flex: 0 0 100%;
@@ -183,6 +219,15 @@
  		margin-top: 10px;
  	}
 
- }
+}
+
+@media screen and (max-width: 480px) {
+	.sfw-section-wrap form .tablenav.bottom .displaying-num {
+		left: 5px;
+		text-align: left;
+		top: 5px;
+	}
+}
+
 
 
