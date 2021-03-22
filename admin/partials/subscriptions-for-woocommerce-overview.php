@@ -48,7 +48,6 @@ global $sfw_mwb_sfw_obj;
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Create Simple Products  As Subscription Product', 'subscriptions-for-woocommerce' ); ?> </h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'You can easily assign a subscription product label to simple product type by simply ticking a checkbox. The product will then be available as a subscription product.', 'subscriptions-for-woocommerce' ); ?>
-									 
 								</p>
 							</div>
 						</div>
@@ -81,7 +80,7 @@ global $sfw_mwb_sfw_obj;
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Offer Free Trial To Users With Both User and Admin Stop Subscription Option', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									
-									<?php esc_html_e( 'Provide free trials to the users and take payments after it is over for continued subscription plans. The flexibility of ending the subscription by the admin or the user anytime. Both can stop subscriptions of products or services in easy steps.', 'subscriptions-for-woocommerce' ); ?>    
+									<?php esc_html_e( 'Provide free trials to the users and take payments after it is over for continued subscription plans. The flexibility of ending the subscription by the admin or the user anytime. Both can stop subscriptions of products or services in easy steps.', 'subscriptions-for-woocommerce' ); ?>
  
 								</p>
 							</div>
@@ -103,7 +102,6 @@ global $sfw_mwb_sfw_obj;
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Subscription Details To User and Admin', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'View all details of the subscription plans of every user of your store. The user can see his subscription plan details and history', 'subscriptions-for-woocommerce' ); ?>
-									 
 								</p>
 							</div>
 						</div>
