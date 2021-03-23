@@ -5,15 +5,15 @@
  * @link       https://makewebbetter.com
  * @since      1.0.0
  *
- * @package     subscriptions_for_woocommerce
- * @subpackage  subscriptions_for_woocommerce/includes
+ * @package     Subscriptions_For_Woocommerce
+ * @subpackage  Subscriptions_For_Woocommerce/package
  */
 
 /**
  * The Onboarding-specific functionality of the plugin admin side.
  *
- * @package     subscriptions_for_woocommerce
- * @subpackage  subscriptions_for_woocommerce/includes
+ * @package     Subscriptions_For_Woocommerce
+ * @subpackage  Subscriptions_For_Woocommerce/package
  * @author      makewebbetter <webmaster@makewebbetter.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {

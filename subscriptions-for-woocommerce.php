@@ -13,7 +13,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Subscriptions For WooCommerce
- * Plugin URI:        https://makewebbetter.com/product/subscriptions-for-woocommerce/
+ * Plugin URI:        https://wordpress.org/plugins/search/subscriptions-for-woocommerce/
  * Description:       This plugin is use to provide the subscriptions option for any type of services
  * Version:           1.0.0
  * Author:            MakeWebBetter

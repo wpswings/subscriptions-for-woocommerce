@@ -280,7 +280,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'User Guide', 'subscriptions-for-woocommerce' ),
 				'description' => __( 'View the detailed guides and documentation to set up your plugin.', 'subscriptions-for-woocommerce' ),
 				'link-text' => __( 'VIEW', 'subscriptions-for-woocommerce' ),
-				'link' => 'https://makewebbetter.com/submit-query/',
+				'link' => 'https://docs.makewebbetter.com/subscriptions-for-woocommerce/',
 			),
 			array(
 				'title' => __( 'Free Support', 'subscriptions-for-woocommerce' ),
@@ -372,7 +372,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function mwb_sfw_custom_product_tab_for_subscription( $tabs ) {
 		$tabs['mwb_sfw_product'] = array(
-			'label'    => __( 'Subscriptions Settings', 'subscriptions-for-woocommerce' ),
+			'label'    => __( 'Subscription Settings', 'subscriptions-for-woocommerce' ),
 			'target'   => 'mwb_sfw_product_target_section',
 			'class'    => array(),
 			'priority' => 80,
@@ -436,7 +436,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				<?php } ?>
 				</select>
 		 <?php
-			$description_text = __( 'Choose the subscriptions time inteval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
+			$description_text = __( 'Choose the subscriptions time interval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
 			?>
 		</p>
@@ -451,7 +451,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				<?php } ?>
 				</select>
 		 <?php
-			$description_text = __( 'Choose the subscriptions expiry time inteval for the product "leave empty for unlimited"', 'subscriptions-for-woocommerce' );
+			$description_text = __( 'Choose the subscriptions expiry time interval for the product "leave empty for unlimited"', 'subscriptions-for-woocommerce' );
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
 			?>
 		</p>
@@ -465,7 +465,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<input type="number" class="short wc_input_price"  min="1" step="any" name="mwb_sfw_subscription_initial_signup_price" id="mwb_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $mwb_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e( 'Enter signup fee', 'subscriptions-for-woocommerce' ); ?>"> 
 			
 		 <?php
-			$description_text = __( 'Choose the subscriptions initial fee for product "leave empty for not any initial fee"', 'subscriptions-for-woocommerce' );
+			$description_text = __( 'Choose the subscriptions initial fee for the product "leave empty for no initial fee"', 'subscriptions-for-woocommerce' );
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
 			?>
 		</p>
@@ -480,7 +480,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				<?php } ?>
 				</select>
 		 <?php
-			$description_text = __( 'Choose the trial period for subscription"leave empty for not any trial period"', 'subscriptions-for-woocommerce' );
+			$description_text = __( 'Choose the trial period for subscription "leave empty for no trial period"', 'subscriptions-for-woocommerce' );
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
 			?>
 		</p>

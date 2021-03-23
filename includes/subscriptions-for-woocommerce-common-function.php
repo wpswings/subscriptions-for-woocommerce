@@ -3,8 +3,8 @@
  * Exit if accessed directly
  *
  * @since      1.0.0
- * @package    subscriptions-for-woocommerce
- * @subpackage subscriptions-for-woocommercee/admin/partials
+ * @package    Subscriptions_For_Woocommerce
+ * @subpackage Subscriptions_For_Woocommerce/admin/partials
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
