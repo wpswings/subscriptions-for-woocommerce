@@ -45,6 +45,8 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
+
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-1.png' ); ?>" alt="feature_one" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Create Simple Products  As Subscription Product', 'subscriptions-for-woocommerce' ); ?> </h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'You can easily assign a subscription product label to simple product type by simply ticking a checkbox. The product will then be available as a subscription product.', 'subscriptions-for-woocommerce' ); ?>
@@ -55,6 +57,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-2.png' ); ?>" alt="feature_two" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Offer Subscription Frequency and Expiry', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									
@@ -66,6 +69,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-3.png' ); ?>" alt="feature_three" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Charge Initial Fee with WooCommerce Payment Integrations', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									
@@ -77,6 +81,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-4.png' ); ?>" alt="feature_four" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Offer Free Trial To Users With Both User and Admin Stop Subscription Option', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									
@@ -89,6 +94,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-5.png' ); ?>" alt="feature_five" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Complete Subscription Reports', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'With a clean subscription report module, you will get complete subscription data of all users.Find important details like active and inactive subscriptions, next payment dates, product names, subscription expiry dates, and due dates of the respective plans.', 'subscriptions-for-woocommerce' ); ?>
@@ -99,6 +105,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-6.png' ); ?>" alt="feature_six" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Subscription Details To User and Admin', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'View all details of the subscription plans of every user of your store. The user can see his subscription plan details and history', 'subscriptions-for-woocommerce' ); ?>
