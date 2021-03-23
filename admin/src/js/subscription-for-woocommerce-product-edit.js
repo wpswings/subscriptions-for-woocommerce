@@ -52,14 +52,16 @@
 
         
         /*Expiry interval validation*/
-        $('#post').submit(function(e){
-           
+        $(document).on('submit','#post', function(e) {
+       
             var subscription_number = $('#mwb_sfw_subscription_number').val();
             var subscription_expiry = $('#mwb_sfw_subscription_expiry_number').val();
             if ( subscription_expiry != '' ) {
                 if ( subscription_expiry < subscription_number ) {
-                     alert( sfw_product_param.expiry_notice );
-                     e.preventDefault();
+                    alert( sfw_product_param.expiry_notice );
+                    jQuery('#publish').siblings('span').removeClass('is-active');
+                    $('#publish').removeClass('disabled');
+                    e.preventDefault();
                 }
             }
             

@@ -115,9 +115,6 @@ jQuery(document).ready(function($) {
 
     /* Close Popup */
     function mwb_sfw_hide_onboard_popup() {
-        // jQuery( '.mwb-on-boarding-wrapper-background' ).removeClass( 'onboard-popup-show' );
-		// jQuery( '.mwb-onboarding-section' ).hide();
-        // const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
         dialog.close();
         if (!jQuery('body').hasClass('mobile-device')) {
             jQuery('body').removeClass('mwb-on-boarding-wrapper-control');

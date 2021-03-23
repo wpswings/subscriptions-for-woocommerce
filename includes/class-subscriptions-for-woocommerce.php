@@ -135,7 +135,7 @@ class Subscriptions_For_Woocommerce {
 
 			// The class responsible for on-boarding steps for plugin.
 			if ( is_dir( plugin_dir_path( dirname( __FILE__ ) ) . 'onboarding' ) && ! class_exists( 'Subscriptions_For_Woocommerce_Onboarding_Steps' ) ) {
-				
+
 				require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-onboarding-steps.php';
 			}
 
@@ -571,6 +571,7 @@ class Subscriptions_For_Woocommerce {
 	public function mwb_sfw_plug_generate_html( $sfw_components = array() ) {
 		if ( is_array( $sfw_components ) && ! empty( $sfw_components ) ) {
 			foreach ( $sfw_components as $sfw_component ) {
+				$mwb_sfw_name = array_key_exists( 'name', $sfw_component ) ? $sfw_component['name'] : $sfw_component['id'];
 				switch ( $sfw_component['type'] ) {
 
 					case 'hidden':
@@ -595,7 +596,7 @@ class Subscriptions_For_Woocommerce {
 								</span>
 								<input 
 								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" 
-								name="<?php echo esc_attr( $sfw_component['id'] ); ?>"
+								name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 								type="<?php echo esc_attr( $sfw_component['type'] ); ?>"
 								value="<?php echo esc_attr( $sfw_component['value'] ); ?>"
@@ -626,7 +627,7 @@ class Subscriptions_For_Woocommerce {
 								</span>
 								<input 
 								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?> mwb-form__password" 
-								name="<?php echo esc_attr( $sfw_component['id'] ); ?>"
+								name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 								type="<?php echo esc_attr( $sfw_component['type'] ); ?>"
 								value="<?php echo esc_attr( $sfw_component['value'] ); ?>"
@@ -658,7 +659,7 @@ class Subscriptions_For_Woocommerce {
 									<span class="mdc-notched-outline__trailing"></span>
 								</span>
 								<span class="mdc-text-field__resizer">
-									<textarea class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" rows="2" cols="25" aria-label="Label" name="<?php echo esc_attr( $sfw_component['id'] ); ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"><?php echo esc_textarea( $sfw_component['value'] ); // WPCS: XSS ok. ?></textarea>
+									<textarea class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" rows="2" cols="25" aria-label="Label" name="<?php echo esc_attr( $mwb_sfw_name ); ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"><?php echo esc_textarea( $sfw_component['value'] ); // WPCS: XSS ok. ?></textarea>
 								</span>
 							</label>
 
@@ -677,7 +678,7 @@ class Subscriptions_For_Woocommerce {
 						</div>
 						<div class="mwb-form-group__control">
 							<div class="mwb-form-select">
-								<select name="<?php echo esc_attr( $sfw_component['id'] ); ?><?php echo ( 'multiselect' === $sfw_component['type'] ) ? '[]' : ''; ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mdl-textfield__input <?php echo esc_attr( $sfw_component['class'] ); ?>" <?php echo 'multiselect' === $sfw_component['type'] ? 'multiple="multiple"' : ''; ?> >
+								<select name="<?php echo esc_attr( $mwb_sfw_name ); ?><?php echo ( 'multiselect' === $sfw_component['type'] ) ? '[]' : ''; ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mdl-textfield__input <?php echo esc_attr( $sfw_component['class'] ); ?>" <?php echo 'multiselect' === $sfw_component['type'] ? 'multiple="multiple"' : ''; ?> >
 									<?php
 									foreach ( $sfw_component['options'] as $sfw_key => $sfw_val ) {
 										?>
@@ -714,7 +715,7 @@ class Subscriptions_For_Woocommerce {
 							<div class="mdc-form-field">
 								<div class="mdc-checkbox">
 									<input 
-									name="<?php echo esc_attr( $sfw_component['id'] ); ?>"
+									name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 									id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 									type="checkbox"
 									class="mdc-checkbox__native-control <?php echo esc_attr( isset( $sfw_component['class'] ) ? $sfw_component['class'] : '' ); ?>"
@@ -754,7 +755,7 @@ class Subscriptions_For_Woocommerce {
 									<div class="mdc-form-field">
 										<div class="mdc-radio">
 											<input
-											name="<?php echo esc_attr( $sfw_component['id'] ); ?>"
+											name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 											value="<?php echo esc_attr( $sfw_radio_key ); ?>"
 											type="radio"
 											class="mdc-radio__native-control <?php echo esc_attr( $sfw_component['class'] ); ?>"
@@ -790,7 +791,7 @@ class Subscriptions_For_Woocommerce {
 									<div class="mdc-switch__track"></div>
 									<div class="mdc-switch__thumb-underlay">
 										<div class="mdc-switch__thumb"></div>
-										<input name="<?php echo esc_html( $sfw_component['id'] ); ?>" type="checkbox" id="basic-switch" value="on" class="mdc-switch__native-control" role="switch" aria-checked="
+										<input name="<?php echo esc_attr( $mwb_sfw_name ); ?>" type="checkbox" id="basic-switch" value="on" class="mdc-switch__native-control" role="switch" aria-checked="
 																<?php
 																if ( 'on' == $sfw_component['value'] ) {
 																	echo 'true';
@@ -814,7 +815,7 @@ class Subscriptions_For_Woocommerce {
 					<div class="mwb-form-group">
 						<div class="mwb-form-group__label"></div>
 						<div class="mwb-form-group__control">
-							<button class="mdc-button mdc-button--raised" name="<?php echo esc_attr( $sfw_component['id'] ); ?>"
+							<button class="mdc-button mdc-button--raised" name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"> <span class="mdc-button__ripple"></span>
 								<span class="mdc-button__label"><?php echo esc_attr( $sfw_component['button_text'] ); ?></span>
 							</button>
@@ -829,7 +830,7 @@ class Subscriptions_For_Woocommerce {
 					<tr valign="top">
 						<td scope="row">
 							<input type="submit" class="button button-primary" 
-							name="<?php echo esc_attr( $sfw_component['id'] ); ?>"
+							name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 							id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 							value="<?php echo esc_attr( $sfw_component['button_text'] ); ?>"
 							/>

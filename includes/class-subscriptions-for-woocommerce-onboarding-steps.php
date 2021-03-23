@@ -5,15 +5,15 @@
  * @link       https://makewebbetter.com
  * @since      1.0.0
  *
- * @package     subscriptions_for_woocommerce
- * @subpackage  subscriptions_for_woocommerce/includes
+ * @package     Subscriptions_For_Woocommerce
+ * @subpackage  Subscriptions_For_Woocommerce/includes
  */
 
 /**
  * The Onboarding-specific functionality of the plugin admin side.
  *
- * @package     subscriptions_for_woocommerce
- * @subpackage  subscriptions_for_woocommerce/includes
+ * @package     Subscriptions_For_Woocommerce
+ * @subpackage  Subscriptions_For_Woocommerce/includes
  * @author      makewebbetter <webmaster@makewebbetter.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -110,8 +110,8 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	public function __construct() {
 		self::$mwb_sfw_store_name = get_bloginfo( 'name' );
 		self::$mwb_sfw_store_url = home_url();
-		self::$mwb_sfw_plugin_name = 'subscriptions-for-woocommerce';
-		self::$mwb_sfw_plugin_name_label = 'MWB STANDARD PLUGIN';
+		self::$mwb_sfw_plugin_name = 'Subscriptions For WooCommerce';
+		self::$mwb_sfw_plugin_name_label = 'Subscriptions For WooCommerce';
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'mwb_sfw_onboarding_enqueue_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'mwb_sfw_onboarding_enqueue_scripts' ) );
@@ -535,7 +535,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'type' => 'hidden',
 				'placeholder' => '',
 				'name' => 'org_plugin_name',
-				'value' => '',
+				'value' => self::$mwb_sfw_plugin_name,
 				'required' => '',
 				'class' => '',
 			),
@@ -679,7 +679,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		$url = 'submissions/v3/integration/submit/' . self::$mwb_sfw_portal_id . '/' . $form_id;
 
 		$headers = array(
-			'Content-Type: application/json',
+			'Content-Type' => 'application/json',
 		);
 
 		$form_data = json_encode(
@@ -705,37 +705,6 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		return $result;
 	}
 
-
-	/**
-	 * Handle Hubspot GET api calls.
-	 *
-	 * @since    1.0.0
-	 * @param   string $endpoint   Url where the form data posted.
-	 * @param   array  $headers    data that must be included in header for request.
-	 */
-	private function mwb_sfw_hic_get( $endpoint, $headers ) {
-
-		$url = $this->mwb_sfw_base_url . $endpoint;
-
-		$ch = @curl_init();
-		@curl_setopt( $ch, CURLOPT_POST, false );
-		@curl_setopt( $ch, CURLOPT_URL, $url );
-		@curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-		@curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		@curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-		@curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
-		$response = @curl_exec( $ch );
-		$status_code = @curl_getinfo( $ch, CURLINFO_HTTP_CODE );
-		$curl_errors = curl_error( $ch );
-		@curl_close( $ch );
-
-		return array(
-			'status_code' => $status_code,
-			'response' => $response,
-			'errors' => $curl_errors,
-		);
-	}
-
 	/**
 	 * Handle Hubspot POST api calls.
 	 *
@@ -747,24 +716,35 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	private function mwb_sfw_hic_post( $endpoint, $post_params, $headers ) {
 
 		$url = $this->mwb_sfw_base_url . $endpoint;
+		$request = array(
+			'httpversion' => '1.0',
+			'sslverify'   => false,
+			'method'      => 'POST',
+			'timeout'     => 45,
+			'headers'     => $headers,
+			'body'        => $post_params,
+			'cookies'     => array(),
+		);
 
-		$ch = @curl_init();
-		@curl_setopt( $ch, CURLOPT_POST, true );
-		@curl_setopt( $ch, CURLOPT_URL, $url );
-		@curl_setopt( $ch, CURLOPT_POSTFIELDS, $post_params );
-		@curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-		@curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		@curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-		@curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
-		$response = @curl_exec( $ch );
-		$status_code = @curl_getinfo( $ch, CURLINFO_HTTP_CODE );
-		$curl_errors = curl_error( $ch );
-		@curl_close( $ch );
+		$response = wp_remote_post( $url, $request );
+
+		if ( is_wp_error( $response ) ) {
+
+			$status_code = 500;
+			$response    = esc_html__( 'Unexpected Error Occured', 'subscriptions-for-woocommerce' );
+			$errors      = $response;
+
+		} else {
+
+			$status_code = wp_remote_retrieve_response_code( $response );
+			$response    = wp_remote_retrieve_body( $response );
+			$errors      = $response;
+		}
 
 		return array(
 			'status_code' => $status_code,
-			'response' => $response,
-			'errors' => $curl_errors,
+			'response'    => $response,
+			'errors'      => $errors,
 		);
 	}
 
