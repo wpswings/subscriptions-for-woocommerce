@@ -111,7 +111,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		self::$mwb_sfw_store_name = get_bloginfo( 'name' );
 		self::$mwb_sfw_store_url = home_url();
 		self::$mwb_sfw_plugin_name = 'subscriptions-for-woocommerce';
-		self::$mwb_sfw_plugin_name_label = 'MWB STANDARD PLUGIN';
+		self::$mwb_sfw_plugin_name_label = 'Subscriptions For WooCommerce';
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'mwb_sfw_onboarding_enqueue_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'mwb_sfw_onboarding_enqueue_scripts' ) );
@@ -170,7 +170,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		if ( $this->mwb_sfw_valid_page_screen_check() || $is_valid ) {
 			// comment the line of code Only when your plugin doesn't uses the Select2.
 			wp_enqueue_style( 'mwb-sfw-onboarding-select2-style', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), time(), 'all' );
-
+			
 			wp_enqueue_style( 'mwb-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), time(), 'all' );
 			wp_enqueue_style( 'mwb-sfw-meterial-css2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.css', array(), time(), 'all' );
 			wp_enqueue_style( 'mwb-sfw-meterial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.css', array(), time(), 'all' );
@@ -253,7 +253,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 */
 	public function mwb_sfw_skip_onboarding_popup() {
 
-		$get_skipped_timstamp = update_option( 'mwb_sfw_onboarding_data_skipped', time() );
+	 $get_skipped_timstamp = update_option( 'mwb_sfw_onboarding_data_skipped', time() );
 		echo json_encode( 'true' );
 		wp_die();
 	}
@@ -300,7 +300,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'title' => esc_html__( 'What is your monthly revenue?', 'subscriptions-for-woocommerce' ),
 				'type' => 'radio',
 				'description' => '',
-				'name' => 'monthly_revenue_',
+				'name' => 'sfw_monthly_revenue_',
 				'value' => '',
 				'multiple' => 'no',
 				'placeholder' => '',
@@ -318,7 +318,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'id' => 'mwb_sfw_industry_type',
 				'title' => esc_html__( 'What industry defines your business?', 'subscriptions-for-woocommerce' ),
 				'type' => 'select',
-				'name' => 'industry_type_',
+				'name' => 'sfw_industry_type_',
 				'value' => '',
 				'description' => '',
 				'multiple' => 'yes',
@@ -356,7 +356,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'title' => esc_html__( 'What is the best email address to contact you?', 'subscriptions-for-woocommerce' ),
 				'type' => 'email',
 				'description' => '',
-				'name' => 'email',
+				'name' => 'sfw-email',
 				'placeholder' => esc_html__( 'Email', 'subscriptions-for-woocommerce' ),
 				'value' => $current_user_email,
 				'required' => 'yes',
@@ -368,7 +368,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'title' => esc_html__( 'What is your contact number?', 'subscriptions-for-woocommerce' ),
 				'type' => 'text',
 				'description' => '',
-				'name' => 'phone',
+				'name' => 'sfw-phone',
 				'value' => '',
 				'placeholder' => esc_html__( 'Contact Number', 'subscriptions-for-woocommerce' ),
 				'required' => 'yes',
@@ -380,7 +380,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'title' => '',
 				'description' => '',
 				'type' => 'hidden',
-				'name' => 'company',
+				'name' => 'sfw-company',
 				'placeholder' => '',
 				'value' => self::$mwb_sfw_store_name,
 				'required' => '',
@@ -392,7 +392,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'title' => '',
 				'description' => '',
 				'type' => 'hidden',
-				'name' => 'website',
+				'name' => 'sfw-website',
 				'placeholder' => '',
 				'value' => self::$mwb_sfw_store_url,
 				'required' => '',
@@ -417,7 +417,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'description' => '',
 				'type' => 'hidden',
 				'placeholder' => '',
-				'name' => 'org_plugin_name',
+				'name' => 'sfw_org_plugin_name',
 				'value' => self::$mwb_sfw_plugin_name,
 				'required' => '',
 				'class' => '',
@@ -439,6 +439,9 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		if ( ! empty( $current_user ) ) {
 			$current_user_email = $current_user->user_email ? $current_user->user_email : '';
 		}
+
+		$store_name = get_bloginfo( 'name ' );
+		$store_url = get_home_url();
 
 		/**
 		 * Do not repeat id index.
@@ -464,7 +467,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'description' => '',
 				'type' => 'radio',
 				'placeholder' => '',
-				'name' => 'plugin_deactivation_reason',
+				'name' => 'mwb_sfw_plugin_deactivation_reason',
 				'value' => '',
 				'multiple' => 'no',
 				'required' => 'yes',
@@ -481,11 +484,10 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 
 			rand() => array(
 				'id' => 'mwb-sfw-deactivation-reason-text',
-				/* translators: %s: search term */
-				'title' => sprintf( esc_html__( ' Let us know why you are deactivating %s so we can improve the plugin', 'subscriptions-for-woocommerce' ), self::$mwb_sfw_plugin_name_label ),
+				'title' => esc_html__( 'Let us know why you are deactivating ' . self::$mwb_sfw_plugin_name_label . ' so we can improve the plugin', 'subscriptions-for-woocommerce' ),
 				'type' => 'textarea',
 				'description' => '',
-				'name' => 'deactivation_reason_text',
+				'name' => 'sfw_deactivation_reason_text',
 				'placeholder' => esc_html__( 'Reason', 'subscriptions-for-woocommerce' ),
 				'value' => '',
 				'required' => '',
@@ -497,7 +499,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'title' => '',
 				'description' => '',
 				'type' => 'hidden',
-				'name' => 'email',
+				'name' => 'sfw_email',
 				'placeholder' => '',
 				'value' => $current_user_email,
 				'required' => '',
@@ -510,7 +512,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'description' => '',
 				'type' => 'hidden',
 				'placeholder' => '',
-				'name' => 'company',
+				'name' => 'sfw_company',
 				'value' => self::$mwb_sfw_store_name,
 				'required' => '',
 				'class' => '',
@@ -521,7 +523,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'title' => '',
 				'description' => '',
 				'type' => 'hidden',
-				'name' => 'website',
+				'name' => 'sfw_website',
 				'placeholder' => '',
 				'value' => self::$mwb_sfw_store_url,
 				'required' => '',
@@ -534,7 +536,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'description' => '',
 				'type' => 'hidden',
 				'placeholder' => '',
-				'name' => 'org_plugin_name',
+				'name' => 'sfw_org_plugin_name',
 				'value' => '',
 				'required' => '',
 				'class' => '',
@@ -600,7 +602,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				array_filter(
 					$formatted_data,
 					function( $item ) {
-						return isset( $item['name'] ) && 'plugin_deactivation_reason' == $item['name'];
+						return isset( $item['name'] ) && 'mwb_sfw_plugin_deactivation_reason' == $item['name'];
 					}
 				)
 			);
@@ -615,7 +617,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 
 				unset( $formatted_data['mwb-sfw-show-counter'] );
 
-				$result = $this->mwb_sfw_handle_form_submission_for_hubspot( $formatted_data, $action_type );
+				$this->mwb_sfw_handle_form_submission_for_hubspot( $formatted_data, $action_type );
 			}
 		} catch ( Exception $e ) {
 
@@ -686,8 +688,8 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 			array(
 				'fields' => $form_data,
 				'context'  => array(
-					'pageUri' => self::$mwb_sfw_store_url,
-					'pageName' => self::$mwb_sfw_store_name,
+					'pageUri' => self::$store_url,
+					'pageName' => self::$store_name,
 					'ipAddress' => $this->mwb_sfw_get_client_ip(),
 				),
 			)
@@ -699,6 +701,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 			$result = json_decode( $response['response'], true );
 			$result['success'] = true;
 		} else {
+
 			$result = $response;
 		}
 
@@ -815,7 +818,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_show_onboarding_popup_check() {
-
+		
 		$mwb_sfw_is_already_sent = get_option( 'mwb_sfw_onboarding_data_sent', false );
 
 		// Already submitted the data.
