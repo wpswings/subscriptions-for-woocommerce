@@ -364,5 +364,25 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 	}
 }
 
+if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
+	/**
+	 * This function is used to get current screen.
+	 *
+	 * @name mwb_sfw_get_page_screen
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_get_page_screen() {
+
+		$mwb_screen_id = sanitize_title( __( 'MakeWebBetter', 'subscriptions-for-woocommerce' ) );
+		$screen_ids   = array(
+			'toplevel_page_' . $mwb_screen_id,
+			$mwb_screen_id . '_page_subscriptions_for_woocommerce_menu',
+		);
+
+		return apply_filters( 'mwb_sfw_page_screen', $screen_ids );
+	}
+}
+
+
 
 
