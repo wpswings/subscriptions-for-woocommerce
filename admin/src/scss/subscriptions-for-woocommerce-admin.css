@@ -6,6 +6,38 @@
 
  /* Overview page css */
 
+ .sfw-overview__icons {
+ 	display: flex;
+ 	flex-wrap: wrap;
+ 	justify-content: flex-end;
+ 	margin-bottom: 30px;
+ }
+
+ .sfw-overview__icons a {
+ 	display: block;
+ }
+
+ .sfw-overview__icons img {
+ 	max-width: 40px;
+ 	width: 100%;
+ 	display: block;
+ 	margin-right: 25px;
+ }
+
+ .sfw-overview__icons a:last-child img {
+ 	margin-right: 0;
+ }
+
+ .sfw-overview__banner-img {
+ 	margin-bottom: 50px;
+ 	padding: 0 10px;
+ }
+
+ .sfw-overview__banner-img img {
+ 	display: block;
+ 	width: 100%;
+ }
+
  .sfw-overview__content-description h1 {
  	color: #163062;
  	font-size: 56px;
@@ -29,10 +61,6 @@
 
  .sfw-overview__content-description p {
  	font-size: 16px;
- }
-
- .sfw-overview__wrapper {
- 	width: calc(100% - 20px);
  }
 
  .sfw-overview__features {
@@ -69,7 +97,7 @@
  .sfw-overview__content-description,.sfw-overview__keywords-wrap {
  	background-color: #ffffff;
  	margin-bottom: 30px;
- 	padding: 20px 40px;
+ 	padding: 20px 10px;
  	text-align: left;
  }
 
@@ -122,7 +150,7 @@
  }
 
  .sfw-overview__keywords-text {
-    text-align: left;
+    text-align: center;
 }
 
  .sfw-overview__keywords-text img {
@@ -154,11 +182,12 @@
  	.sfw-overview__keywords-item {
  		flex: 0 0 100%;
  		max-width: 100%;
+ 		margin-right: 0;
  	}
  }
- @media only screen and (max-width: 600px) {
+ @media only screen and (max-width: 767px) {
  	.sfw-overview__content-description,.sfw-overview__keywords-wrap {
- 		padding: 15px 15px;
+ 		padding: 15px 10px;
  	}
  	.sfw-overview__content-description h1 {
  		font-size: 30px;
@@ -169,6 +198,22 @@
  	.sfw-overview__features {
  		margin-top: 60px;
  	}
+ }
+
+ @media only screen and (max-width: 767px) {
+ 	.sfw-overview__content-description h1 {
+ 		font-size: 24px;
+ 	}
+ 	.sfw-overview__content h2 {
+ 		font-size: 20px;
+ 	}
+ 	.sfw-overview__content-description p {
+ 		font-size: 14px;
+ 	}
+ 	.sfw-overview__features-list li {
+ 		font-size: 14px;
+ 	}
+
  }
 
  /* Media Query Ends */
@@ -233,6 +278,9 @@
  	}
  	.mwb-sfw-gen-section-form .mwb-form-group__control .mdc-text-field-helper-line {
  		margin-top: 10px;
+ 	}
+ 	.sfw-overview__banner-img {
+ 		margin-bottom: 30px;
  	}
 
 }

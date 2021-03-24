@@ -21,6 +21,20 @@ global $sfw_mwb_sfw_obj;
 <div class="sfw-section-wrap">
 	<div class="mwb_sfw_table_wrapper mwb_sfw_overview-wrapper">
 		<div class="sfw-overview__wrapper">
+			<div class="sfw-overview__icons">
+				<a href="https://makewebbetter.com/contact-us/">
+					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/dial.svg' ); ?>" alt="contact-us-img">
+				</a>
+				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/">
+					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/doc.svg' ); ?>" alt="doc-img">
+				</a>
+				<a href="https://join.skype.com/invite/IKVeNkLHebpC">
+					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/skype.svg' ); ?>" alt="skype-img">
+				</a>
+			</div>
+			<div class="sfw-overview__banner-img">
+				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/subscription-overview-banner.png' ); ?>" alt="sfw-banner-img">
+			</div>
 			<div class="sfw-overview__content">
 				<div class="sfw-overview__content-description">
 					<h1><?php esc_html_e( 'Subscriptions for WooCommerce', 'subscriptions-for-woocommerce' ); ?></h1>
