@@ -415,8 +415,6 @@
 
 .select2-container--default .select2-results__option--highlighted[aria-selected],
 .select2-container--default .select2-results__option--highlighted[data-selected] {
-    /* background-color: #0073aa; */
-    /* color: #fff */
     background-color: #e2e2e2;
 }
 

@@ -77,7 +77,6 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 			'sfw-route/v1',
 			'/sfw-dummy-data/',
 			array(
-				// 'methods'  => 'POST',
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => array( $this, 'mwb_sfw_default_callback' ),
 				'permission_callback' => array( $this, 'mwb_sfw_default_permission_check' ),

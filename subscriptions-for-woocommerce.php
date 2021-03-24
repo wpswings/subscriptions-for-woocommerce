@@ -13,16 +13,18 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Subscriptions For WooCommerce
- * Plugin URI:        https://makewebbetter.com/product/subscriptions-for-woocommerce/
+ * Plugin URI:        https://wordpress.org/plugins/search/subscriptions-for-woocommerce/
  * Description:       This plugin is use to provide the subscriptions option for any type of services
  * Version:           1.0.0
- * Author:            makewebbetter
+ * Author:            MakeWebBetter
  * Author URI:        https://makewebbetter.com/
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
- * Requires at least: 4.6
- * Tested up to:      4.9.5
+ * Requires at least:        4.6
+ * Tested up to:             5.7
+ * WC requires at least:     4.0
+ * WC tested up to:          5.1
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -33,8 +35,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins') ) ) ) {
-	
+if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+
 	/**
 	 * Define plugin constants.
 	 *
@@ -171,17 +173,19 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		flush_rewrite_rules();
 	}
 
-	add_action('init','mwb_register_custom_order_types');
+	add_action( 'init', 'mwb_register_custom_order_types' );
 
 	/**
 	 * This function is used to create custom post type for subscription.
+	 *
 	 * @name mwb_register_custom_order_types
 	 * @since 1.0.0
 	 */
 	function mwb_register_custom_order_types() {
 		wc_register_order_type(
 			'mwb_subscriptions',
-			apply_filters( 'mwb_sfw_register_custom_order_types',
+			apply_filters(
+				'mwb_sfw_register_custom_order_types',
 				array(
 					'labels'                           => array(
 						'name'               => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
@@ -194,7 +198,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'view'               => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
 						'view_item'          => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
 						'search_items'       => __( 'Search Subscriptions', 'subscriptions-for-woocommerce' ),
-						'not_found'          => __('Not Found','subscriptions-for-woocommerce'),
+						'not_found'          => __( 'Not Found', 'subscriptions-for-woocommerce' ),
 						'not_found_in_trash' => __( 'No Subscriptions found in trash', 'subscriptions-for-woocommerce' ),
 						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
 						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
@@ -224,15 +228,16 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			)
 		);
 	}
-
-
-
-}
-else{
+} else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'mwb_sfw_activation_failure' );
 
-	// Deactivate this plugin.
+	/**
+	 * Deactivate this plugin.
+	 *
+	 * @name mwb_sfw_activation_failure
+	 * @since 1.0.0
+	 */
 	function mwb_sfw_activation_failure() {
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );
@@ -241,18 +246,23 @@ else{
 	// Add admin error notice.
 	add_action( 'admin_notices', 'mwb_sfw_activation_failure_admin_notice' );
 
-	// This function is used to display admin error notice when WooCommerce is not active.
+	/**
+	 * This function is used to display admin error notice when WooCommerce is not active.
+	 *
+	 * @name mwb_sfw_activation_failure_admin_notice
+	 * @since 1.0.0
+	 */
 	function mwb_sfw_activation_failure_admin_notice() {
 
 		// to hide Plugin activated notice.
 		unset( $_GET['activate'] );
 
-	    ?>
+		?>
 
-	    <div class="notice notice-error is-dismissible">
-	        <p><?php esc_html_e( 'WooCommerce is not activated, Please activate WooCommerce first to activate Subscriptions for Woocommerce.','subscriptions-for-woocommerce' ); ?></p>
-	    </div>
+		<div class="notice notice-error is-dismissible">
+			<p><?php esc_html_e( 'WooCommerce is not activated, Please activate WooCommerce first to activate Subscriptions for Woocommerce.', 'subscriptions-for-woocommerce' ); ?></p>
+		</div>
 
-	    <?php
+		<?php
 	}
 }

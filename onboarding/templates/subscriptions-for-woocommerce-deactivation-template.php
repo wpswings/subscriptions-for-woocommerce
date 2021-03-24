@@ -7,8 +7,8 @@
  * @link       https://makewebbetter.com
  * @since      1.0.0
  *
- * @package    Makewebbetter_Onboarding
- * @subpackage Makewebbetter_Onboarding/admin/onboarding
+ * @package    Subscriptions_For_Woocommerce
+ * @subpackage Subscriptions_For_Woocommerce/onboarding
  */
 
 global $pagenow, $sfw_mwb_sfw_obj;
@@ -32,7 +32,7 @@ $sfw_onboarding_form_deactivate = apply_filters( 'mwb_sfw_deactivation_form_fiel
 					<h3 class="mwb-sfw-on-boarding-heading mdc-dialog__title"></h3>
 					<p class="mwb-sfw-on-boarding-desc"><?php esc_html_e( 'May we have a little info about why you are deactivating?', 'subscriptions-for-woocommerce' ); ?></p>
 					<form action="#" method="post" class="mwb-sfw-on-boarding-form">
-						<?php 
+						<?php
 						$sfw_onboarding_deactive_html = $sfw_mwb_sfw_obj->mwb_sfw_plug_generate_html( $sfw_onboarding_form_deactivate );
 						echo esc_html( $sfw_onboarding_deactive_html );
 						?>
