@@ -72,7 +72,6 @@ global $sfw_mwb_sfw_obj;
 								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-3.png' ); ?>" alt="feature_three" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Charge Initial Fee with WooCommerce Payment Integrations', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
-									
 									<?php esc_html_e( 'You can charge extra payment in the form of an initial fee. Stripe payment integration of WooCommerce is supported with the subscription.', 'subscriptions-for-woocommerce' ); ?>
 								</p>
 							</div>
