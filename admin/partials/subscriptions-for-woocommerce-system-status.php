@@ -53,7 +53,7 @@ $sfw_php_details = is_array( $sfw_default_status['php'] ) && ! empty( $sfw_defau
 				<table class="mwb-sfw-table mdc-data-table__table mwb-table" id="mwb-sfw-sys">
 					<thead>
 						<tr>
-							<th class="mdc-data-table__header-cell"><?php esc_html_e( 'Sysytem Variables', 'subscriptions-for-woocommerce' ); ?></th>
+							<th class="mdc-data-table__header-cell"><?php esc_html_e( 'System Variables', 'subscriptions-for-woocommerce' ); ?></th>
 							<th class="mdc-data-table__header-cell"><?php esc_html_e( 'System Values', 'subscriptions-for-woocommerce' ); ?></th>
 						</tr>
 					</thead>

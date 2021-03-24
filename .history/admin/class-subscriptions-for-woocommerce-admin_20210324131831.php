@@ -60,7 +60,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @param    string $hook      The plugin page slug.
 	 */
 	public function sfw_admin_enqueue_styles( $hook ) {
-
+		
 		$mwb_sfw_screen_ids = mwb_sfw_get_page_screen();
 		$screen = get_current_screen();
 
@@ -93,7 +93,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @param    string $hook      The plugin page slug.
 	 */
 	public function sfw_admin_enqueue_scripts( $hook ) {
-
+		
 		$mwb_sfw_screen_ids = mwb_sfw_get_page_screen();
 		$screen = get_current_screen();
 

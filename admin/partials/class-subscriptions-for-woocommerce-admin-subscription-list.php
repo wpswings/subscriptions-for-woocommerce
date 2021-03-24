@@ -350,12 +350,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		<form method="post">
 		<input type="hidden" name="page" value="<?php esc_html_e( 'susbcription_list_table', 'subscriptions-for-woocommerce' ); ?>">
 		<?php wp_nonce_field( 'susbcription_list_table', 'susbcription_list_table' ); ?>
-		<?php
-		$mylisttable = new Subscriptions_For_Woocommerce_Admin_Subscription_List();
-		$mylisttable->prepare_items();
-		$mylisttable->search_box( __( 'Search Order', 'subscriptions-for-woocommerce' ), 'mwb-sfw-order' );
-		$mylisttable->display();
-		?>
+		<div class="mwb_sfw_list_table">
+			<?php
+			$mylisttable = new Subscriptions_For_Woocommerce_Admin_Subscription_List();
+			$mylisttable->prepare_items();
+			$mylisttable->search_box( __( 'Search Order', 'subscriptions-for-woocommerce' ), 'mwb-sfw-order' );
+			$mylisttable->display();
+			?>
+		<div>
 	</form>
 	<?php
 

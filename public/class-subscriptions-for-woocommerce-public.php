@@ -731,7 +731,8 @@ class Subscriptions_For_Woocommerce_Public {
 					return;
 				}
 				$mwb_subscription->save();
-				$mwb_notice = __( 'Payment Method Added Sucessfully' );
+
+				$mwb_notice = __( 'Payment Method Added Successfully','subscriptions-for-woocommerce' );
 				wc_add_notice( $mwb_notice );
 				wp_redirect( $result['redirect'] );
 				exit;

@@ -34,8 +34,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' 
 
 			$this->id          = 'mwb_sfw_expired_subscription';
 			$this->title       = __( 'Expired Subscription Email Notification', 'subscriptions-for-woocommerce' );
-			$this->description = __( 'This Email Notification Send if any susbcription is Expired', 'subscriptions-for-woocommerce' );
-
+			$this->description = __( 'This Email Notification Send if any subscription is Expired', 'subscriptions-for-woocommerce' );
 			$this->template_html  = 'mwb-sfw-expired-subscription-email-template.php';
 			$this->template_plain = 'plain/mwb-sfw-expired-subscription-email-template.php';
 			$this->template_base  = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'emails/templates/';

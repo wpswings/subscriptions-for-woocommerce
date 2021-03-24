@@ -79,7 +79,6 @@ if ( ! function_exists( 'mwb_sfw_susbcription_expiry_date' ) ) {
 		$expiry_interval = get_post_meta( $subscription_id, 'mwb_sfw_subscription_expiry_interval', true );
 
 		if ( isset( $expiry_number ) && ! empty( $expiry_number ) ) {
-
 			if ( 0 != $trial_end ) {
 				$mwb_sfw_expiry_date = mwb_sfw_susbcription_calculate_time( $trial_end, $expiry_number, $expiry_interval );
 			} else {
@@ -361,6 +360,25 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}
 		return $result;
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
+	/**
+	 * This function is used to get current screen.
+	 *
+	 * @name mwb_sfw_get_page_screen
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_get_page_screen() {
+
+		$mwb_screen_id = sanitize_title( __( 'MakeWebBetter', 'subscriptions-for-woocommerce' ) );
+		$screen_ids   = array(
+			'toplevel_page_' . $mwb_screen_id,
+			$mwb_screen_id . '_page_subscriptions_for_woocommerce_menu',
+		);
+
+		return apply_filters( 'mwb_sfw_page_screen', $screen_ids );
 	}
 }
 

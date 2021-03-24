@@ -199,7 +199,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'view_item'          => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
 						'search_items'       => __( 'Search Subscriptions', 'subscriptions-for-woocommerce' ),
 						'not_found'          => __( 'Not Found', 'subscriptions-for-woocommerce' ),
-						'not_found_in_trash' => __( 'No Subscriptions found in trash', 'subscriptions-for-woocommerce' ),
+						'not_found_in_trash' => __( 'No Subscriptions found in the trash', 'subscriptions-for-woocommerce' ),
 						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
 						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
 					),

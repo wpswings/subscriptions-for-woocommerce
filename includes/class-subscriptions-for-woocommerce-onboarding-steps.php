@@ -781,8 +781,9 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 */
 	public function mwb_sfw_valid_page_screen_check() {
 		$mwb_sfw_screen = get_current_screen();
+		$mwb_sfw_screen_ids = mwb_sfw_get_page_screen();
 		$mwb_sfw_is_flag = false;
-		if ( isset( $mwb_sfw_screen->id ) && 'makewebbetter_page_subscriptions_for_woocommerce_menu' == $mwb_sfw_screen->id ) {
+		if ( isset( $mwb_sfw_screen->id ) && in_array( $mwb_sfw_screen->id, $mwb_sfw_screen_ids ) ) {
 			$mwb_sfw_is_flag = true;
 		}
 

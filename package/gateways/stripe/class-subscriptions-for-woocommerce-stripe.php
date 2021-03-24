@@ -54,7 +54,8 @@ class Subscriptions_For_Woocommerce_Stripe {
 			if ( is_wp_error( $response ) ) {
 
 				// @todo handle the error part here/failure of order.
-				$error_message = sprintf( __( 'Something Went Wrong. Please see log file for more info.', 'subscriptions-for-woocommerce' ) );
+
+				$error_message = sprintf( __( 'Something Went Wrong. Please see the log file for more info.', 'subscriptions-for-woocommerce' ) );
 
 			} else {
 				if ( ! empty( $response->error ) ) {
