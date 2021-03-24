@@ -34,6 +34,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 
 			$this->id          = 'mwb_sfw_cancel_subscription';
 			$this->title       = __( 'Cancelled Subscription Email Notification', 'subscriptions-for-woocommerce' );
+
 			$this->description = __( 'This Email Notification Send if any subscription is Cancelled', 'subscriptions-for-woocommerce' );
 
 			$this->template_html  = 'mwb-sfw-cancel-subscription-email-template.php';
