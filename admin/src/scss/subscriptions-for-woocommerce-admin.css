@@ -191,7 +191,7 @@
 	.mwb_sfw_list_table table .updates-table tbody td.check-column, .widefat tbody th.check-column, .widefat tfoot td.check-column, .widefat thead td.check-column {
    		padding: 5px 0 0 3px;
 	}
-	.mwb_sfw_list_table table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
+	.mwb_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
 		margin-bottom: 5px;
 	}
 	.search-box {
@@ -204,17 +204,17 @@
     	position: absolute;
     	width: 100% !important;
 	}
-	.mwb_sfw_list_table table .wp-list-table .toggle-row:focus:before {
+	.mwb_sfw_list_table .wp-list-table .toggle-row:focus:before {
 		box-shadow: none;
 		color: #4f94d4;
 	}
-	.mwb_sfw_list_table table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+	.mwb_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
 		font-weight: 700;
 	}
 	.mwb_sfw_list_table table td b {
 		font-weight: 400;
 	}
-	.mwb_sfw_list_table table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
+	.mwb_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
     	padding: 3px 8px 3px 52%;
 	}
 }
