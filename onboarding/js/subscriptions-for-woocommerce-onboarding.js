@@ -60,7 +60,7 @@ jQuery(document).ready(function($) {
     });
 
     /* Skip and deactivate. */
-    jQuery(document).on('click', '.mwb-deactivation-no_thanks', function(e) {
+    jQuery(document).on('click', '.mwb-sfw-deactivation-no_thanks', function(e) {
 
         window.location.replace(deactivate_url);
         mwb_sfw_hide_onboard_popup();

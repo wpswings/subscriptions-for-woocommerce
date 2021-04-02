@@ -41,7 +41,7 @@ $sfw_onboarding_form_deactivate = apply_filters( 'mwb_sfw_deactivation_form_fiel
 								<input type="submit" class="mwb-sfw-on-boarding-submit mwb-on-boarding-verify mdc-button mdc-button--raised" value="Send Us">
 							</div>
 							<div class="mwb-sfw-on-boarding-form-no_thanks">
-								<a href="#" class="mwb-deactivation-no_thanks mdc-button"><?php esc_html_e( 'Skip and Deactivate Now', 'subscriptions-for-woocommerce' ); ?></a>
+								<a href="#" class="mwb-sfw-deactivation-no_thanks mdc-button"><?php esc_html_e( 'Skip and Deactivate Now', 'subscriptions-for-woocommerce' ); ?></a>
 							</div>
 						</div>
 					</form>
