@@ -19,7 +19,7 @@ if ( empty( $pagenow ) || 'plugins.php' != $pagenow ) {
 $sfw_onboarding_form_deactivate = apply_filters( 'mwb_sfw_deactivation_form_fields', array() );
 ?>
 <?php if ( ! empty( $sfw_onboarding_form_deactivate ) ) : ?>
-	<div class="mdc-dialog mdc-dialog--scrollable">
+	<div class="mdc-dialog mdc-dialog--scrollable mwb-sfw-on-boarding-dialog">
 		<div class="mwb-sfw-on-boarding-wrapper-background mdc-dialog__container">
 			<div class="mwb-sfw-on-boarding-wrapper mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
 				<div class="mdc-dialog__content">
@@ -41,7 +41,7 @@ $sfw_onboarding_form_deactivate = apply_filters( 'mwb_sfw_deactivation_form_fiel
 								<input type="submit" class="mwb-sfw-on-boarding-submit mwb-on-boarding-verify mdc-button mdc-button--raised" value="Send Us">
 							</div>
 							<div class="mwb-sfw-on-boarding-form-no_thanks">
-								<a href="#" class="mwb-deactivation-no_thanks mdc-button"><?php esc_html_e( 'Skip and Deactivate Now', 'subscriptions-for-woocommerce' ); ?></a>
+								<a href="#" class="mwb-sfw-deactivation-no_thanks mdc-button"><?php esc_html_e( 'Skip and Deactivate Now', 'subscriptions-for-woocommerce' ); ?></a>
 							</div>
 						</div>
 					</form>
