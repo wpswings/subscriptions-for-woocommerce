@@ -7,15 +7,16 @@
  * @link       https://makewebbetter.com
  * @since      1.0.0
  *
- * @package    Makewebbetter_Onboarding
- * @subpackage Makewebbetter_Onboarding/admin/onboarding
+ * @package    Subscriptions_For_Woocommerce
+ * @subpackage Subscriptions_For_Woocommerce/onboarding
  */
+
 global $sfw_mwb_sfw_obj;
 $sfw_onboarding_form_fields = apply_filters( 'mwb_sfw_on_boarding_form_fields', array() );
 ?>
 
 <?php if ( ! empty( $sfw_onboarding_form_fields ) ) : ?>
-	<div class="mdc-dialog mdc-dialog--scrollable">
+	<div class="mdc-dialog mdc-dialog--scrollable mwb-sfw-on-boarding-dialog">
 		<div class="mwb-sfw-on-boarding-wrapper-background mdc-dialog__container">
 			<div class="mwb-sfw-on-boarding-wrapper mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
 				<div class="mdc-dialog__content">
@@ -27,7 +28,7 @@ $sfw_onboarding_form_fields = apply_filters( 'mwb_sfw_on_boarding_form_fields', 
 					<p class="mwb-sfw-on-boarding-desc"><?php esc_html_e( 'We love making new friends! Subscribe below and we promise to keep you up-to-date with our latest new plugins, updates, awesome deals and a few special offers.', 'subscriptions-for-woocommerce' ); ?></p>
 
 					<form action="#" method="post" class="mwb-sfw-on-boarding-form">
-						<?php 
+						<?php
 						$sfw_onboarding_html = $sfw_mwb_sfw_obj->mwb_sfw_plug_generate_html( $sfw_onboarding_form_fields );
 						echo esc_html( $sfw_onboarding_html );
 						?>
