@@ -711,7 +711,14 @@ class Subscriptions_For_Woocommerce_Public {
 
 			// Update payment method.
 			$new_payment_method = isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '';
-
+			if ( empty( $new_payment_method ) ) {
+				
+				$mwb_notice = __( 'Please enable payment method','subscriptions-for-woocommerce' );
+				wc_add_notice( $mwb_notice,'error' );
+				$result_redirect = wc_get_endpoint_url( 'show-subscription', $mwb_subscription->get_id(), wc_get_page_permalink( 'myaccount' ) );
+				wp_redirect( $result_redirect );
+				exit;
+			}
 			$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
 
 			$available_gateways[ $new_payment_method ]->validate_fields();
