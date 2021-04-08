@@ -254,7 +254,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			array(
 				'title' => __( 'Allow Customer to cancel Subscription', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
-				'description'  => __( 'Enable this option to allow customer to cancel subscription.', 'subscriptions-for-woocommerce' ),
+				'description'  => __( 'Enable this option to allow the customer to cancel the subscription.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'mwb_sfw_cancel_subscription_for_customer',
 				'value' => 'on',
 				'checked' => ( 'on' === get_option( 'mwb_sfw_cancel_subscription_for_customer', '' ) ? 'on' : 'off' ),
