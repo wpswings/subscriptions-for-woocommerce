@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Subscriptions For WooCommerce 1.0.0\n"
-"POT-Creation-Date: 2021-04-06 12:11+0530\n"
-"PO-Revision-Date: 2021-04-06 12:11+0530\n"
+"POT-Creation-Date: 2021-04-08 13:13+0530\n"
+"PO-Revision-Date: 2021-04-08 13:13+0530\n"
 "Last-Translator: \n"
 "Language-Team: MakeWebBetter\n"
 "Language: en_US\n"
@@ -86,7 +86,7 @@ msgid "Allow Customer to cancel Subscription"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:257
-msgid "Enable this option to allow customer to cancel subscription."
+msgid "Enable this option to allow the customer to cancel the subscription."
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:266
@@ -661,7 +661,7 @@ msgid "Invalid Subscription."
 msgstr ""
 
 #: includes/subscriptions-for-woocommerce-common-function.php:360
-msgid "Invalid susbcription order."
+msgid "Invalid subscription order."
 msgstr ""
 
 #: onboarding/templates/subscriptions-for-woocommerce-deactivation-template.php:33
