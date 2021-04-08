@@ -168,6 +168,17 @@
  	font-size: 14px;
  }
 
+ .sfw-overview__features-list li:before {
+	position: absolute;
+	left: 5px;
+	top: 0;
+}
+
+.sfw-overview__features-list li {
+	position: relative;
+	padding-left: 20px;
+}
+
  /* Media Queries */
 
  @media only screen and (max-width: 1200px) and (min-width: 992px) {

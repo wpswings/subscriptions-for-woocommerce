@@ -357,7 +357,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
 		} elseif ( $mwb_subscription->get_order_key() !== $order_key ) {
 			$result = false;
-			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Invalid subscription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}
 		return $result;
 	}
