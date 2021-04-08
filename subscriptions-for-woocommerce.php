@@ -13,11 +13,11 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Subscriptions For WooCommerce
- * Plugin URI:        https://wordpress.org/plugins/search/subscriptions-for-woocommerce/
- * Description:       With Subscriptions for Woocommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
+ * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
+ * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
  * Version:           1.0.0
  * Author:            MakeWebBetter
- * Author URI:        https://makewebbetter.com/
+ * Author URI:        https://makewebbetter.com/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-backend
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
@@ -169,9 +169,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		if ( strpos( $file, 'subscriptions-for-woocommerce.php' ) !== false ) {
 
 			$row_meta = array(
-				'demo' => '<a target="_blank" href="https://demo.makewebbetter.com/subscriptions-for-woocommerce/"><i class="fas fa-laptop" style="margin-right:3px;"></i>' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
+				'demo' => '<a target="_blank" href="https://demo.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-demoORG-backend&utm_campaign=MWB-backend"><i class="fas fa-laptop" style="margin-right:3px;"></i>' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'docs'    => '<a target="_blank" href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/"><i class="far fa-file-alt" style="margin-right:3px;"></i>' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
+				'docs'    => '<a target="_blank" href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend"><i class="far fa-file-alt" style="margin-right:3px;"></i>' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 
 				'support' => '<a target="_blank" href="https://makewebbetter.com/submit-query/"><i class="fas fa-user-ninja" style="margin-right:3px;"></i>' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
 
