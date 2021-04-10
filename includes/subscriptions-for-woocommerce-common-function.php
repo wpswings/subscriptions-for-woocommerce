@@ -381,6 +381,66 @@ if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
 		return apply_filters( 'mwb_sfw_page_screen', $screen_ids );
 	}
 }
+if ( ! function_exists( 'mwb_sfw_subscription_period' ) ) {
+
+/**
+	 * This function is used to add subscription intervals.
+	 *
+	 * @name mwb_sfw_subscription_period
+	 * @since    1.0.0
+	 * @return   Array  $subscription_interval
+	 */
+	function mwb_sfw_subscription_period() {
+		$subscription_interval = array(
+			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
+			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
+			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
+		);
+		return apply_filters( 'mwb_sfw_subscription_intervals', $subscription_interval );
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_subscription_expiry_period' ) ) {
+
+	/**
+	 * This function is used to add subscription intervals for expiry.
+	 *
+	 * @name mwb_sfw_subscription_expiry_period
+	 * @since    1.0.0
+	 * @param   string $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
+	 */
+	function mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) {
+
+		$subscription_interval = array(
+			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
+			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
+			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
+		);
+		if ('day' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['week'] );
+			unset( $subscription_interval['month'] );
+			unset( $subscription_interval['year'] );
+		}
+		elseif ( 'week' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['month'] );
+			unset( $subscription_interval['year'] );
+
+		} elseif ( 'month' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['week'] );
+			unset( $subscription_interval['year'] );
+
+		} elseif ( 'year' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['week'] );
+			unset( $subscription_interval['month'] );
+		}
+		return apply_filters( 'mwb_sfw_subscription_expiry_intervals', $subscription_interval );
+	}
+}
 
 
 

@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $sfw_mwb_sfw_obj;
 $sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-overview';
 $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
+$sfw_default_tabs1 = $sfw_default_tabs;
 ?>
 <header>
 	<div class="mwb-header-container mwb-bg-white mwb-r-8">
@@ -63,7 +64,7 @@ $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 						// look for the path based on the tab id in the admin templates.
 				$sfw_tab_content_path = 'admin/partials/' . $sfw_active_tab . '.php';
 
-				$sfw_mwb_sfw_obj->mwb_sfw_plug_load_template( $sfw_tab_content_path );
+				$sfw_mwb_sfw_obj->mwb_sfw_plug_load_template( $sfw_tab_content_path,$sfw_active_tab,$sfw_default_tabs1 );
 
 				do_action( 'mwb_sfw_after_general_settings_form' );
 			?>
