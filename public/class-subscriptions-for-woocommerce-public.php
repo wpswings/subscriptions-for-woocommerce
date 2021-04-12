@@ -88,32 +88,11 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_price_html_subscription_product( $price, $product ) {
 
-		if ( ! $this->mwb_sfw_check_product_is_subscription( $product ) ) {
+		if ( ! mwb_sfw_check_product_is_subscription( $product ) ) {
 			return $price;
 		}
 		$price = $this->mwb_sfw_subscription_product_get_price_html( $price, $product );
 		return $price;
-	}
-
-	/**
-	 * This function is used to check product is subscription or not.
-	 *
-	 * @name mwb_sfw_check_product_is_subscription
-	 * @param object $product Product.
-	 * @since    1.0.0
-	 */
-	public function mwb_sfw_check_product_is_subscription( $product ) {
-
-		$mwb_is_subscription = false;
-		if ( is_object( $product ) ) {
-			$product_id = $product->get_id();
-			$mwb_subscription_product = get_post_meta( $product_id, '_mwb_sfw_product', true );
-			if ( 'yes' === $mwb_subscription_product ) {
-				$mwb_is_subscription = true;
-			}
-		}
-
-		return $mwb_is_subscription;
 	}
 
 	/**
@@ -273,7 +252,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_product_add_to_cart_text( $text, $product ) {
 
-		if ( $this->mwb_sfw_check_product_is_subscription( $product ) ) {
+		if ( mwb_sfw_check_product_is_subscription( $product ) ) {
 			$mwb_add_to_cart_text = $this->mwb_sfw_get_add_to_cart_button_text();
 
 			if ( isset( $mwb_add_to_cart_text ) && ! empty( $mwb_add_to_cart_text ) ) {
@@ -335,7 +314,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
-				if ( $this->mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$mwb_has_subscription = true;
 					break;
 				}
@@ -355,7 +334,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item_key ) {
 
-		if ( $this->mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+		if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 
 			if ( $cart_item['data']->is_on_sale() ) {
 				$price = $cart_item['data']->get_sale_price();
@@ -381,7 +360,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( isset( $cart ) && ! empty( $cart ) ) {
 
 			foreach ( $cart->cart_contents as $key => $cart_data ) {
-				if ( $this->mwb_sfw_check_product_is_subscription( $cart_data['data'] ) ) {
+				if ( mwb_sfw_check_product_is_subscription( $cart_data['data'] ) ) {
 					$product_id = $cart_data['data']->get_id();
 					$mwb_sfw_free_trial_number = $this->mwb_sfw_get_subscription_trial_period_number( $product_id );
 
@@ -445,7 +424,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 
-				if ( $this->mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 
 					if ( $cart_item['data']->is_on_sale() ) {
 						$price = $cart_item['data']->get_sale_price();
@@ -786,7 +765,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 		foreach ( WC()->cart->get_cart_contents() as $key => $values ) {
 
-			if ( $this->mwb_sfw_check_product_is_subscription( $values['data'] ) ) {
+			if ( mwb_sfw_check_product_is_subscription( $values['data'] ) ) {
 				$mwb_has_subscription = true;
 				break;
 			}
@@ -1058,7 +1037,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_hide_quantity_fields_for_subscription( $return, $product ) {
 
-		if ( mwb_sfw_check_plugin_enable() && $this->mwb_sfw_check_product_is_subscription( $product ) ) {
+		if ( mwb_sfw_check_plugin_enable() && mwb_sfw_check_product_is_subscription( $product ) ) {
 			$return = true;
 		}
 		return $return;

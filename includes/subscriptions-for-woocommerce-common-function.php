@@ -348,7 +348,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 	function mwb_sfw_validate_payment_request( $mwb_subscription ) {
 		$result = true;
 		$order_key = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
-		$mwb_nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+		$mwb_nonce = isset( $_GET['_mwb_sfw_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_mwb_sfw_nonce'] ) ) : '';
 		if ( wp_verify_nonce( $mwb_nonce ) === false ) {
 			$result = false;
 			wc_add_notice( __( 'There was an error with your request.', 'subscriptions-for-woocommerce' ), 'error' );
@@ -357,7 +357,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
 		} elseif ( $mwb_subscription->get_order_key() !== $order_key ) {
 			$result = false;
-			wc_add_notice( __( 'Invalid subscription order.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}
 		return $result;
 	}
@@ -379,6 +379,127 @@ if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
 		);
 
 		return apply_filters( 'mwb_sfw_page_screen', $screen_ids );
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_check_product_is_subscription' ) ) {
+	/**
+	 * This function is used to check susbcripton product.
+	 *
+	 * @name mwb_sfw_check_product_is_subscription
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_check_product_is_subscription( $product ) {
+
+		$mwb_is_subscription = false;
+		if ( is_object( $product ) ) {
+			$product_id = $product->get_id();
+			$mwb_subscription_product = get_post_meta( $product_id, '_mwb_sfw_product', true );
+			if ( 'yes' === $mwb_subscription_product ) {
+				$mwb_is_subscription = true;
+			}
+		}
+
+		return $mwb_is_subscription;
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_get_reccuring_time_interval_for_paypal' ) ) {
+	/**
+	 * This function is used to get time interval for paypal.
+	 *
+	 * @name mwb_sfw_get_reccuring_time_interval_for_paypal
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_get_reccuring_time_interval_for_paypal( $mwb_reccuring_period ) {
+		$mwb_converted_period = 'D';
+		switch ( strtolower( $mwb_reccuring_period ) ) {
+			case 'day':
+				$mwb_converted_period = 'D';
+				break;
+			case 'week':
+				$mwb_converted_period = 'W';
+				break;
+			case 'month':
+				$mwb_converted_period = 'M';
+				break;
+			case 'year':
+			default:
+				$mwb_converted_period = 'Y';
+				break;
+		}
+
+		return $mwb_converted_period;
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_create_renewal_order_for_paypal' ) ) { 
+	/**
+	 * This function is used to create renewal order.
+	 *
+	 * @name mwb_sfw_create_renewal_order_for_paypal
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_create_renewal_order_for_paypal( $subscription_id ) {
+		$mwb_renew_order = false;
+		if ( mwb_sfw_check_valid_subscription( $susbcription_id ) ) {
+			$current_time = current_time( 'timestamp' );
+			$subscription = get_post( $susbcription_id );
+			$parent_order_id  = $subscription->mwb_parent_order;
+			$parent_order = wc_get_order( $parent_order_id );
+			$billing_details = $parent_order->get_address( 'billing' );
+			$shipping_details = $parent_order->get_address( 'shipping' );
+
+			$new_status = 'wc-mwb_renewal';
+
+			$user_id = $subscription->mwb_customer_id;
+			$product_id = $subscription->product_id;
+			$product_qty = $subscription->product_qty;
+			$payment_method = $subscription->_payment_method;
+			$payment_method_title = $subscription->_payment_method_title;
+
+			$mwb_old_payment_method = get_post_meta( $parent_order_id, '_payment_method', true );
+			$args = array(
+				'status'      => $new_status,
+				'customer_id' => $user_id,
+			);
+			$mwb_new_order = wc_create_order( $args );
+
+			$_product = wc_get_product( $product_id );
+
+			$total = 0;
+			$tax_total = 0;
+			$variations = array();
+
+			$item_id = $mwb_new_order->add_product(
+				$_product,
+				$product_qty
+			);
+			$mwb_new_order->update_taxes();
+			$mwb_new_order->calculate_totals();
+			$order_id = $mwb_new_order->get_id();
+			update_post_meta( $order_id, '_payment_method', $payment_method );
+			update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
+
+			$mwb_new_order->set_address( $billing_details, 'billing' );
+			$mwb_new_order->set_address( $shipping_details, 'shipping' );
+			update_post_meta( $order_id, 'mwb_sfw_renewal_order', 'yes' );
+			update_post_meta( $order_id, 'mwb_sfw_subscription', $susbcription_id );
+			update_post_meta( $order_id, 'mwb_sfw_parent_order_id', $parent_order_id );
+
+			/*if trial period enable*/
+			if ( '' == $mwb_old_payment_method ) {
+				$parent_order_id = $susbcription_id;
+			}
+			/*update next payment date*/
+			$mwb_next_payment_date = mwb_sfw_next_payment_date( $susbcription_id, $current_time, 0 );
+
+			update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
+
+			return $mwb_new_order;
+		}
+
+		return $mwb_renew_order;
 	}
 }
 if ( ! function_exists( 'mwb_sfw_subscription_period' ) ) {
@@ -441,6 +562,3 @@ if ( ! function_exists( 'mwb_sfw_subscription_expiry_period' ) ) {
 		return apply_filters( 'mwb_sfw_subscription_expiry_intervals', $subscription_interval );
 	}
 }
-
-
-
