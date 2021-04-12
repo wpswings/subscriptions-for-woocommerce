@@ -44,7 +44,7 @@
             return new MDCSwitch(el);
         });
 
-        $('.mwb-password-hidden').click(function() {
+        $(document).on('click','.mwb-password-hidden', function() {
             if ($('.mwb-form__password').attr('type') == 'text') {
                 $('.mwb-form__password').attr('type', 'password');
             } else {

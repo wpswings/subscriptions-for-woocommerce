@@ -23,6 +23,7 @@ $sfw_genaral_settings = apply_filters( 'sfw_general_settings_array', array() );
 		<?php
 		$sfw_general_html = $sfw_mwb_sfw_obj->mwb_sfw_plug_generate_html( $sfw_genaral_settings );
 		echo esc_html( $sfw_general_html );
+		wp_nonce_field( 'mwb-sfw-general-nonce', 'mwb-sfw-general-nonce-field' );
 		?>
 	</div>
 </form>
