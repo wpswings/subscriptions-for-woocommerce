@@ -378,21 +378,25 @@ class Subscriptions_For_Woocommerce {
 		$sfw_default_tabs['subscriptions-for-woocommerce-overview'] = array(
 			'title'       => esc_html__( 'Overview', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-overview',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs['subscriptions-for-woocommerce-general'] = array(
 			'title'       => esc_html__( 'General Setting', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-general',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs', $sfw_default_tabs );
 
 		$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-table'] = array(
 			'title'       => esc_html__( 'Subscription Table', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-subscriptions-table',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-system-status',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs_end', $sfw_default_tabs );
 
@@ -406,31 +410,15 @@ class Subscriptions_For_Woocommerce {
 	 * @param string $path path file for inclusion.
 	 * @param array  $params parameters to pass to the file for access.
 	 */
-	public function mwb_sfw_plug_load_template( $path, $active_tabs, $params ) {
+	public function mwb_sfw_plug_load_template( $content_path ) {
 		
-		/*foreach ( $params as $sfw_tab_key => $sfw_default_tabs ) { 
-			if ( $active_tabs == $sfw_tab_key ) {
-				if ( isset( $sfw_default_tabs['file_path'] ) ) {
-					$file_path = $sfw_default_tabs['file_path'];
-				}
-			}
-		}
+		if ( file_exists( $content_path ) ) {
 
-		if ( isset( $file_path ) && !empty( $file_path ) ) {
-			$sfw_file_path = $file_path . $path;
-		}*/
-		//else{
-
-			$sfw_file_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . $path;
-		//}
-
-		if ( file_exists( $sfw_file_path ) ) {
-
-			include $sfw_file_path;
+			include $content_path;
 		} else {
 
 			/* translators: %s: file path */
-			$sfw_notice = sprintf( esc_html__( 'Unable to locate file at location "%s". Some features may not work properly in this plugin. Please contact us!', 'subscriptions-for-woocommerce' ), $sfw_file_path );
+			$sfw_notice = sprintf( esc_html__( 'Unable to locate file at location "%s". Some features may not work properly in this plugin. Please contact us!', 'subscriptions-for-woocommerce' ), $content_path );
 			$this->mwb_sfw_plug_admin_notice( $sfw_notice, 'error' );
 		}
 	}

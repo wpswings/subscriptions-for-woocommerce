@@ -104,7 +104,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function mwb_sfw_subscription_product_get_price_html( $price, $product ) {
-
+		
 		if ( is_object( $product ) ) {
 			$product_id = $product->get_id();
 			$mwb_sfw_subscription_number = get_post_meta( $product_id, 'mwb_sfw_subscription_number', true );
@@ -114,18 +114,22 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( isset( $mwb_sfw_subscription_expiry_number ) && ! empty( $mwb_sfw_subscription_expiry_number ) ) {
 				$mwb_sfw_subscription_expiry_interval = get_post_meta( $product_id, 'mwb_sfw_subscription_expiry_interval', true );
 
-				$mwb_price_html = $this->mwb_sfw_get_time_interval( $mwb_sfw_subscription_expiry_number, $mwb_sfw_subscription_expiry_interval );
-				$mwb_price = $this->mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
+				$mwb_price_html = mwb_sfw_get_time_interval( $mwb_sfw_subscription_expiry_number, $mwb_sfw_subscription_expiry_interval );
+				$mwb_price_html = apply_filters( 'mwb_sfw_show_time_interval', $mwb_price_html, $product_id );
+				$mwb_price = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 				/* translators: %s: search term */
-				$price .= sprintf( esc_html__( ' / %1$s  For %2$s ', 'subscriptions-for-woocommerce' ), $mwb_price, $mwb_price_html );
+				
+				$price .= '<span class="mwb_sfw_interval">' .sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price ). '</span>';
+
+				$price .= '<span class="mwb_sfw_expiry_interval">' .sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html ). '</span>';
 
 				$price = $this->mwb_sfw_get_free_trial_period_html( $product_id, $price );
 				$price = $this->mwb_sfw_get_initial_signup_fee_html( $product_id, $price );
 			} elseif ( isset( $mwb_sfw_subscription_number ) && ! empty( $mwb_sfw_subscription_number ) ) {
-				$mwb_price_html = $this->mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
+				$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 
 				/* translators: %s: search term */
-				$price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+				$price .= '<span class="mwb_sfw_interval">' .sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html ). '</span>';
 				$price = $this->mwb_sfw_get_free_trial_period_html( $product_id, $price );
 				$price = $this->mwb_sfw_get_initial_signup_fee_html( $product_id, $price );
 
@@ -134,75 +138,6 @@ class Subscriptions_For_Woocommerce_Public {
 		return $price;
 	}
 
-	/**
-	 * This function is used to show subscription price and interval on subscription product page.
-	 *
-	 * @name mwb_sfw_get_time_interval
-	 * @param int    $mwb_sfw_subscription_number Subscription inteval number.
-	 * @param string $mwb_sfw_subscription_interval Subscription Interval .
-	 * @since    1.0.0
-	 */
-	public function mwb_sfw_get_time_interval( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
-
-		$mwb_price_html = '';
-		switch ( $mwb_sfw_subscription_interval ) {
-			case 'day':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-			case 'week':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-			case 'month':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-			case 'year':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-		}
-		return $mwb_price_html;
-
-	}
-
-	/**
-	 * This function is used to show subscription price and interval on subscription product page.
-	 *
-	 * @name mwb_sfw_get_time_interval_for_price
-	 * @param int    $mwb_sfw_subscription_number Subscription inteval number.
-	 * @param string $mwb_sfw_subscription_interval Subscription Interval .
-	 * @since    1.0.0
-	 */
-	public function mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
-		$mwb_number = $mwb_sfw_subscription_number;
-		if ( 1 == $mwb_sfw_subscription_number ) {
-			$mwb_sfw_subscription_number = '';
-		}
-
-		$mwb_price_html = '';
-		switch ( $mwb_sfw_subscription_interval ) {
-			case 'day':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-			case 'week':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-			case 'month':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-			case 'year':
-				/* translators: %s: search term */
-				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
-				break;
-		}
-		return $mwb_price_html;
-
-	}
 
 
 	/**
@@ -217,7 +152,8 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'mwb_sfw_subscription_initial_signup_price', true );
 		if ( isset( $mwb_sfw_subscription_initial_signup_price ) && ! empty( $mwb_sfw_subscription_initial_signup_price ) ) {
 			/* translators: %s: search term */
-			$price .= sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $mwb_sfw_subscription_initial_signup_price ) );
+			
+			$price .= '<span class="mwb_sfw_signup_fee">' .sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $mwb_sfw_subscription_initial_signup_price ) ). '</span>';
 		}
 		return $price;
 	}
@@ -235,9 +171,10 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_sfw_subscription_free_trial_number = get_post_meta( $product_id, 'mwb_sfw_subscription_free_trial_number', true );
 		$mwb_sfw_subscription_free_trial_interval = get_post_meta( $product_id, 'mwb_sfw_subscription_free_trial_interval', true );
 		if ( isset( $mwb_sfw_subscription_free_trial_number ) && ! empty( $mwb_sfw_subscription_free_trial_number ) ) {
-			$mwb_price_html = $this->mwb_sfw_get_time_interval( $mwb_sfw_subscription_free_trial_number, $mwb_sfw_subscription_free_trial_interval );
+			$mwb_price_html = mwb_sfw_get_time_interval( $mwb_sfw_subscription_free_trial_number, $mwb_sfw_subscription_free_trial_interval );
 			/* translators: %s: search term */
-			$price .= sprintf( esc_html__( ' and %s  free trial', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+			
+			$price .= '<span class="mwb_sfw_free_trial">' .sprintf( esc_html__( ' and %s  free trial', 'subscriptions-for-woocommerce' ), $mwb_price_html ). '</span>';
 		}
 		return $price;
 	}
@@ -897,7 +834,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_recurring_total = get_post_meta( $subscription_id, 'mwb_recurring_total', true );
 		$mwb_recurring_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_number', true );
 		$mwb_recurring_interval = get_post_meta( $subscription_id, 'mwb_sfw_subscription_interval', true );
-		$mwb_price_html = $this->mwb_sfw_get_time_interval( $mwb_recurring_number, $mwb_recurring_interval );
+		$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
 		$price = wc_price( $mwb_recurring_total );
 		/* translators: %s: search term */
 		$price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );

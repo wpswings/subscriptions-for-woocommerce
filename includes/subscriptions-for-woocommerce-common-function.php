@@ -400,7 +400,7 @@ if ( ! function_exists( 'mwb_sfw_check_product_is_subscription' ) ) {
 			}
 		}
 
-		return $mwb_is_subscription;
+		return apply_filters( 'mwb_sfw_check_subscription_product_type', $mwb_is_subscription, $product );
 	}
 }
 
@@ -560,5 +560,80 @@ if ( ! function_exists( 'mwb_sfw_subscription_expiry_period' ) ) {
 			unset( $subscription_interval['month'] );
 		}
 		return apply_filters( 'mwb_sfw_subscription_expiry_intervals', $subscription_interval );
+	}
+}
+
+
+
+if ( ! function_exists( 'mwb_sfw_get_time_interval' ) ) {
+	/**
+	 * This function is used to show subscription price and interval on subscription product page.
+	 *
+	 * @name mwb_sfw_get_time_interval
+	 * @param int    $mwb_sfw_subscription_number Subscription inteval number.
+	 * @param string $mwb_sfw_subscription_interval Subscription Interval .
+	 * @since    1.0.0
+	 */
+	function mwb_sfw_get_time_interval( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
+
+		$mwb_price_html = '';
+		switch ( $mwb_sfw_subscription_interval ) {
+			case 'day':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'week':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'month':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'year':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+		}
+		return apply_filters( 'mwb_sfw_display_time_interval', $mwb_price_html );
+
+	}
+}
+if ( ! function_exists( 'mwb_sfw_get_time_interval_for_price' ) ) {
+	/**
+	 * This function is used to show subscription price and interval on subscription product page.
+	 *
+	 * @name mwb_sfw_get_time_interval_for_price
+	 * @param int    $mwb_sfw_subscription_number Subscription inteval number.
+	 * @param string $mwb_sfw_subscription_interval Subscription Interval .
+	 * @since    1.0.0
+	 */
+	function mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
+		$mwb_number = $mwb_sfw_subscription_number;
+		if ( 1 == $mwb_sfw_subscription_number ) {
+			$mwb_sfw_subscription_number = '';
+		}
+
+		$mwb_price_html = '';
+		switch ( $mwb_sfw_subscription_interval ) {
+			case 'day':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'week':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'month':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'year':
+				/* translators: %s: search term */
+				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+		}
+		return $mwb_price_html;
+
 	}
 }
