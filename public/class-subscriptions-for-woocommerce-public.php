@@ -396,8 +396,11 @@ class Subscriptions_For_Woocommerce_Public {
 							if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-process_checkout' ) ) {
 								return;
 							}
+							update_post_meta( $order_id, 'mwb_sfw_order_has_subscription', 'yes' );
+
 							if ( isset( $_POST['payment_method'] ) && 'stripe' == $_POST['payment_method'] ) {
-								if ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) {
+								if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) {
+										
 										$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
 										$stripe_class = $available_gateways['stripe'];
 
@@ -405,7 +408,6 @@ class Subscriptions_For_Woocommerce_Public {
 										return $payment_result;
 								}
 							}
-							update_post_meta( $order_id, 'mwb_sfw_order_has_subscription', 'yes' );
 						}
 					}
 				}
@@ -710,8 +712,10 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
+					$mwb_supported_method = array( 'stripe' );
+					$mwb_payment_method = apply_filters('mwb_sfw_supported_payment_gateway_for_woocommerce',$mwb_supported_method, $key );
 
-					if ( 'stripe' != $key ) {
+					if ( ! in_array( $key, $mwb_payment_method ) ) {
 						unset( $available_gateways[ $key ] );
 					}
 				}
@@ -914,13 +918,14 @@ class Subscriptions_For_Woocommerce_Public {
 	public function mwb_sfw_woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
 
 		$is_activated = get_post_meta( $order_id, 'mwb_sfw_subscription_activated', true );
+
 		if ( 'yes' == $is_activated ) {
 			return;
 		}
 		if ( $old_status != $new_status ) {
 			if ( 'completed' == $new_status || 'processing' == $new_status ) {
 				$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
-
+				
 				if ( 'yes' == $mwb_has_susbcription ) {
 					$args = array(
 						'numberposts' => -1,
@@ -940,6 +945,7 @@ class Subscriptions_For_Woocommerce_Public {
 						),
 					);
 					$mwb_subscriptions = get_posts( $args );
+
 					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 						foreach ( $mwb_subscriptions as $key => $value ) {
 							$current_time = current_time( 'timestamp' );
