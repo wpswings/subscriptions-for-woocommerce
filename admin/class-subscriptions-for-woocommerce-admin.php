@@ -624,6 +624,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					);
 					$mwb_new_order->update_taxes();
 					$mwb_new_order->calculate_totals();
+
 					$order_id = $mwb_new_order->get_id();
 					update_post_meta( $order_id, '_payment_method', $payment_method );
 					update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
@@ -634,6 +635,8 @@ class Subscriptions_For_Woocommerce_Admin {
 					update_post_meta( $order_id, 'mwb_sfw_subscription', $susbcription_id );
 					update_post_meta( $order_id, 'mwb_sfw_parent_order_id', $parent_order_id );
 
+					do_action('mwb_sfw_renewal_order_creation',$mwb_new_order, $susbcription_id );
+					
 					/*if trial period enable*/
 					if ( '' == $mwb_old_payment_method ) {
 						$parent_order_id = $susbcription_id;
@@ -646,6 +649,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					if ( 'stripe' == $payment_method ) {
 						$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
 						$result = $mwb_stripe->mwb_sfw_process_renewal_payment( $order_id, $parent_order_id );
+						do_action('mwb_sfw_cancel_failed_susbcription',$result, $order_id, $susbcription_id );
 						mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 					}
 				}
@@ -669,6 +673,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			if ( function_exists( 'as_next_scheduled_action' ) && false === as_next_scheduled_action( 'mwb_sfw_expired_renewal_subscription' ) ) {
 				as_schedule_recurring_action( strtotime( 'now' ), 3600, 'mwb_sfw_expired_renewal_subscription' );
 			}
+
+			do_action('mwb_sfw_create_admin_scheduler');
 		}
 	}
 
