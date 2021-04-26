@@ -637,3 +637,18 @@ if ( ! function_exists( 'mwb_sfw_get_time_interval_for_price' ) ) {
 
 	}
 }
+
+if ( ! function_exists( 'mwb_sfw_pro_active' ) ) {
+	/**
+	 * This function is used to check if premium plugin is activated.
+	 *
+	 * @since 1.0.0
+	 * @name mwb_sfw_pro_active
+	 * @return boolean
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
+	function mwb_sfw_pro_active() {
+		return apply_filters( 'mwb_wsp_pro_active', false );
+	}
+}

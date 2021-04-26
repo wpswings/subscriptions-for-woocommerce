@@ -105,7 +105,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 			case 'subscription_id':
 				$actions = array();
-				if ( 'active' == $item['status'] ) {
+				$mwb_sfw_status = array('active');
+				$mwb_sfw_status = apply_filters('mwb_sfw_status_array',$mwb_sfw_status);
+				if ( in_array( $item['status'], $mwb_sfw_status) ) {
 					$actions = $this->mwb_sfw_cancel_url( $item['subscription_id'], $item['status'] );
 				}
 				$actions = apply_filters( 'mwb_sfw_add_action_details', $actions, $item['subscription_id'] );

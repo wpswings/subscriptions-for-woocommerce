@@ -297,7 +297,7 @@ class Subscriptions_For_Woocommerce {
 		$emails['mwb_sfw_cancel_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
 		$emails['mwb_sfw_expired_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
 
-		return $emails;
+		return apply_filters('mwb_sfw_email_classes', $emails );
 	}
 	/**
 	 * Register all of the hooks related to the api functionality
