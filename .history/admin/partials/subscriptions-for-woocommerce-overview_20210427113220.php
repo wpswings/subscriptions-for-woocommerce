@@ -33,7 +33,7 @@ global $sfw_mwb_sfw_obj;
 				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/subscription-overview-banner.png' ); ?>" alt="sfw-banner-img">
 			</div>
 			<div class="mwb_sfw_video_wrapper">
-				<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			</div>
 			<div class="sfw-overview__content">
 				<div class="sfw-overview__content-description">
