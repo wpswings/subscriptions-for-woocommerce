@@ -39,9 +39,6 @@ global $sfw_mwb_sfw_obj;
 					<p> <?php esc_html_e( 'Subscriptions for WooCommerce Plugin allows the WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store.', 'subscriptions-for-woocommerce' ); ?>
 					</p>
 					<div class="sfw-overview__features">
-					<div class="mwb_sfw_video_wrapper">
-						<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-					</div>
 						<h2><?php esc_html_e( 'What does Subscriptions for WooCommerce do?', 'subscriptions-for-woocommerce' ); ?>
 					</h2>
 					<p><?php esc_html_e( 'With our Subscriptions for WooCommerce Plugin, you can:', 'subscriptions-for-woocommerce' ); ?></p>
@@ -52,6 +49,7 @@ global $sfw_mwb_sfw_obj;
 						<li><?php esc_html_e( 'Convert simple product selling WooCommerce store to subscription-based', 'subscriptions-for-woocommerce' ); ?></li>
 						<li><?php esc_html_e( 'Give free trials to your customers and loyalize them', 'subscriptions-for-woocommerce' ); ?></li>
 					</ul>
+					<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 					</div>
 				</div>
 				<div class="sfw-overview__keywords-wrap">
