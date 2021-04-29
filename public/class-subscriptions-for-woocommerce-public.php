@@ -385,6 +385,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$mwb_recurring_data['line_tax'] = $cart_item['line_tax'];
 
 					$mwb_recurring_data = apply_filters( 'mwb_sfw_cart_data_for_susbcription', $mwb_recurring_data, $cart_item );
+					mwb_sfw_delete_failed_subscription( $order->get_id() );
 					$subscription = $this->mwb_sfw_create_subscription( $order, $posted_data, $mwb_recurring_data );
 					if ( is_wp_error( $subscription ) ) {
 						throw new Exception( $subscription->get_error_message() );
@@ -984,6 +985,26 @@ class Subscriptions_For_Woocommerce_Public {
 			$return = true;
 		}
 		return $return;
+	}
+
+	/**
+	 * This function is used to restrict guest user susbcription product.
+	 *
+	 * @name mwb_sfw_woocommerce_add_to_cart_validation
+	 * @param bool   $validate validate.
+	 * @param int $product_id product_id.
+	 * @param int $quantity quantity.
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_woocommerce_add_to_cart_validation( $validate, $product_id, $quantity ) {	
+		
+		$product = wc_get_product( $product_id );
+		if ( ! is_user_logged_in() && mwb_sfw_check_product_is_subscription( $product ) ) {
+			$validate = false;
+			wc_add_notice( __( 'You must Logged in to purchase subscription product', 'subscriptions-for-woocommerce' ), 'error' );
+			return $validate;
+		}
+		return $validate;
 	}
 
 }

@@ -116,17 +116,17 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$html = '<a href="' . esc_url( get_edit_post_link( $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
 				return $html;
 			case 'status':
-				return '<b>' . $item[ $column_name ] . '</b>';
+				return $item[ $column_name ];
 			case 'product_name':
-				return '<b>' . $item[ $column_name ] . '</b>';
+				return $item[ $column_name ];
 			case 'recurring_amount':
-				return '<b>' . $item[ $column_name ] . '</b>';
+				return $item[ $column_name ];
 			case 'user_name':
-				return '<b>' . $item[ $column_name ] . '</b>';
+				return $item[ $column_name ];
 			case 'next_payment_date':
-				return '<b>' . $item[ $column_name ] . '</b>';
+				return $item[ $column_name ];
 			case 'subscriptions_expiry_date':
-				return '<b>' . $item[ $column_name ] . '</b>';
+				return $item[ $column_name ];
 			default:
 				return false;
 		}
@@ -154,6 +154,10 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					}
 				}
 			}
+			?>
+			<div class="notice notice-success is-dismissible"> 
+				<p><strong><?php esc_html_e('Subscriptions Deleted Successfully','subscriptions-for-woocommerce'); ?></strong></p>
+			</div><?php
 		}
 		do_action( 'mwb_sfw_process_bulk_reset_option', $this->current_action(), $_POST );
 
@@ -345,8 +349,32 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		$this->mwb_total_count = $total_count;
 		return $mwb_subscriptions_data;
 	}
+
+	/**
+	 * Create the extra table option.
+	 *
+	 * @name extra_tablenav.
+	 * @since      1.0.0
+	 * @param string $which.
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
+	function extra_tablenav( $which ) {
+		do_action('mwb_sfw_extra_tablenav_html', $which );
+	}
+	
 }
 
+if ( isset( $_GET['mwb_subscription_view_renewal_order'] ) && isset( $_GET['mwb_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+			$mwb_status   = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_view_renewal_order'] ) );
+			$subscription_id = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_id'] ) );
+			if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
+				global $mwb_subscription_id;
+				$mwb_subscription_id = $subscription_id;
+				require_once WOOCOMMERCE_SUBSCRIPTIONS_PRO_DIR_PATH . 'admin/partials/class-woocommerce-subscriptions-pro-view-renewal-list.php';
+			}
+		}
+else{
 ?>
 	<h3 class="wp-heading-inline" id="mwb_sfw_heading"><?php esc_html_e( 'Subscriptions', 'subscriptions-for-woocommerce' ); ?></h3>
 		<form method="post">
@@ -359,8 +387,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$mylisttable->search_box( __( 'Search Order', 'subscriptions-for-woocommerce' ), 'mwb-sfw-order' );
 			$mylisttable->display();
 			?>
-		<div>
+		</div>
 	</form>
 	<?php
-
-
+}

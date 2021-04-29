@@ -652,3 +652,44 @@ if ( ! function_exists( 'mwb_sfw_pro_active' ) ) {
 		return apply_filters( 'mwb_wsp_pro_active', false );
 	}
 }
+
+if ( ! function_exists( 'mwb_sfw_delete_failed_subscription' ) ) {
+	/**
+	 * This function is used to check if premium plugin is activated.
+	 *
+	 * @since 1.0.0
+	 * @name mwb_sfw_delete_failed_subscription
+	 * @return boolean
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
+	function mwb_sfw_delete_failed_subscription( $order_id ) {
+		if ( isset( $order_id ) && !empty( $order_id ) ) {
+			$args = array(
+					'numberposts' => -1,
+					'post_type'   => 'mwb_subscriptions',
+					'post_status'   => 'wc-mwb_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'mwb_parent_order',
+							'value' => $order_id,
+						),
+						array(
+							'key'   => 'mwb_subscription_status',
+							'value' => 'pending',
+						),
+
+					),
+				);
+				$mwb_subscriptions = get_posts( $args );
+
+				if ( !empty( $mwb_subscriptions) && is_array( $mwb_subscriptions ) ) {
+					foreach ( $mwb_subscriptions as $key => $value ) {
+						wp_delete_post( $value->ID,true );
+					}
+				}
+				
+		}
+	}
+}
