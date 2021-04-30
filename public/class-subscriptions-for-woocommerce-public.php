@@ -995,9 +995,9 @@ class Subscriptions_For_Woocommerce_Public {
 	public function mwb_sfw_woocommerce_add_to_cart_validation( $validate, $product_id, $quantity ) {	
 		
 		$product = wc_get_product( $product_id );
-		if ( ! is_user_logged_in() && mwb_sfw_check_product_is_subscription( $product ) ) {
+		if ( $this->mwb_sfw_check_cart_has_subscription_product() && mwb_sfw_check_product_is_subscription( $product ) ) {
 			$validate = false;
-			wc_add_notice( __( 'You must Logged in to purchase subscription product', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'You can not add multiple subscription product in cart', 'subscriptions-for-woocommerce' ), 'error' );
 			return $validate;
 		}
 		return $validate;
