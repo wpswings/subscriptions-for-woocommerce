@@ -332,7 +332,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 				$mwb_customer_id   = get_post_meta( $value->ID, 'mwb_customer_id', true );
 				$user = get_user_by( 'id', $mwb_customer_id );
-				$user_nicename = $user->user_nicename;
+
+				$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
 				$mwb_subscriptions_data[] = array(
 					'subscription_id'           => $value->ID,
 					'parent_order_id'           => $parent_order_id,

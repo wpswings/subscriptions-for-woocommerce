@@ -511,9 +511,9 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( is_wp_error( $subscription_id ) ) {
 				return $subscription_id;
 			}
-			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', 0 );
-			update_post_meta( $subscription_id, 'mwb_susbcription_end', 0 );
-			update_post_meta( $subscription_id, 'mwb_next_payment_date', 0 );
+			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', '' );
+			update_post_meta( $subscription_id, 'mwb_susbcription_end', '' );
+			update_post_meta( $subscription_id, 'mwb_next_payment_date', '' );
 			update_post_meta( $subscription_id, '_order_key', wc_generate_order_key() );
 
 			/*if free trial*/

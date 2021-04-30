@@ -394,10 +394,10 @@ class Subscriptions_For_Woocommerce_Public {
 						if ( 'yes' != $mwb_has_susbcription ) {
 							
 							update_post_meta( $order_id, 'mwb_sfw_order_has_subscription', 'yes' );
-							 
+							 // phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( isset( $_POST['payment_method'] ) && 'stripe' == $_POST['payment_method'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-								if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-										 
+								if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) {
+										
 										$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
 										$stripe_class = $available_gateways['stripe'];
 
@@ -511,9 +511,9 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( is_wp_error( $subscription_id ) ) {
 				return $subscription_id;
 			}
-			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', 0 );
-			update_post_meta( $subscription_id, 'mwb_susbcription_end', 0 );
-			update_post_meta( $subscription_id, 'mwb_next_payment_date', 0 );
+			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', '' );
+			update_post_meta( $subscription_id, 'mwb_susbcription_end', '' );
+			update_post_meta( $subscription_id, 'mwb_next_payment_date', '' );
 			update_post_meta( $subscription_id, '_order_key', wc_generate_order_key() );
 
 			/*if free trial*/

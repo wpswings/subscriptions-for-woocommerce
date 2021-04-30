@@ -652,6 +652,9 @@ class Subscriptions_For_Woocommerce_Admin {
 						do_action('mwb_sfw_cancel_failed_susbcription',$result, $order_id, $susbcription_id );
 						mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 					}
+					
+					do_action('mwb_sfw_other_payment_gateway_renewal',$mwb_new_order, $susbcription_id,$payment_method );
+
 				}
 			}
 		}
