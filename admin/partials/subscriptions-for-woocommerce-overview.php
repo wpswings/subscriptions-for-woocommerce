@@ -37,6 +37,9 @@ global $sfw_mwb_sfw_obj;
 					<h1><?php esc_html_e( 'Subscriptions for WooCommerce', 'subscriptions-for-woocommerce' ); ?></h1>
 					<p> <?php esc_html_e( 'Subscriptions for WooCommerce Plugin allows the WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store.', 'subscriptions-for-woocommerce' ); ?>
 					</p>
+					<div class="mwb_sfw_video_wrapper">
+						<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
 					<div class="sfw-overview__features">
 						<h2><?php esc_html_e( 'What does Subscriptions for WooCommerce do?', 'subscriptions-for-woocommerce' ); ?>
 					</h2>
