@@ -387,6 +387,7 @@ if ( ! function_exists( 'mwb_sfw_check_product_is_subscription' ) ) {
 	 * This function is used to check susbcripton product.
 	 *
 	 * @name mwb_sfw_check_product_is_subscription
+	 * @param Object $product product.
 	 * @since 1.0.0
 	 */
 	function mwb_sfw_check_product_is_subscription( $product ) {
@@ -409,6 +410,7 @@ if ( ! function_exists( 'mwb_sfw_get_reccuring_time_interval_for_paypal' ) ) {
 	 * This function is used to get time interval for paypal.
 	 *
 	 * @name mwb_sfw_get_reccuring_time_interval_for_paypal
+	 * @param string $mwb_reccuring_period mwb_reccuring_period.
 	 * @since 1.0.0
 	 */
 	function mwb_sfw_get_reccuring_time_interval_for_paypal( $mwb_reccuring_period ) {
@@ -433,11 +435,12 @@ if ( ! function_exists( 'mwb_sfw_get_reccuring_time_interval_for_paypal' ) ) {
 	}
 }
 
-if ( ! function_exists( 'mwb_sfw_create_renewal_order_for_paypal' ) ) { 
+if ( ! function_exists( 'mwb_sfw_create_renewal_order_for_paypal' ) ) {
 	/**
 	 * This function is used to create renewal order.
 	 *
 	 * @name mwb_sfw_create_renewal_order_for_paypal
+	 * @param int $subscription_id subscription_id.
 	 * @since 1.0.0
 	 */
 	function mwb_sfw_create_renewal_order_for_paypal( $subscription_id ) {
@@ -504,7 +507,7 @@ if ( ! function_exists( 'mwb_sfw_create_renewal_order_for_paypal' ) ) {
 }
 if ( ! function_exists( 'mwb_sfw_subscription_period' ) ) {
 
-/**
+	/**
 	 * This function is used to add subscription intervals.
 	 *
 	 * @name mwb_sfw_subscription_period
@@ -539,12 +542,11 @@ if ( ! function_exists( 'mwb_sfw_subscription_expiry_period' ) ) {
 			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
 			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
 		);
-		if ('day' == $mwb_sfw_subscription_interval ) {
+		if ( 'day' == $mwb_sfw_subscription_interval ) {
 			unset( $subscription_interval['week'] );
 			unset( $subscription_interval['month'] );
 			unset( $subscription_interval['year'] );
-		}
-		elseif ( 'week' == $mwb_sfw_subscription_interval ) {
+		} elseif ( 'week' == $mwb_sfw_subscription_interval ) {
 			unset( $subscription_interval['day'] );
 			unset( $subscription_interval['month'] );
 			unset( $subscription_interval['year'] );
@@ -655,41 +657,40 @@ if ( ! function_exists( 'mwb_sfw_pro_active' ) ) {
 
 if ( ! function_exists( 'mwb_sfw_delete_failed_subscription' ) ) {
 	/**
-	 * This function is used to check if premium plugin is activated.
+	 * This function is used to delete faild subscription.
 	 *
 	 * @since 1.0.0
 	 * @name mwb_sfw_delete_failed_subscription
-	 * @return boolean
+	 * @param int $order_id order_id.
 	 * @author makewebbetter<ticket@makewebbetter.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	function mwb_sfw_delete_failed_subscription( $order_id ) {
-		if ( isset( $order_id ) && !empty( $order_id ) ) {
+		if ( isset( $order_id ) && ! empty( $order_id ) ) {
 			$args = array(
-					'numberposts' => -1,
-					'post_type'   => 'mwb_subscriptions',
-					'post_status'   => 'wc-mwb_renewal',
-					'meta_query' => array(
-						'relation' => 'AND',
-						array(
-							'key'   => 'mwb_parent_order',
-							'value' => $order_id,
-						),
-						array(
-							'key'   => 'mwb_subscription_status',
-							'value' => 'pending',
-						),
-
+				'numberposts' => -1,
+				'post_type'   => 'mwb_subscriptions',
+				'post_status'   => 'wc-mwb_renewal',
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key'   => 'mwb_parent_order',
+						'value' => $order_id,
 					),
-				);
+					array(
+						'key'   => 'mwb_subscription_status',
+						'value' => 'pending',
+					),
+
+				),
+			);
 				$mwb_subscriptions = get_posts( $args );
 
-				if ( !empty( $mwb_subscriptions) && is_array( $mwb_subscriptions ) ) {
-					foreach ( $mwb_subscriptions as $key => $value ) {
-						wp_delete_post( $value->ID,true );
-					}
+			if ( ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+				foreach ( $mwb_subscriptions as $key => $value ) {
+					wp_delete_post( $value->ID, true );
 				}
-				
+			}
 		}
 	}
 }

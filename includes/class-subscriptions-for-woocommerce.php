@@ -299,7 +299,7 @@ class Subscriptions_For_Woocommerce {
 		$emails['mwb_sfw_cancel_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
 		$emails['mwb_sfw_expired_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
 
-		return apply_filters('mwb_sfw_email_classes', $emails );
+		return apply_filters( 'mwb_sfw_email_classes', $emails );
 	}
 	/**
 	 * Register all of the hooks related to the api functionality
@@ -409,11 +409,10 @@ class Subscriptions_For_Woocommerce {
 	 * Locate and load appropriate tempate.
 	 *
 	 * @since   1.0.0
-	 * @param string $path path file for inclusion.
-	 * @param array  $params parameters to pass to the file for access.
+	 * @param string $content_path content_path file for inclusion.
 	 */
 	public function mwb_sfw_plug_load_template( $content_path ) {
-		
+
 		if ( file_exists( $content_path ) ) {
 
 			include $content_path;
