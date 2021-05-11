@@ -385,11 +385,6 @@ class Subscriptions_For_Woocommerce_Public {
 					$mwb_recurring_data['line_tax'] = $cart_item['line_tax'];
 
 					$mwb_recurring_data = apply_filters( 'mwb_sfw_cart_data_for_susbcription', $mwb_recurring_data, $cart_item );
-
-					if ( apply_filters( 'mwb_sfw_is_upgrade_downgrade_order',false, $mwb_recurring_data, $order, $posted_data, $cart_item ) ) {
-						return;
-					}
-					
 					mwb_sfw_delete_failed_subscription( $order->get_id() );
 					$subscription = $this->mwb_sfw_create_subscription( $order, $posted_data, $mwb_recurring_data );
 					if ( is_wp_error( $subscription ) ) {
@@ -399,10 +394,10 @@ class Subscriptions_For_Woocommerce_Public {
 						if ( 'yes' != $mwb_has_susbcription ) {
 							
 							update_post_meta( $order_id, 'mwb_sfw_order_has_subscription', 'yes' );
-							 
+
 							if ( isset( $_POST['payment_method'] ) && 'stripe' == $_POST['payment_method'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-								if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-										 
+								if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) {
+										
 										$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
 										$stripe_class = $available_gateways['stripe'];
 
@@ -516,13 +511,13 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( is_wp_error( $subscription_id ) ) {
 				return $subscription_id;
 			}
-			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', 0 );
-			update_post_meta( $subscription_id, 'mwb_susbcription_end', 0 );
-			update_post_meta( $subscription_id, 'mwb_next_payment_date', 0 );
+			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', '' );
+			update_post_meta( $subscription_id, 'mwb_susbcription_end', '' );
+			update_post_meta( $subscription_id, 'mwb_next_payment_date', '' );
 			update_post_meta( $subscription_id, '_order_key', wc_generate_order_key() );
 
 			/*if free trial*/
-			
+			if ( isset( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) && ! empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
 
 				$new_order = new WC_Order( $subscription_id );
 
@@ -541,7 +536,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$new_order->update_taxes();
 				$new_order->calculate_totals();
 				$new_order->save();
-			
+			}
 			mwb_sfw_update_meta_key_for_susbcription( $subscription_id, $mwb_args );
 
 			return $subscription_id;
@@ -1000,9 +995,9 @@ class Subscriptions_For_Woocommerce_Public {
 	public function mwb_sfw_woocommerce_add_to_cart_validation( $validate, $product_id, $quantity ) {	
 		
 		$product = wc_get_product( $product_id );
-		if ( $this->mwb_sfw_check_cart_has_subscription_product() && mwb_sfw_check_product_is_subscription( $product ) ) {
+		if ( ! is_user_logged_in() && mwb_sfw_check_product_is_subscription( $product ) ) {
 			$validate = false;
-			wc_add_notice( __( 'You can not add multiple subscription product in cart', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'You must Logged in to purchase subscription product', 'subscriptions-for-woocommerce' ), 'error' );
 			return $validate;
 		}
 		return $validate;

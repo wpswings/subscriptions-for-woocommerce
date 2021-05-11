@@ -131,6 +131,14 @@ class Subscriptions_For_Woocommerce_Admin {
 				'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
 				'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
 				'expiry_notice' => __( 'Expiry Interval must be greater than subscription interval', 'subscriptions-for-woocommerce' ),
+				'expiry_days_notice' => __( 'Expiry Interval must not be greater than 90 Days', 'subscriptions-for-woocommerce' ),
+				'expiry_week_notice' => __( 'Expiry Interval must not be greater than 52 Weeks', 'subscriptions-for-woocommerce' ),
+				'expiry_month_notice' => __( 'Expiry Interval must not be greater than 24 Months', 'subscriptions-for-woocommerce' ),
+				'expiry_year_notice' => __( 'Expiry Interval must not be greater than 5 Years', 'subscriptions-for-woocommerce' ),
+				'trial_days_notice' => __( 'Trial period must not be greater than 90 Days', 'subscriptions-for-woocommerce' ),
+				'trial_week_notice' => __( 'Trial period must not be greater than 52 Weeks', 'subscriptions-for-woocommerce' ),
+				'trial_month_notice' => __( 'Trial period must not be greater than 24 Months', 'subscriptions-for-woocommerce' ),
+				'trial_year_notice' => __( 'Trial period must not be greater than 5 Years', 'subscriptions-for-woocommerce' ),
 			);
 			wp_localize_script(
 				'mwb-sfw-admin-single-product-js',
@@ -385,22 +393,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		return $tabs;
 	}
 
-	/**
-	 * This function is used to add subscription intervals.
-	 *
-	 * @name mwb_sfw_subscription_period
-	 * @since    1.0.0
-	 * @return   Array  $subscription_interval
-	 */
-	public function mwb_sfw_subscription_period() {
-		$subscription_interval = array(
-			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
-			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
-			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
-			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
-		);
-		return apply_filters( 'mwb_sfw_subscription_intervals', $subscription_interval );
-	}
+	
 
 	/**
 	 * This function is used to add custom fileds for subscription products.
@@ -436,7 +429,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="number" class="short wc_input_number"  min="1" required name="mwb_sfw_subscription_number" id="mwb_sfw_subscription_number" value="<?php echo esc_attr( $mwb_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_interval" name="mwb_sfw_subscription_interval" class="mwb_sfw_subscription_interval" >
-				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
+				<?php foreach ( mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
@@ -451,7 +444,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_expiry_number" id="mwb_sfw_subscription_expiry_number" value="<?php echo esc_attr( $mwb_sfw_subscription_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_expiry_interval" name="mwb_sfw_subscription_expiry_interval" class="mwb_sfw_subscription_expiry_interval" >
-				<?php foreach ( $this->mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) as $value => $label ) { ?>
+				<?php foreach ( mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
@@ -480,7 +473,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_free_trial_number" id="mwb_sfw_subscription_free_trial_number" value="<?php echo esc_attr( $mwb_sfw_subscription_free_trial_number ); ?>" placeholder="<?php esc_html_e( 'Enter free trial interval', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_free_trial_interval" name="mwb_sfw_subscription_free_trial_interval" class="mwb_sfw_subscription_free_trial_interval" >
-				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
+				<?php foreach ( mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_free_trial_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
@@ -495,33 +488,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		do_action( 'mwb_sfw_product_edit_field', $post_id );
 	}
 
-	/**
-	 * This function is used to add subscription intervals for expiry.
-	 *
-	 * @name mwb_sfw_subscription_expiry_period
-	 * @since    1.0.0
-	 * @param   string $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
-	 */
-	public function mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) {
-
-		$subscription_interval = array(
-			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
-			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
-			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
-			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
-		);
-		if ( 'week' == $mwb_sfw_subscription_interval ) {
-			unset( $subscription_interval['day'] );
-		} elseif ( 'month' == $mwb_sfw_subscription_interval ) {
-			unset( $subscription_interval['day'] );
-			unset( $subscription_interval['week'] );
-		} elseif ( 'year' == $mwb_sfw_subscription_interval ) {
-			unset( $subscription_interval['day'] );
-			unset( $subscription_interval['week'] );
-			unset( $subscription_interval['month'] );
-		}
-		return apply_filters( 'mwb_sfw_subscription_expiry_intervals', $subscription_interval );
-	}
 
 	/**
 	 * This function is used to save custom fields for subscription products.
@@ -556,6 +522,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			update_post_meta( $post_id, 'mwb_sfw_subscription_initial_signup_price', $mwb_sfw_subscription_initial_signup_price );
 			update_post_meta( $post_id, 'mwb_sfw_subscription_free_trial_number', $mwb_sfw_subscription_free_trial_number );
 			update_post_meta( $post_id, 'mwb_sfw_subscription_free_trial_interval', $mwb_sfw_subscription_free_trial_interval );
+
+			do_action('mwb_sfw_save_simple_subscription_field', $post_id, $_POST );
 		}
 
 	}
@@ -656,6 +624,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					);
 					$mwb_new_order->update_taxes();
 					$mwb_new_order->calculate_totals();
+
 					$order_id = $mwb_new_order->get_id();
 					update_post_meta( $order_id, '_payment_method', $payment_method );
 					update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
@@ -666,6 +635,8 @@ class Subscriptions_For_Woocommerce_Admin {
 					update_post_meta( $order_id, 'mwb_sfw_subscription', $susbcription_id );
 					update_post_meta( $order_id, 'mwb_sfw_parent_order_id', $parent_order_id );
 
+					do_action('mwb_sfw_renewal_order_creation',$mwb_new_order, $susbcription_id );
+					
 					/*if trial period enable*/
 					if ( '' == $mwb_old_payment_method ) {
 						$parent_order_id = $susbcription_id;
@@ -678,8 +649,12 @@ class Subscriptions_For_Woocommerce_Admin {
 					if ( 'stripe' == $payment_method ) {
 						$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
 						$result = $mwb_stripe->mwb_sfw_process_renewal_payment( $order_id, $parent_order_id );
+						do_action('mwb_sfw_cancel_failed_susbcription',$result, $order_id, $susbcription_id );
 						mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 					}
+					
+					do_action('mwb_sfw_other_payment_gateway_renewal',$mwb_new_order, $susbcription_id,$payment_method );
+
 				}
 			}
 		}
@@ -701,6 +676,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			if ( function_exists( 'as_next_scheduled_action' ) && false === as_next_scheduled_action( 'mwb_sfw_expired_renewal_subscription' ) ) {
 				as_schedule_recurring_action( strtotime( 'now' ), 3600, 'mwb_sfw_expired_renewal_subscription' );
 			}
+
+			do_action('mwb_sfw_create_admin_scheduler');
 		}
 	}
 
