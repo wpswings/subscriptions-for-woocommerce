@@ -393,7 +393,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		return $tabs;
 	}
 
-	
+
 
 	/**
 	 * This function is used to add custom fileds for subscription products.
@@ -523,7 +523,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			update_post_meta( $post_id, 'mwb_sfw_subscription_free_trial_number', $mwb_sfw_subscription_free_trial_number );
 			update_post_meta( $post_id, 'mwb_sfw_subscription_free_trial_interval', $mwb_sfw_subscription_free_trial_interval );
 
-			do_action('mwb_sfw_save_simple_subscription_field', $post_id, $_POST );
+			do_action( 'mwb_sfw_save_simple_subscription_field', $post_id, $_POST );
 		}
 
 	}
@@ -635,8 +635,8 @@ class Subscriptions_For_Woocommerce_Admin {
 					update_post_meta( $order_id, 'mwb_sfw_subscription', $susbcription_id );
 					update_post_meta( $order_id, 'mwb_sfw_parent_order_id', $parent_order_id );
 
-					do_action('mwb_sfw_renewal_order_creation',$mwb_new_order, $susbcription_id );
-					
+					do_action( 'mwb_sfw_renewal_order_creation', $mwb_new_order, $susbcription_id );
+
 					/*if trial period enable*/
 					if ( '' == $mwb_old_payment_method ) {
 						$parent_order_id = $susbcription_id;
@@ -649,11 +649,11 @@ class Subscriptions_For_Woocommerce_Admin {
 					if ( 'stripe' == $payment_method ) {
 						$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
 						$result = $mwb_stripe->mwb_sfw_process_renewal_payment( $order_id, $parent_order_id );
-						do_action('mwb_sfw_cancel_failed_susbcription',$result, $order_id, $susbcription_id );
+						do_action( 'mwb_sfw_cancel_failed_susbcription', $result, $order_id, $susbcription_id );
 						mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 					}
-					
-					do_action('mwb_sfw_other_payment_gateway_renewal',$mwb_new_order, $susbcription_id,$payment_method );
+
+					do_action( 'mwb_sfw_other_payment_gateway_renewal', $mwb_new_order, $susbcription_id, $payment_method );
 
 				}
 			}
@@ -677,7 +677,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				as_schedule_recurring_action( strtotime( 'now' ), 3600, 'mwb_sfw_expired_renewal_subscription' );
 			}
 
-			do_action('mwb_sfw_create_admin_scheduler');
+			do_action( 'mwb_sfw_create_admin_scheduler' );
 		}
 	}
 
