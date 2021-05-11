@@ -385,6 +385,11 @@ class Subscriptions_For_Woocommerce_Public {
 					$mwb_recurring_data['line_tax'] = $cart_item['line_tax'];
 
 					$mwb_recurring_data = apply_filters( 'mwb_sfw_cart_data_for_susbcription', $mwb_recurring_data, $cart_item );
+
+					if ( apply_filters( 'mwb_sfw_is_upgrade_downgrade_order',false, $mwb_recurring_data, $order, $posted_data, $cart_item ) ) {
+						return;
+					}
+					
 					mwb_sfw_delete_failed_subscription( $order->get_id() );
 					$subscription = $this->mwb_sfw_create_subscription( $order, $posted_data, $mwb_recurring_data );
 					if ( is_wp_error( $subscription ) ) {
@@ -517,7 +522,7 @@ class Subscriptions_For_Woocommerce_Public {
 			update_post_meta( $subscription_id, '_order_key', wc_generate_order_key() );
 
 			/*if free trial*/
-			if ( isset( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) && ! empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
+			
 
 				$new_order = new WC_Order( $subscription_id );
 
@@ -536,7 +541,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$new_order->update_taxes();
 				$new_order->calculate_totals();
 				$new_order->save();
-			}
+			
 			mwb_sfw_update_meta_key_for_susbcription( $subscription_id, $mwb_args );
 
 			return $subscription_id;

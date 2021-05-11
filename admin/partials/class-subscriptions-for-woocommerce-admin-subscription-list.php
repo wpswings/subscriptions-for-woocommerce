@@ -327,6 +327,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$mwb_subscription_status   = get_post_meta( $value->ID, 'mwb_subscription_status', true );
 				$product_name   = get_post_meta( $value->ID, 'product_name', true );
 				$mwb_recurring_total   = get_post_meta( $value->ID, 'mwb_recurring_total', true );
+				$mwb_recurring_total = apply_filters('mwb_sfw_recerring_total_price_list_table',wc_price( $mwb_recurring_total ), $value->ID );
+
 				$mwb_next_payment_date   = get_post_meta( $value->ID, 'mwb_next_payment_date', true );
 				$mwb_susbcription_end   = get_post_meta( $value->ID, 'mwb_susbcription_end', true );
 
@@ -339,7 +341,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					'parent_order_id'           => $parent_order_id,
 					'status'                    => $mwb_subscription_status,
 					'product_name'              => $product_name,
-					'recurring_amount'          => wc_price( $mwb_recurring_total ),
+					'recurring_amount'          => $mwb_recurring_total,
 					'user_name'                 => $user_nicename,
 					'next_payment_date'         => mwb_sfw_get_the_wordpress_date_format( $mwb_next_payment_date ),
 					'subscriptions_expiry_date' => mwb_sfw_get_the_wordpress_date_format( $mwb_susbcription_end ),

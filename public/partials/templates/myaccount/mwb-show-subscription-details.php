@@ -123,6 +123,7 @@ function mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status ) {
 						$product_qty = get_post_meta( $mwb_subscription_id, 'product_qty', true );
 
 						echo esc_html( $mwb_product_name ) . ' x ' . esc_html( $product_qty );
+						do_action( 'mwb_sfw_product_details_html', $mwb_subscription_id );
 					?>
 					
 				 </td>
