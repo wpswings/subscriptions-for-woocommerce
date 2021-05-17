@@ -117,9 +117,11 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_price_html = mwb_sfw_get_time_interval( $mwb_sfw_subscription_expiry_number, $mwb_sfw_subscription_expiry_interval );
 				$mwb_price_html = apply_filters( 'mwb_sfw_show_time_interval', $mwb_price_html, $product_id );
 				$mwb_price = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
-				/* translators: %s: search term */
 
-				$price .= '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price ) . '</span>';
+				/* translators: %s: search term */
+				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price ) . '</span>';
+
+				$price .= apply_filters( 'mwb_sfw_show_sync_interval', $mwb_sfw_price_html, $product_id );
 
 				/* translators: %s: search term */
 				$price .= '<span class="mwb_sfw_expiry_interval">' . sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html ) . '</span>';
@@ -130,13 +132,17 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 
 				/* translators: %s: search term */
-				$price .= '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html ) . '</span>';
+
+				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html ) . '</span>';
+
+				$price .= apply_filters( 'mwb_sfw_show_sync_interval', $mwb_sfw_price_html, $product_id );
+
 				$price = $this->mwb_sfw_get_free_trial_period_html( $product_id, $price );
 				$price = $this->mwb_sfw_get_initial_signup_fee_html( $product_id, $price );
 
 			}
 		}
-		return $price;
+		return apply_filters( 'mwb_sfw_price_html', $price, $mwb_price_html, $product_id );
 	}
 
 
@@ -299,6 +305,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			foreach ( $cart->cart_contents as $key => $cart_data ) {
 				if ( mwb_sfw_check_product_is_subscription( $cart_data['data'] ) ) {
+
 					$product_id = $cart_data['data']->get_id();
 					$mwb_sfw_free_trial_number = $this->mwb_sfw_get_subscription_trial_period_number( $product_id );
 
@@ -307,12 +314,15 @@ class Subscriptions_For_Woocommerce_Public {
 
 					if ( isset( $mwb_sfw_free_trial_number ) && ! empty( $mwb_sfw_free_trial_number ) ) {
 						if ( 0 != $mwb_sfw_signup_fee ) {
+							$mwb_sfw_signup_fee = apply_filters( 'mwb_sfw_cart_price_subscription', $mwb_sfw_signup_fee, $cart_data );
 							$cart_data['data']->set_price( $mwb_sfw_signup_fee );
 						} else {
-							$cart_data['data']->set_price( 0 );
+							$mwb_cart_price = apply_filters( 'mwb_sfw_cart_price_subscription', 0, $cart_data );
+							$cart_data['data']->set_price( $mwb_cart_price );
 						}
 					} else {
 						$product_price = $cart_data['data']->get_price();
+						$product_price = apply_filters( 'mwb_sfw_cart_price_subscription', $product_price, $cart_data );
 						$product_price += $mwb_sfw_signup_fee;
 						$cart_data['data']->set_price( $product_price );
 					}
@@ -960,6 +970,8 @@ class Subscriptions_For_Woocommerce_Public {
 							update_post_meta( $value->ID, 'mwb_susbcription_trial_end', $mwb_susbcription_trial_end );
 
 							$mwb_next_payment_date = mwb_sfw_next_payment_date( $value->ID, $current_time, $mwb_susbcription_trial_end );
+
+							$mwb_next_payment_date = apply_filters( 'mwb_sfw_next_payment_date', $mwb_next_payment_date, $value->ID );
 
 							update_post_meta( $value->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
 
