@@ -482,10 +482,13 @@ class Subscriptions_For_Woocommerce_Admin {
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
 			?>
 		</p>
+		<?php
+			wp_nonce_field( 'mwb_sfw_edit_nonce', 'mwb_sfw_edit_nonce_filed' );
+			do_action( 'mwb_sfw_product_edit_field', $post_id );
+		?>
 		</div>
 		<?php
-		wp_nonce_field( 'mwb_sfw_edit_nonce', 'mwb_sfw_edit_nonce_filed' );
-		do_action( 'mwb_sfw_product_edit_field', $post_id );
+
 	}
 
 
