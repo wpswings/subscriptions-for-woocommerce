@@ -421,7 +421,7 @@ class Subscriptions_For_Woocommerce_Public {
 										return $payment_result;
 								}
 							}
-							do_action('mwb_sfw_subscription_process_checkout', $order_id, $posted_data );
+							do_action('mwb_sfw_subscription_process_checkout', $order_id, $posted_data, $subscription );
 							// phpcs:enable WordPress.Security.NonceVerification.Missing
 						}
 					}
