@@ -135,5 +135,21 @@
             }
             
         });
+
+        // Product type specific options.
+        $( 'select#product-type' ).change( function() {
+
+            var select_val = $( this ).val();
+           
+            if ( 'variable' === select_val ) {
+                $( 'input#_mwb_sfw_product' ).prop( 'checked', false );
+                
+            } else if ( 'grouped' === select_val ) {
+                $( 'input#_mwb_sfw_product' ).prop( 'checked', false );
+                
+            } else if ( 'external' === select_val ) {
+                $( 'input#_mwb_sfw_product' ).prop( 'checked', false );
+            }
+        });
     });
 })( jQuery );

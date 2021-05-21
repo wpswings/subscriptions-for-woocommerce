@@ -387,10 +387,10 @@ class Subscriptions_For_Woocommerce_Admin {
 		$tabs['mwb_sfw_product'] = array(
 			'label'    => __( 'Subscription Settings', 'subscriptions-for-woocommerce' ),
 			'target'   => 'mwb_sfw_product_target_section',
-			'class'    => array(),
+			'class'    => array( 'show_if_simple', 'hide_if_variable', 'hide_if_grouped', 'hide_if_external' ),
 			'priority' => 80,
 		);
-		return $tabs;
+		return apply_filters( 'mwb_swf_settings_tabs', $tabs );
 	}
 
 
