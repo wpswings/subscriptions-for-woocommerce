@@ -367,7 +367,12 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_process_checkout( $order_id, $posted_data ) {
 
+		if ( ! $this->mwb_sfw_check_cart_has_subscription_product() ) {
+			return;
+		}
 		$order = wc_get_order( $order_id );
+		/*delete failed order subscription*/
+		mwb_sfw_delete_failed_subscription( $order->get_id() );
 
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
@@ -401,31 +406,34 @@ class Subscriptions_For_Woocommerce_Public {
 						return;
 					}
 
-					mwb_sfw_delete_failed_subscription( $order->get_id() );
 					$subscription = $this->mwb_sfw_create_subscription( $order, $posted_data, $mwb_recurring_data );
 					if ( is_wp_error( $subscription ) ) {
 						throw new Exception( $subscription->get_error_message() );
 					} else {
 						$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
 						if ( 'yes' != $mwb_has_susbcription ) {
-
 							update_post_meta( $order_id, 'mwb_sfw_order_has_subscription', 'yes' );
-							// phpcs:disable WordPress.Security.NonceVerification.Missing
-							if ( isset( $_POST['payment_method'] ) && 'stripe' == $_POST['payment_method'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-								if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
-										$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
-										$stripe_class = $available_gateways['stripe'];
-
-										$payment_result = $stripe_class->process_payment( $order_id, false, true );
-										return $payment_result;
-								}
-							}
-							do_action('mwb_sfw_subscription_process_checkout', $order_id, $posted_data, $subscription );
-							// phpcs:enable WordPress.Security.NonceVerification.Missing
 						}
+						do_action( 'mwb_sfw_subscription_process_checkout', $order_id, $posted_data, $subscription );
 					}
 				}
+			}
+			$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
+
+			if ( 'yes' == $mwb_has_susbcription ) {
+
+				// phpcs:disable WordPress.Security.NonceVerification.Missing
+				if ( isset( $_POST['payment_method'] ) && 'stripe' == $_POST['payment_method'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+							$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
+							$stripe_class = $available_gateways['stripe'];
+							$payment_result = $stripe_class->process_payment( $order_id, false, true );
+
+					}
+				}
+				do_action( 'mwb_sfw_subscription_process_checkout_payment_method', $order_id, $posted_data );
+				// phpcs:enable WordPress.Security.NonceVerification.Missing
 			}
 		}
 	}
@@ -1015,9 +1023,12 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$product = wc_get_product( $product_id );
 		if ( $this->mwb_sfw_check_cart_has_subscription_product() && mwb_sfw_check_product_is_subscription( $product ) ) {
-			$validate = false;
-			wc_add_notice( __( 'You can not add multiple subscription product in cart', 'subscriptions-for-woocommerce' ), 'error' );
-			return $validate;
+
+			$validate = apply_filters( 'mwb_sfw_add_to_cart_validation', false, $product_id, $quantity );
+
+			if ( ! $validate ) {
+				wc_add_notice( __( 'You can not add multiple subscription product in cart', 'subscriptions-for-woocommerce' ), 'error' );
+			}
 		}
 		return $validate;
 	}
