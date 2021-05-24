@@ -10,7 +10,7 @@
  */
 
 /**
- * The Onboarding-specific functionality of the plugin admin side.
+ * The Payment-specific functionality of the plugin admin side.
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
@@ -47,6 +47,10 @@ class Subscriptions_For_Woocommerce_Stripe {
 		try {
 
 			$gateway = $this->mwb_sfw_get_wc_gateway();
+			if ( ! $gateway ) {
+				$order_note = __( 'Stripe payment gateway not activated.', 'subscriptions-for-woocommerce' );
+				$order->update_status( 'failed', $order_note );
+			}
 			$source   = $gateway->prepare_order_source( $parent_order );
 			WC_Stripe_Logger::log( 'MWB source: ' . print_r( $source, true ) );
 			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ) );
@@ -145,7 +149,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 	public function mwb_sfw_get_wc_gateway() {
 		global $woocommerce;
 		$gateways = $woocommerce->payment_gateways->payment_gateways();
-		if ( ! empty( $gateways['stripe'] ) ) {
+		if ( isset( $gateways['stripe'] ) && ! empty( $gateways['stripe'] ) ) {
 			return $gateways['stripe'];
 		}
 		return false;
