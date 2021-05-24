@@ -694,3 +694,41 @@ if ( ! function_exists( 'mwb_sfw_delete_failed_subscription' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'mwb_sfw_include_process_directory' ) ) {
+	/**
+	 * This function is used to include payment file.
+	 *
+	 * @since 1.0.0
+	 * @name mwb_sfw_include_process_directory
+	 * @param string $mwb_sfw_dir mwb_sfw_dir.
+	 * @param string $mwb_selected_dir mwb_selected_dir.
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
+	function mwb_sfw_include_process_directory( $mwb_sfw_dir, $mwb_selected_dir = '' ) {
+
+		if ( is_dir( $mwb_sfw_dir ) ) {
+			$mwb_dh = opendir( $mwb_sfw_dir );
+			if ( $mwb_dh ) {
+
+				while ( ( $mwb_file = readdir( $mwb_dh ) ) !== false ) {
+
+					if ( '.' == $mwb_file{0} ) {
+						continue; // skip dirs . and .. by first char test.
+					}
+
+					if ( is_dir( $mwb_sfw_dir . '/' . $mwb_file ) ) {
+
+						mwb_sfw_include_process_directory( $mwb_sfw_dir . '/' . $mwb_file, $mwb_file );
+
+					} elseif ( 'class-mwb-subscriptions-payment-' . $mwb_selected_dir . '-main.php' == $mwb_file ) {
+
+						include $mwb_sfw_dir . '/' . $mwb_file;
+					}
+				}
+				closedir( $mwb_dh );
+			}
+		}
+	}
+}

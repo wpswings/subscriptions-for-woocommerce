@@ -95,6 +95,7 @@ class Subscriptions_For_Woocommerce {
 
 		$this->subscriptions_for_woocommerce_api_hooks();
 		$this->init();
+		$this->mwb_sfw_init_payment_integration();
 
 	}
 
@@ -151,8 +152,6 @@ class Subscriptions_For_Woocommerce {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/subscriptions-for-woocommerce-common-function.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php';
-
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
 
 	}
@@ -161,6 +160,16 @@ class Subscriptions_For_Woocommerce {
 	 */
 	public function init() {
 		add_filter( 'woocommerce_email_classes', array( $this, 'mwb_sfw_woocommerce_email_classes' ) );
+	}
+
+	/**
+	 * The function is used to include payment gateway integration.
+	 */
+	public function mwb_sfw_init_payment_integration() {
+
+		$mwb_sfw_dir = plugin_dir_path( dirname( __FILE__ ) ) . '/package/gateways';
+		mwb_sfw_include_process_directory( $mwb_sfw_dir );
+		do_action( 'mwb_sfw_payment_integration' );
 	}
 
 	/**
