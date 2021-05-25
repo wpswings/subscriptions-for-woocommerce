@@ -61,9 +61,16 @@ $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 				$sfw_active_tab = 'mwb_sfw_plug_general';
 			}
 
+				
 				// look for the path based on the tab id in the admin templates.
-				$sfw_tab_content_path = $sfw_default_tabs[ $sfw_active_tab ]['file_path'] . 'admin/partials/' . $sfw_active_tab . '.php';
-
+				if ( ! isset( $sfw_default_tabs[ $sfw_active_tab ]['file_path'] ) ) {
+					$file_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH;
+				}
+				else{
+					$file_path = $sfw_default_tabs[ $sfw_active_tab ]['file_path'];
+				}
+				$sfw_tab_content_path = $file_path . 'admin/partials/' . $sfw_active_tab . '.php';
+				
 				$sfw_mwb_sfw_obj->mwb_sfw_plug_load_template( $sfw_tab_content_path );
 
 				do_action( 'mwb_sfw_after_general_settings_form' );
