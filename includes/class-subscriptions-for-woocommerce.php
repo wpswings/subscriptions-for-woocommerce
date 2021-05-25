@@ -426,7 +426,7 @@ class Subscriptions_For_Woocommerce {
 
 			include $content_path;
 		} else {
-
+			
 			/* translators: %s: file path */
 			$sfw_notice = sprintf( esc_html__( 'Unable to locate file at location "%s". Some features may not work properly in this plugin. Please contact us!', 'subscriptions-for-woocommerce' ), $content_path );
 			$this->mwb_sfw_plug_admin_notice( $sfw_notice, 'error' );
