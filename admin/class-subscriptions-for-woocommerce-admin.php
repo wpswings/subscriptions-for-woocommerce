@@ -372,7 +372,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		);
 		return $products_type;
 
-
 	}
 
 

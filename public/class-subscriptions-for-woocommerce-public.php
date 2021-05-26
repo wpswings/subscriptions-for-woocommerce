@@ -564,7 +564,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			mwb_sfw_update_meta_key_for_susbcription( $subscription_id, $mwb_args );
 
-			return $subscription_id;
+			return apply_filters( 'mwb_sfw_created_subscription', $subscription_id );
 
 		}
 
@@ -922,6 +922,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 			update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
 			mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
+			do_action( 'mwb_sfw_cancel_susbcription', $mwb_subscription_id, $user_id );
+			wc_add_notice( __( 'Subscription Cancelled Successfully', 'woocommerce-subscriptions-pro' ), 'success' );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) );
 			wp_safe_redirect( $redirect_url );
 			exit;
