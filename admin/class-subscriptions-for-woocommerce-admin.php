@@ -591,11 +591,11 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 			foreach ( $mwb_subscriptions as $key => $value ) {
-				$susbcription_id = $value->ID;
+				$subscription_id = $value->ID;
 
-				if ( mwb_sfw_check_valid_subscription( $susbcription_id ) ) {
+				if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
 
-					$subscription = get_post( $susbcription_id );
+					$subscription = get_post( $subscription_id );
 					$parent_order_id  = $subscription->mwb_parent_order;
 					$parent_order = wc_get_order( $parent_order_id );
 					$billing_details = $parent_order->get_address( 'billing' );
@@ -636,28 +636,28 @@ class Subscriptions_For_Woocommerce_Admin {
 					$mwb_new_order->set_address( $billing_details, 'billing' );
 					$mwb_new_order->set_address( $shipping_details, 'shipping' );
 					update_post_meta( $order_id, 'mwb_sfw_renewal_order', 'yes' );
-					update_post_meta( $order_id, 'mwb_sfw_subscription', $susbcription_id );
+					update_post_meta( $order_id, 'mwb_sfw_subscription', $subscription_id );
 					update_post_meta( $order_id, 'mwb_sfw_parent_order_id', $parent_order_id );
-
-					do_action( 'mwb_sfw_renewal_order_creation', $mwb_new_order, $susbcription_id );
+					update_post_meta( $subscription_id, 'mwb_renewal_subscription_order', $order_id );
+					do_action( 'mwb_sfw_renewal_order_creation', $mwb_new_order, $subscription_id );
 
 					/*if trial period enable*/
 					if ( '' == $mwb_old_payment_method ) {
-						$parent_order_id = $susbcription_id;
+						$parent_order_id = $subscription_id;
 					}
 					/*update next payment date*/
-					$mwb_next_payment_date = mwb_sfw_next_payment_date( $susbcription_id, $current_time, 0 );
+					$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
-					update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
+					update_post_meta( $subscription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
 
 					if ( 'stripe' == $payment_method ) {
 						$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
 						$result = $mwb_stripe->mwb_sfw_process_renewal_payment( $order_id, $parent_order_id );
-						do_action( 'mwb_sfw_cancel_failed_susbcription', $result, $order_id, $susbcription_id );
+						do_action( 'mwb_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
 						mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 					}
 
-					do_action( 'mwb_sfw_other_payment_gateway_renewal', $mwb_new_order, $susbcription_id, $payment_method );
+					do_action( 'mwb_sfw_other_payment_gateway_renewal', $mwb_new_order, $subscription_id, $payment_method );
 
 				}
 			}
