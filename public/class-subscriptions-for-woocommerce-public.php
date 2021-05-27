@@ -537,6 +537,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( is_wp_error( $subscription_id ) ) {
 				return $subscription_id;
 			}
+			update_post_meta( $order_id, 'mwb_subscription_id', $subscription_id );
 			update_post_meta( $subscription_id, 'mwb_susbcription_trial_end', 0 );
 			update_post_meta( $subscription_id, 'mwb_susbcription_end', 0 );
 			update_post_meta( $subscription_id, 'mwb_next_payment_date', 0 );
@@ -563,8 +564,8 @@ class Subscriptions_For_Woocommerce_Public {
 				$new_order->save();
 
 			mwb_sfw_update_meta_key_for_susbcription( $subscription_id, $mwb_args );
-
-			return apply_filters( 'mwb_sfw_created_subscription', $subscription_id );
+			do_action( 'mwb_sfw_after_created_subscription', $subscription_id, $order_id );
+			return apply_filters( 'mwb_sfw_created_subscription', $subscription_id, $order_id );
 
 		}
 
@@ -857,11 +858,18 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param int $subscription_id subscription_id.
 	 */
 	public function mwb_sfw_display_susbcription_recerring_total_account_page_callback( $subscription_id ) {
-		$mwb_recurring_total = get_post_meta( $subscription_id, 'mwb_recurring_total', true );
+		$susbcription = wc_get_order( $subscription_id );
+
+		if ( isset( $susbcription ) && ! empty( $susbcription ) ) {
+			$price = wc_price( $susbcription->get_total() );
+		} else {
+			$mwb_recurring_total = get_post_meta( $subscription_id, 'mwb_recurring_total', true );
+			$price = wc_price( $mwb_recurring_total );
+		}
 		$mwb_recurring_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_number', true );
 		$mwb_recurring_interval = get_post_meta( $subscription_id, 'mwb_sfw_subscription_interval', true );
 		$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
-		$price = wc_price( $mwb_recurring_total );
+
 		/* translators: %s: search term */
 		$price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
 		echo wp_kses_post( $price );

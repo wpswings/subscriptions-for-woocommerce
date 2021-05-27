@@ -632,3 +632,24 @@ if ( ! function_exists( 'mwb_sfw_include_process_directory' ) ) {
 		}
 	}
 }
+if ( ! function_exists( 'mwb_sfw_recerring_total_price_list_table_callback' ) ) {
+	/**
+	 * This function is used show recuring interval on list.
+	 *
+	 * @name mwb_sfw_recerring_total_price_list_table_callback
+	 * @param string $mwb_price mwb_price.
+	 * @param int    $mwb_subscription_id mwb_subscription_id.
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_recerring_total_price_list_table_callback( $mwb_price, $mwb_subscription_id ) {
+		if ( mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
+			$mwb_recurring_number = get_post_meta( $mwb_subscription_id, 'mwb_sfw_subscription_number', true );
+			$mwb_recurring_interval = get_post_meta( $mwb_subscription_id, 'mwb_sfw_subscription_interval', true );
+			$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
+
+			/* translators: %s: search term */
+			$mwb_price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+		}
+		return $mwb_price;
+	}
+}
