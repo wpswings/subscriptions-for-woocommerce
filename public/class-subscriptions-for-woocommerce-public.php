@@ -579,7 +579,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_after_woocommerce_pay() {
 		global $wp;
-		$valid_request = false;
+		$mwb_valid_request = false;
 
 		if ( ! isset( $wp->query_vars['order-pay'] ) || ! mwb_sfw_check_valid_subscription( absint( $wp->query_vars['order-pay'] ) ) ) {
 			return;
