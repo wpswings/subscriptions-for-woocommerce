@@ -28,10 +28,12 @@ global $sfw_mwb_sfw_obj;
 				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/">
 					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/doc.svg' ); ?>" alt="doc-img">
 				</a>
+				<?php do_action('mwb_sfw_overview_icon'); ?>
 			</div>
 			<div class="sfw-overview__banner-img">
 				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/subscription-overview-banner.png' ); ?>" alt="sfw-banner-img">
 			</div>
+			<?php do_action('mwb_sfw_before_overview_content'); ?>
 			<div class="sfw-overview__content">
 				<div class="sfw-overview__content-description">
 					<h1><?php esc_html_e( 'Subscriptions for WooCommerce', 'subscriptions-for-woocommerce' ); ?></h1>
@@ -51,8 +53,10 @@ global $sfw_mwb_sfw_obj;
 						<li><?php esc_html_e( 'Convert simple product selling WooCommerce store to subscription-based', 'subscriptions-for-woocommerce' ); ?></li>
 						<li><?php esc_html_e( 'Give free trials to your customers and loyalize them', 'subscriptions-for-woocommerce' ); ?></li>
 					</ul>
+					<?php do_action('mwb_sfw_overview_feature_description'); ?>
 					</div>
 				</div>
+				<?php do_action('mwb_sfw_after_overview_description'); ?>
 				<div class="sfw-overview__keywords-wrap">
 				<h2> <?php esc_html_e( 'Salient Features of Subscriptions for WooCommerce Plugin', 'subscriptions-for-woocommerce' ); ?></h2>
 				<div class="sfw-overview__keywords">
@@ -126,8 +130,10 @@ global $sfw_mwb_sfw_obj;
 							</div>
 						</div>
 					</div>
+					<?php do_action('mwb_sfw_overview_keywords_description'); ?>
 				</div>
 				</div>
+				<?php do_action('mwb_sfw_after_overview_keywords_wrpa'); ?>
 			</div>
 		</div>
 	</div>
