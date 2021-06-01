@@ -43,9 +43,6 @@ global $sfw_mwb_sfw_obj;
 						<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 					</div>
 					<div class="sfw-overview__features">
-					<div class="mwb_sfw_video_wrapper">
-						<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-					</div>
 						<h2><?php esc_html_e( 'What does Subscriptions for WooCommerce do?', 'subscriptions-for-woocommerce' ); ?>
 					</h2>
 					<p><?php esc_html_e( 'With our Subscriptions for WooCommerce Plugin, you can:', 'subscriptions-for-woocommerce' ); ?></p>
