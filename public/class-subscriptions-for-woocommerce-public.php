@@ -928,8 +928,8 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_customer_id = get_post_meta( $mwb_subscription_id, 'mwb_customer_id', true );
 		if ( 'active' == $mwb_status && $mwb_customer_id == $user_id ) {
 
-			update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
-			mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
+			do_action('mwb_sfw_subscription_cancel',$mwb_subscription_id,'Cancel');
+			
 			do_action( 'mwb_sfw_cancel_susbcription', $mwb_subscription_id, $user_id );
 			wc_add_notice( __( 'Subscription Cancelled Successfully', 'woocommerce-subscriptions-pro' ), 'success' );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) );

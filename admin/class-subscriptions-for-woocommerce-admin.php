@@ -544,8 +544,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$mwb_status   = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_status_admin'] ) );
 			$mwb_subscription_id = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_id'] ) );
 			if ( mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
-				 update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
-				 mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
+				 do_action('mwb_sfw_subscription_cancel',$mwb_subscription_id,'Cancel');
 				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );
 				exit;
