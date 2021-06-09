@@ -594,17 +594,59 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_valid_request = mwb_sfw_validate_payment_request( $mwb_subscription );
 
 		if ( $mwb_valid_request ) {
-			foreach ( array( 'country', 'state', 'postcode' ) as $address_property ) {
-				$subscription_address = $mwb_subscription->{"get_billing_$address_property"}();
-
-				if ( $subscription_address ) {
-					WC()->customer->{"set_billing_$address_property"}( $subscription_address );
-				}
-			}
-
+			$this->mwb_sfw_set_customer_address( $mwb_subscription );
 			do_action( 'before_woocommerce_pay' );
 			wc_get_template( 'myaccount/mwb-add-new-payment-details.php', array( 'mwb_subscription' => $mwb_subscription ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
 		}
+	}
+
+	/**
+	 * This function is used to set customer address.
+	 *
+	 * @name mwb_sfw_set_customer_address
+	 * @since    1.0.1
+	 */
+	public function mwb_sfw_set_customer_address( $mwb_subscription ) {
+		$mwb_sfw_billing_country = $mwb_subscription->get_billing_country();
+		$mwb_sfw_billing_state = $mwb_subscription->get_billing_state();
+		$mwb_sfw_billing_postcode = $mwb_subscription->get_billing_postcode();
+		if ( $mwb_sfw_billing_country ) {
+			WC()->customer->set_billing_country( $mwb_sfw_billing_country );
+		}
+		if ( $mwb_sfw_billing_state ) {
+			WC()->customer->set_billing_state( $mwb_sfw_billing_state );
+		}
+		if ( $mwb_sfw_billing_postcode ) {
+			WC()->customer->set_billing_postcode( $mwb_sfw_billing_postcode );
+		}
+
+	}
+
+	/**
+	 * This function is used to set customer address.
+	 *
+	 * @name mwb_sfw_set_customer_address_for_payment
+	 * @since    1.0.1
+	 */
+	public function mwb_sfw_set_customer_address_for_payment( $mwb_subscription ) {
+		$mwb_subscription_billing_country  = $mwb_subscription->get_billing_country();
+		$mwb_subscription_billing_state  = $mwb_subscription->get_billing_state();
+		$mwb_subscription_billing_postcode = $mwb_subscription->get_billing_postcode();
+		$mwb_subscription_billing_city     = $mwb_subscription->get_billing_postcode();
+
+		if ( $mwb_subscription_billing_country ) {
+			WC()->customer->set_billing_country( $mwb_subscription_billing_country );
+		}
+		if ( $mwb_subscription_billing_state ) {
+			WC()->customer->set_billing_state( $mwb_subscription_billing_state );
+		}
+		if ( $mwb_subscription_billing_postcode ) {
+			WC()->customer->set_billing_postcode( $mwb_subscription_billing_postcode );
+		}
+		if ( $mwb_subscription_billing_city ) {
+			WC()->customer->set_billing_city( $mwb_subscription_billing_city );
+		}
+
 	}
 
 	/**
@@ -628,28 +670,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$order_key = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
 		if ( $mwb_subscription->get_order_key() == $order_key ) {
 
-			$mwb_subscription_billing_country  = $mwb_subscription->get_billing_country();
-			$mwb_subscription_billing_state    = $mwb_subscription->get_billing_state();
-			$mwb_subscription_billing_postcode = $mwb_subscription->get_billing_postcode();
-			$mwb_subscription_billing_city     = $mwb_subscription->get_billing_postcode();
-
-			if ( $mwb_subscription_billing_country ) {
-				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_country' ) ) ? 'set_billing_country' : 'set_country';
-				WC()->customer->$mwb_setter( $mwb_subscription_billing_country );
-			}
-			if ( $mwb_subscription_billing_state ) {
-				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_state' ) ) ? 'set_billing_state' : 'set_state';
-				WC()->customer->$mwb_setter( $mwb_subscription_billing_state );
-			}
-			if ( $mwb_subscription_billing_postcode ) {
-				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_postcode' ) ) ? 'set_billing_postcode' : 'set_postcode';
-				WC()->customer->$mwb_setter( $mwb_subscription_billing_postcode );
-			}
-			if ( $mwb_subscription_billing_city ) {
-				$mwb_setter = is_callable( array( WC()->customer, 'set_billing_city' ) ) ? 'set_billing_city' : 'set_city';
-				WC()->customer->$mwb_setter( $mwb_subscription_billing_city );
-			}
-
+			$this->mwb_sfw_set_customer_address_for_payment( $mwb_subscription );
 			// Update payment method.
 			$new_payment_method = isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '';
 			if ( empty( $new_payment_method ) ) {
@@ -1041,6 +1062,41 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 		}
 		return $validate;
+	}
+
+	/**
+	 * This function is used to set payment options.
+	 *
+	 * @name mwb_sfw_woocommerce_cart_needs_payment
+	 * @param bool $mwb_needs_payment mwb_needs_payment.
+	 * @param int  $cart cart.
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_woocommerce_cart_needs_payment( $mwb_needs_payment, $cart ) {
+		$mwb_is_payment = false;
+
+		if ( $mwb_needs_payment ) {
+			return $mwb_needs_payment;
+		}
+		
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+
+				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$product_id = $cart_item['data']->get_id();
+					$mwb_free_trial_length = get_post_meta( $product_id,'mwb_sfw_subscription_free_trial_number',true );
+					if ( $mwb_free_trial_length > 0 ) {
+						$mwb_is_payment = true;
+						break;
+					}
+					
+				}
+			}
+		}
+		if ( $mwb_is_payment && $cart->total == 0 ) {
+			$mwb_needs_payment = true;
+		}
+		return $mwb_needs_payment;
 	}
 
 }

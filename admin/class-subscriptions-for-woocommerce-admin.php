@@ -617,17 +617,26 @@ class Subscriptions_For_Woocommerce_Admin {
 
 					$_product = wc_get_product( $product_id );
 
-					$total = 0;
-					$tax_total = 0;
-					$variations = array();
+					
 
 					$item_id = $mwb_new_order->add_product(
 						$_product,
-						$product_qty
+						$product_qty,
+						array(
+							'variation' => array(),
+							'totals'    => array(
+								'subtotal'     => $subscription->line_subtotal,
+								'subtotal_tax' => $subscription->line_subtotal_tax,
+								'total'        => $subscription->line_total,
+								'tax'          => $subscription->line_tax,
+								'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
+							),
+						)
 					);
 					$mwb_new_order->update_taxes();
-					$mwb_new_order->calculate_totals();
-
+					$mwb_new_order->calculate_totals( false );
+					$mwb_new_order->save();
+					
 					$order_id = $mwb_new_order->get_id();
 					update_post_meta( $order_id, '_payment_method', $payment_method );
 					update_post_meta( $order_id, '_payment_method_title', $payment_method_title );

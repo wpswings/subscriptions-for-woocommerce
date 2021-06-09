@@ -27,8 +27,8 @@ if ( ! function_exists( 'mwb_sfw_get_the_wordpress_date_format' ) ) {
 			$date_format = get_option( 'date_format', 'Y-m-d' );
 			$time_format = get_option( 'time_format', 'g:i a' );
 			$wp_date = date_i18n( $date_format, $saved_date );
-			$wp_time = date_i18n( $time_format, $saved_date );
-			$return_date = $wp_date . ' ' . $wp_time;
+			
+			$return_date = $wp_date;
 		}
 
 		return $return_date;
