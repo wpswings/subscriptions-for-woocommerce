@@ -17,9 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $sfw_mwb_sfw_obj;
+global $mwb_sfw_notices;
 $sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-overview';
 $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 
+if ( $mwb_sfw_notices ) {
+	$mwb_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
+	$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
+}
 ?>
 <header>
 	<div class="mwb-header-container mwb-bg-white mwb-r-8">
@@ -29,6 +34,7 @@ $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 </header>
 
 <main class="mwb-main mwb-bg-white mwb-r-8">
+	
 	<nav class="mwb-navbar">
 		<ul class="mwb-navbar__items">
 			<?php
