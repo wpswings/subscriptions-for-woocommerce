@@ -314,6 +314,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function sfw_admin_save_tab_settings() {
 		global $sfw_mwb_sfw_obj;
+		global $mwb_sfw_notices;
 		if ( isset( $_POST['mwb_sfw_save_general_settings'] ) && isset( $_POST['mwb-sfw-general-nonce-field'] ) ) {
 			$mwb_sfw_geberal_nonce = sanitize_text_field( wp_unslash( $_POST['mwb-sfw-general-nonce-field'] ) );
 			if ( wp_verify_nonce( $mwb_sfw_geberal_nonce, 'mwb-sfw-general-nonce' ) ) {
@@ -346,8 +347,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						$mwb_sfw_error_text = esc_html__( 'Id of some field is missing', 'subscriptions-for-woocommerce' );
 						$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'error' );
 					} else {
-						$mwb_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
-						$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
+						$mwb_sfw_notices = true;
 					}
 				}
 			}

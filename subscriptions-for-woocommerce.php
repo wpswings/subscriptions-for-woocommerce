@@ -133,6 +133,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		$sfw_plugin_standard = new Subscriptions_For_Woocommerce();
 		$sfw_plugin_standard->sfw_run();
 		$GLOBALS['sfw_mwb_sfw_obj'] = $sfw_plugin_standard;
+		$GLOBALS['mwb_sfw_notices'] = false;
 
 	}
 	run_subscriptions_for_woocommerce();
