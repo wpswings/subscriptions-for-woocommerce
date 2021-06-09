@@ -293,6 +293,8 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'mwb_sfw_hide_quantity_fields_for_subscription', 10, 2 );
 
 			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'mwb_sfw_woocommerce_add_to_cart_validation', 10, 3 );
+			
+			$this->loader->add_filter( 'woocommerce_cart_needs_payment', $sfw_plugin_public, 'mwb_sfw_woocommerce_cart_needs_payment', 99, 2 );
 
 		}
 	}

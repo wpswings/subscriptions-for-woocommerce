@@ -55,11 +55,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 				}
 
 				foreach ( $available_gateways as $key => $gateway ) :
+					$mwb_supported_method = array( 'stripe');
+					$mwb_payment_method = apply_filters( 'mwb_sfw_supported_add_payment_gateway', $mwb_supported_method, $key );
 
-					if ( 'stripe' != $key ) {
+					if ( ! in_array( $key, $mwb_payment_method ) ) {
 						continue;
 					}
-
 					?>
 					<li class="wc_payment_method payment_method_<?php echo esc_attr( $gateway->id ); ?>">
 						<input id="payment_method_<?php echo esc_attr( $gateway->id ); ?>" type="radio" class="input-radio" name="payment_method" value="<?php echo esc_attr( $gateway->id ); ?>" <?php checked( $gateway->chosen, true ); ?> data-order_button_text="<?php echo esc_attr( $button_text ); ?>"/>
