@@ -143,12 +143,13 @@
            
             if ( 'variable' === select_val ) {
                 $( 'input#_mwb_sfw_product' ).prop( 'checked', false );
-                
+                mwb_sfw_show_subscription_settings_tab();
             } else if ( 'grouped' === select_val ) {
                 $( 'input#_mwb_sfw_product' ).prop( 'checked', false );
-                
+                mwb_sfw_show_subscription_settings_tab();
             } else if ( 'external' === select_val ) {
                 $( 'input#_mwb_sfw_product' ).prop( 'checked', false );
+                mwb_sfw_show_subscription_settings_tab();
             }
         });
     });
