@@ -1096,7 +1096,8 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_is_payment && $cart->total == 0 ) {
 			$mwb_needs_payment = true;
 		}
-		return $mwb_needs_payment;
+		
+		return apply_filters( 'mwb_sfw_needs_payment', $mwb_needs_payment, $cart );
 	}
 
 }

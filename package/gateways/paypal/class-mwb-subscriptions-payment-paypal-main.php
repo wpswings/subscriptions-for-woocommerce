@@ -118,15 +118,10 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 				
 				add_action( 'valid-paypal-standard-ipn-request', array( $this, 'mwb_sfw_validate_process_ipn_request' ),0 );
 				add_action( 'mwb_sfw_subscription_cancel', array( $this, 'mwb_sfw_cancel_paypal_subscription' ),10,2 );
-				//add_action('mwb_paypal_cancel', array( $this,'mwb_test_paypal') );
+				
 
 			}
 
-		}
-
-		public function mwb_test_paypal( $subscription_id ) {
-			print_r( $subscription_id );
-			die('-->>');
 		}
 
 		public function mwb_wsp_manual_payment_gateway_for_woocommerce( $supported_payment_method, $payment_method ) {
