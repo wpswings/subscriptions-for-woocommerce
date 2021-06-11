@@ -55,7 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				}
 
 				foreach ( $available_gateways as $key => $gateway ) :
-					$mwb_supported_method = array( 'stripe');
+					$mwb_supported_method = array( 'stripe' );
 					$mwb_payment_method = apply_filters( 'mwb_sfw_supported_add_payment_gateway', $mwb_supported_method, $key );
 
 					if ( ! in_array( $key, $mwb_payment_method ) ) {

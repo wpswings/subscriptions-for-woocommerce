@@ -604,6 +604,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to set customer address.
 	 *
 	 * @name mwb_sfw_set_customer_address
+	 * @param object $mwb_subscription mwb_subscription.
 	 * @since    1.0.1
 	 */
 	public function mwb_sfw_set_customer_address( $mwb_subscription ) {
@@ -626,6 +627,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to set customer address.
 	 *
 	 * @name mwb_sfw_set_customer_address_for_payment
+	 * @param object $mwb_subscription mwb_subscription.
 	 * @since    1.0.1
 	 */
 	public function mwb_sfw_set_customer_address_for_payment( $mwb_subscription ) {
@@ -949,8 +951,8 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_customer_id = get_post_meta( $mwb_subscription_id, 'mwb_customer_id', true );
 		if ( 'active' == $mwb_status && $mwb_customer_id == $user_id ) {
 
-			do_action('mwb_sfw_subscription_cancel',$mwb_subscription_id,'Cancel');
-			
+			do_action( 'mwb_sfw_subscription_cancel', $mwb_subscription_id, 'Cancel' );
+
 			do_action( 'mwb_sfw_cancel_susbcription', $mwb_subscription_id, $user_id );
 			wc_add_notice( __( 'Subscription Cancelled Successfully', 'woocommerce-subscriptions-pro' ), 'success' );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) );
@@ -1078,25 +1080,24 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_needs_payment ) {
 			return $mwb_needs_payment;
 		}
-		
+
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 
 				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$product_id = $cart_item['data']->get_id();
-					$mwb_free_trial_length = get_post_meta( $product_id,'mwb_sfw_subscription_free_trial_number',true );
+					$mwb_free_trial_length = get_post_meta( $product_id, 'mwb_sfw_subscription_free_trial_number', true );
 					if ( $mwb_free_trial_length > 0 ) {
 						$mwb_is_payment = true;
 						break;
 					}
-					
 				}
 			}
 		}
-		if ( $mwb_is_payment && $cart->total == 0 ) {
+		if ( $mwb_is_payment && 0 == $cart->total ) {
 			$mwb_needs_payment = true;
 		}
-		
+
 		return apply_filters( 'mwb_sfw_needs_payment', $mwb_needs_payment, $cart );
 	}
 

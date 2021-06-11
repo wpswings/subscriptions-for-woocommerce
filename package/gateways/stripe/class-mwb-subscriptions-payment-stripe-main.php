@@ -29,14 +29,22 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Stripe_Main' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
-			add_action( 'mwb_sfw_subscription_cancel', array( $this, 'mwb_sfw_cancel_stripe_subscription' ),10,2 );
+			add_action( 'mwb_sfw_subscription_cancel', array( $this, 'mwb_sfw_cancel_stripe_subscription' ), 10, 2 );
 			include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php';
 		}
 
+		/**
+		 * This function is used to cancel subscriptions status.
+		 *
+		 * @name mwb_sfw_cancel_stripe_subscription
+		 * @param int    $mwb_subscription_id mwb_subscription_id.
+		 * @param string $status status.
+		 * @since    1.0.1
+		 */
 		public function mwb_sfw_cancel_stripe_subscription( $mwb_subscription_id, $status ) {
-			
-			$mwb_payment_method = get_post_meta( $mwb_subscription_id, '_payment_method',true );
-			if ( $mwb_payment_method == 'stripe' ) {
+
+			$mwb_payment_method = get_post_meta( $mwb_subscription_id, '_payment_method', true );
+			if ( 'stripe' == $mwb_payment_method ) {
 				if ( 'Cancel' == $status ) {
 					mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
 					update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
