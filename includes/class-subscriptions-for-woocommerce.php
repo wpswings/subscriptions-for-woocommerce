@@ -200,18 +200,18 @@ class Subscriptions_For_Woocommerce {
 
 		$sfw_plugin_admin = new Subscriptions_For_Woocommerce_Admin( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'sfw_admin_enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'sfw_admin_enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'mwb_sfw_admin_enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'mwb_sfw_admin_enqueue_scripts' );
 
 		// Add settings menu for Subscriptions For Woocommerce.
-		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'sfw_options_page' );
+		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'mwb_sfw_options_page' );
 		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'mwb_sfw_remove_default_submenu', 50 );
 
 		// All admin actions and filters after License Validation goes here.
-		$this->loader->add_filter( 'mwb_add_plugins_menus_array', $sfw_plugin_admin, 'sfw_admin_submenu_page', 15 );
+		$this->loader->add_filter( 'mwb_add_plugins_menus_array', $sfw_plugin_admin, 'mwb_sfw_admin_submenu_page', 15 );
 
-		$this->loader->add_filter( 'sfw_general_settings_array', $sfw_plugin_admin, 'sfw_admin_general_settings_page', 10 );
-		$this->loader->add_filter( 'sfw_supprot_tab_settings_array', $sfw_plugin_admin, 'sfw_admin_support_settings_page', 10 );
+		$this->loader->add_filter( 'mwb_sfw_general_settings_array', $sfw_plugin_admin, 'mwb_sfw_admin_general_settings_page', 10 );
+		$this->loader->add_filter( 'mwb_sfw_supprot_tab_settings_array', $sfw_plugin_admin, 'mwb_sfw_admin_support_settings_page', 10 );
 
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
@@ -252,8 +252,8 @@ class Subscriptions_For_Woocommerce {
 		$sfw_plugin_public = new Subscriptions_For_Woocommerce_Public( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
 		if ( mwb_sfw_check_plugin_enable() ) {
-			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'sfw_public_enqueue_styles' );
-			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'sfw_public_enqueue_scripts' );
+			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'mwb_sfw_public_enqueue_styles' );
+			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'mwb_sfw_public_enqueue_scripts' );
 
 			$this->loader->add_filter( 'woocommerce_get_price_html', $sfw_plugin_public, 'mwb_sfw_price_html_subscription_product', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_product_single_add_to_cart_text', $sfw_plugin_public, 'mwb_sfw_product_add_to_cart_text', 10, 2 );

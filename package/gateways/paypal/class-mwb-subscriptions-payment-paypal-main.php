@@ -317,8 +317,6 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 
 			$mwb_order_items = $susbcription->get_items();
 
-			// $mwb_order_items = $order->get_items();
-
 			if ( empty( $mwb_order_items ) ) {
 
 				return $mwb_args;
@@ -551,9 +549,9 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 					$mwb_converted_period = 'M';
 					break;
 				case 'year':
-				default:
 					$mwb_converted_period = 'Y';
 					break;
+				default:
 			}
 
 			return $mwb_converted_period;
