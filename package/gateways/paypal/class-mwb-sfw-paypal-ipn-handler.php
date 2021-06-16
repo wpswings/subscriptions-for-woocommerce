@@ -40,9 +40,6 @@ if ( ! class_exists( 'MWB_Sfw_PayPal_IPN_Handler' ) ) {
 				'subscr_cancel',
 				'subscr_eot',
 				'subscr_failed',
-				'subscr_modify',
-				'recurring_payment_skipped',
-				'recurring_payment_suspended',
 				'recurring_payment_suspended_due_to_max_failed_payment',
 			);
 

@@ -59,7 +59,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function sfw_public_enqueue_styles() {
+	public function mwb_sfw_public_enqueue_styles() {
 
 		wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/src/scss/subscriptions-for-woocommerce-public.css', array(), $this->version, 'all' );
 
@@ -70,7 +70,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function sfw_public_enqueue_scripts() {
+	public function mwb_sfw_public_enqueue_scripts() {
 
 		wp_register_script( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/src/js/subscriptions-for-woocommerce-public.js', array( 'jquery' ), $this->version, false );
 		wp_localize_script( $this->plugin_name, 'sfw_public_param', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
@@ -545,24 +545,24 @@ class Subscriptions_For_Woocommerce_Public {
 
 			/*if free trial*/
 
-				$new_order = new WC_Order( $subscription_id );
+			$new_order = new WC_Order( $subscription_id );
 
-				$billing_details = $order->get_address( 'billing' );
-				$shipping_details = $order->get_address( 'shipping' );
+			$billing_details = $order->get_address( 'billing' );
+			$shipping_details = $order->get_address( 'shipping' );
 
-				$new_order->set_address( $billing_details, 'billing' );
-				$new_order->set_address( $shipping_details, 'shipping' );
+			$new_order->set_address( $billing_details, 'billing' );
+			$new_order->set_address( $shipping_details, 'shipping' );
 
-				$_product = wc_get_product( $mwb_args['product_id'] );
+			$_product = wc_get_product( $mwb_args['product_id'] );
 
-				$item_id = $new_order->add_product(
-					$_product,
-					$mwb_args['product_qty']
-				);
-				$new_order->update_taxes();
-				$new_order->calculate_totals();
-				$new_order->save();
-
+			$item_id = $new_order->add_product(
+				$_product,
+				$mwb_args['product_qty']
+			);
+			$new_order->update_taxes();
+			$new_order->calculate_totals();
+			$new_order->save();
+			do_action( 'mwb_sfw_subscription_order', $new_order );
 			mwb_sfw_update_meta_key_for_susbcription( $subscription_id, $mwb_args );
 			do_action( 'mwb_sfw_after_created_subscription', $subscription_id, $order_id );
 			return apply_filters( 'mwb_sfw_created_subscription', $subscription_id, $order_id );
