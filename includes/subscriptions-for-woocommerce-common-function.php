@@ -614,7 +614,7 @@ if ( ! function_exists( 'mwb_sfw_include_process_directory' ) ) {
 
 				while ( ( $mwb_file = readdir( $mwb_dh ) ) !== false ) {
 
-					if ( '.' == $mwb_file{0} ) {
+					if ( '.' == $mwb_file[0] ) {
 						continue; // skip dirs . and .. by first char test.
 					}
 
@@ -651,5 +651,21 @@ if ( ! function_exists( 'mwb_sfw_recerring_total_price_list_table_callback' ) ) 
 			$mwb_price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
 		}
 		return $mwb_price;
+	}
+}
+if ( ! function_exists( 'mwb_sfw_get_file_content' ) ) {
+	/**
+	 * This function is used to get file content.
+	 *
+	 * @name mwb_sfw_get_file_content
+	 * @param string $mwb_file_path mwb_file_path.
+	 * @since 1.0.1
+	 */
+	function mwb_sfw_get_file_content( $mwb_file_path ) {
+		global $wp_filesystem;
+
+		WP_Filesystem();
+		$mwb_file_content = $wp_filesystem->get_contents( $mwb_file_path );
+		return $mwb_file_content;
 	}
 }

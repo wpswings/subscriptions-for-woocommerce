@@ -155,8 +155,8 @@ if ( ! class_exists( 'MWB_Sfw_PayPal_IPN_Handler' ) ) {
 			 * @since    1.0.1
 			 */
 			private function mwb_paypal_ipn_request( $order, $mwb_transaction_details ) {
-
-				WC_Gateway_Paypal::log( 'MWB - Transaction log payment:' . print_r( $mwb_transaction_details, true ) );
+				// show the data in log file.
+				WC_Gateway_Paypal::log( 'MWB - Transaction log payment:' . wc_print_r( $mwb_transaction_details, true ) );
 				$mwb_order_statuses = array( 'on-hold', 'pending', 'failed', 'cancelled', 'wc-mwb_renewal' );
 				$mwb_order_info = $this->mwb_sfw_get_order_info( $mwb_transaction_details );
 				if ( $order->get_order_key() != $mwb_order_info['order_key'] ) {
@@ -222,7 +222,8 @@ if ( ! class_exists( 'MWB_Sfw_PayPal_IPN_Handler' ) ) {
 
 						break;
 					case 'subscr_payment':
-						WC_Gateway_Paypal::log( 'MWB - Transaction log for subscr_payment:' . print_r( $mwb_transaction_details, true ) );
+						// show the data in log file.
+						WC_Gateway_Paypal::log( 'MWB - Transaction log for subscr_payment:' . wc_print_r( $mwb_transaction_details, true ) );
 						if ( 'completed' == strtolower( $mwb_transaction_details['payment_status'] ) ) {
 
 							$mwb_order_transactions = get_post_meta( $mwb_subscription_id, '_mwb_paypal_transaction_ids', true );
@@ -489,9 +490,10 @@ if ( ! class_exists( 'MWB_Sfw_PayPal_IPN_Handler' ) ) {
 					WC_Gateway_Paypal::log( 'MWB - Renewal Order result1:' . $subscription_id );
 					$current_time = current_time( 'timestamp' );
 					$subscription = get_post( $subscription_id );
-					WC_Gateway_Paypal::log( 'MWB - Renewal Order subscription1:' . print_r( $subscription, true ) );
-
-					WC_Gateway_Paypal::log( 'MWB - Renewal Order subscription2:' . print_r( $subscription, true ) );
+					// show the data in log file.
+					WC_Gateway_Paypal::log( 'MWB - Renewal Order subscription1:' . wc_print_r( $subscription, true ) );
+					// show the data in log file.
+					WC_Gateway_Paypal::log( 'MWB - Renewal Order subscription2:' . wc_print_r( $subscription, true ) );
 					$parent_order_id  = $subscription->mwb_parent_order;
 					WC_Gateway_Paypal::log( 'MWB - Renewal Order result parent order:' . $parent_order_id );
 					$parent_order = wc_get_order( $parent_order_id );

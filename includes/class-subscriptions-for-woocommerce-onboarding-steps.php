@@ -554,7 +554,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 
 		check_ajax_referer( 'mwb_sfw_onboarding_nonce', 'nonce' );
 
-		$form_data = ! empty( $_POST['form_data'] ) ? json_decode( sanitize_text_field( wp_unslash( $_POST['form_data'] ) ) ) : '';
+		$form_data = ! empty( $_POST['form_data'] ) ? map_deep( json_decode( sanitize_text_field( wp_unslash( $_POST['form_data'] ) ) ), 'sanitize_text_field' ) : '';
 
 		$formatted_data = array();
 
