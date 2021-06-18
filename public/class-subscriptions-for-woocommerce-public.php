@@ -421,17 +421,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
 
 			if ( 'yes' == $mwb_has_susbcription ) {
-
 				// phpcs:disable WordPress.Security.NonceVerification.Missing
-				if ( isset( $_POST['payment_method'] ) && 'stripe' == $_POST['payment_method'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-					if ( ( isset( $_POST['wc-stripe-payment-token'] ) && 'new' == $_POST['wc-stripe-payment-token'] ) || isset( $_POST['stripe_source'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
-							$available_gateways  = WC()->payment_gateways->get_available_payment_gateways();
-							$stripe_class = $available_gateways['stripe'];
-							$payment_result = $stripe_class->process_payment( $order_id, false, true );
-
-					}
-				}
 				do_action( 'mwb_sfw_subscription_process_checkout_payment_method', $order_id, $posted_data );
 				// phpcs:enable WordPress.Security.NonceVerification.Missing
 			}
