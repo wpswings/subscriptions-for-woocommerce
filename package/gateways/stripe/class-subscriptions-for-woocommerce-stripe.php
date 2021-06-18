@@ -52,26 +52,31 @@ class Subscriptions_For_Woocommerce_Stripe {
 				$order->update_status( 'failed', $order_note );
 			}
 			$source   = $gateway->prepare_order_source( $parent_order );
-			WC_Stripe_Logger::log( 'MWB source: ' . print_r( $source, true ) );
+			// show the data in log file.
+			WC_Stripe_Logger::log( 'MWB source: ' . wc_print_r( $source, true ) );
 			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ) );
-			WC_Stripe_Logger::log( 'MWB response: ' . print_r( $response, true ) );
+			// show the data in log file.
+			WC_Stripe_Logger::log( 'MWB response: ' . wc_print_r( $response, true ) );
 			// Log here complete response.
 			if ( is_wp_error( $response ) ) {
-				WC_Stripe_Logger::log( 'MWB response error: ' . print_r( $response, true ) );
+				// show the data in log file.
+				WC_Stripe_Logger::log( 'MWB response error: ' . wc_print_r( $response, true ) );
 				// @todo handle the error part here/failure of order.
 
 				$error_message = sprintf( __( 'Something Went Wrong. Please see the log file for more info.', 'subscriptions-for-woocommerce' ) );
 
 			} else {
 				if ( ! empty( $response->error ) ) {
-					WC_Stripe_Logger::log( 'MWB response error: ' . print_r( $response, true ) );
+					// show the data in log file.
+					WC_Stripe_Logger::log( 'MWB response error: ' . wc_print_r( $response, true ) );
 					$is_successful = false;
 					$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 					$order->update_status( 'failed', $order_note );
 
 				} else {
-					WC_Stripe_Logger::log( 'MWB response succes: ' . print_r( $response, true ) );
-					// @todo handle the success part here/failure of order.
+					// show the data in log file.
+					WC_Stripe_Logger::log( 'MWB response succes: ' . wc_print_r( $response, true ) );
+
 					update_post_meta( $order_id, '_mwb_sfw_payment_transaction_id', $response->id );
 					/* translators: %s: search term */
 					$order_note = sprintf( __( 'Stripe Renewal Transaction Successful (%s)', 'subscriptions-for-woocommerce' ), $response->id );

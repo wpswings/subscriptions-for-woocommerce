@@ -202,15 +202,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		flush_rewrite_rules();
 	}
 
-	add_action( 'init', 'mwb_register_custom_order_types' );
+	add_action( 'init', 'mwb_sfw_register_custom_order_types' );
 
 	/**
 	 * This function is used to create custom post type for subscription.
 	 *
-	 * @name mwb_register_custom_order_types
+	 * @name mwb_sfw_register_custom_order_types
 	 * @since 1.0.0
 	 */
-	function mwb_register_custom_order_types() {
+	function mwb_sfw_register_custom_order_types() {
 		wc_register_order_type(
 			'mwb_subscriptions',
 			apply_filters(

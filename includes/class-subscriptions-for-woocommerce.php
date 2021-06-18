@@ -570,7 +570,7 @@ class Subscriptions_For_Woocommerce {
 		$sfw_system_status['php_max_execution_time'] = function_exists( 'ini_get' ) ? ini_get( 'max_execution_time' ) : __( 'N/A (ini_get function does not exist)', 'subscriptions-for-woocommerce' );
 
 		// Get outgoing IP address.
-		$sfw_system_status['outgoing_ip'] = function_exists( 'file_get_contents' ) ? file_get_contents( 'http://ipecho.net/plain' ) : __( 'N/A (file_get_contents function does not exist)', 'subscriptions-for-woocommerce' );
+		$sfw_system_status['outgoing_ip'] = function_exists( 'mwb_sfw_get_file_content' ) ? mwb_sfw_get_file_content( 'http://ipecho.net/plain' ) : __( 'N/A (mwb_sfw_get_file_content function does not exist)', 'subscriptions-for-woocommerce' );
 
 		$sfw_system_data['php'] = $sfw_system_status;
 		$sfw_system_data['wp'] = $sfw_wordpress_status;

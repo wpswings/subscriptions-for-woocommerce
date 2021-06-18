@@ -169,8 +169,8 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php';
 
 				WC_Gateway_Paypal::log( 'MWB Subscription Transaction Type: ' . $mwb_transaction_details['txn_type'] );
-
-				WC_Gateway_Paypal::log( 'MWB Subscription Transaction Details: ' . print_r( $mwb_transaction_details, true ) );
+				// show the data in log file.
+				WC_Gateway_Paypal::log( 'MWB Subscription Transaction Details: ' . wc_print_r( $mwb_transaction_details, true ) );
 
 			if ( class_exists( 'MWB_Sfw_PayPal_IPN_Handler' ) ) {
 				$mwb_paypal_obj = new MWB_Sfw_PayPal_IPN_Handler( $this->mwb_sfw_testmode, $this->mwb_sfw_receiver_email );
@@ -430,8 +430,8 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 
 			}
 			$mwb_args['rm'] = 2;
-
-			WC_Gateway_Paypal::log( 'MWB - Subscription Request: ' . print_r( $mwb_args, true ) );
+			// show the data in log file.
+			WC_Gateway_Paypal::log( 'MWB - Subscription Request: ' . wc_print_r( $mwb_args, true ) );
 
 			return apply_filters( 'mwb_sfw_paypal_args_data', $mwb_args, $order );
 
@@ -492,7 +492,8 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 				WC_Gateway_Paypal::log( 'MWB - Change Paypal status for ' . $profile_id . ' has been Failed: ' . $error_message );
 			} else {
 				$response    = wp_remote_retrieve_body( $response );
-				WC_Gateway_Paypal::log( 'MWB - Change Paypal status for ' . $profile_id . ' has been successfull: ' . print_r( $response, true ) );
+				// show the data in log file.
+				WC_Gateway_Paypal::log( 'MWB - Change Paypal status for ' . $profile_id . ' has been successfull: ' . wc_print_r( $response, true ) );
 				parse_str( $response, $parsed_response );
 				return $parsed_response;
 			}
