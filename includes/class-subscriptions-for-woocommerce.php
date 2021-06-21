@@ -524,7 +524,7 @@ class Subscriptions_For_Woocommerce {
 		$sfw_wordpress_status['wp_users'] = function_exists( 'count_users' ) ? count_users() : __( 'N/A (count_users function does not exist)', 'subscriptions-for-woocommerce' );
 
 		// Get the number of published WordPress posts.
-		$sfw_wordpress_status['wp_posts'] = wp_count_posts()->publish >= 1 ? wp_count_posts()->publish : __( '0', 'subscriptions-for-woocommerce' );
+		$sfw_wordpress_status['wp_posts'] = wp_count_posts()->publish >= 1 ? wp_count_posts()->publish : 0;
 
 		// Get PHP memory limit.
 		$sfw_system_status['php_memory_limit'] = function_exists( 'ini_get' ) ? (int) ini_get( 'memory_limit' ) : __( 'N/A (ini_get function does not exist)', 'subscriptions-for-woocommerce' );

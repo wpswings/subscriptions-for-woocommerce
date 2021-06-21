@@ -508,7 +508,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$mwb_args['mwb_subscription_status'] = 'pending';
 
 			$mwb_args = apply_filters( 'mwb_sfw_new_subscriptions_data', $mwb_args );
-			/* translators: %s: search term */
+			// translators: post title date parsed by strftime.
 			$post_title_date = strftime( _x( '%1$b %2$d, %Y @ %I:%M %p', 'subscription post title. "Subscriptions order - <this>"', 'subscriptions-for-woocommerce' ) );
 
 			$mwb_subscription_data = array();

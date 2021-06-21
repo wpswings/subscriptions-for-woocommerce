@@ -127,8 +127,8 @@ class Subscriptions_For_Woocommerce_Stripe {
 			$post_data['receipt_email'] = $billing_email;
 		}
 		$metadata              = array(
-			__( 'customer_name', 'subscriptions-for-woocommerce' )  => sanitize_text_field( $billing_first_name ) . ' ' . sanitize_text_field( $billing_last_name ),
-			__( 'customer_email', 'subscriptions-for-woocommerce' ) => sanitize_email( $billing_email ),
+			'customer_name'  => sanitize_text_field( $billing_first_name ) . ' ' . sanitize_text_field( $billing_last_name ),
+			'customer_email' => sanitize_email( $billing_email ),
 			'order_id'                                           => $order_id,
 		);
 		$post_data['expand[]'] = 'balance_transaction';
