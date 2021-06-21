@@ -388,7 +388,7 @@ if ( isset( $_GET['mwb_subscription_view_renewal_order'] ) && isset( $_GET['mwb_
 	?>
 	<h3 class="wp-heading-inline" id="mwb_sfw_heading"><?php esc_html_e( 'Subscriptions', 'subscriptions-for-woocommerce' ); ?></h3>
 		<form method="post">
-		<input type="hidden" name="page" value="<?php esc_html_e( 'susbcription_list_table', 'subscriptions-for-woocommerce' ); ?>">
+		<input type="hidden" name="page" value="susbcription_list_table">
 		<?php wp_nonce_field( 'susbcription_list_table', 'susbcription_list_table' ); ?>
 		<div class="mwb_sfw_list_table">
 			<?php

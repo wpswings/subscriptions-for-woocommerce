@@ -78,7 +78,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 					WC_Stripe_Logger::log( 'MWB response succes: ' . wc_print_r( $response, true ) );
 
 					update_post_meta( $order_id, '_mwb_sfw_payment_transaction_id', $response->id );
-					/* translators: %s: search term */
+					/* translators: %s: response id */
 					$order_note = sprintf( __( 'Stripe Renewal Transaction Successful (%s)', 'subscriptions-for-woocommerce' ), $response->id );
 					$order->update_status( 'processing', $order_note );
 					$is_successful = true;
@@ -116,7 +116,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 		$post_data                = array();
 		$post_data['currency']    = strtolower( $this->mwb_sfw_get_order_currency( $order ) );
 		$post_data['amount']      = WC_Stripe_Helper::get_stripe_amount( $charge_amount, $post_data['currency'] );
-		/* translators: %s: search term */
+		/* translators: 1$: site name,2$: order number */
 		$post_data['description'] = sprintf( __( '%1$s - Order %2$s - Renewal Order.', 'subscriptions-for-woocommerce' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 		$post_data['capture']     = $gateway->capture ? 'true' : 'false';
 		$billing_first_name       = $order->get_billing_first_name();

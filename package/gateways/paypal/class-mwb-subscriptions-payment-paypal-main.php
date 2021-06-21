@@ -421,7 +421,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			}
 
 			if ( count( $mwb_item_names ) > 1 ) {
-				/* translators: %s: search term */
+				/* translators: %s: order number */
 				$mwb_args['item_name'] = $this->mwb_format_item_name( sprintf( __( 'Order %s', 'subscriptions-for-woocommerce' ), $order->get_order_number() . ' - ' . implode( ', ', $mwb_item_names ) ) );
 
 			} else {
@@ -472,7 +472,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 						. '&METHOD=ManageRecurringPaymentsProfileStatus'
 						. '&PROFILEID=' . urlencode( $profile_id )
 						. '&ACTION=' . urlencode( $action )
-						/* translators: %s: search term */
+						/* translators: %s: subscription status */
 						. '&NOTE=' . urlencode( sprintf( __( 'MWB Subscription %s', 'subscriptions-for-woocommerce' ), strtolower( $action ) ) );
 
 			$url = $this->mwb_sfw_api_endpoint;

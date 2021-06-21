@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
-<?php /* translators: %s: search term */ ?>
+<?php /* translators: %s: susbcription ID */ ?>
 <p><?php printf( esc_html__( 'A subscription [#%s] has been Expired. Their subscription\'s details are as follows:', 'subscriptions-for-woocommerce' ), esc_html( $mwb_subscription ) ); ?></p>
 
 <?php
