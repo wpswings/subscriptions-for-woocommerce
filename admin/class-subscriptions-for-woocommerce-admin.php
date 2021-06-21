@@ -763,7 +763,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'exclude_from_search'       => false,
 				'show_in_admin_all_list'    => true,
 				'show_in_admin_status_list' => true,
-				/* translators: %s: search term */
+				/* translators: %s: count */
 				'label_count'               => _n_noop( 'Mwb Renewal <span class="count">(%s)</span>', 'Mwb Renewal<span class="count">(%s)</span>', 'subscriptions-for-woocommerce' ),
 			)
 		);

@@ -481,7 +481,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 
 			rand() => array(
 				'id' => 'mwb-sfw-deactivation-reason-text',
-				/* translators: %s: search term */
+				/* translators: %s: plugin name */
 				'title' => sprintf( esc_html__( ' Let us know why you are deactivating %s so we can improve the plugin', 'subscriptions-for-woocommerce' ), self::$mwb_sfw_plugin_name_label ),
 				'type' => 'textarea',
 				'description' => '',

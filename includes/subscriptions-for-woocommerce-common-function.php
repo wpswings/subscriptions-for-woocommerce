@@ -481,19 +481,19 @@ if ( ! function_exists( 'mwb_sfw_get_time_interval' ) ) {
 		$mwb_price_html = '';
 		switch ( $mwb_sfw_subscription_interval ) {
 			case 'day':
-				/* translators: %s: search term */
+				/* translators: %s: Day,%s: Days */
 				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'week':
-				/* translators: %s: search term */
+				/* translators: %s: Week,%s: Weeks */
 				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'month':
-				/* translators: %s: search term */
+				/* translators: %s: Month,%s: Months */
 				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'year':
-				/* translators: %s: search term */
+				/* translators: %s: Year,%s: Years */
 				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 		}
@@ -519,19 +519,19 @@ if ( ! function_exists( 'mwb_sfw_get_time_interval_for_price' ) ) {
 		$mwb_price_html = '';
 		switch ( $mwb_sfw_subscription_interval ) {
 			case 'day':
-				/* translators: %s: search term */
+				/* translators: %s: Day,%s: Days */
 				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'week':
-				/* translators: %s: search term */
+				/* translators: %s: Week,%s: Weeks */
 				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'month':
-				/* translators: %s: search term */
+				/* translators: %s: Month,%s: Months */
 				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 			case 'year':
-				/* translators: %s: search term */
+				/* translators: %s: Year,%s: Years */
 				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
 				break;
 		}
@@ -647,7 +647,7 @@ if ( ! function_exists( 'mwb_sfw_recerring_total_price_list_table_callback' ) ) 
 			$mwb_recurring_interval = get_post_meta( $mwb_subscription_id, 'mwb_sfw_subscription_interval', true );
 			$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
 
-			/* translators: %s: search term */
+			/* translators: %s: frequency interval. */
 			$mwb_price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
 		}
 		return $mwb_price;
