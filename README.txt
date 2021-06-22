@@ -5,25 +5,24 @@ Tags: subscription, subscriptions, woocommerce, recurring revenue, woocommerce s
 Requires at least: 4.6
 Tested up to: 5.7
 WC requires at least: 4.0
-WC tested up to: 5.1
-Stable tag: 1.0.0
+WC tested up to: 5.4
+Stable tag: 1.0.1
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
 
 
-With Subscriptions for WooCommerce, turn your physical or online store into a WooCommerce subscription store and avail recurring revenue with complete subscription plan management.
+With Subscriptions for WooCommerce, turn your physical or online store into a WooCommerce subscription store and avail recurring revenue.
 
 == Description ==
 
 **GET SUBSCRIPTIONS FOR WOOCOMMERCE AND INCREASE RECURRING REVENUE**
 
-Subscriptions for WooCommerce Plugin allows the WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store. The free Subscriptions for WooCommerce plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, online courses to eCommerce stores, revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business. 
+Subscriptions for WooCommerce Plugin allows WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store. The free Subscriptions for WooCommerce plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, online courses to eCommerce stores, revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business. 
 
+[youtube https://www.youtube.com/watch?v=QZO0Q_DT0ik]
 
-
-
-== WITH OUR FREE SUBSCRIPTIONS FOR WOOCOMMERCE PLUGIN, YOU CAN: ==
+== WITH OUR FREE SUBSCRIPTIONS FOR THE WOOCOMMERCE PLUGIN, YOU CAN: ==
 
 * Provide WooCommerce subscription free of cost on products 
 * Generate trouble-free recurring revenue with recurring payments from users
@@ -34,6 +33,13 @@ Subscriptions for WooCommerce Plugin allows the WooCommerce merchants to provide
 * Charge initial fees on subscription-based products and services
 * Cancel WooCommerce subscriptions anytime
 * Full control of subscriptions management   
+* Added Paypal Payment Gateway for Subscription.
+* Show Recurring Frequency in the subscription List Table.
+* Added error notice for purchasing multiple subscriptions.
+
+== PLUGIN MEETS YOUR REQUIREMENT, SO ==
+[*Download Now !!*](https://downloads.wordpress.org/plugin/subscriptions-for-woocommerce.zip)
+Visit [**Subscriptions For WooCommerce Documentation**](https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions)
 
 
 == SALIENT FEATURES OF FREE SUBSCRIPTIONS FOR WOOCOMMERCE PLUGIN ==
@@ -48,19 +54,19 @@ You can set the recurring frequency options for subscribed products for the user
 You can set the expiration date of the WooCommerce subscription plans. The subscription of the product will last till the expiration period. And, the recurring payments will be made according to the WooCommerce subscription frequency plan. The subscription plan can be renewed for extending the subscription.
 
 **4)** **Charge Initial Fee on Subscription-based Products with WooCommerce Payment Integrations**
-If you want to charge extra payment in the form of an initial sign-up fee, you can do that too. The free subscriptions for WooCommerce plugin supports Stripe payment integration of WooCommerce. This integration works seamlessly together.
+If you want to charge extra payment in the form of an initial sign-up fee, you can do that too. The free subscriptions for the WooCommerce plugin support Stripe payment integration of WooCommerce. This integration works seamlessly together.
 
 **5)** **Offer Free Trial To WooCommerce Subscription Users**
-You can provide free trials to the subscription users. Admin can also set the free trial frequency. Urge them to sign up by offering them a free trial of subscription-based products or services. Recurring Payments can be done by the user after the free trial is over, and WooCommerce subscription plan can later be continued. 
+You can provide free trials to the subscription users. Admin can also set the free trial frequency. Urge them to sign up by offering them a free trial of subscription-based products or services. Recurring Payments can be done by the user after the free trial is over, and the WooCommerce subscription plan can later be continued. 
 
 **6)** **Both User and Admin Can Stop WooCommerce Subscription Option**
 There is a flexibility of ending the subscription by the admin or the user anytime. Both can stop subscriptions of products or services in easy steps. Thus, also halting future recurring payments.
 
 **7)** **Complete WooCommerce Subscription Reports for Admin**
-With a clean WooCommerce subscription plan report module, you will get complete WooCommerce subscription plan data of all users. Find essential details like active and inactive WooCommerce subscriptions, following recurring payment dates, subscription-based product names, WooCommerce subscription expiry dates, and the individual plans' due dates.
+With a clean WooCommerce subscription plan report module, you will get the complete WooCommerce subscription plan data of all users. Find essential details like active and inactive WooCommerce subscriptions, following recurring payment dates, subscription-based product names, WooCommerce subscription expiry dates, and the individual plans' due dates.
 
 **8)** **Cancel WooCommerce Subscription Plan Anytime via User or Admin**
-With the free Subscriptions for WooCommerce plugin, both users and admin can cancel the WooCommerce subscription plans anytime. This way, subscription management becomes flexible enough. 
+With the free Subscriptions for the WooCommerce plugin, both users and admin can cancel the WooCommerce subscription plans anytime. This way, subscription management becomes flexible enough. 
 
  [**Free demo of Subscriptions for WooCommerce**](https://demo.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-org&utm_medium=MWB-ORG-Page&utm_campaign=MWB-free_demo)
 
@@ -120,7 +126,7 @@ Yes, Admin can check the status of all his subscriptions like active and inactiv
 
 = Is it possible to cancel the subscription by admin & customer both? =
 
-Yes, the plugin provides this functionality for both admin and the customer.
+Yes, the plugin provides this functionality for both the admin and the customer.
 
 = Can the admin set the subscription expiry date? =
 
@@ -134,6 +140,9 @@ Yes, Admin can provide a feature to give the free trial to customers, for which 
 
 Yes, The plugin has a feature by using that Admin can charge a fee.
 
+= My question is not listed? =
+
+Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com/wordpress-plugins-knowledge-base/category/subscriptions-for-woocommerce-kb/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions-faq) and for more details visit [Subscriptions For WooCommerce Documentation](https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions-faq).
 
 == Screenshots ==
 
@@ -149,10 +158,26 @@ Yes, The plugin has a feature by using that Admin can charge a fee.
 
 == Changelog ==
 
-= 1.0.0 - RELEASED ON 6 APRIL 2021 =
+= 1.0.1 - RELEASED ON 19 JUNE 2021 =
+
+* New: Added Paypal Payment Gateway for Subscription.
+* New: Show Recurring Frequency in the subscription List Table.
+* New: Added error notice for purchasing multiple subscriptions.
+* Fix: Added demo video in the overview section.
+* Fix: Guest Checkout issue for subscription products.
+* Fix: Compatibility with WooCommerce 5.4
+
+= 1.0.0 - RELEASED ON 9 APRIL 2021 =
 
 * First version
 
 == Upgrade Notice ==
-= 1.0.0 - RELEASED ON 6 APRIL 2021 =
-* First version
+
+= 1.0.1 - RELEASED ON 19 JUNE 2021 =
+
+* New: Added Paypal Payment Gateway for Subscription.
+* New: Show Recurring Frequency in the subscription List Table.
+* New: Added error notice for purchasing multiple subscriptions.
+* Fix: Added demo video in the overview section.
+* Fix: Guest Checkout issue for subscription products.
+* Fix: Compatibility with WooCommerce 5.4
