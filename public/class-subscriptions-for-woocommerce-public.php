@@ -101,9 +101,10 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @name mwb_sfw_subscription_product_get_price_html
 	 * @param object $price price.
 	 * @param string $product product.
+	 * @param array  $cart_item cart_item.
 	 * @since    1.0.0
 	 */
-	public function mwb_sfw_subscription_product_get_price_html( $price, $product ) {
+	public function mwb_sfw_subscription_product_get_price_html( $price, $product, $cart_item = array() ) {
 
 		if ( is_object( $product ) ) {
 			$product_id = $product->get_id();
@@ -115,7 +116,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_sfw_subscription_expiry_interval = get_post_meta( $product_id, 'mwb_sfw_subscription_expiry_interval', true );
 
 				$mwb_price_html = mwb_sfw_get_time_interval( $mwb_sfw_subscription_expiry_number, $mwb_sfw_subscription_expiry_interval );
-				$mwb_price_html = apply_filters( 'mwb_sfw_show_time_interval', $mwb_price_html, $product_id );
+				$mwb_price_html = apply_filters( 'mwb_sfw_show_time_interval', $mwb_price_html, $product_id, $cart_item );
 				$mwb_price = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 
 				/* translators: %s: susbcription interval */
@@ -287,7 +288,7 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
-			$product_price = $this->mwb_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'] );
+			$product_price = $this->mwb_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
 		}
 		return $product_price;
 	}
