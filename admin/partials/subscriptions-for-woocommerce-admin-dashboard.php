@@ -25,7 +25,7 @@ if ( $mwb_sfw_notices ) {
 	$mwb_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
 	$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
 }
-do_action('mwb_sfw_notice_message');
+do_action( 'mwb_sfw_notice_message' );
 ?>
 <header>
 	<div class="mwb-header-container mwb-bg-white mwb-r-8">
