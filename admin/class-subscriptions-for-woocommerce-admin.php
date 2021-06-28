@@ -617,20 +617,31 @@ class Subscriptions_For_Woocommerce_Admin {
 
 					$_product = wc_get_product( $product_id );
 
-					$item_id = $mwb_new_order->add_product(
-						$_product,
-						$product_qty,
-						array(
-							'variation' => array(),
-							'totals'    => array(
-								'subtotal'     => $subscription->line_subtotal,
-								'subtotal_tax' => $subscription->line_subtotal_tax,
-								'total'        => $subscription->line_total,
-								'tax'          => $subscription->line_tax,
-								'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
-							),
-						)
+					$mwb_args = array(
+						'variation' => array(),
+						'totals'    => array(
+							'subtotal'     => $subscription->line_subtotal,
+							'subtotal_tax' => $subscription->line_subtotal_tax,
+							'total'        => $subscription->line_total,
+							'tax'          => $subscription->line_tax,
+							'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
+						),
 					);
+					$mwb_pro_args = apply_filters( 'mwb_product_args_for_order', $mwb_args );
+
+					if ( ! empty( $subscription->line_subtotal ) && ! empty( $subscription->line_total ) ) {
+						$item_id = $mwb_new_order->add_product(
+							$_product,
+							$product_qty,
+							$mwb_pro_args
+						);
+					} else {
+						$item_id = $mwb_new_order->add_product(
+							$_product,
+							$product_qty
+						);
+					}
+
 					$mwb_new_order->update_taxes();
 					$mwb_new_order->calculate_totals( false );
 					$mwb_new_order->save();
