@@ -629,7 +629,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					);
 					$mwb_pro_args = apply_filters( 'mwb_product_args_for_order', $mwb_args );
 
-					if ( ! empty( $subscription->line_subtotal ) && ! empty( $subscription->line_total ) ) {
+					if ( ! empty( $subscription->line_subtotal ) && ! empty( $subscription->line_total ) && empty( $subscription->mwb_sfw_subscription_initial_signup_price ) ) {
 						$item_id = $mwb_new_order->add_product(
 							$_product,
 							$product_qty,
