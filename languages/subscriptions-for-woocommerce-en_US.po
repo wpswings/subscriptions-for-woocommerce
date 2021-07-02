@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Subscriptions For WooCommerce 1.0.1\n"
-"POT-Creation-Date: 2021-06-22 11:59+0530\n"
-"PO-Revision-Date: 2021-06-22 11:59+0530\n"
+"POT-Creation-Date: 2021-07-01 18:53+0530\n"
+"PO-Revision-Date: 2021-07-01 18:53+0530\n"
 "Last-Translator: \n"
 "Language-Team: MakeWebBetter\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
-"X-Poedit-Basepath: ../subscriptions-for-woocommerce\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n;_x;__;_ex;_nx;esc_attr__;esc_attr_e;"
-"esc_attr_x;esc_html;esc_html__;esc_html_e;esc_html_x;_n_noop;_nx_noop;"
+"X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_attr__;esc_attr_e;esc_attr_x;"
+"esc_html;esc_html__;esc_html_e;esc_html_x;_n_noop;_nx_noop;"
 "translate_nooped_plural\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -226,12 +226,12 @@ msgid ""
 "Choose the trial period for subscription \"leave empty for no trial period\""
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:761
-#: admin/class-subscriptions-for-woocommerce-admin.php:780
+#: admin/class-subscriptions-for-woocommerce-admin.php:772
+#: admin/class-subscriptions-for-woocommerce-admin.php:791
 msgid "Mwb Renewal"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:767
+#: admin/class-subscriptions-for-woocommerce-admin.php:778
 #, php-format
 msgid "Mwb Renewal <span class=\"count\">(%s)</span>"
 msgstr ""
@@ -286,7 +286,7 @@ msgid "Delete"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:389
-#: public/class-subscriptions-for-woocommerce-public.php:800
+#: public/class-subscriptions-for-woocommerce-public.php:801
 #: subscriptions-for-woocommerce.php:220 subscriptions-for-woocommerce.php:233
 msgid "Subscriptions"
 msgstr ""
@@ -299,7 +299,7 @@ msgstr ""
 msgid "Settings saved !"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:32
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:33
 #: subscriptions-for-woocommerce.php:177
 msgid "Support"
 msgstr ""
@@ -722,9 +722,9 @@ msgid "%s Year"
 msgstr ""
 
 #: includes/subscriptions-for-woocommerce-common-function.php:651
-#: public/class-subscriptions-for-woocommerce-public.php:122
-#: public/class-subscriptions-for-woocommerce-public.php:136
-#: public/class-subscriptions-for-woocommerce-public.php:887
+#: public/class-subscriptions-for-woocommerce-public.php:123
+#: public/class-subscriptions-for-woocommerce-public.php:137
+#: public/class-subscriptions-for-woocommerce-public.php:888
 #, php-format
 msgid " / %s "
 msgstr ""
@@ -812,47 +812,47 @@ msgstr ""
 msgid "%1$s - Order %2$s - Renewal Order."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:127
+#: public/class-subscriptions-for-woocommerce-public.php:128
 #, php-format
 msgid " For %s "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:163
+#: public/class-subscriptions-for-woocommerce-public.php:164
 #, php-format
 msgid " and %s  Sign up fee"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:184
+#: public/class-subscriptions-for-woocommerce-public.php:185
 #, php-format
 msgid " and %s  free trial"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:512
+#: public/class-subscriptions-for-woocommerce-public.php:513
 msgid "%1$b %2$d, %Y @ %I:%M %p"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:521
+#: public/class-subscriptions-for-woocommerce-public.php:522
 #, php-format
 msgid "MWB Subscription &ndash; %s"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:670
+#: public/class-subscriptions-for-woocommerce-public.php:671
 msgid "Please enable payment method"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:696
+#: public/class-subscriptions-for-woocommerce-public.php:697
 msgid "Payment Method Added Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:902
+#: public/class-subscriptions-for-woocommerce-public.php:903
 msgid "Not a valid subscription"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:947
+#: public/class-subscriptions-for-woocommerce-public.php:948
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1053
+#: public/class-subscriptions-for-woocommerce-public.php:1054
 msgid "You can not add multiple subscription product in cart"
 msgstr ""
 
