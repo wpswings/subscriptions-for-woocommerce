@@ -33,7 +33,7 @@ Subscriptions for WooCommerce Plugin allows WooCommerce merchants to provide the
 * Charge initial fees on subscription-based products and services
 * Cancel WooCommerce subscriptions anytime
 * Full control of subscriptions management   
-* Added Paypal Payment Gateway for Subscription.
+* Added WooCommerce Paypal Standard Payment Gateway for Subscription.
 * Show Recurring Frequency in the subscription List Table.
 * Added error notice for purchasing multiple subscriptions.
 
@@ -160,7 +160,7 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 = 1.0.1 - RELEASED ON 19 JUNE 2021 =
 
-* New: Added Paypal Payment Gateway for Subscription.
+* New: Added WooCommerce Paypal Standard Payment Gateway for Subscription.
 * New: Show Recurring Frequency in the subscription List Table.
 * New: Added error notice for purchasing multiple subscriptions.
 * Fix: Added demo video in the overview section.
@@ -175,7 +175,7 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 = 1.0.1 - RELEASED ON 19 JUNE 2021 =
 
-* New: Added Paypal Payment Gateway for Subscription.
+* New: Added WooCommerce Paypal Standard Payment Gateway for Subscription.
 * New: Show Recurring Frequency in the subscription List Table.
 * New: Added error notice for purchasing multiple subscriptions.
 * Fix: Added demo video in the overview section.
