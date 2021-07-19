@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 global $sfw_mwb_sfw_obj;
-$sfw_genaral_settings = apply_filters( 'sfw_general_settings_array', array() );
+$sfw_genaral_settings = apply_filters( 'mwb_sfw_general_settings_array', array() );
 ?>
 <!--  template file for admin settings. -->
 <form action="" method="POST" class="mwb-sfw-gen-section-form">

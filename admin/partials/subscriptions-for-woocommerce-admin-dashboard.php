@@ -17,8 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $sfw_mwb_sfw_obj;
+global $mwb_sfw_notices;
 $sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-overview';
 $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
+
+if ( $mwb_sfw_notices ) {
+	$mwb_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
+	$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
+}
+do_action( 'mwb_sfw_notice_message' );
 ?>
 <header>
 	<div class="mwb-header-container mwb-bg-white mwb-r-8">
@@ -28,12 +35,13 @@ $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 </header>
 
 <main class="mwb-main mwb-bg-white mwb-r-8">
+	
 	<nav class="mwb-navbar">
 		<ul class="mwb-navbar__items">
 			<?php
 			if ( is_array( $sfw_default_tabs ) && ! empty( $sfw_default_tabs ) ) {
 
-				foreach ( $sfw_default_tabs as $sfw_tab_key => $sfw_default_tabs ) {
+				foreach ( $sfw_default_tabs as $sfw_tab_key => $sfw_default_tab ) {
 
 					$sfw_tab_classes = 'mwb-link ';
 
@@ -42,7 +50,7 @@ $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 					}
 					?>
 					<li>
-						<a id="<?php echo esc_attr( $sfw_tab_key ); ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ) . '&sfw_tab=' . esc_attr( $sfw_tab_key ) ); ?>" class="<?php echo esc_attr( $sfw_tab_classes ); ?>"><?php echo esc_html( $sfw_default_tabs['title'] ); ?></a>
+						<a id="<?php echo esc_attr( $sfw_tab_key ); ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ) . '&sfw_tab=' . esc_attr( $sfw_tab_key ) ); ?>" class="<?php echo esc_attr( $sfw_tab_classes ); ?>"><?php echo esc_html( $sfw_default_tab['title'] ); ?></a>
 					</li>
 					<?php
 				}
@@ -60,8 +68,14 @@ $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 				$sfw_active_tab = 'mwb_sfw_plug_general';
 			}
 
-						// look for the path based on the tab id in the admin templates.
-				$sfw_tab_content_path = 'admin/partials/' . $sfw_active_tab . '.php';
+
+				// look for the path based on the tab id in the admin templates.
+			if ( ! isset( $sfw_default_tabs[ $sfw_active_tab ]['file_path'] ) ) {
+				$file_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH;
+			} else {
+				$file_path = $sfw_default_tabs[ $sfw_active_tab ]['file_path'];
+			}
+				$sfw_tab_content_path = $file_path . 'admin/partials/' . $sfw_active_tab . '.php';
 
 				$sfw_mwb_sfw_obj->mwb_sfw_plug_load_template( $sfw_tab_content_path );
 

@@ -10,7 +10,7 @@
  */
 
 /**
- * The Onboarding-specific functionality of the plugin admin side.
+ * The Payment-specific functionality of the plugin admin side.
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
@@ -47,28 +47,38 @@ class Subscriptions_For_Woocommerce_Stripe {
 		try {
 
 			$gateway = $this->mwb_sfw_get_wc_gateway();
+			if ( ! $gateway ) {
+				$order_note = __( 'Stripe payment gateway not activated.', 'subscriptions-for-woocommerce' );
+				$order->update_status( 'failed', $order_note );
+			}
 			$source   = $gateway->prepare_order_source( $parent_order );
+			// show the data in log file.
+			WC_Stripe_Logger::log( 'MWB source: ' . wc_print_r( $source, true ) );
 			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ) );
-
+			// show the data in log file.
+			WC_Stripe_Logger::log( 'MWB response: ' . wc_print_r( $response, true ) );
 			// Log here complete response.
 			if ( is_wp_error( $response ) ) {
-
+				// show the data in log file.
+				WC_Stripe_Logger::log( 'MWB response error: ' . wc_print_r( $response, true ) );
 				// @todo handle the error part here/failure of order.
 
 				$error_message = sprintf( __( 'Something Went Wrong. Please see the log file for more info.', 'subscriptions-for-woocommerce' ) );
 
 			} else {
 				if ( ! empty( $response->error ) ) {
-
+					// show the data in log file.
+					WC_Stripe_Logger::log( 'MWB response error: ' . wc_print_r( $response, true ) );
 					$is_successful = false;
 					$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 					$order->update_status( 'failed', $order_note );
 
 				} else {
+					// show the data in log file.
+					WC_Stripe_Logger::log( 'MWB response succes: ' . wc_print_r( $response, true ) );
 
-					// @todo handle the success part here/failure of order.
 					update_post_meta( $order_id, '_mwb_sfw_payment_transaction_id', $response->id );
-					/* translators: %s: search term */
+					/* translators: %s: response id */
 					$order_note = sprintf( __( 'Stripe Renewal Transaction Successful (%s)', 'subscriptions-for-woocommerce' ), $response->id );
 					$order->update_status( 'processing', $order_note );
 					$is_successful = true;
@@ -79,7 +89,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 			return $is_successful;
 
 		} catch ( Exception $e ) {
-
+			WC_Stripe_Logger::log( 'MWB response Failed: ' );
 			// @todo transaction failure to handle here.
 			$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 			$order->update_status( 'failed', $order_note );
@@ -106,7 +116,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 		$post_data                = array();
 		$post_data['currency']    = strtolower( $this->mwb_sfw_get_order_currency( $order ) );
 		$post_data['amount']      = WC_Stripe_Helper::get_stripe_amount( $charge_amount, $post_data['currency'] );
-		/* translators: %s: search term */
+		/* translators: 1$: site name,2$: order number */
 		$post_data['description'] = sprintf( __( '%1$s - Order %2$s - Renewal Order.', 'subscriptions-for-woocommerce' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 		$post_data['capture']     = $gateway->capture ? 'true' : 'false';
 		$billing_first_name       = $order->get_billing_first_name();
@@ -117,8 +127,8 @@ class Subscriptions_For_Woocommerce_Stripe {
 			$post_data['receipt_email'] = $billing_email;
 		}
 		$metadata              = array(
-			__( 'customer_name', 'subscriptions-for-woocommerce' )  => sanitize_text_field( $billing_first_name ) . ' ' . sanitize_text_field( $billing_last_name ),
-			__( 'customer_email', 'subscriptions-for-woocommerce' ) => sanitize_email( $billing_email ),
+			'customer_name'  => sanitize_text_field( $billing_first_name ) . ' ' . sanitize_text_field( $billing_last_name ),
+			'customer_email' => sanitize_email( $billing_email ),
 			'order_id'                                           => $order_id,
 		);
 		$post_data['expand[]'] = 'balance_transaction';
@@ -144,7 +154,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 	public function mwb_sfw_get_wc_gateway() {
 		global $woocommerce;
 		$gateways = $woocommerce->payment_gateways->payment_gateways();
-		if ( ! empty( $gateways['stripe'] ) ) {
+		if ( isset( $gateways['stripe'] ) && ! empty( $gateways['stripe'] ) ) {
 			return $gateways['stripe'];
 		}
 		return false;

@@ -27,8 +27,8 @@ if ( ! function_exists( 'mwb_sfw_get_the_wordpress_date_format' ) ) {
 			$date_format = get_option( 'date_format', 'Y-m-d' );
 			$time_format = get_option( 'time_format', 'g:i a' );
 			$wp_date = date_i18n( $date_format, $saved_date );
-			$wp_time = date_i18n( $time_format, $saved_date );
-			$return_date = $wp_date . ' ' . $wp_time;
+
+			$return_date = $wp_date;
 		}
 
 		return $return_date;
@@ -357,7 +357,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
 		} elseif ( $mwb_subscription->get_order_key() !== $order_key ) {
 			$result = false;
-			wc_add_notice( __( 'Invalid subscription order.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}
 		return $result;
 	}
@@ -382,5 +382,290 @@ if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
 	}
 }
 
+if ( ! function_exists( 'mwb_sfw_check_product_is_subscription' ) ) {
+	/**
+	 * This function is used to check susbcripton product.
+	 *
+	 * @name mwb_sfw_check_product_is_subscription
+	 * @param Object $product product.
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_check_product_is_subscription( $product ) {
+
+		$mwb_is_subscription = false;
+		if ( is_object( $product ) ) {
+			$product_id = $product->get_id();
+			$mwb_subscription_product = get_post_meta( $product_id, '_mwb_sfw_product', true );
+			if ( 'yes' === $mwb_subscription_product ) {
+				$mwb_is_subscription = true;
+			}
+		}
+
+		return apply_filters( 'mwb_sfw_check_subscription_product_type', $mwb_is_subscription, $product );
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_subscription_period' ) ) {
+
+	/**
+	 * This function is used to add subscription intervals.
+	 *
+	 * @name mwb_sfw_subscription_period
+	 * @since    1.0.0
+	 * @return   Array  $subscription_interval
+	 */
+	function mwb_sfw_subscription_period() {
+		$subscription_interval = array(
+			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
+			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
+			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
+		);
+		return apply_filters( 'mwb_sfw_subscription_intervals', $subscription_interval );
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_subscription_expiry_period' ) ) {
+
+	/**
+	 * This function is used to add subscription intervals for expiry.
+	 *
+	 * @name mwb_sfw_subscription_expiry_period
+	 * @since    1.0.0
+	 * @param   string $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
+	 */
+	function mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) {
+
+		$subscription_interval = array(
+			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
+			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
+			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
+		);
+		if ( 'day' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['week'] );
+			unset( $subscription_interval['month'] );
+			unset( $subscription_interval['year'] );
+		} elseif ( 'week' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['month'] );
+			unset( $subscription_interval['year'] );
+
+		} elseif ( 'month' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['week'] );
+			unset( $subscription_interval['year'] );
+
+		} elseif ( 'year' == $mwb_sfw_subscription_interval ) {
+			unset( $subscription_interval['day'] );
+			unset( $subscription_interval['week'] );
+			unset( $subscription_interval['month'] );
+		}
+		return apply_filters( 'mwb_sfw_subscription_expiry_intervals', $subscription_interval );
+	}
+}
 
 
+
+if ( ! function_exists( 'mwb_sfw_get_time_interval' ) ) {
+	/**
+	 * This function is used to show subscription price and interval on subscription product page.
+	 *
+	 * @name mwb_sfw_get_time_interval
+	 * @param int    $mwb_sfw_subscription_number Subscription inteval number.
+	 * @param string $mwb_sfw_subscription_interval Subscription Interval .
+	 * @since    1.0.0
+	 */
+	function mwb_sfw_get_time_interval( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
+
+		$mwb_price_html = '';
+		switch ( $mwb_sfw_subscription_interval ) {
+			case 'day':
+				/* translators: %s: Day,%s: Days */
+				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'week':
+				/* translators: %s: Week,%s: Weeks */
+				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'month':
+				/* translators: %s: Month,%s: Months */
+				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'year':
+				/* translators: %s: Year,%s: Years */
+				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_sfw_subscription_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+		}
+		return apply_filters( 'mwb_sfw_display_time_interval', $mwb_price_html );
+
+	}
+}
+if ( ! function_exists( 'mwb_sfw_get_time_interval_for_price' ) ) {
+	/**
+	 * This function is used to show subscription price and interval on subscription product page.
+	 *
+	 * @name mwb_sfw_get_time_interval_for_price
+	 * @param int    $mwb_sfw_subscription_number Subscription inteval number.
+	 * @param string $mwb_sfw_subscription_interval Subscription Interval .
+	 * @since    1.0.0
+	 */
+	function mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval ) {
+		$mwb_number = $mwb_sfw_subscription_number;
+		if ( 1 == $mwb_sfw_subscription_number ) {
+			$mwb_sfw_subscription_number = '';
+		}
+
+		$mwb_price_html = '';
+		switch ( $mwb_sfw_subscription_interval ) {
+			case 'day':
+				/* translators: %s: Day,%s: Days */
+				$mwb_price_html = sprintf( _n( '%s Day', '%s Days', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'week':
+				/* translators: %s: Week,%s: Weeks */
+				$mwb_price_html = sprintf( _n( '%s Week', '%s Weeks', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'month':
+				/* translators: %s: Month,%s: Months */
+				$mwb_price_html = sprintf( _n( '%s Month', '%s Months', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+			case 'year':
+				/* translators: %s: Year,%s: Years */
+				$mwb_price_html = sprintf( _n( '%s Year', '%s Years', $mwb_number, 'subscriptions-for-woocommerce' ), $mwb_sfw_subscription_number );
+				break;
+		}
+		return $mwb_price_html;
+
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_pro_active' ) ) {
+	/**
+	 * This function is used to check if premium plugin is activated.
+	 *
+	 * @since 1.0.0
+	 * @name mwb_sfw_pro_active
+	 * @return boolean
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
+	function mwb_sfw_pro_active() {
+		return apply_filters( 'mwb_wsp_pro_active', false );
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_delete_failed_subscription' ) ) {
+	/**
+	 * This function is used to delete faild subscription.
+	 *
+	 * @since 1.0.0
+	 * @name mwb_sfw_delete_failed_subscription
+	 * @param int $order_id order_id.
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
+	function mwb_sfw_delete_failed_subscription( $order_id ) {
+		if ( isset( $order_id ) && ! empty( $order_id ) ) {
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'mwb_subscriptions',
+				'post_status'   => 'wc-mwb_renewal',
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key'   => 'mwb_parent_order',
+						'value' => $order_id,
+					),
+					array(
+						'key'   => 'mwb_subscription_status',
+						'value' => 'pending',
+					),
+
+				),
+			);
+				$mwb_subscriptions = get_posts( $args );
+
+			if ( ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+				foreach ( $mwb_subscriptions as $key => $value ) {
+					wp_delete_post( $value->ID, true );
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_include_process_directory' ) ) {
+	/**
+	 * This function is used to include payment file.
+	 *
+	 * @since 1.0.0
+	 * @name mwb_sfw_include_process_directory
+	 * @param string $mwb_sfw_dir mwb_sfw_dir.
+	 * @param string $mwb_selected_dir mwb_selected_dir.
+	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @link https://www.makewebbetter.com/
+	 */
+	function mwb_sfw_include_process_directory( $mwb_sfw_dir, $mwb_selected_dir = '' ) {
+
+		if ( is_dir( $mwb_sfw_dir ) ) {
+			$mwb_dh = opendir( $mwb_sfw_dir );
+			if ( $mwb_dh ) {
+
+				while ( ( $mwb_file = readdir( $mwb_dh ) ) !== false ) {
+
+					if ( '.' == $mwb_file[0] ) {
+						continue; // skip dirs . and .. by first char test.
+					}
+
+					if ( is_dir( $mwb_sfw_dir . '/' . $mwb_file ) ) {
+
+						mwb_sfw_include_process_directory( $mwb_sfw_dir . '/' . $mwb_file, $mwb_file );
+
+					} elseif ( 'class-mwb-subscriptions-payment-' . $mwb_selected_dir . '-main.php' == $mwb_file ) {
+
+						include $mwb_sfw_dir . '/' . $mwb_file;
+					}
+				}
+				closedir( $mwb_dh );
+			}
+		}
+	}
+}
+if ( ! function_exists( 'mwb_sfw_recerring_total_price_list_table_callback' ) ) {
+	/**
+	 * This function is used show recuring interval on list.
+	 *
+	 * @name mwb_sfw_recerring_total_price_list_table_callback
+	 * @param string $mwb_price mwb_price.
+	 * @param int    $mwb_subscription_id mwb_subscription_id.
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_recerring_total_price_list_table_callback( $mwb_price, $mwb_subscription_id ) {
+		if ( mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
+			$mwb_recurring_number = get_post_meta( $mwb_subscription_id, 'mwb_sfw_subscription_number', true );
+			$mwb_recurring_interval = get_post_meta( $mwb_subscription_id, 'mwb_sfw_subscription_interval', true );
+			$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
+
+			/* translators: %s: frequency interval. */
+			$mwb_price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+		}
+		return $mwb_price;
+	}
+}
+if ( ! function_exists( 'mwb_sfw_get_file_content' ) ) {
+	/**
+	 * This function is used to get file content.
+	 *
+	 * @name mwb_sfw_get_file_content
+	 * @param string $mwb_file_path mwb_file_path.
+	 * @since 1.0.1
+	 */
+	function mwb_sfw_get_file_content( $mwb_file_path ) {
+		global $wp_filesystem;
+
+		WP_Filesystem();
+		$mwb_file_content = $wp_filesystem->get_contents( $mwb_file_path );
+		return $mwb_file_content;
+	}
+}

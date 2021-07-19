@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
             }
         });
     } else {
-        console.log(jQuery('#mwb-sfw-show-counter'));
+        
         // Show Popup after 1 second of entering into the MWB pagescreen.
         if (jQuery('#mwb-sfw-show-counter').length > 0 && jQuery('#mwb-sfw-show-counter').val() == 'not-sent') {
             setTimeout(mwb_sfw_show_onboard_popup(), 1000);

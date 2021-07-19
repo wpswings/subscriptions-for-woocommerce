@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            MakeWebBetter
  * Author URI:        https://makewebbetter.com/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-backend
  * Text Domain:       subscriptions-for-woocommerce
@@ -24,7 +24,7 @@
  * Requires at least:        4.6
  * Tested up to:             5.7
  * WC requires at least:     4.0
- * WC tested up to:          5.1
+ * WC tested up to:          5.4
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -44,7 +44,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.0.0' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.0.1' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://makewebbetter.com' );
@@ -133,6 +133,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		$sfw_plugin_standard = new Subscriptions_For_Woocommerce();
 		$sfw_plugin_standard->sfw_run();
 		$GLOBALS['sfw_mwb_sfw_obj'] = $sfw_plugin_standard;
+		$GLOBALS['mwb_sfw_notices'] = false;
 
 	}
 	run_subscriptions_for_woocommerce();
@@ -201,15 +202,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		flush_rewrite_rules();
 	}
 
-	add_action( 'init', 'mwb_register_custom_order_types' );
+	add_action( 'init', 'mwb_sfw_register_custom_order_types' );
 
 	/**
 	 * This function is used to create custom post type for subscription.
 	 *
-	 * @name mwb_register_custom_order_types
+	 * @name mwb_sfw_register_custom_order_types
 	 * @since 1.0.0
 	 */
-	function mwb_register_custom_order_types() {
+	function mwb_sfw_register_custom_order_types() {
 		wc_register_order_type(
 			'mwb_subscriptions',
 			apply_filters(

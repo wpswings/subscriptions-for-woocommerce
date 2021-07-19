@@ -59,7 +59,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @since    1.0.0
 	 * @param    string $hook      The plugin page slug.
 	 */
-	public function sfw_admin_enqueue_styles( $hook ) {
+	public function mwb_sfw_admin_enqueue_styles( $hook ) {
 
 		$mwb_sfw_screen_ids = mwb_sfw_get_page_screen();
 		$screen = get_current_screen();
@@ -92,7 +92,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @since    1.0.0
 	 * @param    string $hook      The plugin page slug.
 	 */
-	public function sfw_admin_enqueue_scripts( $hook ) {
+	public function mwb_sfw_admin_enqueue_scripts( $hook ) {
 
 		$mwb_sfw_screen_ids = mwb_sfw_get_page_screen();
 		$screen = get_current_screen();
@@ -131,6 +131,14 @@ class Subscriptions_For_Woocommerce_Admin {
 				'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
 				'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
 				'expiry_notice' => __( 'Expiry Interval must be greater than subscription interval', 'subscriptions-for-woocommerce' ),
+				'expiry_days_notice' => __( 'Expiry Interval must not be greater than 90 Days', 'subscriptions-for-woocommerce' ),
+				'expiry_week_notice' => __( 'Expiry Interval must not be greater than 52 Weeks', 'subscriptions-for-woocommerce' ),
+				'expiry_month_notice' => __( 'Expiry Interval must not be greater than 24 Months', 'subscriptions-for-woocommerce' ),
+				'expiry_year_notice' => __( 'Expiry Interval must not be greater than 5 Years', 'subscriptions-for-woocommerce' ),
+				'trial_days_notice' => __( 'Trial period must not be greater than 90 Days', 'subscriptions-for-woocommerce' ),
+				'trial_week_notice' => __( 'Trial period must not be greater than 52 Weeks', 'subscriptions-for-woocommerce' ),
+				'trial_month_notice' => __( 'Trial period must not be greater than 24 Months', 'subscriptions-for-woocommerce' ),
+				'trial_year_notice' => __( 'Trial period must not be greater than 5 Years', 'subscriptions-for-woocommerce' ),
 			);
 			wp_localize_script(
 				'mwb-sfw-admin-single-product-js',
@@ -145,7 +153,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function sfw_options_page() {
+	public function mwb_sfw_options_page() {
 		global $submenu;
 		if ( empty( $GLOBALS['admin_page_hooks']['mwb-plugins'] ) ) {
 			add_menu_page( 'MakeWebBetter', 'MakeWebBetter', 'manage_options', 'mwb-plugins', array( $this, 'mwb_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/mwb-logo.png', 15 );
@@ -174,18 +182,18 @@ class Subscriptions_For_Woocommerce_Admin {
 
 
 	/**
-	 * Subscriptions For Woocommerce sfw_admin_submenu_page.
+	 * Subscriptions For Woocommerce mwb_sfw_admin_submenu_page.
 	 *
 	 * @since 1.0.0
 	 * @param array $menus Marketplace menus.
 	 */
-	public function sfw_admin_submenu_page( $menus = array() ) {
+	public function mwb_sfw_admin_submenu_page( $menus = array() ) {
 		$menus[] = array(
 			'name'            => __( 'Subscriptions For WooCommerce', 'subscriptions-for-woocommerce' ),
 			'slug'            => 'subscriptions_for_woocommerce_menu',
 			'menu_link'       => 'subscriptions_for_woocommerce_menu',
 			'instance'        => $this,
-			'function'        => 'sfw_options_menu_html',
+			'function'        => 'mwb_sfw_options_menu_html',
 		);
 		return $menus;
 	}
@@ -208,7 +216,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function sfw_options_menu_html() {
+	public function mwb_sfw_options_menu_html() {
 
 		include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/partials/subscriptions-for-woocommerce-admin-dashboard.php';
 	}
@@ -220,7 +228,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @since    1.0.0
 	 * @param array $sfw_settings_general Settings fields.
 	 */
-	public function sfw_admin_general_settings_page( $sfw_settings_general ) {
+	public function mwb_sfw_admin_general_settings_page( $sfw_settings_general ) {
 
 		$sfw_settings_general = array(
 
@@ -279,7 +287,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @param    Array $mwb_sfw_support Settings fields.
 	 * @return   Array  $mwb_sfw_support
 	 */
-	public function sfw_admin_support_settings_page( $mwb_sfw_support ) {
+	public function mwb_sfw_admin_support_settings_page( $mwb_sfw_support ) {
 		$mwb_sfw_support = array(
 			array(
 				'title' => __( 'User Guide', 'subscriptions-for-woocommerce' ),
@@ -306,11 +314,12 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function sfw_admin_save_tab_settings() {
 		global $sfw_mwb_sfw_obj;
+		global $mwb_sfw_notices;
 		if ( isset( $_POST['mwb_sfw_save_general_settings'] ) && isset( $_POST['mwb-sfw-general-nonce-field'] ) ) {
 			$mwb_sfw_geberal_nonce = sanitize_text_field( wp_unslash( $_POST['mwb-sfw-general-nonce-field'] ) );
 			if ( wp_verify_nonce( $mwb_sfw_geberal_nonce, 'mwb-sfw-general-nonce' ) ) {
 				$mwb_sfw_gen_flag = false;
-				$sfw_genaral_settings = apply_filters( 'sfw_general_settings_array', array() );
+				$sfw_genaral_settings = apply_filters( 'mwb_sfw_general_settings_array', array() );
 				$sfw_button_index = array_search( 'submit', array_column( $sfw_genaral_settings, 'type' ) );
 				if ( isset( $sfw_button_index ) && ( null == $sfw_button_index || '' == $sfw_button_index ) ) {
 					$sfw_button_index = array_search( 'button', array_column( $sfw_genaral_settings, 'type' ) );
@@ -338,8 +347,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						$mwb_sfw_error_text = esc_html__( 'Id of some field is missing', 'subscriptions-for-woocommerce' );
 						$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'error' );
 					} else {
-						$mwb_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
-						$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
+						$mwb_sfw_notices = true;
 					}
 				}
 			}
@@ -379,28 +387,14 @@ class Subscriptions_For_Woocommerce_Admin {
 		$tabs['mwb_sfw_product'] = array(
 			'label'    => __( 'Subscription Settings', 'subscriptions-for-woocommerce' ),
 			'target'   => 'mwb_sfw_product_target_section',
-			'class'    => array(),
+			'class'    => apply_filters( 'mwb_swf_settings_tabs_class', array() ),
 			'priority' => 80,
 		);
-		return $tabs;
+		return apply_filters( 'mwb_swf_settings_tabs', $tabs );
+
 	}
 
-	/**
-	 * This function is used to add subscription intervals.
-	 *
-	 * @name mwb_sfw_subscription_period
-	 * @since    1.0.0
-	 * @return   Array  $subscription_interval
-	 */
-	public function mwb_sfw_subscription_period() {
-		$subscription_interval = array(
-			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
-			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
-			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
-			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
-		);
-		return apply_filters( 'mwb_sfw_subscription_intervals', $subscription_interval );
-	}
+
 
 	/**
 	 * This function is used to add custom fileds for subscription products.
@@ -436,7 +430,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="number" class="short wc_input_number"  min="1" required name="mwb_sfw_subscription_number" id="mwb_sfw_subscription_number" value="<?php echo esc_attr( $mwb_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_interval" name="mwb_sfw_subscription_interval" class="mwb_sfw_subscription_interval" >
-				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
+				<?php foreach ( mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
@@ -451,7 +445,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_expiry_number" id="mwb_sfw_subscription_expiry_number" value="<?php echo esc_attr( $mwb_sfw_subscription_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_expiry_interval" name="mwb_sfw_subscription_expiry_interval" class="mwb_sfw_subscription_expiry_interval" >
-				<?php foreach ( $this->mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) as $value => $label ) { ?>
+				<?php foreach ( mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
@@ -480,7 +474,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			</label>
 			<input type="number" class="short wc_input_number"  min="1" name="mwb_sfw_subscription_free_trial_number" id="mwb_sfw_subscription_free_trial_number" value="<?php echo esc_attr( $mwb_sfw_subscription_free_trial_number ); ?>" placeholder="<?php esc_html_e( 'Enter free trial interval', 'subscriptions-for-woocommerce' ); ?>"> 
 			<select id="mwb_sfw_subscription_free_trial_interval" name="mwb_sfw_subscription_free_trial_interval" class="mwb_sfw_subscription_free_trial_interval" >
-				<?php foreach ( $this->mwb_sfw_subscription_period() as $value => $label ) { ?>
+				<?php foreach ( mwb_sfw_subscription_period() as $value => $label ) { ?>
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $mwb_sfw_subscription_free_trial_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php } ?>
 				</select>
@@ -489,39 +483,15 @@ class Subscriptions_For_Woocommerce_Admin {
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
 			?>
 		</p>
+		<?php
+			wp_nonce_field( 'mwb_sfw_edit_nonce', 'mwb_sfw_edit_nonce_filed' );
+			do_action( 'mwb_sfw_product_edit_field', $post_id );
+		?>
 		</div>
 		<?php
-		wp_nonce_field( 'mwb_sfw_edit_nonce', 'mwb_sfw_edit_nonce_filed' );
-		do_action( 'mwb_sfw_product_edit_field', $post_id );
+
 	}
 
-	/**
-	 * This function is used to add subscription intervals for expiry.
-	 *
-	 * @name mwb_sfw_subscription_expiry_period
-	 * @since    1.0.0
-	 * @param   string $mwb_sfw_subscription_interval mwb_sfw_subscription_interval.
-	 */
-	public function mwb_sfw_subscription_expiry_period( $mwb_sfw_subscription_interval ) {
-
-		$subscription_interval = array(
-			'day' => __( 'Days', 'subscriptions-for-woocommerce' ),
-			'week' => __( 'Weeks', 'subscriptions-for-woocommerce' ),
-			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
-			'year' => __( 'Years', 'subscriptions-for-woocommerce' ),
-		);
-		if ( 'week' == $mwb_sfw_subscription_interval ) {
-			unset( $subscription_interval['day'] );
-		} elseif ( 'month' == $mwb_sfw_subscription_interval ) {
-			unset( $subscription_interval['day'] );
-			unset( $subscription_interval['week'] );
-		} elseif ( 'year' == $mwb_sfw_subscription_interval ) {
-			unset( $subscription_interval['day'] );
-			unset( $subscription_interval['week'] );
-			unset( $subscription_interval['month'] );
-		}
-		return apply_filters( 'mwb_sfw_subscription_expiry_intervals', $subscription_interval );
-	}
 
 	/**
 	 * This function is used to save custom fields for subscription products.
@@ -533,7 +503,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function mwb_sfw_save_custom_product_fields_data_for_subscription( $post_id, $post ) {
 
-		if ( isset( $_POST['mwb_sfw_edit_nonce_filed'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['mwb_sfw_edit_nonce_filed'] ) ), 'mwb_sfw_edit_nonce' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( ! isset( $_POST['mwb_sfw_edit_nonce_filed'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['mwb_sfw_edit_nonce_filed'] ) ), 'mwb_sfw_edit_nonce' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			return;
 		}
 		if ( isset( $_POST['_mwb_sfw_product'] ) && ! empty( $_POST['_mwb_sfw_product'] ) ) {
@@ -556,6 +526,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			update_post_meta( $post_id, 'mwb_sfw_subscription_initial_signup_price', $mwb_sfw_subscription_initial_signup_price );
 			update_post_meta( $post_id, 'mwb_sfw_subscription_free_trial_number', $mwb_sfw_subscription_free_trial_number );
 			update_post_meta( $post_id, 'mwb_sfw_subscription_free_trial_interval', $mwb_sfw_subscription_free_trial_interval );
+
+			do_action( 'mwb_sfw_save_simple_subscription_field', $post_id, $_POST );
 		}
 
 	}
@@ -572,8 +544,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$mwb_status   = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_status_admin'] ) );
 			$mwb_subscription_id = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_id'] ) );
 			if ( mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
-				 update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
-				 mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
+				 do_action( 'mwb_sfw_subscription_cancel', $mwb_subscription_id, 'Cancel' );
 				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );
 				exit;
@@ -619,11 +590,11 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 			foreach ( $mwb_subscriptions as $key => $value ) {
-				$susbcription_id = $value->ID;
+				$subscription_id = $value->ID;
 
-				if ( mwb_sfw_check_valid_subscription( $susbcription_id ) ) {
+				if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
 
-					$subscription = get_post( $susbcription_id );
+					$subscription = get_post( $subscription_id );
 					$parent_order_id  = $subscription->mwb_parent_order;
 					$parent_order = wc_get_order( $parent_order_id );
 					$billing_details = $parent_order->get_address( 'billing' );
@@ -646,16 +617,35 @@ class Subscriptions_For_Woocommerce_Admin {
 
 					$_product = wc_get_product( $product_id );
 
-					$total = 0;
-					$tax_total = 0;
-					$variations = array();
-
-					$item_id = $mwb_new_order->add_product(
-						$_product,
-						$product_qty
+					$mwb_args = array(
+						'variation' => array(),
+						'totals'    => array(
+							'subtotal'     => $subscription->line_subtotal,
+							'subtotal_tax' => $subscription->line_subtotal_tax,
+							'total'        => $subscription->line_total,
+							'tax'          => $subscription->line_tax,
+							'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
+						),
 					);
+					$mwb_pro_args = apply_filters( 'mwb_product_args_for_order', $mwb_args );
+
+					if ( ! empty( $subscription->line_subtotal ) && ! empty( $subscription->line_total ) && empty( $subscription->mwb_sfw_subscription_initial_signup_price ) ) {
+						$item_id = $mwb_new_order->add_product(
+							$_product,
+							$product_qty,
+							$mwb_pro_args
+						);
+					} else {
+						$item_id = $mwb_new_order->add_product(
+							$_product,
+							$product_qty
+						);
+					}
+
 					$mwb_new_order->update_taxes();
-					$mwb_new_order->calculate_totals();
+					$mwb_new_order->calculate_totals( false );
+					$mwb_new_order->save();
+
 					$order_id = $mwb_new_order->get_id();
 					update_post_meta( $order_id, '_payment_method', $payment_method );
 					update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
@@ -663,23 +653,29 @@ class Subscriptions_For_Woocommerce_Admin {
 					$mwb_new_order->set_address( $billing_details, 'billing' );
 					$mwb_new_order->set_address( $shipping_details, 'shipping' );
 					update_post_meta( $order_id, 'mwb_sfw_renewal_order', 'yes' );
-					update_post_meta( $order_id, 'mwb_sfw_subscription', $susbcription_id );
+					update_post_meta( $order_id, 'mwb_sfw_subscription', $subscription_id );
 					update_post_meta( $order_id, 'mwb_sfw_parent_order_id', $parent_order_id );
+					update_post_meta( $subscription_id, 'mwb_renewal_subscription_order', $order_id );
+					do_action( 'mwb_sfw_renewal_order_creation', $mwb_new_order, $subscription_id );
 
 					/*if trial period enable*/
 					if ( '' == $mwb_old_payment_method ) {
-						$parent_order_id = $susbcription_id;
+						$parent_order_id = $subscription_id;
 					}
 					/*update next payment date*/
-					$mwb_next_payment_date = mwb_sfw_next_payment_date( $susbcription_id, $current_time, 0 );
+					$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
-					update_post_meta( $susbcription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
+					update_post_meta( $subscription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
 
 					if ( 'stripe' == $payment_method ) {
 						$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
 						$result = $mwb_stripe->mwb_sfw_process_renewal_payment( $order_id, $parent_order_id );
+						do_action( 'mwb_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
 						mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 					}
+
+					do_action( 'mwb_sfw_other_payment_gateway_renewal', $mwb_new_order, $subscription_id, $payment_method );
+
 				}
 			}
 		}
@@ -701,6 +697,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			if ( function_exists( 'as_next_scheduled_action' ) && false === as_next_scheduled_action( 'mwb_sfw_expired_renewal_subscription' ) ) {
 				as_schedule_recurring_action( strtotime( 'now' ), 3600, 'mwb_sfw_expired_renewal_subscription' );
 			}
+
+			do_action( 'mwb_sfw_create_admin_scheduler' );
 		}
 	}
 
@@ -776,7 +774,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'exclude_from_search'       => false,
 				'show_in_admin_all_list'    => true,
 				'show_in_admin_status_list' => true,
-				/* translators: %s: search term */
+				/* translators: %s: count */
 				'label_count'               => _n_noop( 'Mwb Renewal <span class="count">(%s)</span>', 'Mwb Renewal<span class="count">(%s)</span>', 'subscriptions-for-woocommerce' ),
 			)
 		);

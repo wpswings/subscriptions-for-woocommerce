@@ -102,7 +102,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' 
 					'plain_text'         => false,
 					'email' => $this,
 				),
-				'subscriptions-for-woocommerce',
+				'',
 				$this->template_base
 			);
 		}
@@ -123,7 +123,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' 
 					'plain_text'         => true,
 					'email' => $this,
 				),
-				'subscriptions-for-woocommerce',
+				'',
 				$this->template_base
 			);
 		}
