@@ -1,4 +1,4 @@
-/**
+*
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
@@ -360,7 +360,15 @@ input#s2id_autogen1 {
 .mwb-sfw-hidden {
     display: none !important;
 }
-
+/*Go pro link*/
+a.mwb-sfw-go-pro {
+    background: #05d5d8;
+    color: white;
+    font-weight: 700;
+    padding: 2px 5px;
+    border: 1px solid #05d5d8;
+    border-radius: 5px;
+}
 
 /*=====  End of MWB POPUP FORM CSS  ======*/
 
@@ -466,4 +474,4 @@ input#s2id_autogen1 {
 }
 
 
-/*=====  End of MEDIA QUERIES  ======*/
+/*=====  End of MEDIA QUERIES  ======

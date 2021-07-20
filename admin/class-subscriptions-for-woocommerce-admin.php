@@ -293,13 +293,13 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'User Guide', 'subscriptions-for-woocommerce' ),
 				'description' => __( 'View the detailed guides and documentation to set up your plugin.', 'subscriptions-for-woocommerce' ),
 				'link-text' => __( 'VIEW', 'subscriptions-for-woocommerce' ),
-				'link' => 'https://docs.makewebbetter.com/subscriptions-for-woocommerce/',
+				'link' => 'https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend',
 			),
 			array(
 				'title' => __( 'Free Support', 'subscriptions-for-woocommerce' ),
 				'description' => __( 'Please submit a ticket, our team will respond within 24 hours.', 'subscriptions-for-woocommerce' ),
 				'link-text' => __( 'SUBMIT', 'subscriptions-for-woocommerce' ),
-				'link' => 'https://makewebbetter.com/submit-query/',
+				'link' => 'https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-support',
 			),
 		);
 

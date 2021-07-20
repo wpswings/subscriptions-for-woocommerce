@@ -22,10 +22,10 @@ global $sfw_mwb_sfw_obj;
 	<div class="mwb_sfw_table_wrapper mwb_sfw_overview-wrapper">
 		<div class="sfw-overview__wrapper">
 			<div class="sfw-overview__icons">
-				<a href="https://makewebbetter.com/contact-us/">
+				<a href="https://makewebbetter.com/contact-us/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-contact">
 					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/dial.svg' ); ?>" alt="contact-us-img">
 				</a>
-				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/">
+				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend">
 					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/doc.svg' ); ?>" alt="doc-img">
 				</a>
 				<?php do_action( 'mwb_sfw_overview_icon' ); ?>
