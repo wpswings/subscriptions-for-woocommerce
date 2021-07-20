@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Subscriptions For WooCommerce 1.0.1\n"
-"POT-Creation-Date: 2021-07-01 18:53+0530\n"
-"PO-Revision-Date: 2021-07-01 18:53+0530\n"
+"POT-Creation-Date: 2021-07-20 12:28+0530\n"
+"PO-Revision-Date: 2021-07-20 12:28+0530\n"
 "Last-Translator: \n"
 "Language-Team: MakeWebBetter\n"
 "Language: en_US\n"
@@ -155,7 +155,7 @@ msgid "Id of some field is missing"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:369
-#: subscriptions-for-woocommerce.php:221
+#: subscriptions-for-woocommerce.php:225
 msgid "Subscription"
 msgstr ""
 
@@ -287,7 +287,7 @@ msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:389
 #: public/class-subscriptions-for-woocommerce-public.php:801
-#: subscriptions-for-woocommerce.php:220 subscriptions-for-woocommerce.php:233
+#: subscriptions-for-woocommerce.php:224 subscriptions-for-woocommerce.php:237
 msgid "Subscriptions"
 msgstr ""
 
@@ -300,7 +300,7 @@ msgid "Settings saved !"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:33
-#: subscriptions-for-woocommerce.php:177
+#: subscriptions-for-woocommerce.php:181
 msgid "Support"
 msgstr ""
 
@@ -928,59 +928,63 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:173
+#: subscriptions-for-woocommerce.php:158
+msgid "GO PRO"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:177
 msgid "Free Demo"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:175
+#: subscriptions-for-woocommerce.php:179
 msgid "Documentation"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:222
+#: subscriptions-for-woocommerce.php:226
 msgid "Add Subscription"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:223
+#: subscriptions-for-woocommerce.php:227
 msgid "Add New Subscription"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:224
+#: subscriptions-for-woocommerce.php:228
 msgid "Edit"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:225
+#: subscriptions-for-woocommerce.php:229
 msgid "Edit Subscription"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:226
+#: subscriptions-for-woocommerce.php:230
 msgid "New Subscription"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:227 subscriptions-for-woocommerce.php:228
+#: subscriptions-for-woocommerce.php:231 subscriptions-for-woocommerce.php:232
 msgid "View Subscription"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:229
+#: subscriptions-for-woocommerce.php:233
 msgid "Search Subscriptions"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:230
+#: subscriptions-for-woocommerce.php:234
 msgid "Not Found"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:231
+#: subscriptions-for-woocommerce.php:235
 msgid "No Subscriptions found in the trash"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:232
+#: subscriptions-for-woocommerce.php:236
 msgid "Parent Subscriptions"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:235
+#: subscriptions-for-woocommerce.php:239
 msgid "This subscriptions are stored."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:292
+#: subscriptions-for-woocommerce.php:296
 msgid ""
 "WooCommerce is not activated, Please activate WooCommerce first to activate "
 "Subscriptions for Woocommerce."
