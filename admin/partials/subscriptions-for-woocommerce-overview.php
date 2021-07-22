@@ -22,21 +22,26 @@ global $sfw_mwb_sfw_obj;
 	<div class="mwb_sfw_table_wrapper mwb_sfw_overview-wrapper">
 		<div class="sfw-overview__wrapper">
 			<div class="sfw-overview__icons">
-				<a href="https://makewebbetter.com/contact-us/">
+				<a href="https://makewebbetter.com/contact-us/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-contact">
 					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/dial.svg' ); ?>" alt="contact-us-img">
 				</a>
-				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/">
+				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend">
 					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/doc.svg' ); ?>" alt="doc-img">
 				</a>
+				<?php do_action( 'mwb_sfw_overview_icon' ); ?>
 			</div>
 			<div class="sfw-overview__banner-img">
 				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/subscription-overview-banner.png' ); ?>" alt="sfw-banner-img">
 			</div>
+			<?php do_action( 'mwb_sfw_before_overview_content' ); ?>
 			<div class="sfw-overview__content">
 				<div class="sfw-overview__content-description">
 					<h1><?php esc_html_e( 'Subscriptions for WooCommerce', 'subscriptions-for-woocommerce' ); ?></h1>
 					<p> <?php esc_html_e( 'Subscriptions for WooCommerce Plugin allows the WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store.', 'subscriptions-for-woocommerce' ); ?>
 					</p>
+					<div class="mwb_sfw_video_wrapper">
+						<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
 					<div class="sfw-overview__features">
 						<h2><?php esc_html_e( 'What does Subscriptions for WooCommerce do?', 'subscriptions-for-woocommerce' ); ?>
 					</h2>
@@ -48,8 +53,10 @@ global $sfw_mwb_sfw_obj;
 						<li><?php esc_html_e( 'Convert simple product selling WooCommerce store to subscription-based', 'subscriptions-for-woocommerce' ); ?></li>
 						<li><?php esc_html_e( 'Give free trials to your customers and loyalize them', 'subscriptions-for-woocommerce' ); ?></li>
 					</ul>
+					<?php do_action( 'mwb_sfw_overview_feature_description' ); ?>
 					</div>
 				</div>
+				<?php do_action( 'mwb_sfw_after_overview_description' ); ?>
 				<div class="sfw-overview__keywords-wrap">
 				<h2> <?php esc_html_e( 'Salient Features of Subscriptions for WooCommerce Plugin', 'subscriptions-for-woocommerce' ); ?></h2>
 				<div class="sfw-overview__keywords">
@@ -123,8 +130,10 @@ global $sfw_mwb_sfw_obj;
 							</div>
 						</div>
 					</div>
+					<?php do_action( 'mwb_sfw_overview_keywords_description' ); ?>
 				</div>
 				</div>
+				<?php do_action( 'mwb_sfw_after_overview_keywords_wrpa' ); ?>
 			</div>
 		</div>
 	</div>

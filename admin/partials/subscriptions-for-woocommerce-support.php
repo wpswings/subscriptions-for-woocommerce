@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 global $sfw_mwb_sfw_obj;
-$sfw_support_settings = apply_filters( 'sfw_supprot_tab_settings_array', array() );
+$sfw_support_settings = apply_filters( 'mwb_sfw_supprot_tab_settings_array', array() );
 ?>
 <!--  template file for admin settings. -->
 <div class="sfw-section-wrap">

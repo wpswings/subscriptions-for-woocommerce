@@ -95,6 +95,7 @@ class Subscriptions_For_Woocommerce {
 
 		$this->subscriptions_for_woocommerce_api_hooks();
 		$this->init();
+		$this->mwb_sfw_init_payment_integration();
 
 	}
 
@@ -151,8 +152,6 @@ class Subscriptions_For_Woocommerce {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/subscriptions-for-woocommerce-common-function.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php';
-
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
 
 	}
@@ -161,6 +160,16 @@ class Subscriptions_For_Woocommerce {
 	 */
 	public function init() {
 		add_filter( 'woocommerce_email_classes', array( $this, 'mwb_sfw_woocommerce_email_classes' ) );
+	}
+
+	/**
+	 * The function is used to include payment gateway integration.
+	 */
+	public function mwb_sfw_init_payment_integration() {
+
+		$mwb_sfw_dir = plugin_dir_path( dirname( __FILE__ ) ) . '/package/gateways';
+		mwb_sfw_include_process_directory( $mwb_sfw_dir );
+		do_action( 'mwb_sfw_payment_integration' );
 	}
 
 	/**
@@ -191,18 +200,18 @@ class Subscriptions_For_Woocommerce {
 
 		$sfw_plugin_admin = new Subscriptions_For_Woocommerce_Admin( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'sfw_admin_enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'sfw_admin_enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'mwb_sfw_admin_enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'mwb_sfw_admin_enqueue_scripts' );
 
 		// Add settings menu for Subscriptions For Woocommerce.
-		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'sfw_options_page' );
+		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'mwb_sfw_options_page' );
 		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'mwb_sfw_remove_default_submenu', 50 );
 
 		// All admin actions and filters after License Validation goes here.
-		$this->loader->add_filter( 'mwb_add_plugins_menus_array', $sfw_plugin_admin, 'sfw_admin_submenu_page', 15 );
+		$this->loader->add_filter( 'mwb_add_plugins_menus_array', $sfw_plugin_admin, 'mwb_sfw_admin_submenu_page', 15 );
 
-		$this->loader->add_filter( 'sfw_general_settings_array', $sfw_plugin_admin, 'sfw_admin_general_settings_page', 10 );
-		$this->loader->add_filter( 'sfw_supprot_tab_settings_array', $sfw_plugin_admin, 'sfw_admin_support_settings_page', 10 );
+		$this->loader->add_filter( 'mwb_sfw_general_settings_array', $sfw_plugin_admin, 'mwb_sfw_admin_general_settings_page', 10 );
+		$this->loader->add_filter( 'mwb_sfw_supprot_tab_settings_array', $sfw_plugin_admin, 'mwb_sfw_admin_support_settings_page', 10 );
 
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
@@ -243,8 +252,8 @@ class Subscriptions_For_Woocommerce {
 		$sfw_plugin_public = new Subscriptions_For_Woocommerce_Public( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
 		if ( mwb_sfw_check_plugin_enable() ) {
-			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'sfw_public_enqueue_styles' );
-			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'sfw_public_enqueue_scripts' );
+			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'mwb_sfw_public_enqueue_styles' );
+			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'mwb_sfw_public_enqueue_scripts' );
 
 			$this->loader->add_filter( 'woocommerce_get_price_html', $sfw_plugin_public, 'mwb_sfw_price_html_subscription_product', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_product_single_add_to_cart_text', $sfw_plugin_public, 'mwb_sfw_product_add_to_cart_text', 10, 2 );
@@ -283,6 +292,10 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_order_get_total', $sfw_plugin_public, 'mwb_sfw_set_susbcription_total', 11, 2 );
 			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'mwb_sfw_hide_quantity_fields_for_subscription', 10, 2 );
 
+			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'mwb_sfw_woocommerce_add_to_cart_validation', 10, 3 );
+
+			$this->loader->add_filter( 'woocommerce_cart_needs_payment', $sfw_plugin_public, 'mwb_sfw_woocommerce_cart_needs_payment', 99, 2 );
+
 		}
 	}
 
@@ -297,7 +310,7 @@ class Subscriptions_For_Woocommerce {
 		$emails['mwb_sfw_cancel_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
 		$emails['mwb_sfw_expired_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
 
-		return $emails;
+		return apply_filters( 'mwb_sfw_email_classes', $emails );
 	}
 	/**
 	 * Register all of the hooks related to the api functionality
@@ -378,21 +391,27 @@ class Subscriptions_For_Woocommerce {
 		$sfw_default_tabs['subscriptions-for-woocommerce-overview'] = array(
 			'title'       => esc_html__( 'Overview', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-overview',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs['subscriptions-for-woocommerce-general'] = array(
 			'title'       => esc_html__( 'General Setting', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-general',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs', $sfw_default_tabs );
 
 		$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-table'] = array(
 			'title'       => esc_html__( 'Subscription Table', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-subscriptions-table',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
+		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-system-status',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
+		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs_end', $sfw_default_tabs );
 
 		return $sfw_default_tabs;
 	}
@@ -401,20 +420,17 @@ class Subscriptions_For_Woocommerce {
 	 * Locate and load appropriate tempate.
 	 *
 	 * @since   1.0.0
-	 * @param string $path path file for inclusion.
-	 * @param array  $params parameters to pass to the file for access.
+	 * @param string $content_path content_path file for inclusion.
 	 */
-	public function mwb_sfw_plug_load_template( $path, $params = array() ) {
+	public function mwb_sfw_plug_load_template( $content_path ) {
 
-		$sfw_file_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . $path;
+		if ( file_exists( $content_path ) ) {
 
-		if ( file_exists( $sfw_file_path ) ) {
-
-			include $sfw_file_path;
+			include $content_path;
 		} else {
 
 			/* translators: %s: file path */
-			$sfw_notice = sprintf( esc_html__( 'Unable to locate file at location "%s". Some features may not work properly in this plugin. Please contact us!', 'subscriptions-for-woocommerce' ), $sfw_file_path );
+			$sfw_notice = sprintf( esc_html__( 'Unable to locate file at location "%s". Some features may not work properly in this plugin. Please contact us!', 'subscriptions-for-woocommerce' ), $content_path );
 			$this->mwb_sfw_plug_admin_notice( $sfw_notice, 'error' );
 		}
 	}
@@ -508,7 +524,7 @@ class Subscriptions_For_Woocommerce {
 		$sfw_wordpress_status['wp_users'] = function_exists( 'count_users' ) ? count_users() : __( 'N/A (count_users function does not exist)', 'subscriptions-for-woocommerce' );
 
 		// Get the number of published WordPress posts.
-		$sfw_wordpress_status['wp_posts'] = wp_count_posts()->publish >= 1 ? wp_count_posts()->publish : __( '0', 'subscriptions-for-woocommerce' );
+		$sfw_wordpress_status['wp_posts'] = wp_count_posts()->publish >= 1 ? wp_count_posts()->publish : 0;
 
 		// Get PHP memory limit.
 		$sfw_system_status['php_memory_limit'] = function_exists( 'ini_get' ) ? (int) ini_get( 'memory_limit' ) : __( 'N/A (ini_get function does not exist)', 'subscriptions-for-woocommerce' );
@@ -554,7 +570,7 @@ class Subscriptions_For_Woocommerce {
 		$sfw_system_status['php_max_execution_time'] = function_exists( 'ini_get' ) ? ini_get( 'max_execution_time' ) : __( 'N/A (ini_get function does not exist)', 'subscriptions-for-woocommerce' );
 
 		// Get outgoing IP address.
-		$sfw_system_status['outgoing_ip'] = function_exists( 'file_get_contents' ) ? file_get_contents( 'http://ipecho.net/plain' ) : __( 'N/A (file_get_contents function does not exist)', 'subscriptions-for-woocommerce' );
+		$sfw_system_status['outgoing_ip'] = function_exists( 'mwb_sfw_get_file_content' ) ? mwb_sfw_get_file_content( 'http://ipecho.net/plain' ) : __( 'N/A (mwb_sfw_get_file_content function does not exist)', 'subscriptions-for-woocommerce' );
 
 		$sfw_system_data['php'] = $sfw_system_status;
 		$sfw_system_data['wp'] = $sfw_wordpress_status;

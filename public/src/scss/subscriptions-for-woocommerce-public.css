@@ -6,3 +6,6 @@
  .mwb_sfw_account_wrap {
  	overflow-x: auto;
  }
+ .mwb_sfw_free_trial, .mwb_sfw_signup_fee {
+    display: block;
+}

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 echo esc_html( $email_heading ) . "\n\n"; // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 ?>
-<?php /* translators: %s: search term */ ?>
+<?php /* translators: %s: subscription ID */ ?>
 <p><?php printf( esc_html__( 'A subscription [#%s] has been expired. Their subscription\'s details are as follows:', 'subscriptions-for-woocommerce' ), esc_html( $mwb_subscription ) ); ?></p>
 
 <?php

@@ -123,6 +123,7 @@ function mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status ) {
 						$product_qty = get_post_meta( $mwb_subscription_id, 'product_qty', true );
 
 						echo esc_html( $mwb_product_name ) . ' x ' . esc_html( $product_qty );
+						do_action( 'mwb_sfw_product_details_html', $mwb_subscription_id );
 					?>
 					
 				 </td>
@@ -133,6 +134,7 @@ function mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status ) {
 				</td>
 			</tr>
 			<?php do_action( 'mwb_sfw_order_details_html_before_cancel', $mwb_subscription_id ); ?>
+			<tr>
 				<?php
 					$mwb_sfw_cancel_subscription = get_option( 'mwb_sfw_cancel_subscription_for_customer', '' );
 				if ( 'on' == $mwb_sfw_cancel_subscription ) {
@@ -141,16 +143,16 @@ function mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status ) {
 					if ( 'active' == $mwb_status ) {
 						$mwb_cancel_url = mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status );
 						?>
-							<tr>
-								<td>
-									<a href="<?php echo esc_url( $mwb_cancel_url ); ?>" class="button mwb_sfw_cancel_subscription"><?php esc_html_e( 'Cancel', 'subscriptions-for-woocommerce' ); ?></a>
-								</td>
-							</tr>
+							<td>
+								<a href="<?php echo esc_url( $mwb_cancel_url ); ?>" class="button mwb_sfw_cancel_subscription"><?php esc_html_e( 'Cancel', 'subscriptions-for-woocommerce' ); ?></a>
+							</td>
 						<?php
 					}
 				}
 				?>
-				<?php do_action( 'mwb_sfw_order_details_html_after_cancel', $mwb_subscription_id ); ?>
+					<?php do_action( 'mwb_sfw_order_details_html_after_cancel_button', $mwb_subscription_id ); ?>
+				</tr>
+					<?php do_action( 'mwb_sfw_order_details_html_after_cancel', $mwb_subscription_id ); ?>
 		</tbody>
 	</table>
 </div>
