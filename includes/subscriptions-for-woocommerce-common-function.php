@@ -227,7 +227,7 @@ if ( ! function_exists( 'mwb_sfw_send_email_for_renewal_susbcription' ) ) {
 
 				}
 			}
-			do_action('mwb_sfw_renewal_email_notification', $order, $mailer );
+			do_action( 'mwb_sfw_renewal_email_notification', $order, $mailer );
 		}
 	}
 }

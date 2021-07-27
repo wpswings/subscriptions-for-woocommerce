@@ -1011,9 +1011,9 @@ class Subscriptions_For_Woocommerce_Public {
 							$mwb_susbcription_end = mwb_sfw_susbcription_expiry_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
 							update_post_meta( $subscription->ID, 'mwb_susbcription_end', $mwb_susbcription_end );
 
-							//Set billing id.
+							// Set billing id.
 							$billing_agreement_id = get_post_meta( $order_id, '_ppec_billing_agreement_id', true );
-							if ( isset( $billing_agreement_id ) && !empty( $billing_agreement_id ) ) {
+							if ( isset( $billing_agreement_id ) && ! empty( $billing_agreement_id ) ) {
 								update_post_meta( $subscription->ID, '_mwb_paypal_subscription_id', $billing_agreement_id );
 							}
 							do_action( 'mwb_sfw_order_status_changed', $order_id, $subscription->ID );

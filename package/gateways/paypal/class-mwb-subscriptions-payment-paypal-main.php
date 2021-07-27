@@ -152,7 +152,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		private $mwb_sfw_invoice_prefix;
 
-		
+
 
 		/**
 		 * Define the paypal functionality of the plugin.
@@ -168,17 +168,17 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 				add_filter( 'woocommerce_paypal_args', array( $this, 'mwb_sfw_add_paypal_args' ), 10, 2 );
 
 				add_action( 'valid-paypal-standard-ipn-request', array( $this, 'mwb_sfw_validate_process_ipn_request' ), 0 );
-				
-				//Express checkout.
-				add_action( 'woocommerce_api_mwb_sfw_paypal', array( $this,'mwb_sfw_handle_express_checkout_api' ) );
-				
+
+				// Express checkout.
+				add_action( 'woocommerce_api_mwb_sfw_paypal', array( $this, 'mwb_sfw_handle_express_checkout_api' ) );
+
 			}
 
 			add_filter( 'mwb_sfw_supported_payment_gateway_for_woocommerce', array( $this, 'mwb_sfw_paypal_payment_gateway_for_woocommerce' ), 10, 2 );
 			add_action( 'mwb_sfw_other_payment_gateway_renewal', array( $this, 'mwb_sfw_process_subscription_payment' ), 10, 3 );
 			add_action( 'mwb_sfw_subscription_cancel', array( $this, 'mwb_sfw_cancel_paypal_subscription' ), 10, 2 );
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'mwb_sfw_add_order_statuses_for_payment_complete' ), 10, 2 );
-			
+
 			add_filter( 'woocommerce_paypal_express_checkout_needs_billing_agreement', array( $this, 'mwb_sfw_create_billing_agreement_for_express_checkout' ) );
 
 		}
@@ -187,11 +187,11 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * Create Billing for subscription.
 		 *
 		 * @name mwb_sfw_create_billing_agreement_for_express_checkout.
-		 * @param array $args args.
+		 * @param bool $mwb_create_billing mwb_create_billing.
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_create_billing_agreement_for_express_checkout( $mwb_create_billing ) {
-			if( $this->mwb_sfw_check_paypal_express_enable() && ! $mwb_create_billing ) {
+			if ( $this->mwb_sfw_check_paypal_express_enable() && ! $mwb_create_billing ) {
 				if ( mwb_sfw_is_cart_has_subscription_product() ) {
 					$mwb_create_billing = true;
 				}
@@ -203,7 +203,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 *
 		 * @name mwb_sfw_process_subscription_payment.
 		 * @param object $order order.
-		 * @param int $subscription_id subscription_id.
+		 * @param int    $subscription_id subscription_id.
 		 * @param string $payment_method payment_method.
 		 * @since    1.0.2
 		 */
@@ -216,14 +216,14 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 				if ( 'paypal' == $payment_method && 'yes' == $mwb_sfw_renewal_order ) {
 					if ( $this->mwb_sfw_paypal_check_settings() && $this->mwb_sfw_paypal_credential_set() ) {
 						if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
-							$paypal_profile_id = get_post_meta( $subscription_id,'_mwb_paypal_subscription_id',true );
+							$paypal_profile_id = get_post_meta( $subscription_id, '_mwb_paypal_subscription_id', true );
 
-							if ( isset( $paypal_profile_id ) && !empty( $paypal_profile_id ) ) {
+							if ( isset( $paypal_profile_id ) && ! empty( $paypal_profile_id ) ) {
 								if ( $this->mwb_sfw_check_billing_id( $paypal_profile_id, 'billing_agreement' ) ) {
 
 									if ( 0 == $order->get_total() ) {
 										$order->payment_complete();
-										
+
 										return;
 									}
 									$response = $this->mwb_sfw_do_reference_transaction( $paypal_profile_id, $order );
@@ -233,27 +233,25 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 							}
 						}
 					}
-				}
-				elseif ( 'ppec_paypal'== $payment_method && 'yes' == $mwb_sfw_renewal_order ) {
+				} elseif ( 'ppec_paypal' == $payment_method && 'yes' == $mwb_sfw_renewal_order ) {
 
 					if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
-						$paypal_profile_id = get_post_meta( $subscription_id,'_mwb_paypal_subscription_id', true );
-						
-						if ( isset( $paypal_profile_id ) && !empty( $paypal_profile_id ) ) {
-							
+						$paypal_profile_id = get_post_meta( $subscription_id, '_mwb_paypal_subscription_id', true );
+
+						if ( isset( $paypal_profile_id ) && ! empty( $paypal_profile_id ) ) {
+
 							if ( 0 == $order->get_total() ) {
 								$order->payment_complete();
 								return;
 							}
 							if ( $this->mwb_sfw_check_paypal_express_enable() && class_exists( 'WC_Gateway_PPEC_With_PayPal_Addons' ) ) {
 
-								update_post_meta( $order_id,'_ppec_billing_agreement_id', $paypal_profile_id );
-								$paypal_obj = new  WC_Gateway_PPEC_With_PayPal_Addons();
+								update_post_meta( $order_id, '_ppec_billing_agreement_id', $paypal_profile_id );
+								$paypal_obj = new WC_Gateway_PPEC_With_PayPal_Addons();
 								$paypal_obj->scheduled_subscription_payment( $order->get_total(), $order );
 								mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 							}
 						}
-						
 					}
 				}
 			}
@@ -269,7 +267,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		public function mwb_sfw_add_order_statuses_for_payment_complete( $order_status, $order ) {
 			if ( $order && is_object( $order ) ) {
-				
+
 				$order_id = $order->get_id();
 				$payment_method = get_post_meta( $order_id, '_payment_method', true );
 				$mwb_sfw_renewal_order = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
@@ -299,7 +297,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( 'ppec_paypal' == $payment_method ) {
 				$supported_payment_method[] = $payment_method;
 			}
-			
+
 			return $supported_payment_method;
 		}
 
@@ -342,7 +340,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			$mwb_paypal_enable = true;
 
 			$mwb_paypal_settings = get_option( 'woocommerce_paypal_settings' );
-			
+
 			if ( ! isset( $mwb_paypal_settings['enabled'] ) || 'yes' != $mwb_paypal_settings['enabled'] ) {
 
 				$mwb_paypal_enable = false;
@@ -355,7 +353,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			$this->mwb_sfw_email           = ( isset( $mwb_paypal_settings['email'] ) ) ? $mwb_paypal_settings['email'] : '';
 
 			$this->mwb_sfw_receiver_email  = ( isset( $mwb_paypal_settings['receiver_email'] ) ) ? $mwb_paypal_settings['receiver_email'] : $this->mwb_sfw_email;
-			
+
 			$this->mwb_sfw_invoice_prefix  = ( isset( $mwb_paypal_settings['invoice_prefix'] ) ) ? $mwb_paypal_settings['invoice_prefix'] : 'WC-';
 
 			return $mwb_paypal_enable;
@@ -374,7 +372,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( ! isset( $mwb_ppec_settings['enabled'] ) || 'yes' != $mwb_ppec_settings['enabled'] ) {
 				$mwb_ppec_enable = false;
 			}
-			
+
 			return $mwb_ppec_enable;
 		}
 
@@ -441,7 +439,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		public function mwb_sfw_set_express_checkout( $args ) {
 			$request_obj = $this->mwb_get_new_request();
-			
+
 			$payments_args = $request_obj->mwb_sfw_get_express_checkout_param( $args );
 			$response = $this->mwb_sfw_process_request( $payments_args );
 			return $response;
@@ -451,7 +449,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * This function is used to process request.
 		 *
 		 * @name mwb_sfw_process_request.
-		 * @param array $request request.
+		 * @param array $payments_args payments_args.
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_process_request( $payments_args ) {
@@ -466,7 +464,8 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * This function is used to process request.
 		 *
 		 * @name mwb_sfw_process_api_response.
-		 * @param array $request request.
+		 * @param array $response response.
+		 * @throws Exception Return error.
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_process_api_response( $response ) {
@@ -475,41 +474,23 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 				throw new Exception( $response->get_error_message(), (int) $response->get_error_code() );
 			}
 
-			//Set response data.
-			$response_code     = wp_remote_retrieve_response_code( $response );
-			//$response_message  = wp_remote_retrieve_response_message( $response );
-			//$response_headers  = wp_remote_retrieve_headers( $response );
 			$response_body = wp_remote_retrieve_body( $response );
-			
+
 			parse_str( $response_body, $response_result );
-			
+
 			return $response_result;
 		}
 
 		/**
 		 * This function is used to process request.
 		 *
-		 * @name mwb_sfw_process_api_response.
-		 * @param array $request request.
-		 * @since    1.0.2
-		 */
-		/*public function get_parsed_response( $response ) {
-			
-			wp_parse_str( urldecode( $response ), $this->mwb_sfw_parse_response );
-
-			return $this->mwb_sfw_parse_response;
-		}*/
-
-		/**
-		 * This function is used to process request.
-		 *
 		 * @name mwb_sfw_process_remote_request.
 		 * @param string $url url.
-		 * @param array $mwb_args mwb_args.
+		 * @param array  $mwb_args mwb_args.
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_process_remote_request( $url, $mwb_args ) {
-			
+
 			$args = array(
 				'method'      => 'POST',
 				'timeout'     => 45,
@@ -547,7 +528,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 
 			$request_obj = $this->mwb_get_new_request();
 			$payments_args = $request_obj->mwb_sfw_get_express_checkout_params( $token );
-			
+
 			return $this->mwb_sfw_process_request( $payments_args );
 		}
 
@@ -612,7 +593,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_do_express_checkout( $token, $order, $args ) {
-			
+
 			$request_obj = $this->mwb_get_new_request();
 
 			$payments_args = $request_obj->mwb_sfw_do_express_checkout_params( $token, $order, $args );
@@ -650,11 +631,11 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 				$order = wc_get_order( $order );
 			}
 			$mwb_subscription_id = get_post_meta( $order->get_id(), 'mwb_subscription_id', true );
-			if ( isset( $mwb_subscription_id ) && !empty( $mwb_subscription_id ) ) {
+			if ( isset( $mwb_subscription_id ) && ! empty( $mwb_subscription_id ) ) {
 				if ( ! in_array( $paypal_subscription_id, get_user_meta( $order->get_user_id(), '_paypal_subscription_id', false ) ) ) {
 					add_user_meta( $order->get_user_id(), '_mwb_paypal_subscription_id', $paypal_subscription_id );
 				}
-				update_post_meta( $mwb_subscription_id,'_mwb_paypal_subscription_id',$paypal_subscription_id );
+				update_post_meta( $mwb_subscription_id, '_mwb_paypal_subscription_id', $paypal_subscription_id );
 
 			}
 		}
@@ -668,7 +649,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		public function mwb_sfw_check_transaction( $response ) {
 
-			return in_array( $this->mwb_sfw_get_payment_status( $response ), array('Completed','Processed') );
+			return in_array( $this->mwb_sfw_get_payment_status( $response ), array( 'Completed', 'Processed' ) );
 		}
 
 		/**
@@ -680,9 +661,9 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		public function mwb_sfw_check_pending_transaction( $response ) {
 
-			return in_array( $this->mwb_sfw_get_payment_status( $response ), array('Pending') );
+			return in_array( $this->mwb_sfw_get_payment_status( $response ), array( 'Pending' ) );
 		}
-		
+
 		/**
 		 * Get  transaction status.
 		 *
@@ -691,7 +672,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_get_payment_status( $response ) {
-			
+
 			return $this->mwb_sfw_get_payment_parameter( $response, 'PAYMENTSTATUS' );
 		}
 		/**
@@ -710,23 +691,21 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * Get transaction paramenter.
 		 *
 		 * @name mwb_sfw_get_payment_parameter.
-		 * @param array $response response.
+		 * @param array  $response response.
 		 * @param string $name name.
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_get_payment_parameter( $response, $name ) {
-			if ( isset( $response[ 'PAYMENTINFO_0_' . $name] ) ) { 
-				
-				return $response[ 'PAYMENTINFO_0_' . $name];
-			}
-			elseif ( isset( $response[$name] ) ) {
-				return $response[$name];
-			}
-			else{
+			if ( isset( $response[ 'PAYMENTINFO_0_' . $name ] ) ) {
+
+				return $response[ 'PAYMENTINFO_0_' . $name ];
+			} elseif ( isset( $response[ $name ] ) ) {
+				return $response[ $name ];
+			} else {
 				return null;
 			}
 		}
-		
+
 		/**
 		 * Check pappal id.
 		 *
@@ -752,34 +731,33 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 *
 		 * @name mwb_sfw_process_payment_response.
 		 * @param object $order order.
-		 * @param array $response response.
+		 * @param array  $response response.
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_process_payment_response( $order, $response ) {
-			
-			if ( isset( $response['ACK'] ) && $response['ACK'] != 'Success' ) {
 
-				$order->update_status( 'failed');
-			}
-			elseif ( $this->mwb_sfw_check_transaction( $response ) ) {
+			if ( isset( $response['ACK'] ) && 'Success' != $response['ACK'] ) {
+
+				$order->update_status( 'failed' );
+			} elseif ( $this->mwb_sfw_check_transaction( $response ) ) {
 				// translators: placeholder is a transaction ID.
 				$order->add_order_note( sprintf( __( 'PayPal payment approved (ID: %s)', 'subscriptions-for-woocommerce' ), $this->get_transaction_id( $response ) ) );
 
 				$order->payment_complete( $this->get_transaction_id( $response ) );
 				$order_id = $order->get_id();
 				mwb_sfw_send_email_for_renewal_susbcription( $order_id );
-			}
-			elseif ( $this->mwb_sfw_check_pending_transaction( $response ) ) {
+			} elseif ( $this->mwb_sfw_check_pending_transaction( $response ) ) {
 				$order_note   = sprintf( __( 'PayPal Transaction Held:', 'subscriptions-for-woocommerce' ) );
 				$order->update_status( 'on-hold', $order_note );
 			}
-			
+
 		}
 
 		/**
 		 * Check api response.
 		 *
 		 * @name mwb_sfw_handle_express_checkout_api.
+		 * @throws Exception Return error.
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_handle_express_checkout_api() {
@@ -787,72 +765,72 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( ! isset( $_GET['action'] ) ) {
 				return;
 			}
-			if ( isset( $_GET['action'] ) &&  'create_billing_agreement' == $_GET['action'] ) {
-					if ( ! isset( $_GET['token'] ) ) {
+			if ( isset( $_GET['action'] ) && 'create_billing_agreement' == $_GET['action'] ) {
+				if ( ! isset( $_GET['token'] ) ) {
+					return;
+				}
+					$token = sanitize_text_field( wp_unslash( $_GET['token'] ) );
+				try {
+					$mwb_sfw_express_checkout_response = $this->mwb_sfw_get_express_checkout_details( $token );
+					if ( ! isset( $mwb_sfw_express_checkout_response['BILLINGAGREEMENTACCEPTEDSTATUS'] ) ) {
 						return;
 					}
-					$token = esc_attr( $_GET['token'] );
-					try {
-						$mwb_sfw_express_checkout_response = $this->mwb_sfw_get_express_checkout_details( $token );
-						if ( ! isset( $mwb_sfw_express_checkout_response['BILLINGAGREEMENTACCEPTEDSTATUS'] ) ) {
+					$mwb_sfw_express_response = $mwb_sfw_express_checkout_response['BILLINGAGREEMENTACCEPTEDSTATUS'];
+
+					if ( 1 == $mwb_sfw_express_response ) {
+						$order_data = isset( $mwb_sfw_express_checkout_response['CUSTOM'] ) ? $mwb_sfw_express_checkout_response['CUSTOM'] : '';
+						$order = $this->get_paypal_order( $order_data );
+
+						if ( is_null( $order ) ) {
+							throw new Exception( __( 'Unable to find order for PayPal billing agreement.', 'subscriptions-for-woocommerce' ) );
+						}
+						if ( $order->get_total() > 0 && ! mwb_sfw_check_valid_subscription( $order->get_id() ) ) {
+
+							$payments_args = array(
+								'payment_action' => 'Sale',
+								'payer_id'       => isset( $mwb_sfw_express_checkout_response['PAYERID'] ) ? $mwb_sfw_express_checkout_response['PAYERID'] : '',
+							);
+
+							$mwb_sfw_billing_response = $this->mwb_sfw_do_express_checkout( $token, $order, $payments_args );
+
+						} else {
+
+							$mwb_sfw_billing_response = $this->mwb_sfw_create_billing_agreement( $token );
+						}
+
+						if ( isset( $mwb_sfw_billing_response['ACK'] ) && 'Success' != $mwb_sfw_billing_response['ACK'] ) {
+
 							return;
 						}
-						$mwb_sfw_express_response = $mwb_sfw_express_checkout_response['BILLINGAGREEMENTACCEPTEDSTATUS'];
-					
-						if ( 1 == $mwb_sfw_express_response ) {
-							$order_data = isset( $mwb_sfw_express_checkout_response['CUSTOM'] ) ? $mwb_sfw_express_checkout_response['CUSTOM'] : '';
-							$order = $this->get_paypal_order( $order_data );
-							
-							if ( is_null( $order ) ) {
-								throw new Exception( __( 'Unable to find order for PayPal billing agreement.', 'subscriptions-for-woocommerce' ) );
-							}
-							if ( $order->get_total() > 0 && ! mwb_sfw_check_valid_subscription( $order->get_id() ) ) {
-								
-								$payments_args = array(
-									'payment_action' => 'Sale',
-									'payer_id'       => isset( $mwb_sfw_express_checkout_response['PAYERID'] ) ? $mwb_sfw_express_checkout_response['PAYERID'] : '',
-								);
 
-								$mwb_sfw_billing_response = $this->mwb_sfw_do_express_checkout( $token, $order, $payments_args );
-								
-							} else {
-							
-								$mwb_sfw_billing_response = $this->mwb_sfw_create_billing_agreement( $token );
-							}
+						$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+						$payment_method     = isset( $available_gateways['paypal'] ) ? $available_gateways['paypal'] : false;
+						$order->set_payment_method( $payment_method );
 
-							if ( isset( $mwb_sfw_billing_response['ACK'] ) && $mwb_sfw_billing_response['ACK'] != 'Success' ) {
-								
-								return;
-							}
-							
-							$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
-							$payment_method     = isset( $available_gateways['paypal'] ) ? $available_gateways['paypal'] : false;
-							$order->set_payment_method( $payment_method );
-
-							if ( isset( $mwb_sfw_billing_response['BILLINGAGREEMENTID'] ) ) {
-								$this->mwb_sfw_set_paypal_id( $order, $mwb_sfw_billing_response['BILLINGAGREEMENTID'] );
-							}
-
-							if ( ! mwb_sfw_check_valid_subscription( $order->get_id() ) ) {
-								if ( 0 == $order->get_total() ) {
-									$order->payment_complete();
-								} else {
-									$this->mwb_sfw_process_payment_response( $order, $mwb_sfw_billing_response );
-								}
-							}
-							wp_safe_redirect( $order->get_checkout_order_received_url() );
-							exit;
-						} else {
-							wp_safe_redirect( wc_get_cart_url() );
-							exit;
+						if ( isset( $mwb_sfw_billing_response['BILLINGAGREEMENTID'] ) ) {
+							$this->mwb_sfw_set_paypal_id( $order, $mwb_sfw_billing_response['BILLINGAGREEMENTID'] );
 						}
-					} catch ( Exception $e ) {
 
-						wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', 'subscriptions-for-woocommerce' ), 'error' );
-
-						wp_redirect( wc_get_cart_url() );
+						if ( ! mwb_sfw_check_valid_subscription( $order->get_id() ) ) {
+							if ( 0 == $order->get_total() ) {
+								$order->payment_complete();
+							} else {
+								$this->mwb_sfw_process_payment_response( $order, $mwb_sfw_billing_response );
+							}
+						}
+						wp_safe_redirect( $order->get_checkout_order_received_url() );
+						exit;
+					} else {
+						wp_safe_redirect( wc_get_cart_url() );
 						exit;
 					}
+				} catch ( Exception $e ) {
+
+					wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', 'subscriptions-for-woocommerce' ), 'error' );
+
+					wp_redirect( wc_get_cart_url() );
+					exit;
+				}
 			}
 		}
 
@@ -875,22 +853,23 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( 'yes' != $mwb_order_has_susbcription ) {
 				return $mwb_args;
 			}
-			//Set express checkout.
-			$response = $this->mwb_sfw_set_express_checkout( array(
-				'currency'   => $mwb_args['currency_code'],
-				'return_url' => $this->mwb_sfw_get_callback_url( 'create_billing_agreement' ),
-				'cancel_url' => $mwb_args['cancel_return'],
-				'notify_url' => $mwb_args['notify_url'],
-				'custom'     => $mwb_args['custom'],
-				'order'      => $order,
-			) );
-			
+			// Set express checkout.
+			$response = $this->mwb_sfw_set_express_checkout(
+				array(
+					'currency'   => $mwb_args['currency_code'],
+					'return_url' => $this->mwb_sfw_get_callback_url( 'create_billing_agreement' ),
+					'cancel_url' => $mwb_args['cancel_return'],
+					'notify_url' => $mwb_args['notify_url'],
+					'custom'     => $mwb_args['custom'],
+					'order'      => $order,
+				)
+			);
+
 			$mwb_args = array(
 				'cmd'   => '_express-checkout',
 				'token' => $response['TOKEN'],
 			);
 			return $mwb_args;
-
 
 			$mwb_is_renewal_order = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
 
@@ -1130,17 +1109,16 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		public function mwb_sfw_cancel_paypal_subscription( $mwb_subscription_id, $status ) {
 			$mwb_sfw_paypal_subscriber_id = get_post_meta( $mwb_subscription_id, 'mwb_sfw_paypal_subscriber_id', true );
-			$paypal_profile_id = get_post_meta( $mwb_subscription_id,'_mwb_paypal_subscription_id',true );
+			$paypal_profile_id = get_post_meta( $mwb_subscription_id, '_mwb_paypal_subscription_id', true );
 
-			if ( isset( $paypal_profile_id ) && !empty( $paypal_profile_id ) ) {
+			if ( isset( $paypal_profile_id ) && ! empty( $paypal_profile_id ) ) {
 				if ( $this->mwb_sfw_check_billing_id( $paypal_profile_id, 'billing_agreement' ) ) {
 					if ( 'Cancel' == $status ) {
 						mwb_sfw_send_email_for_cancel_susbcription( $mwb_subscription_id );
 						update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
 					}
 				}
-			}
-			elseif ( isset( $mwb_sfw_paypal_subscriber_id ) && empty( $mwb_sfw_paypal_subscriber_id ) ) {
+			} elseif ( isset( $mwb_sfw_paypal_subscriber_id ) && empty( $mwb_sfw_paypal_subscriber_id ) ) {
 				$response = $this->mwb_sfw_change_paypal_subscription_status( $mwb_sfw_paypal_subscriber_id, $status );
 				if ( ! empty( $response ) ) {
 					if ( 'Failure' == $response['ACK'] ) {
@@ -1153,11 +1131,10 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 						}
 					}
 				}
-			}
-			else {
+			} else {
 				return;
 			}
-			
+
 		}
 
 		/**
