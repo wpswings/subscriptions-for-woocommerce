@@ -227,6 +227,7 @@ if ( ! function_exists( 'mwb_sfw_send_email_for_renewal_susbcription' ) ) {
 
 				}
 			}
+			do_action('mwb_sfw_renewal_email_notification', $order, $mailer );
 		}
 	}
 }
@@ -667,5 +668,26 @@ if ( ! function_exists( 'mwb_sfw_get_file_content' ) ) {
 		WP_Filesystem();
 		$mwb_file_content = $wp_filesystem->get_contents( $mwb_file_path );
 		return $mwb_file_content;
+	}
+}
+if ( ! function_exists( 'mwb_sfw_is_cart_has_subscription_product' ) ) {
+	/**
+	 * This function is used to check susbcripton product in cart.
+	 *
+	 * @name mwb_sfw_is_cart_has_subscription_product
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_is_cart_has_subscription_product() {
+		$mwb_has_subscription = false;
+
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$mwb_has_subscription = true;
+					break;
+				}
+			}
+		}
+		return $mwb_has_subscription;
 	}
 }

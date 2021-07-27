@@ -993,23 +993,30 @@ class Subscriptions_For_Woocommerce_Public {
 					$mwb_subscriptions = get_posts( $args );
 
 					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
-						foreach ( $mwb_subscriptions as $key => $value ) {
+						foreach ( $mwb_subscriptions as $key => $subscription ) {
 							$current_time = current_time( 'timestamp' );
 
-							update_post_meta( $value->ID, 'mwb_subscription_status', 'active' );
-							update_post_meta( $value->ID, 'mwb_schedule_start', $current_time );
+							update_post_meta( $subscription->ID, 'mwb_subscription_status', 'active' );
+							update_post_meta( $subscription->ID, 'mwb_schedule_start', $current_time );
 
-							$mwb_susbcription_trial_end = mwb_sfw_susbcription_trial_date( $value->ID, $current_time );
-							update_post_meta( $value->ID, 'mwb_susbcription_trial_end', $mwb_susbcription_trial_end );
+							$mwb_susbcription_trial_end = mwb_sfw_susbcription_trial_date( $subscription->ID, $current_time );
+							update_post_meta( $subscription->ID, 'mwb_susbcription_trial_end', $mwb_susbcription_trial_end );
 
-							$mwb_next_payment_date = mwb_sfw_next_payment_date( $value->ID, $current_time, $mwb_susbcription_trial_end );
+							$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
 
-							$mwb_next_payment_date = apply_filters( 'mwb_sfw_next_payment_date', $mwb_next_payment_date, $value->ID );
+							$mwb_next_payment_date = apply_filters( 'mwb_sfw_next_payment_date', $mwb_next_payment_date, $subscription->ID );
 
-							update_post_meta( $value->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
+							update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
 
-							$mwb_susbcription_end = mwb_sfw_susbcription_expiry_date( $value->ID, $current_time, $mwb_susbcription_trial_end );
-							update_post_meta( $value->ID, 'mwb_susbcription_end', $mwb_susbcription_end );
+							$mwb_susbcription_end = mwb_sfw_susbcription_expiry_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
+							update_post_meta( $subscription->ID, 'mwb_susbcription_end', $mwb_susbcription_end );
+
+							//Set billing id.
+							$billing_agreement_id = get_post_meta( $order_id, '_ppec_billing_agreement_id', true );
+							if ( isset( $billing_agreement_id ) && !empty( $billing_agreement_id ) ) {
+								update_post_meta( $subscription->ID, '_mwb_paypal_subscription_id', $billing_agreement_id );
+							}
+							do_action( 'mwb_sfw_order_status_changed', $order_id, $subscription->ID );
 						}
 						update_post_meta( $order_id, 'mwb_sfw_subscription_activated', 'yes' );
 					}
