@@ -173,7 +173,7 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 = 1.0.2 - RELEASED ON 05 August 2021 =
 
 * New: Compatibility with WordPress 5.8
-* New: Compatibility with WooCommerce 5.5.2
+* New: Compatibility with WooCommerce 5.5
 
 = 1.0.1 - RELEASED ON 20 July 2021 =
 
@@ -193,4 +193,4 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 = 1.0.2 - RELEASED ON 05 August 2021 =
 
 * New: Compatibility with WordPress 5.8
-* New: Compatibility with WooCommerce 5.5.2
+* New: Compatibility with WooCommerce 5.5
