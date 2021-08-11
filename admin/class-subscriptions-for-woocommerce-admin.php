@@ -599,9 +599,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					$parent_order = wc_get_order( $parent_order_id );
 					$billing_details = $parent_order->get_address( 'billing' );
 					$shipping_details = $parent_order->get_address( 'shipping' );
-
-					$new_status = 'wc-mwb_renewal';
-
+					$new_status = 'mwb_renewal';
 					$user_id = $subscription->mwb_customer_id;
 					$product_id = $subscription->product_id;
 					$product_qty = $subscription->product_qty;
@@ -762,22 +760,21 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * This function is used to custom order status for susbcription.
 	 *
 	 * @name mwb_sfw_register_new_order_statuses
+	 * @param array $order_status order_status.
 	 * @since 1.0.0
 	 */
-	public function mwb_sfw_register_new_order_statuses() {
+	public function mwb_sfw_register_new_order_statuses( $order_status ) {
 
-		register_post_status(
-			'wc-mwb_renewal',
-			array(
-				'label'                     => _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => true,
-				'show_in_admin_status_list' => true,
-				/* translators: %s: count */
-				'label_count'               => _n_noop( 'Mwb Renewal <span class="count">(%s)</span>', 'Mwb Renewal<span class="count">(%s)</span>', 'subscriptions-for-woocommerce' ),
-			)
+		$order_status['wc-mwb_renewal'] = array(
+			'label'                     => _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
+			'public'                    => false,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			/* translators: %s: number of orders */
+			'label_count'               => _n_noop( 'Mwb Renewal <span class="count">(%s)</span>', 'Mwb Renewal <span class="count">(%s)</span>', 'subscriptions-for-woocommerce' ),
 		);
+		return $order_status;
 	}
 
 	/**

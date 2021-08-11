@@ -45,11 +45,17 @@ class Subscriptions_For_Woocommerce_Stripe {
 		$is_successful = false;
 
 		try {
+			// Return if order total is zero.
+			if ( 0 == $order->get_total() ) {
+				$order->payment_complete();
+				return;
+			}
 
 			$gateway = $this->mwb_sfw_get_wc_gateway();
 			if ( ! $gateway ) {
 				$order_note = __( 'Stripe payment gateway not activated.', 'subscriptions-for-woocommerce' );
 				$order->update_status( 'failed', $order_note );
+				return;
 			}
 			$source   = $gateway->prepare_order_source( $parent_order );
 			// show the data in log file.
@@ -78,9 +84,11 @@ class Subscriptions_For_Woocommerce_Stripe {
 					WC_Stripe_Logger::log( 'MWB response succes: ' . wc_print_r( $response, true ) );
 
 					update_post_meta( $order_id, '_mwb_sfw_payment_transaction_id', $response->id );
-					/* translators: %s: response id */
+					/* translators: %s: transaction id */
 					$order_note = sprintf( __( 'Stripe Renewal Transaction Successful (%s)', 'subscriptions-for-woocommerce' ), $response->id );
-					$order->update_status( 'processing', $order_note );
+					$order->add_order_note( $order_note );
+					$order->payment_complete( $response->id );
+
 					$is_successful = true;
 				}
 			}

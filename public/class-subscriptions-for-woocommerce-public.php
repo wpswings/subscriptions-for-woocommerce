@@ -1074,7 +1074,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_woocommerce_cart_needs_payment( $mwb_needs_payment, $cart ) {
 		$mwb_is_payment = false;
-
+		$mwb_cart_has_subscription = false;
 		if ( $mwb_needs_payment ) {
 			return $mwb_needs_payment;
 		}
@@ -1083,6 +1083,7 @@ class Subscriptions_For_Woocommerce_Public {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 
 				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$mwb_cart_has_subscription = true;
 					$product_id = $cart_item['data']->get_id();
 					$mwb_free_trial_length = get_post_meta( $product_id, 'mwb_sfw_subscription_free_trial_number', true );
 					if ( $mwb_free_trial_length > 0 ) {
@@ -1093,6 +1094,8 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 		}
 		if ( $mwb_is_payment && 0 == $cart->total ) {
+			$mwb_needs_payment = true;
+		} elseif ( $mwb_cart_has_subscription && 0 == $cart->total ) {
 			$mwb_needs_payment = true;
 		}
 
