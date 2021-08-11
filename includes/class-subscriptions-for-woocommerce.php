@@ -233,7 +233,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'mwb_sfw_expired_renewal_subscription', $sfw_plugin_admin, 'mwb_sfw_expired_renewal_subscription_callback' );
 
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_register_new_order_statuses' );
+			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'mwb_sfw_register_new_order_statuses' );
 
 			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'mwb_sfw_new_wc_order_statuses' );
 		}

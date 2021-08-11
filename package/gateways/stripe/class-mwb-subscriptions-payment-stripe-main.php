@@ -52,9 +52,11 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Stripe_Main' ) ) {
 				$mwb_sfw_renewal_order = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
 				if ( 'stripe' == $payment_method && 'yes' == $mwb_sfw_renewal_order ) {
 					$order_status[] = 'mwb_renewal';
+
 				}
 			}
-			return apply_filters('mwb_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
+			return apply_filters( 'mwb_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
+
 		}
 
 		/**

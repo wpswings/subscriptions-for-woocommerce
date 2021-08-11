@@ -45,7 +45,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 		$is_successful = false;
 
 		try {
-			//Return if order total is zero.
+			// Return if order total is zero.
 			if ( 0 == $order->get_total() ) {
 				$order->payment_complete();
 				return;
@@ -55,6 +55,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 			if ( ! $gateway ) {
 				$order_note = __( 'Stripe payment gateway not activated.', 'subscriptions-for-woocommerce' );
 				$order->update_status( 'failed', $order_note );
+				return;
 			}
 			$source   = $gateway->prepare_order_source( $parent_order );
 			// show the data in log file.
