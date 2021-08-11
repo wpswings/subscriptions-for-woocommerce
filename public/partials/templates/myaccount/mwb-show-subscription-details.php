@@ -155,4 +155,5 @@ function mwb_sfw_cancel_url( $mwb_subscription_id, $mwb_status ) {
 					<?php do_action( 'mwb_sfw_order_details_html_after_cancel', $mwb_subscription_id ); ?>
 		</tbody>
 	</table>
+	<?php do_action( 'mwb_sfw_after_subscription_details', $mwb_subscription_id ); ?>
 </div>

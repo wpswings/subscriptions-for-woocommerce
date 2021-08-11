@@ -1118,7 +1118,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 						update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
 					}
 				}
-			} elseif ( isset( $mwb_sfw_paypal_subscriber_id ) && empty( $mwb_sfw_paypal_subscriber_id ) ) {
+			} elseif ( isset( $mwb_sfw_paypal_subscriber_id ) && ! empty( $mwb_sfw_paypal_subscriber_id ) && $this->mwb_sfw_paypal_check_settings() ) {
 				$response = $this->mwb_sfw_change_paypal_subscription_status( $mwb_sfw_paypal_subscriber_id, $status );
 				if ( ! empty( $response ) ) {
 					if ( 'Failure' == $response['ACK'] ) {
