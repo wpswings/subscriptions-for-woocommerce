@@ -159,6 +159,9 @@ class Subscriptions_For_Woocommerce_Public {
 	public function mwb_sfw_get_initial_signup_fee_html( $product_id, $price ) {
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'mwb_sfw_subscription_initial_signup_price', true );
 		if ( isset( $mwb_sfw_subscription_initial_signup_price ) && ! empty( $mwb_sfw_subscription_initial_signup_price ) ) {
+			if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $mwb_sfw_subscription_initial_signup_price );
+			}
 			/* translators: %s: signup fee */
 
 			$price .= '<span class="mwb_sfw_signup_fee">' . sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $mwb_sfw_subscription_initial_signup_price ) ) . '</span>';
@@ -286,12 +289,16 @@ class Subscriptions_For_Woocommerce_Public {
 			} else {
 				$price = $cart_item['data']->get_regular_price();
 			}
-
+			if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+				$price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $price );
+			}
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
 			$product_price = $this->mwb_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
 		}
 		return $product_price;
 	}
+
+
 
 	/**
 	 * This function is used to add susbcription price.
@@ -550,6 +557,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$_product,
 				$mwb_args['product_qty']
 			);
+
 			$new_order->update_taxes();
 			$new_order->calculate_totals();
 			$new_order->save();
@@ -875,11 +883,20 @@ class Subscriptions_For_Woocommerce_Public {
 		$susbcription = wc_get_order( $subscription_id );
 
 		if ( isset( $susbcription ) && ! empty( $susbcription ) ) {
-			$price = wc_price( $susbcription->get_total() );
+			$price = $susbcription->get_total();
+			$mwb_curr_args = array(
+				'currency' => $susbcription->get_currency(),
+			);
 		} else {
-			$mwb_recurring_total = get_post_meta( $subscription_id, 'mwb_recurring_total', true );
-			$price = wc_price( $mwb_recurring_total );
+			$price = get_post_meta( $subscription_id, 'mwb_recurring_total', true );
 		}
+
+		$mwb_curr_args = array();
+		// Curruecy switchers.
+		if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+			$price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $price, $susbcription->get_currency() );
+		}
+		$price = wc_price( $price, $mwb_curr_args );
 		$mwb_recurring_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_number', true );
 		$mwb_recurring_interval = get_post_meta( $subscription_id, 'mwb_sfw_subscription_interval', true );
 		$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
