@@ -91,6 +91,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( ! mwb_sfw_check_product_is_subscription( $product ) ) {
 			return $price;
 		}
+		$price = apply_filters( 'mwb_rbpfw_price', $price, $product );
 		$price = $this->mwb_sfw_subscription_product_get_price_html( $price, $product );
 		return $price;
 	}
@@ -293,6 +294,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $price );
 			}
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
+			$product_price = apply_filters( 'mwb_rbpfw_cart_price', $product_price, $cart_item );
 			$product_price = $this->mwb_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
 		}
 		return $product_price;
@@ -551,11 +553,38 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->set_address( $billing_details, 'billing' );
 			$new_order->set_address( $shipping_details, 'shipping' );
 
+			// If initial fee available.
+			if ( isset( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) && ! empty( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) ) {
+				$initial_signup_price = $mwb_args['mwb_sfw_subscription_initial_signup_price'];
+				// Currency switchers.
+				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+					$initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $initial_signup_price, $mwb_args['mwb_order_currency'] );
+				}
+				$line_subtotal = $mwb_args['line_subtotal'] - $initial_signup_price;
+				$line_total = $mwb_args['line_total'] - $initial_signup_price;
+			} else {
+				$line_subtotal = $mwb_args['line_subtotal'];
+				$line_total = $mwb_args['line_total'];
+			}
+
 			$_product = wc_get_product( $mwb_args['product_id'] );
+
+			$mwb_pro_args = array(
+				'variation' => array(),
+				'totals'    => array(
+					'subtotal'     => $line_subtotal,
+					'subtotal_tax' => $mwb_args['line_subtotal_tax'],
+					'total'        => $line_total,
+					'tax'          => $mwb_args['line_tax'],
+					'tax_data'     => $mwb_args['line_tax_data'],
+				),
+			);
+			$mwb_pro_args = apply_filters( 'mwb_product_args_for_order', $mwb_pro_args );
 
 			$item_id = $new_order->add_product(
 				$_product,
-				$mwb_args['product_qty']
+				$mwb_args['product_qty'],
+				$mwb_pro_args
 			);
 
 			$new_order->update_taxes();
@@ -892,10 +921,7 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 
 		$mwb_curr_args = array();
-		// Curruecy switchers.
-		if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
-			$price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $price, $susbcription->get_currency() );
-		}
+
 		$price = wc_price( $price, $mwb_curr_args );
 		$mwb_recurring_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_number', true );
 		$mwb_recurring_interval = get_post_meta( $subscription_id, 'mwb_sfw_subscription_interval', true );

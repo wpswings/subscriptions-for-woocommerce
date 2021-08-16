@@ -336,10 +336,6 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 						'currency' => $susbcription->get_currency(),
 					);
 				}
-				// Curruecy switchers.
-				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
-					$mwb_recurring_total = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $mwb_recurring_total, $susbcription->get_currency() );
-				}
 
 				$mwb_recurring_total = mwb_sfw_recerring_total_price_list_table_callback( wc_price( $mwb_recurring_total, $mwb_curr_args ), $value->ID );
 
