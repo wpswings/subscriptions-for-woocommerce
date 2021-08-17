@@ -86,7 +86,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php } ?>
 			<?php
 		} else {
-			esc_html_e( 'You have not any active subscriptions.', 'subscriptions-for-woocommerce' );
+			esc_html_e( 'You do not have any active subscription(s).', 'subscriptions-for-woocommerce' );
 		}
 		?>
 	</div>
