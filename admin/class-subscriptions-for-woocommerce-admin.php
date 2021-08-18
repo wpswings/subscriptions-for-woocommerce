@@ -599,6 +599,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					$parent_order = wc_get_order( $parent_order_id );
 					$billing_details = $parent_order->get_address( 'billing' );
 					$shipping_details = $parent_order->get_address( 'shipping' );
+					$parent_order_currency = $parent_order->get_currency();
 					$new_status = 'mwb_renewal';
 					$user_id = $subscription->mwb_customer_id;
 					$product_id = $subscription->product_id;
@@ -612,33 +613,41 @@ class Subscriptions_For_Woocommerce_Admin {
 						'customer_id' => $user_id,
 					);
 					$mwb_new_order = wc_create_order( $args );
+					$mwb_new_order->set_currency( $parent_order_currency );
+
+					// If initial fee available.
+					if ( ! empty( $subscription->mwb_sfw_subscription_initial_signup_price ) ) {
+						$initial_signup_price = $subscription->mwb_sfw_subscription_initial_signup_price;
+						// Currency switchers.
+						if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+							$initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $initial_signup_price, $parent_order_currency );
+						}
+						$line_subtotal = $subscription->line_subtotal - $initial_signup_price;
+						$line_total = $subscription->line_total - $initial_signup_price;
+					} else {
+						$line_subtotal = $subscription->line_subtotal;
+						$line_total = $subscription->line_total;
+					}
 
 					$_product = wc_get_product( $product_id );
 
 					$mwb_args = array(
 						'variation' => array(),
 						'totals'    => array(
-							'subtotal'     => $subscription->line_subtotal,
+							'subtotal'     => $line_subtotal,
 							'subtotal_tax' => $subscription->line_subtotal_tax,
-							'total'        => $subscription->line_total,
+							'total'        => $line_total,
 							'tax'          => $subscription->line_tax,
 							'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
 						),
 					);
 					$mwb_pro_args = apply_filters( 'mwb_product_args_for_order', $mwb_args );
 
-					if ( ! empty( $subscription->line_subtotal ) && ! empty( $subscription->line_total ) && empty( $subscription->mwb_sfw_subscription_initial_signup_price ) ) {
-						$item_id = $mwb_new_order->add_product(
-							$_product,
-							$product_qty,
-							$mwb_pro_args
-						);
-					} else {
-						$item_id = $mwb_new_order->add_product(
-							$_product,
-							$product_qty
-						);
-					}
+					$item_id = $mwb_new_order->add_product(
+						$_product,
+						$product_qty,
+						$mwb_pro_args
+					);
 
 					$mwb_new_order->update_taxes();
 					$mwb_new_order->calculate_totals( false );
@@ -654,6 +663,26 @@ class Subscriptions_For_Woocommerce_Admin {
 					update_post_meta( $order_id, 'mwb_sfw_subscription', $subscription_id );
 					update_post_meta( $order_id, 'mwb_sfw_parent_order_id', $parent_order_id );
 					update_post_meta( $subscription_id, 'mwb_renewal_subscription_order', $order_id );
+
+					// Renewal info.
+					$mwb_no_of_order = get_post_meta( $subscription_id, 'mwb_wsp_no_of_renewal_order', true );
+					if ( empty( $mwb_no_of_order ) ) {
+						$mwb_no_of_order = 1;
+						update_post_meta( $subscription_id, 'mwb_wsp_no_of_renewal_order', $mwb_no_of_order );
+					} else {
+						$mwb_no_of_order = (int) $mwb_no_of_order + 1;
+						update_post_meta( $subscription_id, 'mwb_wsp_no_of_renewal_order', $mwb_no_of_order );
+					}
+					$mwb_renewal_order_data = get_post_meta( $subscription_id, 'mwb_wsp_renewal_order_data', true );
+					if ( empty( $mwb_renewal_order_data ) ) {
+						$mwb_renewal_order_data = array( $order_id );
+						update_post_meta( $subscription_id, 'mwb_wsp_renewal_order_data', $mwb_renewal_order_data );
+					} else {
+						$mwb_renewal_order_data[] = $order_id;
+						update_post_meta( $subscription_id, 'mwb_wsp_renewal_order_data', $mwb_renewal_order_data );
+					}
+					update_post_meta( $subscription_id, 'mwb_wsp_last_renewal_order_id', $order_id );
+
 					do_action( 'mwb_sfw_renewal_order_creation', $mwb_new_order, $subscription_id );
 
 					/*if trial period enable*/
@@ -690,10 +719,10 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function mwb_sfw_admin_create_order_scheduler() {
 		if ( class_exists( 'ActionScheduler' ) ) {
 			if ( function_exists( 'as_next_scheduled_action' ) && false === as_next_scheduled_action( 'mwb_sfw_create_renewal_order_schedule' ) ) {
-				as_schedule_recurring_action( strtotime( 'now' ), 3600, 'mwb_sfw_create_renewal_order_schedule' );
+				as_schedule_recurring_action( strtotime( 'hourly' ), 3600, 'mwb_sfw_create_renewal_order_schedule' );
 			}
 			if ( function_exists( 'as_next_scheduled_action' ) && false === as_next_scheduled_action( 'mwb_sfw_expired_renewal_subscription' ) ) {
-				as_schedule_recurring_action( strtotime( 'now' ), 3600, 'mwb_sfw_expired_renewal_subscription' );
+				as_schedule_recurring_action( strtotime( 'hourly' ), 3600, 'mwb_sfw_expired_renewal_subscription' );
 			}
 
 			do_action( 'mwb_sfw_create_admin_scheduler' );
@@ -788,6 +817,27 @@ class Subscriptions_For_Woocommerce_Admin {
 		$order_statuses['wc-mwb_renewal'] = _x( 'Mwb Renewal', 'Order status', 'subscriptions-for-woocommerce' );
 
 		return $order_statuses;
+	}
+
+	/**
+	 * This function is used to custom field compatibility with WPML.
+	 *
+	 * @name mwb_sfw_add_lock_custom_fields_ids.
+	 * @since 1.0.3
+	 * @param array $ids ids.
+	 */
+	public function mwb_sfw_add_lock_custom_fields_ids( $ids ) {
+
+		$ids[] = '_mwb_sfw_product';
+		$ids[] = 'mwb_sfw_subscription_number';
+		$ids[] = 'mwb_sfw_subscription_interval';
+		$ids[] = 'mwb_sfw_subscription_expiry_number';
+		$ids[] = 'mwb_sfw_subscription_expiry_interval';
+		$ids[] = 'mwb_sfw_subscription_initial_signup_price';
+		$ids[] = 'mwb_sfw_subscription_free_trial_number';
+		$ids[] = 'mwb_sfw_subscription_free_trial_interval';
+
+		return apply_filters( 'mwb_sfw_add_lock_fields_ids_pro', $ids );
 	}
 
 }
