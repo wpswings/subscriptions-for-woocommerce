@@ -154,6 +154,15 @@ class Subscriptions_For_Woocommerce {
 
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
 
+		/**
+		 * Include the log file.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-log.php';
+		/**
+		 * Include the cron file.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-scheduler.php';
+
 	}
 	/**
 	 * The function is used to include email class.
@@ -226,12 +235,6 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'mwb_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
 
 			$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_admin_cancel_susbcription' );
-
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_admin_create_order_scheduler' );
-
-			$this->loader->add_action( 'mwb_sfw_create_renewal_order_schedule', $sfw_plugin_admin, 'mwb_sfw_renewal_order_on_scheduler' );
-
-			$this->loader->add_action( 'mwb_sfw_expired_renewal_subscription', $sfw_plugin_admin, 'mwb_sfw_expired_renewal_subscription_callback' );
 
 			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'mwb_sfw_register_new_order_statuses' );
 
