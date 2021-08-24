@@ -71,4 +71,36 @@ $sfw_php_details = is_array( $sfw_default_status['php'] ) && ! empty( $sfw_defau
 			</div>
 		</div>
 	</div>
+	<?php 
+	global $sfw_mwb_sfw_obj;
+	$mwb_sfw_tracking_fields_array = apply_filters( 'mwb_sfw_tracking_fields_array' , array(
+		array(
+			'title' => __( 'Enable Tracking', 'subscriptions-for-woocommerce' ),
+			'type'  => 'radio-switch',
+			'description'  => __( 'Allow usage of this plugin to be tracked', 'subscriptions-for-woocommerce' ),
+			'id'    => 'mwb_sfw_enable_tracking',
+			'value' => get_option( 'mwb_sfw_enable_tracking' ),
+			'class' => 'sfw-radio-switch-class',
+			'options' => array(
+				'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
+				'no' => __( 'NO', 'subscriptions-for-woocommerce' ),
+			),
+		),
+		array(
+			'type'  => 'button',
+			'id'    => 'sfw_track_button',
+			'button_text' => __('Save', 'subscriptions-for-woocommerce'),
+			'class' => 'sfw-button-class',
+		),
+	) );
+	?>
+	<form action="" method="POST" class="mwb-sfw-gen-section-form">
+		<div class="sfw-secion-wrap">
+			<?php
+			$mps_tracking_html = $sfw_mwb_sfw_obj->mwb_sfw_plug_generate_html( $mwb_sfw_tracking_fields_array );
+			echo esc_html( $mps_tracking_html );
+			wp_nonce_field( 'mwb-sfw-general-nonce', 'mwb-sfw-general-nonce-field' );
+			?>
+		</div>
+	</form>
 </div>

@@ -691,3 +691,57 @@ if ( ! function_exists( 'mwb_sfw_is_cart_has_subscription_product' ) ) {
 		return $mwb_has_subscription;
 	}
 }
+
+if ( ! function_exists( 'mwb_sfw_get_subscription_supported_payment_method' ) ) {
+	/**
+	 * This function is used to get supported payment gateway.
+	 *
+	 * @name mwb_sfw_get_subscription_supported_payment_method
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_get_subscription_supported_payment_method() {
+		
+		$gateway = 
+			array(
+				 array(
+					'id' => 'stripe',
+					'name' => __('WooCommerce Stripe Gateway','subscription-for-woocommerce'),
+					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-stripe/',
+					'slug' => 'woocommerce-gateway-stripe',
+					'is_activated'=> !empty( is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) ? true : false,
+				),
+				array(
+					'id'=> 'ppec_paypal',
+					'name' => __('WooCommerce PayPal Checkout Payment Gateway','subscription-for-woocommerce'),
+					'url' =>'https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/',
+					'slug' => 'woocommerce-gateway-paypal-express-checkout',
+					'is_activated'=> !empty( is_plugin_active( 'woocommerce-gateway-paypal-express-checkout/woocommerce-gateway-paypal-express-checkout.php' ) ) ? true : false,
+				),
+			
+			);
+
+		$gateway = apply_filters( 'mwb_sfw_supported_data_payment_for_configuration', $gateway );
+		return $gateway;
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_is_enable_usage_tracking' ) ) {
+	/**
+	 * This function is used to check tracking enable.
+	 *
+	 * @name mwb_sfw_is_enable_usage_tracking
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_is_enable_usage_tracking() {
+		$is_enable = false;
+		$mwb_wps_enable = get_option( 'mwb_sfw_enable_tracking', '' );
+		if ( 'on' == $mwb_wps_enable ) {
+			$is_enable = true;
+		}
+		return $is_enable;
+	}
+}
+
+
+
+

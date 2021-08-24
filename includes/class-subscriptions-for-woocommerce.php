@@ -224,7 +224,13 @@ class Subscriptions_For_Woocommerce {
 
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
+		//Multistep.
+		$this->loader->add_action('wp_ajax_mwb_sfw_save_settings_filter', $sfw_plugin_admin, 'mwb_sfw_save_settings_filter');
+		$this->loader->add_action('wp_ajax_nopriv_mwb_sfw_save_settings_filter', $sfw_plugin_admin, 'mwb_sfw_save_settings_filter');
 
+		$this->loader->add_action('wp_ajax_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration');
+		$this->loader->add_action('wp_ajax_nopriv_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration');
+		
 		if ( mwb_sfw_check_plugin_enable() ) {
 			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'mwb_sfw_create_subscription_product_type' );
 
@@ -241,6 +247,10 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'mwb_sfw_new_wc_order_statuses' );
 			// WPLM Translation.
 			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'mwb_sfw_add_lock_custom_fields_ids' );
+			
+			if ( mwb_sfw_is_enable_usage_tracking() ) {
+				$this->loader->add_action('makewebbetter_tracker_send_event', $sfw_plugin_admin, 'mwb_sfw_makewebbetter_tracker_send_event');
+			}
 		}
 
 	}

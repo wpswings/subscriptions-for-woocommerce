@@ -65,7 +65,19 @@ class Subscriptions_For_Woocommerce_Admin {
 		$screen = get_current_screen();
 
 		if ( isset( $screen->id ) && in_array( $screen->id, $mwb_sfw_screen_ids ) ) {
-
+			
+			//Multistep form css.
+			if ( ! mwb_sfw_check_multistep() ) {
+				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
+				wp_enqueue_style(
+					'mwb-sfw-admin-react-styles',
+					$style_url,
+					array(),
+					time(),
+					false
+				);
+				return;
+			}
 			wp_enqueue_style( 'mwb-sfw-select2-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), time(), 'all' );
 
 			wp_enqueue_style( 'mwb-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), time(), 'all' );
@@ -98,6 +110,44 @@ class Subscriptions_For_Woocommerce_Admin {
 		$screen = get_current_screen();
 
 		if ( isset( $screen->id ) && in_array( $screen->id, $mwb_sfw_screen_ids ) ) {
+			
+			if ( ! mwb_sfw_check_multistep() ) {
+				
+				//Js for the multistep from
+				$script_path      = '../../build/index.js';
+				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index.asset.php';
+				$script_asset      = file_exists( $script_asset_path )
+					? require $script_asset_path
+					: array(
+						'dependencies' => array(
+							'wp-hooks',
+							'wp-element',
+							'wp-i18n',
+							'wc-components',
+						),
+						'version'      => filemtime( $script_path ),
+				);
+				$script_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/index.js';
+				wp_register_script(
+					'mwb-sfw-react-app-block',
+					$script_url,
+					$script_asset['dependencies'],
+					$script_asset['version'],
+					true
+				);
+				wp_enqueue_script( 'mwb-sfw-react-app-block' );
+				wp_localize_script(
+					'mwb-sfw-react-app-block',
+					'frontend_ajax_object',
+					array(
+						'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+						'mwb_sfw_react_nonce' => wp_create_nonce( 'ajax-nonce' ),
+						'redirect_url' => admin_url( 'admin.php?page=page=subscriptions_for_woocommerce_menu' ),
+						'supported_gateway' => mwb_sfw_get_subscription_supported_payment_method(),
+					)
+				);
+				return;
+			}
 			wp_enqueue_script( 'mwb-sfw-select2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.js', array( 'jquery' ), time(), false );
 
 			wp_enqueue_script( 'mwb-sfw-metarial-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.js', array(), time(), false );
@@ -361,6 +411,21 @@ class Subscriptions_For_Woocommerce_Admin {
 				}
 			}
 		}
+		if ( isset( $_POST['sfw_track_button'] ) && isset( $_POST['mwb-sfw-general-nonce-field'] ) ) {
+			$mwb_sfw_geberal_nonce = sanitize_text_field( wp_unslash( $_POST['mwb-sfw-general-nonce-field'] ) );
+			if ( wp_verify_nonce( $mwb_sfw_geberal_nonce, 'mwb-sfw-general-nonce' ) ) {
+				
+				if ( isset( $_POST['mwb_sfw_enable_tracking'] ) && '' !== $_POST['mwb_sfw_enable_tracking'] ) {
+					$posted_value = sanitize_text_field( wp_unslash( $_POST['mwb_sfw_enable_tracking'] ) );
+					update_option( 'mwb_sfw_enable_tracking', $posted_value );
+				}
+				else {
+					update_option( 'mwb_sfw_enable_tracking', '' );
+				}
+				$mwb_sfw_notices = true;
+
+			}
+		}
 	}
 
 	/**
@@ -614,6 +679,172 @@ class Subscriptions_For_Woocommerce_Admin {
 		$ids[] = 'mwb_sfw_subscription_free_trial_interval';
 
 		return apply_filters( 'mwb_sfw_add_lock_fields_ids_pro', $ids );
+	}
+
+	/**
+	 * Update the option for settings from the multistep form.
+	 * 
+	 * @name mwb_sfw_save_settings_filter
+	 * @since 1.0.0
+	*/
+	public function mwb_sfw_save_settings_filter() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+		
+		$term_accpted = ! empty( $_POST['consetCheck'] ) ? sanitize_text_field( wp_unslash( $_POST['consetCheck'] ) ) : ' ';
+		if ( ! empty( $term_accpted ) && 'yes' == $term_accpted ) {
+			update_option( 'mwb_sfw_enable_tracking', 'on' );
+		}
+
+		//settings fields.
+		$enable_plugin = ! empty( $_POST['EnablePlugin'] ) ? sanitize_text_field( wp_unslash( $_POST['EnablePlugin'] ) ) : '';
+		$add_to_cart_text = ! empty( $_POST['AddToCartText'] ) ? sanitize_text_field( wp_unslash( $_POST['AddToCartText'] ) ) : '';
+		$place_order_text = ! empty( $_POST['PlaceOrderText'] ) ? sanitize_text_field( wp_unslash( $_POST['PlaceOrderText'] ) ) : '';
+		
+
+		
+		$product_name = ! empty( $_POST['ProductName'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductName'] ) ) : 'Subscription';
+		$product_description = ! empty( $_POST['ProductDescription'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductDescription'] ) ) : 'This is Subscription';
+		$short_description = ! empty( $_POST['ProductShortDescription'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductShortDescription'] ) ) : 'This is Subscription Product';
+		
+
+		$product_price = ! empty( $_POST['ProductPrice'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductPrice'] ) ) : '';
+		
+
+		$subscription_number = ! empty( $_POST['SubscriptionNumber'] ) ? sanitize_text_field( wp_unslash( $_POST['SubscriptionNumber'] ) ) : '';
+		
+
+		$subscription_interval = ! empty( $_POST['SubscriptionInterval'] ) ? sanitize_text_field( wp_unslash( $_POST['SubscriptionInterval'] ) ) : '';
+		
+
+		//Update settings
+		if( $enable_plugin ) {
+			update_option( 'mwb_sfw_enable_plugin ','on' );
+			update_option( 'mwb_sfw_add_to_cart_text ', $add_to_cart_text );
+			update_option( 'mwb_sfw_place_order_button_text ', $place_order_text );
+		}
+
+		//Create products.
+		if( $enable_plugin ) {
+			$post_id = wp_insert_post( 
+				array(
+					'post_title' => $product_name,
+					'post_type' => 'product',
+					'post_content' => $product_description,
+					'post_excerpt' => $short_description,
+					'post_status' => 'publish',
+				)
+			);
+			
+			wp_set_object_terms( $post_id, 'simple', 'product_type');
+			update_post_meta( $post_id, '_visibility', 'visible' );
+			update_post_meta( $post_id, '_stock_status', 'instock');
+			
+			update_post_meta( $post_id, '_mwb_sfw_product', 'yes');
+			update_post_meta( $post_id, 'mwb_sfw_subscription_number', $subscription_number );
+			update_post_meta( $post_id, 'mwb_sfw_subscription_interval', $subscription_interval );
+			
+			update_post_meta( $post_id, '_regular_price', $product_price );
+			update_post_meta( $post_id, '_sale_price', '' );
+			update_post_meta( $post_id, '_price', $product_price );
+			$product = wc_get_product( $post_id );
+			
+			$product->save();
+		}
+		update_option( 'mwb_sfw_multistep_done', 'yes' );
+
+		wp_send_json( 'yes' );
+	}
+
+	/**
+	 * Update the option for settings from the multistep form.
+	 * 
+	 * @name mwb_sfw_save_settings_filter
+	 * @since 1.0.0
+	*/
+	public function mwb_sfw_install_plugin_configuration() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+		$mwb_plugin_name = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
+		$response = false;
+		if( ! empty( $mwb_plugin_name ) ) {
+			$mwb_plugin_file_path = $mwb_plugin_name . '/' . $mwb_plugin_name . '.php';
+			
+			if ( file_exists( WP_PLUGIN_DIR . '/' . $mwb_plugin_file_path ) && ! is_plugin_active( $mwb_plugin_file_path ) ) {
+				activate_plugin( $mwb_plugin_file_path );
+				$response = true;
+			}
+			else {
+				
+			    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+				include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+	
+				
+			 	$mwb_plugin_api    = plugins_api(
+			 		'plugin_information',
+			 		array(
+			 			'slug' => $mwb_plugin_name,
+			 			'fields' => array( 'sections' => false ),
+			 		)
+			 	);
+			 	if ( isset( $mwb_plugin_api->download_link ) ) {
+			 		$mwb_ajax_obj = new WP_Ajax_Upgrader_Skin();
+			 		$mwb_obj = new Plugin_Upgrader( $mwb_ajax_obj );
+			 		$mwb_install = $mwb_obj->install( $mwb_plugin_api->download_link );
+			 		activate_plugin( $mwb_plugin_file_path );
+					 $response = true;
+			 	}
+			 }
+		}
+		wp_send_json( $response );
+		
+
+	}
+
+	/**
+	 * Function is used for the sending the track data
+	 * 
+	 * @name mwb_sfw_makewebbetter_tracker_send_event
+	 * @since 1.0.0
+	*/
+	public function mwb_sfw_makewebbetter_tracker_send_event( $override = false ) {
+		require WC()->plugin_path() . '/includes/class-wc-tracker.php';
+
+		$last_send = get_option('makewebbetter_tracker_last_send');
+		if ( ! apply_filters( 'makewebbetter_tracker_send_override', $override ) ) {
+			// Send a maximum of once per week by default.
+			$last_send = $this->mwb_sfw_last_send_time();
+			if ( $last_send && $last_send > apply_filters( 'makewebbetter_tracker_last_send_interval', strtotime( '-1 week' ) ) ) {
+				return;
+			}
+		} else {
+			// Make sure there is at least a 1 hour delay between override sends, we don't want duplicate calls due to double clicking links.
+			$last_send = $this->mwb_sfw_last_send_time();
+			if ( $last_send && $last_send > strtotime( '-1 hours' ) ) {
+				return;
+			}
+		}
+		// Update time first before sending to ensure it is set.
+		update_option( 'makewebbetter_tracker_last_send', time() );
+		$params = WC_Tracker::get_tracking_data();
+		$params = apply_filters( 'makewebbetter_tracker_params' , $params );
+		$api_url = 'http://demo.makewebbetter.com/wordpress-testing/wp-json/mps-route/v1/mps-testing-data/';
+		$sucess = wp_safe_remote_post(
+			$api_url,
+			array(
+				'method'      => 'POST',
+				'body'        => wp_json_encode( $params ),
+			)
+		);
+	}
+
+	/**
+	 * Get the updated time.
+	 * 
+	 * @name mwb_sfw_last_send_time
+	 * 
+	 * @since 1.0.0
+	*/
+	public function mwb_sfw_last_send_time() {
+		return apply_filters( 'makewebbetter_tracker_last_send_time', get_option( 'makewebbetter_tracker_last_send', false ) );
 	}
 
 }
