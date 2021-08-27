@@ -55576,8 +55576,8 @@ function App(props) {
   const [loading, setLoading] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false);
   const [state, setState] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
     EnablePlugin: true,
-    AddToCartText: '',
-    PlaceOrderText: '',
+    AddToCartText: 'Add to cart',
+    PlaceOrderText: 'Place order',
     ProductName: '',
     ProductDescription: '',
     ProductShortDescription: '',
@@ -55687,7 +55687,7 @@ function App(props) {
     steps: steps
   }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
     className: "mwbHeadingWrap"
-  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Welcome to Makewebbetter', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Complete The steps to get started', 'subscriptions-for-woocommerce'))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Container"], {
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Welcome to Subscription For WooCommerce', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h3", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Complete steps to start selling subscriptions', 'subscriptions-for-woocommerce'))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Container"], {
     maxWidth: "sm"
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("form", {
     className: "mwbMsf"
@@ -55749,7 +55749,10 @@ function FinalStep(props) {
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["FormLabel"], {
     component: "legend",
     className: "mwbFormLabel"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('This plugin can send a list of active plugins and theme used on your site.This allow our support team to help you much faster and to contact you in advance about potentials compatibility problem and their solutions', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["RadioGroup"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Bingo! You are all set to take advantage of subscription business. Lastly we urge you to allow us get some', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("a", {
+    href: "https://makewebbetter.com/",
+    target: "_blank"
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('information', 'subscriptions-for-woocommerce')), " ", Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('in order to make this plugin improve and make us to give better support. You can dis-allow anytime from settings, We never track down your personal data ever, Promise!', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["RadioGroup"], {
     "aria-label": "gender",
     name: "consetCheck",
     value: ctx.formFields['consetCheck'],
@@ -55760,14 +55763,14 @@ function FinalStep(props) {
     control: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Radio"], {
       color: "primary"
     }),
-    label: "Yes",
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Yes, definitely you guys rocks!', 'subscriptions-for-woocommerce'),
     className: "mwbFormRadio"
   }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["FormControlLabel"], {
     value: "no",
     control: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Radio"], {
       color: "primary"
     }),
-    label: "No",
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('No, not required', 'subscriptions-for-woocommerce'),
     className: "mwbFormRadio"
   }))));
 }
@@ -55827,7 +55830,8 @@ const FirstStep = props => {
     onChange: ctx.changeHandler,
     id: "AddToCartText",
     name: "AddToCartText",
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Add to cart text', 'subscriptions-for-woocommerce'),
+    helperText: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Enter text to dispaly on "Add to cart" button for subscription products', 'subscriptions-for-woocommerce'),
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])(' "Add to cart" button label', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin
   })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
@@ -55839,7 +55843,8 @@ const FirstStep = props => {
     onChange: ctx.changeHandler,
     id: "PlaceOrderText",
     name: "PlaceOrderText",
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Place order text', 'subscriptions-for-woocommerce'),
+    helperText: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Enter text to dispaly on "Place order" button for subscription products', 'subscriptions-for-woocommerce'),
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])(' "Place order" button label', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin
   })));
@@ -55916,13 +55921,18 @@ const PaymentGateway = props => {
     });
   };
 
-  let button = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_icons_CloudDownload__WEBPACK_IMPORTED_MODULE_5___default.a, {
+  let button = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["Tooltip"], {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Download & activate', 'subscription-for-woocommerce'),
+    placement: "right-start"
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_icons_CloudDownload__WEBPACK_IMPORTED_MODULE_5___default.a, {
     onClick: e => PaymentInstallHanlder(e, id)
-  });
-  console.log(item.is_activated);
+  }));
 
   if (item.is_activated) {
-    button = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_icons_CheckCircleOutline__WEBPACK_IMPORTED_MODULE_7___default.a, null);
+    button = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["Tooltip"], {
+      title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Installed', 'subscription-for-woocommerce'),
+      placement: "right-start"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_icons_CheckCircleOutline__WEBPACK_IMPORTED_MODULE_7___default.a, null));
   }
 
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["ListItem"], {
@@ -55974,7 +55984,7 @@ const SecondStep = props => {
   const ctx = Object(react__WEBPACK_IMPORTED_MODULE_1__["useContext"])(_store_store__WEBPACK_IMPORTED_MODULE_5__["default"]);
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h3", {
     className: "mwb-title"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Create Sample Subscription Product', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Create Subscription Product', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
     component: "fieldset",
     fullWidth: true,
     className: "fieldsetWrapper"
@@ -56002,12 +56012,14 @@ const SecondStep = props => {
     component: "fieldset",
     fullWidth: true,
     className: "fieldsetWrapper"
-  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_2__["TextField"], {
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_2__["TextareaAutosize"], {
     value: ctx.formFields['ProductDescription'],
     onChange: ctx.changeHandler,
     id: "ProductDescription",
     name: "ProductDescription",
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Product Description', 'subscriptions-for-woocommerce'),
+    "aria-label": "Product Description",
+    placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Product Description', 'subscriptions-for-woocommerce'),
+    minRows: 3,
     variant: "outlined",
     className: classes.margin
   })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
@@ -56019,7 +56031,7 @@ const SecondStep = props => {
     onChange: ctx.changeHandler,
     id: "ProductPrice",
     name: "ProductPrice",
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Product Price', 'subscriptions-for-woocommerce'),
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Subscription Price', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin
   })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_2__["FormControl"], {
@@ -56030,7 +56042,6 @@ const SecondStep = props => {
     value: ctx.formFields['SubscriptionNumber'],
     onChange: ctx.changeHandler,
     id: "SubscriptionNumber",
-    name: "SubscriptionNumber",
     label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Subscription Interval', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin
@@ -56137,7 +56148,7 @@ const ThirdStep = props => {
     subheader: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["ListSubheader"], {
       component: "div",
       id: "nested-list-subheader"
-    }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Supported payment gateways for susbcription', 'subscription-for-woocommerce')),
+    }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Supported payment gateways for subscription', 'subscription-for-woocommerce')),
     className: classes.root
   }, show_payment_gateway.length !== 0 && show_payment_gateway.map(item => Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_PaymentGateway__WEBPACK_IMPORTED_MODULE_7__["default"], _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({
     key: item.id,

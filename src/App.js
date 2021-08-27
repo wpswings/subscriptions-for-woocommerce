@@ -20,8 +20,8 @@ function App(props) {
     const [loading, setLoading] = useState(false);
     const [state, setState] = useState({
         EnablePlugin:true,
-        AddToCartText:'',
-        PlaceOrderText:'',
+        AddToCartText:'Add to cart',
+        PlaceOrderText:'Place order',
         ProductName:'',
         ProductDescription:'',
         ProductShortDescription:'',
@@ -123,8 +123,8 @@ function App(props) {
             <div className="mwbMsfWrapper">
                 <Stepper activeStep={activeStep} steps={steps}/>
                 <div className="mwbHeadingWrap">
-                    <h2>{__( 'Welcome to Makewebbetter', 'subscriptions-for-woocommerce' ) }</h2>
-                    <p>{__('Complete The steps to get started','subscriptions-for-woocommerce') }</p>
+                    <h2>{__( 'Welcome to Subscription For WooCommerce', 'subscriptions-for-woocommerce' ) }</h2>
+                    <h3>{__('Complete steps to start selling subscriptions','subscriptions-for-woocommerce') }</h3>
                 </div>
                 <Container maxWidth="sm">
                     <form className="mwbMsf">

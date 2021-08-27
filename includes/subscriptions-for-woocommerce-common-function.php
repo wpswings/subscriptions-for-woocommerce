@@ -700,24 +700,24 @@ if ( ! function_exists( 'mwb_sfw_get_subscription_supported_payment_method' ) ) 
 	 * @since 1.0.2
 	 */
 	function mwb_sfw_get_subscription_supported_payment_method() {
-		
-		$gateway = 
+
+		$gateway =
 			array(
-				 array(
+				array(
 					'id' => 'stripe',
-					'name' => __('WooCommerce Stripe Gateway','subscription-for-woocommerce'),
+					'name' => __( 'WooCommerce Stripe Gateway', 'subscription-for-woocommerce' ),
 					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-stripe/',
 					'slug' => 'woocommerce-gateway-stripe',
-					'is_activated'=> !empty( is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) ? true : false,
+					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) ? true : false,
 				),
 				array(
-					'id'=> 'ppec_paypal',
-					'name' => __('WooCommerce PayPal Checkout Payment Gateway','subscription-for-woocommerce'),
-					'url' =>'https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/',
+					'id' => 'ppec_paypal',
+					'name' => __( 'WooCommerce PayPal Checkout Payment Gateway', 'subscription-for-woocommerce' ),
+					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/',
 					'slug' => 'woocommerce-gateway-paypal-express-checkout',
-					'is_activated'=> !empty( is_plugin_active( 'woocommerce-gateway-paypal-express-checkout/woocommerce-gateway-paypal-express-checkout.php' ) ) ? true : false,
+					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-paypal-express-checkout/woocommerce-gateway-paypal-express-checkout.php' ) ) ? true : false,
 				),
-			
+
 			);
 
 		$gateway = apply_filters( 'mwb_sfw_supported_data_payment_for_configuration', $gateway );

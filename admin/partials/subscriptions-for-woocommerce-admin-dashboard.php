@@ -26,7 +26,7 @@ if ( $mwb_sfw_notices ) {
 	$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
 }
 do_action( 'mwb_sfw_notice_message' );
-if ( !mwb_sfw_check_multistep() ) {
+if ( ! mwb_sfw_check_multistep() ) {
 	?>
 	<div id="react-app"></div>
 	<?php

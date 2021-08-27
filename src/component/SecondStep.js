@@ -1,5 +1,5 @@
 import React,{useContext} from 'react';
-import { Select, FormGroup, InputLabel, MenuItem, Checkbox, FormControlLabel, FormControl, TextField } from '@material-ui/core';
+import { Select, FormGroup, InputLabel, MenuItem, Checkbox, FormControlLabel, FormControl, TextField,TextareaAutosize } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { __ } from '@wordpress/i18n';
 import Context from '../store/store';
@@ -13,7 +13,7 @@ const SecondStep = (props) => {
     const ctx = useContext(Context);
     return ( 
     <>
-        <h3 className="mwb-title">{__('Create Sample Subscription Product','subscriptions-for-woocommerce') }</h3>
+        <h3 className="mwb-title">{__('Create Subscription Product','subscriptions-for-woocommerce') }</h3>
         
         <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
             <TextField 
@@ -32,27 +32,29 @@ const SecondStep = (props) => {
                 label={__('Product Short Description','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
         </FormControl>
         <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
-            <TextField 
+            <TextareaAutosize 
                 value={ctx.formFields['ProductDescription']}
                 onChange={ctx.changeHandler} 
                 id="ProductDescription" 
                 name="ProductDescription" 
-                label={__('Product Description','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
+                aria-label="Product Description"
+                placeholder={__('Product Description','subscriptions-for-woocommerce')}
+                minRows={3}
+                variant="outlined" className={classes.margin}/>
         </FormControl>
         <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
             <TextField 
                 value={ctx.formFields['ProductPrice']}
                 onChange={ctx.changeHandler} 
                 id="ProductPrice" 
-                name="ProductPrice" 
-                label={__('Product Price','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
+                name="ProductPrice"
+                label={__('Subscription Price','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
         </FormControl>
         <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
             <TextField 
                 value={ctx.formFields['SubscriptionNumber']}
                 onChange={ctx.changeHandler} 
                 id="SubscriptionNumber" 
-                name="SubscriptionNumber" 
                 label={__('Subscription Interval','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
         </FormControl>
         <FormControl component="fieldset" variant="outlined" fullWidth className="fieldsetWrapper">

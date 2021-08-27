@@ -14,11 +14,11 @@ export default function FinalStep(props) {
     return (
         <Fragment>
             <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
-                <FormLabel component="legend" className="mwbFormLabel">{ __('This plugin can send a list of active plugins and theme used on your site.This allow our support team to help you much faster and to contact you in advance about potentials compatibility problem and their solutions', 'subscriptions-for-woocommerce') }
+                <FormLabel component="legend" className="mwbFormLabel">{ __('Bingo! You are all set to take advantage of subscription business. Lastly we urge you to allow us get some','subscriptions-for-woocommerce')} <a href='https://makewebbetter.com/' target="_blank" >{__('information','subscriptions-for-woocommerce') }</a> { __( 'in order to make this plugin improve and make us to give better support. You can dis-allow anytime from settings, We never track down your personal data ever, Promise!', 'subscriptions-for-woocommerce') }
                 </FormLabel>
                 <RadioGroup aria-label="gender" name="consetCheck" value={ctx.formFields['consetCheck']} onChange={ctx.changeHandler} className={classes.margin}>
-                    <FormControlLabel value="yes" control={<Radio color="primary"/>} label="Yes" className="mwbFormRadio"/>
-                    <FormControlLabel value="no" control={<Radio color="primary"/>} label="No" className="mwbFormRadio"/>
+                    <FormControlLabel value="yes" control={<Radio color="primary"/>} label={ __( 'Yes, definitely you guys rocks!', 'subscriptions-for-woocommerce' ) } className="mwbFormRadio"/>
+                    <FormControlLabel value="no" control={<Radio color="primary"/>} label={ __( 'No, not required', 'subscriptions-for-woocommerce' ) } className="mwbFormRadio"/>
                 </RadioGroup>
             </FormControl>
             

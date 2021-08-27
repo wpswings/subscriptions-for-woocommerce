@@ -127,10 +127,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		function mwb_sfw_check_multistep() {
 			$bool = false;
 			$mwb_sfw_check = get_option( 'mwb_sfw_multistep_done', false );
-			if ( !empty( $mwb_sfw_check) ) {
+			if ( ! empty( $mwb_sfw_check ) ) {
 				$bool = true;
 			}
-			$bool = apply_filters('mwb_sfw_multistep_done', $bool );
+			$bool = apply_filters( 'mwb_sfw_multistep_done', $bool );
 			return $bool;
 		}
 	}
@@ -278,16 +278,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		);
 	}
 	add_action( 'activated_plugin', 'mwb_sfe_redirect_on_settings' );
-	if( ! function_exists('mwb_sfe_redirect_on_settings') ) {
-		function mwb_sfe_redirect_on_settings ( $plugin ) {
+
+	if ( ! function_exists( 'mwb_sfe_redirect_on_settings' ) ) {
+		/**
+		 * This function is used to check plugin.
+		 *
+		 * @name mwb_sfe_redirect_on_settings
+		 * @param string $plugin plugin.
+		 * @since 1.0.3
+		 */
+		function mwb_sfe_redirect_on_settings( $plugin ) {
 			if ( plugin_basename( __FILE__ ) === $plugin ) {
 				$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
-				wp_redirect(  esc_url( $general_settings_url ) );
-				exit(); 
+				wp_redirect( esc_url( $general_settings_url ) );
+				exit();
 			}
 		}
 	}
-	
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'mwb_sfw_activation_failure' );

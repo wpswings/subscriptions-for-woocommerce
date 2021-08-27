@@ -7,7 +7,7 @@ import { Button,
     ListItem,ListItemText,
     IconButton,
     ListItemSecondaryAction,
-    CircularProgress } from '@material-ui/core';
+    CircularProgress,Tooltip } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Context from '../store/store';
 const PaymentGateway = (props) => {
@@ -36,12 +36,17 @@ const PaymentGateway = (props) => {
     }
     let button = (
         
-        <CloudDownloadIcon onClick={(e) => PaymentInstallHanlder(e,id)} />
-        
+        <Tooltip title={__( 'Download & activate', 'subscription-for-woocommerce' )} placement="right-start">
+            <CloudDownloadIcon onClick={(e) => PaymentInstallHanlder(e,id)} />
+          </Tooltip>
     )
-    console.log(item.is_activated);
+    
     if(  item.is_activated ) {
-        button = <CheckCircleOutlineIcon />;
+       button = (<Tooltip title={__( 'Installed', 'subscription-for-woocommerce' )} placement="right-start">
+            <CheckCircleOutlineIcon />
+          </Tooltip>);
+
+       
     }
     return(
         <ListItem button>

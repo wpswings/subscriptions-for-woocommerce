@@ -117,6 +117,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_sfw_subscription_expiry_interval = get_post_meta( $product_id, 'mwb_sfw_subscription_expiry_interval', true );
 
 				$mwb_price_html = mwb_sfw_get_time_interval( $mwb_sfw_subscription_expiry_number, $mwb_sfw_subscription_expiry_interval );
+				// Show interval html.
 				$mwb_price_html = apply_filters( 'mwb_sfw_show_time_interval', $mwb_price_html, $product_id, $cart_item );
 				$mwb_price = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 
@@ -294,6 +295,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $price );
 			}
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
+			// Use for role base pricing.
 			$product_price = apply_filters( 'mwb_rbpfw_cart_price', $product_price, $cart_item );
 			$product_price = $this->mwb_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
 		}
@@ -324,14 +326,17 @@ class Subscriptions_For_Woocommerce_Public {
 
 					if ( isset( $mwb_sfw_free_trial_number ) && ! empty( $mwb_sfw_free_trial_number ) ) {
 						if ( 0 != $mwb_sfw_signup_fee ) {
+							// Cart price.
 							$mwb_sfw_signup_fee = apply_filters( 'mwb_sfw_cart_price_subscription', $mwb_sfw_signup_fee, $cart_data );
 							$cart_data['data']->set_price( $mwb_sfw_signup_fee );
 						} else {
+							// Cart price.
 							$mwb_cart_price = apply_filters( 'mwb_sfw_cart_price_subscription', 0, $cart_data );
 							$cart_data['data']->set_price( $mwb_cart_price );
 						}
 					} else {
 						$product_price = $cart_data['data']->get_price();
+						// Cart price.
 						$product_price = apply_filters( 'mwb_sfw_cart_price_subscription', $product_price, $cart_data );
 						$product_price += $mwb_sfw_signup_fee;
 						$cart_data['data']->set_price( $product_price );
@@ -432,6 +437,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			if ( 'yes' == $mwb_has_susbcription ) {
 				// phpcs:disable WordPress.Security.NonceVerification.Missing
+				// After process checkout.
 				do_action( 'mwb_sfw_subscription_process_checkout_payment_method', $order_id, $posted_data );
 				// phpcs:enable WordPress.Security.NonceVerification.Missing
 			}
@@ -590,9 +596,12 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->update_taxes();
 			$new_order->calculate_totals();
 			$new_order->save();
+			// After susbcription order created.
 			do_action( 'mwb_sfw_subscription_order', $new_order );
 			mwb_sfw_update_meta_key_for_susbcription( $subscription_id, $mwb_args );
+			// After susbcription order created.
 			do_action( 'mwb_sfw_after_created_subscription', $subscription_id, $order_id );
+			// After susbcription created.
 			return apply_filters( 'mwb_sfw_created_subscription', $subscription_id, $order_id );
 
 		}
@@ -623,7 +632,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( $mwb_valid_request ) {
 			$this->mwb_sfw_set_customer_address( $mwb_subscription );
-			do_action( 'before_woocommerce_pay' );
+
 			wc_get_template( 'myaccount/mwb-add-new-payment-details.php', array( 'mwb_subscription' => $mwb_subscription ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
 		}
 	}
@@ -787,6 +796,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
 					$mwb_supported_method = array( 'stripe' );
+					// Supported paymnet gateway.
 					$mwb_payment_method = apply_filters( 'mwb_sfw_supported_payment_gateway_for_woocommerce', $mwb_supported_method, $key );
 
 					if ( ! in_array( $key, $mwb_payment_method ) ) {

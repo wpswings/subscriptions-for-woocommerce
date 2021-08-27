@@ -32,8 +32,9 @@ const FirstStep = (props) => {
                 value={ctx.formFields['AddToCartText']}
                 onChange={ctx.changeHandler} 
                 id="AddToCartText" 
-                name="AddToCartText" 
-                label={__('Add to cart text','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
+                name="AddToCartText"
+                helperText={__('Enter text to dispaly on "Add to cart" button for subscription products','subscriptions-for-woocommerce') } 
+                label={__(' "Add to cart" button label','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
             </FormControl>
             <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
                 <TextField 
@@ -41,7 +42,8 @@ const FirstStep = (props) => {
                 onChange={ctx.changeHandler} 
                 id="PlaceOrderText" 
                 name="PlaceOrderText" 
-                label={__('Place order text','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
+                helperText={__('Enter text to dispaly on "Place order" button for subscription products','subscriptions-for-woocommerce') }
+                label={__(' "Place order" button label','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
             </FormControl>
         </>
     )

@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 global $sfw_mwb_sfw_obj;
+// Add filed above susbcription list.
 $sfw_template_settings = apply_filters( 'sfw_template_settings_array', array() );
 ?>
 <!--  template file for admin settings. -->
