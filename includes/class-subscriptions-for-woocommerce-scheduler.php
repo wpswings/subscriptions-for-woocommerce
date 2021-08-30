@@ -72,7 +72,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 				),
 			);
 			$mwb_subscriptions = get_posts( $args );
-			
+
 			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 				foreach ( $mwb_subscriptions as $key => $value ) {
 					$subscription_id = $value->ID;
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$mwb_new_order->save();
 
 						$order_id = $mwb_new_order->get_id();
-						
+
 						update_post_meta( $order_id, '_payment_method', $payment_method );
 						update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
 
@@ -257,7 +257,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 				),
 			);
 			$mwb_subscriptions = get_posts( $args );
-			
+
 			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 				foreach ( $mwb_subscriptions as $key => $value ) {
 					$susbcription_id = $value->ID;
