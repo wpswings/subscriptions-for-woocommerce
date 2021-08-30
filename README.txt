@@ -5,8 +5,8 @@ Tags: subscription, subscriptions, woocommerce, recurring revenue, woocommerce s
 Requires at least: 4.6
 Tested up to: 5.8
 WC requires at least: 4.0
-WC tested up to: 5.5
-Stable tag: 1.0.2
+WC tested up to: 5.6
+Stable tag: 1.0.3
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -160,15 +160,20 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 1. General Setting of Subscriptions for WooCommerce
 2. Subscription Table
-3. System Status
-4. Subscriptions Settings
-5. Subscription Products
-6. Checkout Page
-7. Buy Subscription
-8. My Account 
-9. Subscriptions Order Details
+3. Subscriptions Settings
+4. Subscription Products
+5. Checkout Page
+6. Buy Subscription
+7. My Account 
+8. Subscriptions Order Details
 
 == Changelog ==
+
+= 1.0.3 - RELEASED ON 30 August 2021 =
+
+* Fix: Renewal Order Scheduler issue.
+* Fix: String Translation issue.
+* New: Compatibility with WooCommerce 5.6
 
 = 1.0.2 - RELEASED ON 05 August 2021 =
 
@@ -192,5 +197,6 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 = 1.0.2 - RELEASED ON 05 August 2021 =
 
-* New: Compatibility with WordPress 5.8
-* New: Compatibility with WooCommerce 5.5
+* Fix: Renewal Order Scheduler issue.
+* Fix: String Translation issue.
+* New: Compatibility with WooCommerce 5.6

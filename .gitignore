@@ -6,6 +6,8 @@ node_modules/*
 .history/*
 .vscode
 .vscode/*
+.test
+.test/*
 # ignore compiled files
 *.com
 *.class
@@ -23,3 +25,5 @@ node_modules/*
 *.rar
 *.tar
 *.zip
+*.json
+*.json
