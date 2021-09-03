@@ -55749,10 +55749,10 @@ function FinalStep(props) {
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["FormLabel"], {
     component: "legend",
     className: "mwbFormLabel"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Bingo! You are all set to take advantage of subscription business. Lastly we urge you to allow us get some', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("a", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Bingo! You are all set to take advantage of your subscription business. Lastly, we urge you to allow us collect some', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("a", {
     href: "https://makewebbetter.com/",
     target: "_blank"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('information', 'subscriptions-for-woocommerce')), " ", Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('in order to make this plugin improve and make us to give better support. You can dis-allow anytime from settings, We never track down your personal data ever, Promise!', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["RadioGroup"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('information', 'subscriptions-for-woocommerce')), " ", Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('in order to improve this plugin and provide better support. If you want, you can dis-allow anytime settings, We never track down your personal data. Promise!', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["RadioGroup"], {
     "aria-label": "gender",
     name: "consetCheck",
     value: ctx.formFields['consetCheck'],
@@ -55763,14 +55763,14 @@ function FinalStep(props) {
     control: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Radio"], {
       color: "primary"
     }),
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Yes, definitely you guys rocks!', 'subscriptions-for-woocommerce'),
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('Yes. Definitely, you guys rock!', 'subscriptions-for-woocommerce'),
     className: "mwbFormRadio"
   }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["FormControlLabel"], {
     value: "no",
     control: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Radio"], {
       color: "primary"
     }),
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('No, not required', 'subscriptions-for-woocommerce'),
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('No, not required.', 'subscriptions-for-woocommerce'),
     className: "mwbFormRadio"
   }))));
 }
