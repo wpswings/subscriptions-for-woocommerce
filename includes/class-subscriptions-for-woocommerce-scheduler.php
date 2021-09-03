@@ -33,8 +33,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 				add_action( 'init', array( $this, 'mwb_sfw_admin_create_order_scheduler' ) );
 				add_action( 'mwb_sfw_create_renewal_order_schedule', array( $this, 'mwb_sfw_renewal_order_on_scheduler' ) );
 				add_action( 'mwb_sfw_expired_renewal_subscription', array( $this, 'mwb_sfw_expired_renewal_subscription_callback' ) );
+
+				if ( mwb_sfw_is_enable_usage_tracking() ) {
+					add_action( 'makewebbetter_tracker_send_event', array( $this, 'mwb_sfw_makewebbetter_tracker_send_event' ) );
+				}
 			}
 		}
+
 
 		/**
 		 * This function is used to create renewal order on scheduler.
@@ -269,6 +274,60 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 					}
 				}
 			}
+		}
+
+		/**
+		 * Function is used for the sending the track data
+		 *
+		 * @name mwb_sfw_makewebbetter_tracker_send_event
+		 * @since 1.0.0
+		 */
+		public function mwb_sfw_makewebbetter_tracker_send_event() {
+
+			require WC()->plugin_path() . '/includes/class-wc-tracker.php';
+
+			$last_send = get_option( 'makewebbetter_tracker_last_send' );
+			if ( ! apply_filters( 'makewebbetter_tracker_send_override', false ) ) {
+
+				// Send a maximum of once per week by default.
+				$last_send = $this->mwb_sfw_last_send_time();
+				if ( $last_send && $last_send > apply_filters( 'makewebbetter_tracker_last_send_interval', strtotime( '-1 week' ) ) ) {
+
+					return;
+				}
+			} else {
+
+				// Make sure there is at least a 1 hour delay between override sends, we don't want duplicate calls due to double clicking links.
+				$last_send = $this->mwb_sfw_last_send_time();
+				if ( $last_send && $last_send > strtotime( '-1 hours' ) ) {
+
+					return;
+				}
+			}
+			// Update time first before sending to ensure it is set.
+			update_option( 'makewebbetter_tracker_last_send', time() );
+			$params = WC_Tracker::get_tracking_data();
+			$params = apply_filters( 'makewebbetter_tracker_params', $params );
+			$api_url = 'http://demo.makewebbetter.com/wordpress-testing/wp-json/mps-route/v1/mps-testing-data/';
+			$sucess = wp_safe_remote_post(
+				$api_url,
+				array(
+					'method'      => 'POST',
+					'body'        => wp_json_encode( $params ),
+				)
+			);
+
+		}
+
+		/**
+		 * Get the updated time.
+		 *
+		 * @name mwb_sfw_last_send_time
+		 *
+		 * @since 1.0.0
+		 */
+		public function mwb_sfw_last_send_time() {
+			return apply_filters( 'makewebbetter_tracker_last_send_time', get_option( 'makewebbetter_tracker_last_send', false ) );
 		}
 	}
 }

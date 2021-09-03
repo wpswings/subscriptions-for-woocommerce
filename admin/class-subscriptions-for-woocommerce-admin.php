@@ -66,6 +66,18 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		if ( isset( $screen->id ) && in_array( $screen->id, $mwb_sfw_screen_ids ) ) {
 
+			// Multistep form css.
+			if ( ! mwb_sfw_check_multistep() ) {
+				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
+				wp_enqueue_style(
+					'mwb-sfw-admin-react-styles',
+					$style_url,
+					array(),
+					time(),
+					false
+				);
+				return;
+			}
 			wp_enqueue_style( 'mwb-sfw-select2-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), time(), 'all' );
 
 			wp_enqueue_style( 'mwb-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), time(), 'all' );
@@ -98,6 +110,45 @@ class Subscriptions_For_Woocommerce_Admin {
 		$screen = get_current_screen();
 
 		if ( isset( $screen->id ) && in_array( $screen->id, $mwb_sfw_screen_ids ) ) {
+
+			if ( ! mwb_sfw_check_multistep() ) {
+
+				// Js for the multistep from.
+				$script_path      = '../../build/index.js';
+				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index.asset.php';
+				$script_asset      = file_exists( $script_asset_path )
+					? require $script_asset_path
+					: array(
+						'dependencies' => array(
+							'wp-hooks',
+							'wp-element',
+							'wp-i18n',
+							'wc-components',
+						),
+						'version'      => filemtime( $script_path ),
+					);
+				$script_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/index.js';
+				wp_register_script(
+					'mwb-sfw-react-app-block',
+					$script_url,
+					$script_asset['dependencies'],
+					$script_asset['version'],
+					true
+				);
+				wp_enqueue_script( 'mwb-sfw-react-app-block' );
+				wp_localize_script(
+					'mwb-sfw-react-app-block',
+					'frontend_ajax_object',
+					array(
+						'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+						'mwb_sfw_react_nonce' => wp_create_nonce( 'ajax-nonce' ),
+						'redirect_url' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ),
+						'disable_track_url' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-developer' ),
+						'supported_gateway' => mwb_sfw_get_subscription_supported_payment_method(),
+					)
+				);
+				return;
+			}
 			wp_enqueue_script( 'mwb-sfw-select2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.js', array( 'jquery' ), time(), false );
 
 			wp_enqueue_script( 'mwb-sfw-metarial-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.js', array(), time(), false );
@@ -157,6 +208,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		global $submenu;
 		if ( empty( $GLOBALS['admin_page_hooks']['mwb-plugins'] ) ) {
 			add_menu_page( 'MakeWebBetter', 'MakeWebBetter', 'manage_options', 'mwb-plugins', array( $this, 'mwb_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/mwb-logo.png', 15 );
+			// Add menus.
 			$sfw_menus = apply_filters( 'mwb_add_plugins_menus_array', array() );
 			if ( is_array( $sfw_menus ) && ! empty( $sfw_menus ) ) {
 				foreach ( $sfw_menus as $sfw_key => $sfw_value ) {
@@ -205,6 +257,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @since 1.0.0
 	 */
 	public function mwb_plugins_listing_page() {
+		// Add menus.
 		$active_marketplaces = apply_filters( 'mwb_add_plugins_menus_array', array() );
 		if ( is_array( $active_marketplaces ) && ! empty( $active_marketplaces ) ) {
 			require SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/partials/welcome.php';
@@ -284,36 +337,11 @@ class Subscriptions_For_Woocommerce_Admin {
 				'class' => 'sfw-button-class',
 			),
 		);
+		// Add general settings.
 		return apply_filters( 'mwb_sfw_add_general_settings_fields', $sfw_settings_general );
 
 	}
 
-
-	/**
-	 * Subscriptions For Woocommerce support page tabs.
-	 *
-	 * @since    1.0.0
-	 * @param    Array $mwb_sfw_support Settings fields.
-	 * @return   Array  $mwb_sfw_support
-	 */
-	public function mwb_sfw_admin_support_settings_page( $mwb_sfw_support ) {
-		$mwb_sfw_support = array(
-			array(
-				'title' => __( 'User Guide', 'subscriptions-for-woocommerce' ),
-				'description' => __( 'View the detailed guides and documentation to set up your plugin.', 'subscriptions-for-woocommerce' ),
-				'link-text' => __( 'VIEW', 'subscriptions-for-woocommerce' ),
-				'link' => 'https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend',
-			),
-			array(
-				'title' => __( 'Free Support', 'subscriptions-for-woocommerce' ),
-				'description' => __( 'Please submit a ticket, our team will respond within 24 hours.', 'subscriptions-for-woocommerce' ),
-				'link-text' => __( 'SUBMIT', 'subscriptions-for-woocommerce' ),
-				'link' => 'https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-support',
-			),
-		);
-
-		return apply_filters( 'mwb_sfw_add_support_content', $mwb_sfw_support );
-	}
 
 	/**
 	 * Subscriptions For Woocommerce save tab settings.
@@ -328,6 +356,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$mwb_sfw_geberal_nonce = sanitize_text_field( wp_unslash( $_POST['mwb-sfw-general-nonce-field'] ) );
 			if ( wp_verify_nonce( $mwb_sfw_geberal_nonce, 'mwb-sfw-general-nonce' ) ) {
 				$mwb_sfw_gen_flag = false;
+				// General settings.
 				$sfw_genaral_settings = apply_filters( 'mwb_sfw_general_settings_array', array() );
 				$sfw_button_index = array_search( 'submit', array_column( $sfw_genaral_settings, 'type' ) );
 				if ( isset( $sfw_button_index ) && ( null == $sfw_button_index || '' == $sfw_button_index ) ) {
@@ -359,6 +388,20 @@ class Subscriptions_For_Woocommerce_Admin {
 						$mwb_sfw_notices = true;
 					}
 				}
+			}
+		}
+		if ( isset( $_POST['sfw_track_button'] ) && isset( $_POST['mwb-sfw-general-nonce-field'] ) ) {
+			$mwb_sfw_geberal_nonce = sanitize_text_field( wp_unslash( $_POST['mwb-sfw-general-nonce-field'] ) );
+			if ( wp_verify_nonce( $mwb_sfw_geberal_nonce, 'mwb-sfw-general-nonce' ) ) {
+
+				if ( isset( $_POST['mwb_sfw_enable_tracking'] ) && '' !== $_POST['mwb_sfw_enable_tracking'] ) {
+					$posted_value = sanitize_text_field( wp_unslash( $_POST['mwb_sfw_enable_tracking'] ) );
+					update_option( 'mwb_sfw_enable_tracking', $posted_value );
+				} else {
+					update_option( 'mwb_sfw_enable_tracking', '' );
+				}
+				$mwb_sfw_notices = true;
+
 			}
 		}
 	}
@@ -396,9 +439,11 @@ class Subscriptions_For_Woocommerce_Admin {
 		$tabs['mwb_sfw_product'] = array(
 			'label'    => __( 'Subscription Settings', 'subscriptions-for-woocommerce' ),
 			'target'   => 'mwb_sfw_product_target_section',
+			// Add class for product.
 			'class'    => apply_filters( 'mwb_swf_settings_tabs_class', array() ),
 			'priority' => 80,
 		);
+		// Add tb for product.
 		return apply_filters( 'mwb_swf_settings_tabs', $tabs );
 
 	}
@@ -494,6 +539,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		</p>
 		<?php
 			wp_nonce_field( 'mwb_sfw_edit_nonce', 'mwb_sfw_edit_nonce_filed' );
+			// Add filed on product edit page.
 			do_action( 'mwb_sfw_product_edit_field', $post_id );
 		?>
 		</div>
@@ -553,7 +599,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			$mwb_status   = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_status_admin'] ) );
 			$mwb_subscription_id = sanitize_text_field( wp_unslash( $_GET['mwb_subscription_id'] ) );
 			if ( mwb_sfw_check_valid_subscription( $mwb_subscription_id ) ) {
-				 do_action( 'mwb_sfw_subscription_cancel', $mwb_subscription_id, 'Cancel' );
+				// Cancel subscription.
+				do_action( 'mwb_sfw_subscription_cancel', $mwb_subscription_id, 'Cancel' );
 				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );
 				exit;
@@ -614,6 +661,204 @@ class Subscriptions_For_Woocommerce_Admin {
 		$ids[] = 'mwb_sfw_subscription_free_trial_interval';
 
 		return apply_filters( 'mwb_sfw_add_lock_fields_ids_pro', $ids );
+	}
+
+	/**
+	 * Update the option for settings from the multistep form.
+	 *
+	 * @name mwb_sfw_save_settings_filter
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_save_settings_filter() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		$term_accpted = ! empty( $_POST['consetCheck'] ) ? sanitize_text_field( wp_unslash( $_POST['consetCheck'] ) ) : ' ';
+		if ( ! empty( $term_accpted ) && 'yes' == $term_accpted ) {
+			update_option( 'mwb_sfw_enable_tracking', 'on' );
+		}
+
+		// settings fields.
+		$enable_plugin = ! empty( $_POST['EnablePlugin'] ) ? sanitize_text_field( wp_unslash( $_POST['EnablePlugin'] ) ) : '';
+		$add_to_cart_text = ! empty( $_POST['AddToCartText'] ) ? sanitize_text_field( wp_unslash( $_POST['AddToCartText'] ) ) : '';
+		$place_order_text = ! empty( $_POST['PlaceOrderText'] ) ? sanitize_text_field( wp_unslash( $_POST['PlaceOrderText'] ) ) : '';
+
+		$product_name = ! empty( $_POST['ProductName'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductName'] ) ) : 'Subscription';
+		$product_description = ! empty( $_POST['ProductDescription'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductDescription'] ) ) : 'This is Subscription';
+		$short_description = ! empty( $_POST['ProductShortDescription'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductShortDescription'] ) ) : 'This is Subscription Product';
+
+		$product_price = ! empty( $_POST['ProductPrice'] ) ? sanitize_text_field( wp_unslash( $_POST['ProductPrice'] ) ) : '';
+
+		$subscription_number = ! empty( $_POST['SubscriptionNumber'] ) ? sanitize_text_field( wp_unslash( $_POST['SubscriptionNumber'] ) ) : '';
+
+		$subscription_interval = ! empty( $_POST['SubscriptionInterval'] ) ? sanitize_text_field( wp_unslash( $_POST['SubscriptionInterval'] ) ) : '';
+
+		// Update settings.
+		if ( $enable_plugin ) {
+			update_option( 'mwb_sfw_enable_plugin ', 'on' );
+			update_option( 'mwb_sfw_add_to_cart_text ', $add_to_cart_text );
+			update_option( 'mwb_sfw_place_order_button_text ', $place_order_text );
+		}
+
+		// Create products.
+		if ( $enable_plugin ) {
+			$post_id = wp_insert_post(
+				array(
+					'post_title' => $product_name,
+					'post_type' => 'product',
+					'post_content' => $product_description,
+					'post_excerpt' => $short_description,
+					'post_status' => 'publish',
+				)
+			);
+
+			wp_set_object_terms( $post_id, 'simple', 'product_type' );
+			update_post_meta( $post_id, '_visibility', 'visible' );
+			update_post_meta( $post_id, '_stock_status', 'instock' );
+
+			update_post_meta( $post_id, '_mwb_sfw_product', 'yes' );
+			update_post_meta( $post_id, 'mwb_sfw_subscription_number', $subscription_number );
+			update_post_meta( $post_id, 'mwb_sfw_subscription_interval', $subscription_interval );
+
+			update_post_meta( $post_id, '_regular_price', $product_price );
+			update_post_meta( $post_id, '_sale_price', '' );
+			update_post_meta( $post_id, '_price', $product_price );
+			$product = wc_get_product( $post_id );
+
+			$product->save();
+		}
+		update_option( 'mwb_sfw_multistep_done', 'yes' );
+
+		wp_send_json( 'yes' );
+	}
+
+	/**
+	 * Update the option for settings from the multistep form.
+	 *
+	 * @name mwb_sfw_save_settings_filter
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_install_plugin_configuration() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+		$mwb_plugin_name = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
+		$response = false;
+		if ( ! empty( $mwb_plugin_name ) ) {
+			$mwb_plugin_file_path = $mwb_plugin_name . '/' . $mwb_plugin_name . '.php';
+
+			if ( file_exists( WP_PLUGIN_DIR . '/' . $mwb_plugin_file_path ) && ! is_plugin_active( $mwb_plugin_file_path ) ) {
+				activate_plugin( $mwb_plugin_file_path );
+				$response = true;
+			} else {
+
+				include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+				include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+				$mwb_plugin_api    = plugins_api(
+					'plugin_information',
+					array(
+						'slug' => $mwb_plugin_name,
+						'fields' => array( 'sections' => false ),
+					)
+				);
+				if ( isset( $mwb_plugin_api->download_link ) ) {
+					$mwb_ajax_obj = new WP_Ajax_Upgrader_Skin();
+					$mwb_obj = new Plugin_Upgrader( $mwb_ajax_obj );
+					$mwb_install = $mwb_obj->install( $mwb_plugin_api->download_link );
+					activate_plugin( $mwb_plugin_file_path );
+					 $response = true;
+				}
+			}
+		}
+		wp_send_json( $response );
+
+	}
+
+	/**
+	 * Developer_admin_hooks_listing
+	 *
+	 * @name mwb_developer_admin_hooks_listing
+	 */
+	public function mwb_developer_admin_hooks_listing() {
+		$admin_hooks = array();
+		$val         = self::mwb_developer_hooks_function( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/' );
+		if ( ! empty( $val['hooks'] ) ) {
+			$admin_hooks[] = $val['hooks'];
+			unset( $val['hooks'] );
+		}
+		$data = array();
+		foreach ( $val['files'] as $v ) {
+			if ( 'css' !== $v && 'js' !== $v && 'images' !== $v ) {
+				$helo = self::mwb_developer_hooks_function( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/' . $v . '/' );
+				if ( ! empty( $helo['hooks'] ) ) {
+					$admin_hooks[] = $helo['hooks'];
+					unset( $helo['hooks'] );
+				}
+				if ( ! empty( $helo ) ) {
+					$data[] = $helo;
+				}
+			}
+		}
+
+		return $admin_hooks;
+	}
+
+	/**
+	 * Developer_public_hooks_listing
+	 */
+	public function mwb_developer_public_hooks_listing() {
+
+		$public_hooks = array();
+		$val          = self::mwb_developer_hooks_function( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/' );
+
+		if ( ! empty( $val['hooks'] ) ) {
+			$public_hooks[] = $val['hooks'];
+			unset( $val['hooks'] );
+		}
+		$data = array();
+		foreach ( $val['files'] as $v ) {
+			if ( 'css' !== $v && 'js' !== $v && 'images' !== $v ) {
+				$helo = self::mwb_developer_hooks_function( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/' . $v . '/' );
+				if ( ! empty( $helo['hooks'] ) ) {
+					$public_hooks[] = $helo['hooks'];
+					unset( $helo['hooks'] );
+				}
+				if ( ! empty( $helo ) ) {
+					$data[] = $helo;
+				}
+			}
+		}
+		return $public_hooks;
+	}
+	/**
+	 * Developer_hooks_function
+	 *
+	 * @name mwb_developer_hooks_function
+	 * @param string $path Path of the file.
+	 */
+	public function mwb_developer_hooks_function( $path ) {
+		$all_hooks = array();
+		$scan      = scandir( $path );
+		$response  = array();
+		foreach ( $scan as $file ) {
+			if ( strpos( $file, '.php' ) ) {
+				$myfile = file( $path . $file );
+				foreach ( $myfile as $key => $lines ) {
+					if ( preg_match( '/do_action/i', $lines ) && ! strpos( $lines, 'str_replace' ) && ! strpos( $lines, 'preg_match' ) ) {
+						$all_hooks[ $key ]['action_hook'] = $lines;
+						$all_hooks[ $key ]['desc']        = $myfile[ $key - 1 ];
+					}
+					if ( preg_match( '/apply_filters/i', $lines ) && ! strpos( $lines, 'str_replace' ) && ! strpos( $lines, 'preg_match' ) ) {
+						$all_hooks[ $key ]['filter_hook'] = $lines;
+						$all_hooks[ $key ]['desc']        = $myfile[ $key - 1 ];
+					}
+				}
+			} elseif ( strpos( $file, '.' ) == '' && strpos( $file, '.' ) !== 0 ) {
+				$response['files'][] = $file;
+			}
+		}
+		if ( ! empty( $all_hooks ) ) {
+			$response['hooks'] = $all_hooks;
+		}
+		return $response;
 	}
 
 }

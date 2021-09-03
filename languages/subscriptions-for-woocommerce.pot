@@ -1,17 +1,18 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Subscriptions For WooCommerce 1.0.1\n"
-"POT-Creation-Date: 2021-07-20 12:28+0530\n"
-"PO-Revision-Date: 2021-07-20 12:28+0530\n"
+"POT-Creation-Date: 2021-08-25 09:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: MakeWebBetter\n"
-"Language: en_US\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Loco https://localise.biz/\n"
 "X-Poedit-Basepath: ..\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_attr__;esc_attr_e;esc_attr_x;"
 "esc_html;esc_html__;esc_html_e;esc_html_x;_n_noop;_nx_noop;"
@@ -21,6 +22,7 @@ msgstr ""
 #: admin/class-subscriptions-for-woocommerce-admin.php:129
 #: includes/subscriptions-for-woocommerce-common-function.php:419
 #: includes/subscriptions-for-woocommerce-common-function.php:440
+msgctxt "asasasasasssssssssss"
 msgid "Days"
 msgstr ""
 
@@ -177,8 +179,8 @@ msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:438
 msgid ""
-"Choose the subscriptions time interval for the product \"for example 10 days"
-"\""
+"Choose the subscriptions time interval for the product \"for example 10 "
+"days\""
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:444

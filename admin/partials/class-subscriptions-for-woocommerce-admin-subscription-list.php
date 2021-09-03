@@ -375,6 +375,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function extra_tablenav( $which ) {
+		// Add list option.
 		do_action( 'mwb_sfw_extra_tablenav_html', $which );
 	}
 
