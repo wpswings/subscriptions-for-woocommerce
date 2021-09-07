@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $sfw_mwb_sfw_obj;
 global $mwb_sfw_notices;
-$sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-overview';
+$sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-general';
 $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 
 if ( $mwb_sfw_notices ) {
@@ -74,7 +74,7 @@ if ( ! mwb_sfw_check_multistep() ) {
 				do_action( 'mwb_sfw_before_general_settings_form' );
 						// if submenu is directly clicked on woocommerce.
 			if ( empty( $sfw_active_tab ) ) {
-				$sfw_active_tab = 'mwb_sfw_plug_general';
+				$sfw_active_tab = 'subscriptions-for-woocommerce-general';
 			}
 
 

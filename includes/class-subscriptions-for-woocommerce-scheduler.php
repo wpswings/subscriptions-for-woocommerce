@@ -109,7 +109,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$initial_signup_price = $subscription->mwb_sfw_subscription_initial_signup_price;
 							// Currency switchers.
 							if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
-								$initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $initial_signup_price, $parent_order_currency );
+								$initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $parent_order_currency, $initial_signup_price );
 							}
 							$line_subtotal = $subscription->line_subtotal - $initial_signup_price;
 							$line_total = $subscription->line_total - $initial_signup_price;
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						);
 
 						$mwb_new_order->update_taxes();
-						$mwb_new_order->calculate_totals( false );
+						$mwb_new_order->calculate_totals();
 						$mwb_new_order->save();
 
 						$order_id = $mwb_new_order->get_id();
@@ -307,7 +307,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 			// Update time first before sending to ensure it is set.
 			update_option( 'makewebbetter_tracker_last_send', time() );
 			$params = WC_Tracker::get_tracking_data();
+			$params['extensions']['subscriptions_for_woocommerce'] = array(
+				'version' => SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION,
+				'site_url' => home_url(),
+				'subscriptions_details' => $this->mwb_get_subscriptions_counts(),
+				'subscription_products' => $this->mwb_get_subscriptions_products(),
+			);
+
 			$params = apply_filters( 'makewebbetter_tracker_params', $params );
+
 			$api_url = 'http://demo.makewebbetter.com/wordpress-testing/wp-json/mps-route/v1/mps-testing-data/';
 			$sucess = wp_safe_remote_post(
 				$api_url,
@@ -317,6 +325,95 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 				)
 			);
 
+		}
+
+		/**
+		 * Function is used get subscriptions details
+		 *
+		 * @name mwb_get_subscriptions_counts
+		 * @since 1.0.0
+		 */
+		public function mwb_get_subscriptions_counts() {
+			$subscriptions_details = array();
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'mwb_subscriptions',
+				'post_status' => 'wc-mwb_renewal',
+				'meta_query' => array(
+					array(
+						'key'   => 'mwb_customer_id',
+						'compare' => 'EXISTS',
+					),
+				),
+			);
+			$mwb_subscriptions = get_posts( $args );
+			$total_subscriptions = count( $mwb_subscriptions );
+			$subscriptions_details['no_of_subscriptions'] = $total_subscriptions;
+
+			$active_count = 0;
+			$pending_count = 0;
+			$cancel_count = 0;
+			$expired_count = 0;
+			$paused_count = 0;
+
+			$subscriptions_details['active_subscriptions'] = $active_count;
+			$subscriptions_details['pending_subscriptions'] = $pending_count;
+			$subscriptions_details['cancelled_subscriptions'] = $cancel_count;
+			$subscriptions_details['expired_subscriptions'] = $expired_count;
+			$subscriptions_details['paused_subscriptions'] = $paused_count;
+
+			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+				foreach ( $mwb_subscriptions as $key => $subscription ) {
+					$status = get_post_meta( $subscription->ID, 'mwb_subscription_status', true );
+					if ( 'active' == $status ) {
+						$active_count++;
+						$subscriptions_details['active_subscriptions'] = $active_count;
+					} elseif ( 'pending' == $status ) {
+						$pending_count++;
+						$subscriptions_details['pending_subscriptions'] = $pending_count;
+					} elseif ( 'cancelled' == $status ) {
+						$cancel_count++;
+						$subscriptions_details['cancelled_subscriptions'] = $cancel_count;
+					} elseif ( 'expired' == $status ) {
+						$expired_count++;
+						$subscriptions_details['expired_subscriptions'] = $expired_count;
+					} elseif ( 'paused' == $status ) {
+						$paused_count++;
+						$subscriptions_details['paused_subscriptions'] = $paused_count;
+					}
+				}
+			}
+			return $subscriptions_details;
+		}
+
+		/**
+		 * Function is used get subscriptions products
+		 *
+		 * @name mwb_get_subscriptions_products
+		 * @since 1.0.0
+		 */
+		public function mwb_get_subscriptions_products() {
+
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'product',
+				'post_status' => 'publish',
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key'   => '_mwb_sfw_product',
+						'value' => 'yes',
+					),
+					array(
+						'key'   => 'mwb_sfw_variable_product',
+						'value' => 'yes',
+					),
+				),
+			);
+			$mwb_subscriptions = get_posts( $args );
+
+			$total_subscriptions = count( $mwb_subscriptions );
+			return $total_subscriptions;
 		}
 
 		/**
