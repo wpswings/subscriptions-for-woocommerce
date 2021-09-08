@@ -742,6 +742,34 @@ if ( ! function_exists( 'mwb_sfw_is_enable_usage_tracking' ) ) {
 	}
 }
 
+if ( ! function_exists( 'mwb_sfw_check_valid_order' ) ) {
+	/**
+	 * This function is used to check valid order.
+	 *
+	 * @name mwb_sfw_check_valid_order
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_check_valid_order( $order_id ) {
+		$valid = true;
+		if ( empty( $order_id ) ) {
+			$valid = false;
+		}
+		else{
+			$status = get_post_status( $order_id );
+			$order = wc_get_order( $order_id );
+			if ( 'trash' == $status ) {
+				$valid = false;
+			}
+			elseif ( ! $order ) {
+				$valid = false;
+			}
+		}
+		
+		return $valid;
+	}
+}
+
+
 
 
 

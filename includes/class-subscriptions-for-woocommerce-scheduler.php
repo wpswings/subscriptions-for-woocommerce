@@ -85,6 +85,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$subscription = get_post( $subscription_id );
 						$parent_order_id  = $subscription->mwb_parent_order;
+						if ( function_exists( 'mwb_sfw_check_valid_order' ) && ! mwb_sfw_check_valid_order( $parent_order_id ) ) {
+							continue;
+						}
 						$parent_order = wc_get_order( $parent_order_id );
 						$billing_details = $parent_order->get_address( 'billing' );
 						$shipping_details = $parent_order->get_address( 'shipping' );
