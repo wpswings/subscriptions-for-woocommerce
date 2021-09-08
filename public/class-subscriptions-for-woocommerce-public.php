@@ -162,7 +162,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'mwb_sfw_subscription_initial_signup_price', true );
 		if ( isset( $mwb_sfw_subscription_initial_signup_price ) && ! empty( $mwb_sfw_subscription_initial_signup_price ) ) {
 			if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) && ! is_admin() ) {
-				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $mwb_sfw_subscription_initial_signup_price );
+				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $mwb_sfw_subscription_initial_signup_price );
 			}
 			/* translators: %s: signup fee */
 
@@ -292,7 +292,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$price = $cart_item['data']->get_regular_price();
 			}
 			if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
-				$price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $price );
+				$price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
 			}
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
 			// Use for role base pricing.
@@ -564,10 +564,21 @@ class Subscriptions_For_Woocommerce_Public {
 				$initial_signup_price = $mwb_args['mwb_sfw_subscription_initial_signup_price'];
 				// Currency switchers.
 				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
-					$initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $initial_signup_price, $mwb_args['mwb_order_currency'] );
+					$initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $mwb_args['mwb_order_currency'], $initial_signup_price );
 				}
 				$line_subtotal = $mwb_args['line_subtotal'] - $initial_signup_price;
 				$line_total = $mwb_args['line_total'] - $initial_signup_price;
+			} elseif ( isset( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) && ! empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
+				// Currency switchers.
+				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+					$mwb_args['line_subtotal'] = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $mwb_args['mwb_order_currency'], $mwb_args['mwb_recurring_total'] );
+					$mwb_args['line_total'] = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $mwb_args['mwb_order_currency'], $mwb_args['mwb_recurring_total'] );
+				} else {
+					$mwb_args['line_subtotal'] = $mwb_args['mwb_recurring_total'];
+					$mwb_args['line_total'] = $mwb_args['mwb_recurring_total'];
+				}
+				$line_subtotal = $mwb_args['line_subtotal'];
+				$line_total = $mwb_args['line_total'];
 			} else {
 				$line_subtotal = $mwb_args['line_subtotal'];
 				$line_total = $mwb_args['line_total'];
@@ -1056,7 +1067,7 @@ class Subscriptions_For_Woocommerce_Public {
 							update_post_meta( $subscription->ID, 'mwb_susbcription_trial_end', $mwb_susbcription_trial_end );
 
 							$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
-
+							$mwb_next_payment_date = $this->mwb_sfw_check_next_payment_date( $subscription->ID, $mwb_next_payment_date );
 							$mwb_next_payment_date = apply_filters( 'mwb_sfw_next_payment_date', $mwb_next_payment_date, $subscription->ID );
 
 							update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
@@ -1078,6 +1089,28 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 	}
 
+	/**
+	 * This function is used to set next payment date.
+	 *
+	 * @name mwb_sfw_check_next_payment_date
+	 * @param int    $subscription_id subscription_id.
+	 * @param string $mwb_next_payment_date mwb_next_payment_date.
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_check_next_payment_date( $subscription_id, $mwb_next_payment_date ) {
+		$mwb_sfw_subscription_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_number', true );
+		$mwb_sfw_subscription_expiry_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_expiry_number', true );
+		$mwb_sfw_subscription_free_trial_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_free_trial_number', true );
+
+		if ( empty( $mwb_sfw_subscription_free_trial_number ) ) {
+			if ( ! empty( $mwb_sfw_subscription_number ) && ! empty( $mwb_sfw_subscription_expiry_number ) ) {
+				if ( $mwb_sfw_subscription_number == $mwb_sfw_subscription_expiry_number ) {
+					$mwb_next_payment_date = 0;
+				}
+			}
+		}
+		return $mwb_next_payment_date;
+	}
 	/**
 	 * This function is used to set single quantity for susbcription product.
 	 *
@@ -1114,7 +1147,7 @@ class Subscriptions_For_Woocommerce_Public {
 				wc_add_notice( __( 'You can not add multiple subscription product in cart', 'subscriptions-for-woocommerce' ), 'error' );
 			}
 		}
-		return $validate;
+		return apply_filters( 'mwb_sfw_expiry_add_to_cart_validation', $validate, $product_id, $quantity );
 	}
 
 	/**

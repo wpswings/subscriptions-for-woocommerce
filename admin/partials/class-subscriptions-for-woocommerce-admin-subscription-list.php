@@ -325,6 +325,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			foreach ( $mwb_subscriptions as $key => $value ) {
 
 				$parent_order_id   = get_post_meta( $value->ID, 'mwb_parent_order', true );
+				
+				if ( function_exists( 'mwb_sfw_check_valid_order' ) && ! mwb_sfw_check_valid_order( $parent_order_id ) ) {
+					$total_count = $total_count - 1;
+					continue;
+				}
 				$mwb_subscription_status   = get_post_meta( $value->ID, 'mwb_subscription_status', true );
 				$product_name   = get_post_meta( $value->ID, 'product_name', true );
 				$mwb_recurring_total   = get_post_meta( $value->ID, 'mwb_recurring_total', true );
