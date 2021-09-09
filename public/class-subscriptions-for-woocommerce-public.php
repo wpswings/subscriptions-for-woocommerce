@@ -1124,7 +1124,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( mwb_sfw_check_plugin_enable() && mwb_sfw_check_product_is_subscription( $product ) ) {
 			$return = true;
 		}
-		return $return;
+		return apply_filters( 'mwb_sfw_show_quantity_fields_for_susbcriptions', $return, $product );
 	}
 
 	/**
