@@ -230,6 +230,8 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'wp_ajax_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration' );
 		$this->loader->add_action( 'wp_ajax_nopriv_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration' );
 
+		$this->loader->add_action( 'mwb_sfw_multistep_done', $sfw_plugin_admin, 'mwb_sfw_check_plugin_already_enable' );
+
 		// Developer's Hook Listing.
 		$this->loader->add_action( 'sfw_developer_admin_hooks_array', $sfw_plugin_admin, 'mwb_developer_admin_hooks_listing' );
 		$this->loader->add_action( 'sfw_developer_public_hooks_array', $sfw_plugin_admin, 'mwb_developer_public_hooks_listing' );

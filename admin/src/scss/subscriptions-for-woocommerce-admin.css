@@ -183,6 +183,13 @@
 	width: 50%;
 	height: 300px;
 }
+.mwb-header-container__links {
+    margin: 10px 0 0 auto;
+}
+
+.mwb-header-container__links span {
+    padding: 0 5px;
+}
 
  /* Media Queries */
 

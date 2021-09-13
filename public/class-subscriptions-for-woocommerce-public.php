@@ -560,7 +560,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->set_address( $shipping_details, 'shipping' );
 
 			// If initial fee available.
-			if ( isset( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) && ! empty( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) ) {
+			if ( isset( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) && ! empty( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) && empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
 				$initial_signup_price = $mwb_args['mwb_sfw_subscription_initial_signup_price'];
 				// Currency switchers.
 				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -568,6 +568,8 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 				$line_subtotal = $mwb_args['line_subtotal'] - $initial_signup_price;
 				$line_total = $mwb_args['line_total'] - $initial_signup_price;
+				$mwb_args['line_subtotal'] = $line_subtotal;
+				$mwb_args['line_total'] = $line_total;
 			} elseif ( isset( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) && ! empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
 				// Currency switchers.
 				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -1067,7 +1069,7 @@ class Subscriptions_For_Woocommerce_Public {
 							update_post_meta( $subscription->ID, 'mwb_susbcription_trial_end', $mwb_susbcription_trial_end );
 
 							$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
-							$mwb_next_payment_date = $this->mwb_sfw_check_next_payment_date( $subscription->ID, $mwb_next_payment_date );
+							
 							$mwb_next_payment_date = apply_filters( 'mwb_sfw_next_payment_date', $mwb_next_payment_date, $subscription->ID );
 
 							update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );

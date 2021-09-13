@@ -107,19 +107,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$mwb_new_order = wc_create_order( $args );
 						$mwb_new_order->set_currency( $parent_order_currency );
 
-						// If initial fee available.
-						if ( ! empty( $subscription->mwb_sfw_subscription_initial_signup_price ) ) {
-							$initial_signup_price = $subscription->mwb_sfw_subscription_initial_signup_price;
-							// Currency switchers.
-							if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
-								$initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $parent_order_currency, $initial_signup_price );
-							}
-							$line_subtotal = $subscription->line_subtotal - $initial_signup_price;
-							$line_total = $subscription->line_total - $initial_signup_price;
-						} else {
-							$line_subtotal = $subscription->line_subtotal;
-							$line_total = $subscription->line_total;
-						}
+						$line_subtotal = $subscription->line_subtotal;
+						$line_total = $subscription->line_total;
+						
 
 						$_product = wc_get_product( $product_id );
 

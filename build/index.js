@@ -55649,7 +55649,7 @@ function App(props) {
       setLoading(false);
       handleNext();
       setTimeout(() => {
-        window.location.href = frontend_ajax_object.redirect_url;
+        //  window.location.href = frontend_ajax_object.redirect_url; 
         return null;
       }, 3000);
     }).catch(error => {
@@ -55687,7 +55687,7 @@ function App(props) {
     steps: steps
   }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
     className: "mwbHeadingWrap"
-  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Welcome to Subscription For WooCommerce', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h3", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Complete steps to start selling subscriptions', 'subscriptions-for-woocommerce'))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Container"], {
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h2", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Welcome to Subscriptions For WooCommerce', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("h3", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Complete steps to start selling subscriptions', 'subscriptions-for-woocommerce'))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["Container"], {
     maxWidth: "sm"
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("form", {
     className: "mwbMsf"
@@ -56042,6 +56042,7 @@ const SecondStep = props => {
     value: ctx.formFields['SubscriptionNumber'],
     onChange: ctx.changeHandler,
     id: "SubscriptionNumber",
+    name: "SubscriptionNumber",
     label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__["__"])('Subscription Interval', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin

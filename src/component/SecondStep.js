@@ -54,7 +54,8 @@ const SecondStep = (props) => {
             <TextField 
                 value={ctx.formFields['SubscriptionNumber']}
                 onChange={ctx.changeHandler} 
-                id="SubscriptionNumber" 
+                id="SubscriptionNumber"
+                name="SubscriptionNumber" 
                 label={__('Subscription Interval','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
         </FormControl>
         <FormControl component="fieldset" variant="outlined" fullWidth className="fieldsetWrapper">

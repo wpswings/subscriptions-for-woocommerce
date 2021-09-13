@@ -110,9 +110,9 @@ class Subscriptions_For_Woocommerce_Admin {
 		$screen = get_current_screen();
 
 		if ( isset( $screen->id ) && in_array( $screen->id, $mwb_sfw_screen_ids ) ) {
-
+			
 			if ( ! mwb_sfw_check_multistep() ) {
-
+				
 				// Js for the multistep from.
 				$script_path      = '../../build/index.js';
 				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index.asset.php';
@@ -561,10 +561,9 @@ class Subscriptions_For_Woocommerce_Admin {
 		if ( ! isset( $_POST['mwb_sfw_edit_nonce_filed'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['mwb_sfw_edit_nonce_filed'] ) ), 'mwb_sfw_edit_nonce' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			return;
 		}
+		$mwb_sfw_product = isset( $_POST['_mwb_sfw_product'] ) ? 'yes' : 'no';
+		update_post_meta( $post_id, '_mwb_sfw_product', $mwb_sfw_product );
 		if ( isset( $_POST['_mwb_sfw_product'] ) && ! empty( $_POST['_mwb_sfw_product'] ) ) {
-
-			$mwb_sfw_product = isset( $_POST['_mwb_sfw_product'] ) ? 'yes' : 'no';
-			update_post_meta( $post_id, '_mwb_sfw_product', $mwb_sfw_product );
 
 			$mwb_sfw_subscription_number = isset( $_POST['mwb_sfw_subscription_number'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_number'] ) ) : '';
 			$mwb_sfw_subscription_interval = isset( $_POST['mwb_sfw_subscription_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_interval'] ) ) : '';
@@ -670,6 +669,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @since 1.0.0
 	 */
 	public function mwb_sfw_save_settings_filter() {
+		
 		check_ajax_referer( 'ajax-nonce', 'nonce' );
 
 		$term_accpted = ! empty( $_POST['consetCheck'] ) ? sanitize_text_field( wp_unslash( $_POST['consetCheck'] ) ) : ' ';
@@ -693,14 +693,15 @@ class Subscriptions_For_Woocommerce_Admin {
 		$subscription_interval = ! empty( $_POST['SubscriptionInterval'] ) ? sanitize_text_field( wp_unslash( $_POST['SubscriptionInterval'] ) ) : '';
 
 		// Update settings.
-		if ( $enable_plugin ) {
+		if ( 'true' == $enable_plugin ) {
 			update_option( 'mwb_sfw_enable_plugin ', 'on' );
 			update_option( 'mwb_sfw_add_to_cart_text ', $add_to_cart_text );
 			update_option( 'mwb_sfw_place_order_button_text ', $place_order_text );
 		}
-
+		
+		$allready_created = get_option( 'mwb_sfw_multistep_product_create_done', 'no' );
 		// Create products.
-		if ( $enable_plugin ) {
+		if ( $enable_plugin && 'no' == $allready_created ) {
 			$post_id = wp_insert_post(
 				array(
 					'post_title' => $product_name,
@@ -725,6 +726,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$product = wc_get_product( $post_id );
 
 			$product->save();
+			update_option( 'mwb_sfw_multistep_product_create_done', 'yes' );
 		}
 		update_option( 'mwb_sfw_multistep_done', 'yes' );
 
@@ -859,6 +861,22 @@ class Subscriptions_For_Woocommerce_Admin {
 			$response['hooks'] = $all_hooks;
 		}
 		return $response;
+	}
+
+	/**
+	 * Check for multistep.
+	 *
+	 * @name mwb_sfw_check_plugin_already_enable
+	 * @param bool $bool bool.
+	 */
+	public function mwb_sfw_check_plugin_already_enable( $bool ) {
+		
+		$enable_plugin = get_option( 'mwb_sfw_enable_plugin', 'not_enable' );
+		
+		if( ! $bool && 'not_enable' != $enable_plugin ) {
+			$bool = true;
+		}
+		return $bool;
 	}
 
 }
