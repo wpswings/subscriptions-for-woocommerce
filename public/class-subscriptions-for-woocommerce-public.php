@@ -1069,7 +1069,7 @@ class Subscriptions_For_Woocommerce_Public {
 							update_post_meta( $subscription->ID, 'mwb_susbcription_trial_end', $mwb_susbcription_trial_end );
 
 							$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
-							
+
 							$mwb_next_payment_date = apply_filters( 'mwb_sfw_next_payment_date', $mwb_next_payment_date, $subscription->ID );
 
 							update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );

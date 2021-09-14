@@ -109,7 +109,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$line_subtotal = $subscription->line_subtotal;
 						$line_total = $subscription->line_total;
-						
 
 						$_product = wc_get_product( $product_id );
 

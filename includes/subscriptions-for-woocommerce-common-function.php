@@ -747,24 +747,23 @@ if ( ! function_exists( 'mwb_sfw_check_valid_order' ) ) {
 	 * This function is used to check valid order.
 	 *
 	 * @name mwb_sfw_check_valid_order
+	 * @param string $order_id order_id.
 	 * @since 1.0.2
 	 */
 	function mwb_sfw_check_valid_order( $order_id ) {
 		$valid = true;
 		if ( empty( $order_id ) ) {
 			$valid = false;
-		}
-		else{
+		} else {
 			$status = get_post_status( $order_id );
 			$order = wc_get_order( $order_id );
 			if ( 'trash' == $status ) {
 				$valid = false;
-			}
-			elseif ( ! $order ) {
+			} elseif ( ! $order ) {
 				$valid = false;
 			}
 		}
-		
+
 		return $valid;
 	}
 }
