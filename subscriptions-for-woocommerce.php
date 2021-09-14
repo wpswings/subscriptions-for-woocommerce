@@ -131,7 +131,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$bool = true;
 			}
 			$bool = apply_filters( 'mwb_sfw_multistep_done', $bool );
-			
+
 			return $bool;
 		}
 	}

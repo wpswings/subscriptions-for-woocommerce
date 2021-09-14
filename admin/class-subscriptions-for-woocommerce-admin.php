@@ -110,9 +110,9 @@ class Subscriptions_For_Woocommerce_Admin {
 		$screen = get_current_screen();
 
 		if ( isset( $screen->id ) && in_array( $screen->id, $mwb_sfw_screen_ids ) ) {
-			
+
 			if ( ! mwb_sfw_check_multistep() ) {
-				
+
 				// Js for the multistep from.
 				$script_path      = '../../build/index.js';
 				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index.asset.php';
@@ -669,7 +669,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @since 1.0.0
 	 */
 	public function mwb_sfw_save_settings_filter() {
-		
+
 		check_ajax_referer( 'ajax-nonce', 'nonce' );
 
 		$term_accpted = ! empty( $_POST['consetCheck'] ) ? sanitize_text_field( wp_unslash( $_POST['consetCheck'] ) ) : ' ';
@@ -698,7 +698,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			update_option( 'mwb_sfw_add_to_cart_text ', $add_to_cart_text );
 			update_option( 'mwb_sfw_place_order_button_text ', $place_order_text );
 		}
-		
+
 		$allready_created = get_option( 'mwb_sfw_multistep_product_create_done', 'no' );
 		// Create products.
 		if ( $enable_plugin && 'no' == $allready_created ) {
@@ -870,10 +870,10 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @param bool $bool bool.
 	 */
 	public function mwb_sfw_check_plugin_already_enable( $bool ) {
-		
+
 		$enable_plugin = get_option( 'mwb_sfw_enable_plugin', 'not_enable' );
-		
-		if( ! $bool && 'not_enable' != $enable_plugin ) {
+
+		if ( ! $bool && 'not_enable' != $enable_plugin ) {
 			$bool = true;
 		}
 		return $bool;
