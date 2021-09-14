@@ -183,6 +183,7 @@
 	width: 50%;
 	height: 300px;
 }
+/*Support and doc link*/
 .mwb-header-container__links {
     margin: 10px 0 0 auto;
 }
@@ -190,6 +191,31 @@
 .mwb-header-container__links span {
     padding: 0 5px;
 }
+.mwb-header-container .mwb-header-title {
+ 	flex: 0 0 50%;
+ 	max-width: 50%;
+ }
+ .mwb-header-container .mwb-header-container__links {
+ 	flex: 0 0 calc(50% - 15px);
+ 	max-width: calc(50% - 15px);
+ 	margin: 0 !important;
+ 	padding-left: 15px;
+ 	text-align: right;
+ }
+@media only screen and (max-width: 767px) {
+ 	.mwb-header-container .mwb-header-title {
+ 		flex: 0 0 100%;
+ 		max-width: 100%;
+ 		margin-bottom: 20px;
+ 	}
+ 	.mwb-header-container .mwb-header-container__links {
+ 		flex: 0 0 100%;
+ 		max-width: 100%;
+ 		padding-left: 0;
+ 		text-align: left;
+ 	}
+ }
+
 
  /* Media Queries */
 
