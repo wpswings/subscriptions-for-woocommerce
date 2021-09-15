@@ -162,7 +162,15 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'mwb_sfw_subscription_initial_signup_price', true );
 		if ( isset( $mwb_sfw_subscription_initial_signup_price ) && ! empty( $mwb_sfw_subscription_initial_signup_price ) ) {
 			if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) && ! is_admin() ) {
-				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $mwb_sfw_subscription_initial_signup_price );
+				
+				if ( WC()->session->__isset( 's_selected_currency' ) ) {
+					$to_currency = WC()->session->get( 's_selected_currency' );
+				}
+				else{
+					$to_currency = get_woocommerce_currency();
+				}
+				
+				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $to_currency, $mwb_sfw_subscription_initial_signup_price );
 			}
 			/* translators: %s: signup fee */
 
