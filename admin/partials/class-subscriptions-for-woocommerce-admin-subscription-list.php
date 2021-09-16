@@ -292,6 +292,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 */
 	public function mwb_sfw_get_subscription_list() {
 
+		$mwb_sfw_pro_plugin_activated = false;
+		if ( in_array( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+			$mwb_sfw_pro_plugin_activated = true;
+		}
+
 		$args = array(
 			'numberposts' => -1,
 			'post_type'   => 'mwb_subscriptions',
@@ -354,6 +359,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$mwb_customer_id   = get_post_meta( $value->ID, 'mwb_customer_id', true );
 				$user = get_user_by( 'id', $mwb_customer_id );
 
+				if ( ! $mwb_sfw_pro_plugin_activated ) {
+					$subp_id = get_post_meta( $value->ID, 'product_id', true );
+					$check_variable = get_post_meta( $subp_id, 'mwb_sfw_variable_product', true );
+					if( 'yes' === $check_variable ) {
+						continue;
+					}
+				}
+								
 				$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
 				$mwb_subscriptions_data[] = array(
 					'subscription_id'           => $value->ID,
