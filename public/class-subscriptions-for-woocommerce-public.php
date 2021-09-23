@@ -61,7 +61,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_public_enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/src/scss/subscriptions-for-woocommerce-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/src/css/subscriptions-for-woocommerce-public.css', array(), $this->version, 'all' );
 
 	}
 

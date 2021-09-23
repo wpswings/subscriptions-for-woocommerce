@@ -86,13 +86,13 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			wp_enqueue_style( 'mwb-sfw-meterial-icons-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/icon.css', array(), time(), 'all' );
 
-			wp_enqueue_style( $this->plugin_name . '-admin-global', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/scss/subscriptions-for-woocommerce-admin-global.css', array( 'mwb-sfw-meterial-icons-css' ), time(), 'all' );
+			wp_enqueue_style( $this->plugin_name . '-admin-global', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/css/subscriptions-for-woocommerce-admin-global.css', array( 'mwb-sfw-meterial-icons-css' ), time(), 'all' );
 
-			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/scss/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
+			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/css/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
 		}
 
 		if ( isset( $screen->id ) && 'product' == $screen->id ) {
-			wp_enqueue_style( 'mwb-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/scss/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
+			wp_enqueue_style( 'mwb-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
 		}
 
