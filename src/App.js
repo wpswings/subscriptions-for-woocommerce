@@ -88,7 +88,7 @@ function App(props) {
                 
                 handleNext();
                 setTimeout(() => {
-               //  window.location.href = frontend_ajax_object.redirect_url; 
+               window.location.href = frontend_ajax_object.redirect_url; 
                     return null;
                 }, 3000);
             }).catch(error=>{
