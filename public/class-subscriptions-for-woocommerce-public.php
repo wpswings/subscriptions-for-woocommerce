@@ -162,14 +162,13 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'mwb_sfw_subscription_initial_signup_price', true );
 		if ( isset( $mwb_sfw_subscription_initial_signup_price ) && ! empty( $mwb_sfw_subscription_initial_signup_price ) ) {
 			if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) && ! is_admin() ) {
-				
+
 				if ( WC()->session->__isset( 's_selected_currency' ) ) {
 					$to_currency = WC()->session->get( 's_selected_currency' );
-				}
-				else{
+				} else {
 					$to_currency = get_woocommerce_currency();
 				}
-				
+
 				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $to_currency, $mwb_sfw_subscription_initial_signup_price );
 			}
 			/* translators: %s: signup fee */
@@ -1019,7 +1018,7 @@ class Subscriptions_For_Woocommerce_Public {
 			do_action( 'mwb_sfw_subscription_cancel', $mwb_subscription_id, 'Cancel' );
 
 			do_action( 'mwb_sfw_cancel_susbcription', $mwb_subscription_id, $user_id );
-			wc_add_notice( __( 'Subscription Cancelled Successfully', 'woocommerce-subscriptions-pro' ), 'success' );
+			wc_add_notice( __( 'Subscription Cancelled Successfully', 'subscriptions-for-woocommerce' ), 'success' );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) );
 			wp_safe_redirect( $redirect_url );
 			exit;

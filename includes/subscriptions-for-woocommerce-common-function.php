@@ -705,14 +705,14 @@ if ( ! function_exists( 'mwb_sfw_get_subscription_supported_payment_method' ) ) 
 			array(
 				array(
 					'id' => 'stripe',
-					'name' => __( 'WooCommerce Stripe Gateway', 'subscription-for-woocommerce' ),
+					'name' => __( 'WooCommerce Stripe Gateway', 'subscriptions-for-woocommerce' ),
 					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-stripe/',
 					'slug' => 'woocommerce-gateway-stripe',
 					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) ? true : false,
 				),
 				array(
 					'id' => 'ppec_paypal',
-					'name' => __( 'WooCommerce PayPal Checkout Payment Gateway', 'subscription-for-woocommerce' ),
+					'name' => __( 'WooCommerce PayPal Checkout Payment Gateway', 'subscriptions-for-woocommerce' ),
 					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/',
 					'slug' => 'woocommerce-gateway-paypal-express-checkout',
 					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-paypal-express-checkout/woocommerce-gateway-paypal-express-checkout.php' ) ) ? true : false,
