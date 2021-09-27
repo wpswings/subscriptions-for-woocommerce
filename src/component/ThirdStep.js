@@ -20,7 +20,7 @@ const ThirdStep = (props) => {
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
-         { __( 'Supported payment gateways for subscription', 'subscription-for-woocommerce' ) }
+         { __( 'Supported payment gateways for subscription', 'subscriptions-for-woocommerce' ) }
         </ListSubheader>
       }
       className={classes.root}

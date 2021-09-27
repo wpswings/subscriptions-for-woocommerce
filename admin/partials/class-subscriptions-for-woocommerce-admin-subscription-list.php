@@ -61,7 +61,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			'subscriptions_expiry_date'     => __( 'Subscription Expiry Date', 'subscriptions-for-woocommerce' ),
 
 		);
-		return $columns;
+		return apply_filters( 'mwb_sfw_column_subscription_table', $columns );
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			case 'subscriptions_expiry_date':
 				return $item[ $column_name ];
 			default:
-				return false;
+				return apply_filters( 'mwb_sfw_add_case_column', false, $column_name, $item );
 		}
 	}
 
@@ -325,9 +325,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			foreach ( $mwb_subscriptions as $key => $value ) {
 
 				$parent_order_id   = get_post_meta( $value->ID, 'mwb_parent_order', true );
-				
+
 				if ( function_exists( 'mwb_sfw_check_valid_order' ) && ! mwb_sfw_check_valid_order( $parent_order_id ) ) {
-					$total_count = $total_count - 1;
+					$total_count = --$total_count;
 					continue;
 				}
 				$mwb_subscription_status   = get_post_meta( $value->ID, 'mwb_subscription_status', true );
@@ -353,15 +353,18 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$user = get_user_by( 'id', $mwb_customer_id );
 
 				$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
-				$mwb_subscriptions_data[] = array(
-					'subscription_id'           => $value->ID,
-					'parent_order_id'           => $parent_order_id,
-					'status'                    => $mwb_subscription_status,
-					'product_name'              => $product_name,
-					'recurring_amount'          => $mwb_recurring_total,
-					'user_name'                 => $user_nicename,
-					'next_payment_date'         => mwb_sfw_get_the_wordpress_date_format( $mwb_next_payment_date ),
-					'subscriptions_expiry_date' => mwb_sfw_get_the_wordpress_date_format( $mwb_susbcription_end ),
+				$mwb_subscriptions_data[] = apply_filters(
+					'mwb_sfw_subs_table_data',
+					array(
+						'subscription_id'           => $value->ID,
+						'parent_order_id'           => $parent_order_id,
+						'status'                    => $mwb_subscription_status,
+						'product_name'              => $product_name,
+						'recurring_amount'          => $mwb_recurring_total,
+						'user_name'                 => $user_nicename,
+						'next_payment_date'         => mwb_sfw_get_the_wordpress_date_format( $mwb_next_payment_date ),
+						'subscriptions_expiry_date' => mwb_sfw_get_the_wordpress_date_format( $mwb_susbcription_end ),
+					)
 				);
 			}
 		}

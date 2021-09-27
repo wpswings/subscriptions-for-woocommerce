@@ -61,7 +61,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_public_enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/src/scss/subscriptions-for-woocommerce-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/css/subscriptions-for-woocommerce-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -72,7 +72,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw_public_enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/src/js/subscriptions-for-woocommerce-public.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/js/subscriptions-for-woocommerce-public.js', array( 'jquery' ), $this->version, false );
 		wp_localize_script( $this->plugin_name, 'sfw_public_param', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 		wp_enqueue_script( $this->plugin_name );
 
@@ -122,7 +122,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_price = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 
 				/* translators: %s: susbcription interval */
-				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price ) . '</span>';
+				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $mwb_price ) . '</span>';
 
 				$price .= apply_filters( 'mwb_sfw_show_sync_interval', $mwb_sfw_price_html, $product_id );
 
@@ -136,7 +136,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 				/* translators: %s: susbcription interval */
 
-				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html ) . '</span>';
+				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $mwb_price_html ) . '</span>';
 
 				$price .= apply_filters( 'mwb_sfw_show_sync_interval', $mwb_sfw_price_html, $product_id );
 
@@ -162,7 +162,14 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'mwb_sfw_subscription_initial_signup_price', true );
 		if ( isset( $mwb_sfw_subscription_initial_signup_price ) && ! empty( $mwb_sfw_subscription_initial_signup_price ) ) {
 			if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) && ! is_admin() ) {
-				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $mwb_sfw_subscription_initial_signup_price );
+
+				if ( WC()->session->__isset( 's_selected_currency' ) ) {
+					$to_currency = WC()->session->get( 's_selected_currency' );
+				} else {
+					$to_currency = get_woocommerce_currency();
+				}
+
+				$mwb_sfw_subscription_initial_signup_price = mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency( $to_currency, $mwb_sfw_subscription_initial_signup_price );
 			}
 			/* translators: %s: signup fee */
 
@@ -560,7 +567,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->set_address( $shipping_details, 'shipping' );
 
 			// If initial fee available.
-			if ( isset( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) && ! empty( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) ) {
+			if ( isset( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) && ! empty( $mwb_args['mwb_sfw_subscription_initial_signup_price'] ) && empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
 				$initial_signup_price = $mwb_args['mwb_sfw_subscription_initial_signup_price'];
 				// Currency switchers.
 				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -568,6 +575,8 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 				$line_subtotal = $mwb_args['line_subtotal'] - $initial_signup_price;
 				$line_total = $mwb_args['line_total'] - $initial_signup_price;
+				$mwb_args['line_subtotal'] = $line_subtotal;
+				$mwb_args['line_total'] = $line_total;
 			} elseif ( isset( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) && ! empty( $mwb_args['mwb_sfw_subscription_free_trial_number'] ) ) {
 				// Currency switchers.
 				if ( function_exists( 'mwb_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -949,7 +958,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
 
 		/* translators: %s: subscription interval */
-		$price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+		$price .= sprintf( esc_html( ' / %s ' ), $mwb_price_html );
 		echo wp_kses_post( $price );
 	}
 
@@ -1009,7 +1018,7 @@ class Subscriptions_For_Woocommerce_Public {
 			do_action( 'mwb_sfw_subscription_cancel', $mwb_subscription_id, 'Cancel' );
 
 			do_action( 'mwb_sfw_cancel_susbcription', $mwb_subscription_id, $user_id );
-			wc_add_notice( __( 'Subscription Cancelled Successfully', 'woocommerce-subscriptions-pro' ), 'success' );
+			wc_add_notice( __( 'Subscription Cancelled Successfully', 'subscriptions-for-woocommerce' ), 'success' );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $mwb_subscription_id, wc_get_page_permalink( 'myaccount' ) );
 			wp_safe_redirect( $redirect_url );
 			exit;
@@ -1067,7 +1076,7 @@ class Subscriptions_For_Woocommerce_Public {
 							update_post_meta( $subscription->ID, 'mwb_susbcription_trial_end', $mwb_susbcription_trial_end );
 
 							$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
-							$mwb_next_payment_date = $this->mwb_sfw_check_next_payment_date( $subscription->ID, $mwb_next_payment_date );
+
 							$mwb_next_payment_date = apply_filters( 'mwb_sfw_next_payment_date', $mwb_next_payment_date, $subscription->ID );
 
 							update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
@@ -1124,7 +1133,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( mwb_sfw_check_plugin_enable() && mwb_sfw_check_product_is_subscription( $product ) ) {
 			$return = true;
 		}
-		return $return;
+		return apply_filters( 'mwb_sfw_show_quantity_fields_for_susbcriptions', $return, $product );
 	}
 
 	/**
@@ -1144,7 +1153,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$validate = apply_filters( 'mwb_sfw_add_to_cart_validation', false, $product_id, $quantity );
 
 			if ( ! $validate ) {
-				wc_add_notice( __( 'You can not add multiple subscription product in cart', 'subscriptions-for-woocommerce' ), 'error' );
+				wc_add_notice( __( 'You can not add multiple subscription products in cart', 'subscriptions-for-woocommerce' ), 'error' );
 			}
 		}
 		return apply_filters( 'mwb_sfw_expiry_add_to_cart_validation', $validate, $product_id, $quantity );

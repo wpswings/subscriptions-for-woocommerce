@@ -31,18 +31,17 @@ const PaymentGateway = (props) => {
                 }
                
             }).catch(error=>{
-                console.log(error);
         })
     }
     let button = (
         
-        <Tooltip title={__( 'Download & activate', 'subscription-for-woocommerce' )} placement="right-start">
+        <Tooltip title={__( 'Download & activate', 'subscriptions-for-woocommerce' )} placement="right-start">
             <CloudDownloadIcon onClick={(e) => PaymentInstallHanlder(e,id)} />
           </Tooltip>
     )
     
     if(  item.is_activated ) {
-       button = (<Tooltip title={__( 'Installed', 'subscription-for-woocommerce' )} placement="right-start">
+       button = (<Tooltip title={__( 'Installed', 'subscriptions-for-woocommerce' )} placement="right-start">
             <CheckCircleOutlineIcon />
           </Tooltip>);
 

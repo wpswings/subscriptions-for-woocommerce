@@ -88,11 +88,11 @@ function App(props) {
                 
                 handleNext();
                 setTimeout(() => {
-                 window.location.href = frontend_ajax_object.redirect_url; 
+                window.location.href = frontend_ajax_object.redirect_url; 
                     return null;
                 }, 3000);
             }).catch(error=>{
-                console.log(error);
+
         })
         
     }
@@ -123,7 +123,7 @@ function App(props) {
             <div className="mwbMsfWrapper">
                 <Stepper activeStep={activeStep} steps={steps}/>
                 <div className="mwbHeadingWrap">
-                    <h2>{__( 'Welcome to Subscription For WooCommerce', 'subscriptions-for-woocommerce' ) }</h2>
+                    <h2>{__( 'Welcome to Subscriptions For WooCommerce', 'subscriptions-for-woocommerce' ) }</h2>
                     <h3>{__('Complete steps to start selling subscriptions','subscriptions-for-woocommerce') }</h3>
                 </div>
                 <Container maxWidth="sm">

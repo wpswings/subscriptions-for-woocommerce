@@ -358,7 +358,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
 		} elseif ( $mwb_subscription->get_order_key() !== $order_key ) {
 			$result = false;
-			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Invalid subscription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}
 		return $result;
 	}
@@ -649,7 +649,7 @@ if ( ! function_exists( 'mwb_sfw_recerring_total_price_list_table_callback' ) ) 
 			$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
 
 			/* translators: %s: frequency interval. */
-			$mwb_price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+			$mwb_price .= sprintf( esc_html( ' / %s ' ), $mwb_price_html );
 		}
 		return $mwb_price;
 	}
@@ -705,14 +705,14 @@ if ( ! function_exists( 'mwb_sfw_get_subscription_supported_payment_method' ) ) 
 			array(
 				array(
 					'id' => 'stripe',
-					'name' => __( 'WooCommerce Stripe Gateway', 'subscription-for-woocommerce' ),
+					'name' => __( 'WooCommerce Stripe Gateway', 'subscriptions-for-woocommerce' ),
 					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-stripe/',
 					'slug' => 'woocommerce-gateway-stripe',
 					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) ? true : false,
 				),
 				array(
 					'id' => 'ppec_paypal',
-					'name' => __( 'WooCommerce PayPal Checkout Payment Gateway', 'subscription-for-woocommerce' ),
+					'name' => __( 'WooCommerce PayPal Checkout Payment Gateway', 'subscriptions-for-woocommerce' ),
 					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/',
 					'slug' => 'woocommerce-gateway-paypal-express-checkout',
 					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-paypal-express-checkout/woocommerce-gateway-paypal-express-checkout.php' ) ) ? true : false,
@@ -747,24 +747,23 @@ if ( ! function_exists( 'mwb_sfw_check_valid_order' ) ) {
 	 * This function is used to check valid order.
 	 *
 	 * @name mwb_sfw_check_valid_order
+	 * @param string $order_id order_id.
 	 * @since 1.0.2
 	 */
 	function mwb_sfw_check_valid_order( $order_id ) {
 		$valid = true;
 		if ( empty( $order_id ) ) {
 			$valid = false;
-		}
-		else{
+		} else {
 			$status = get_post_status( $order_id );
 			$order = wc_get_order( $order_id );
 			if ( 'trash' == $status ) {
 				$valid = false;
-			}
-			elseif ( ! $order ) {
+			} elseif ( ! $order ) {
 				$valid = false;
 			}
 		}
-		
+
 		return $valid;
 	}
 }

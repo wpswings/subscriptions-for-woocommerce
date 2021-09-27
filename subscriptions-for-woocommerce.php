@@ -24,7 +24,7 @@
  * Requires at least:        4.6
  * Tested up to:             5.8
  * WC requires at least:     4.0
- * WC tested up to:          5.6
+ * WC tested up to:          5.7
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -131,6 +131,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$bool = true;
 			}
 			$bool = apply_filters( 'mwb_sfw_multistep_done', $bool );
+
 			return $bool;
 		}
 	}
@@ -190,11 +191,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		if ( strpos( $file, 'subscriptions-for-woocommerce.php' ) !== false ) {
 
 			$row_meta = array(
-				'demo' => '<a target="_blank" href="https://demo.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-demoORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/src/images/Demo.svg" class="mwb-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
+				'demo' => '<a target="_blank" href="https://demo.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-demoORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="mwb-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'docs'    => '<a target="_blank" href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/src/images/Documentation.svg" class="mwb-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
+				'docs'    => '<a target="_blank" href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="mwb-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'support' => '<a target="_blank" href="https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/src/images/Support.svg" class="mwb-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
+				'support' => '<a target="_blank" href="https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Support.svg" class="mwb-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
 
 			);
 
@@ -252,7 +253,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
 						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
 					),
-					'description'                      => __( 'This subscriptions are stored.', 'subscriptions-for-woocommerce' ),
+					'description'                      => __( 'These subscriptions are stored.', 'subscriptions-for-woocommerce' ),
 					'public'                           => false,
 					'show_ui'                          => true,
 					'capability_type'                  => 'shop_order',

@@ -30,6 +30,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<tbody>
 					<?php
 					foreach ( $mwb_subscriptions as $key => $mwb_subscription ) {
+						$parent_order_id   = get_post_meta( $mwb_subscription->ID, 'mwb_parent_order', true );
+						if ( function_exists( 'mwb_sfw_check_valid_order' ) && ! mwb_sfw_check_valid_order( $parent_order_id ) ) {
+							continue;
+						}
 						?>
 								<tr class="mwb_sfw_account_row woocommerce-orders-table__row woocommerce-orders-table__row--status-processing order">
 									<td class="mwb_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number">
