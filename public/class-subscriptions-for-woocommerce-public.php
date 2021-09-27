@@ -122,7 +122,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_price = mwb_sfw_get_time_interval_for_price( $mwb_sfw_subscription_number, $mwb_sfw_subscription_interval );
 
 				/* translators: %s: susbcription interval */
-				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price ) . '</span>';
+				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $mwb_price ) . '</span>';
 
 				$price .= apply_filters( 'mwb_sfw_show_sync_interval', $mwb_sfw_price_html, $product_id );
 
@@ -136,7 +136,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 				/* translators: %s: susbcription interval */
 
-				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html ) . '</span>';
+				$mwb_sfw_price_html = '<span class="mwb_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $mwb_price_html ) . '</span>';
 
 				$price .= apply_filters( 'mwb_sfw_show_sync_interval', $mwb_sfw_price_html, $product_id );
 
@@ -958,7 +958,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
 
 		/* translators: %s: subscription interval */
-		$price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+		$price .= sprintf( esc_html( ' / %s ' ), $mwb_price_html );
 		echo wp_kses_post( $price );
 	}
 
@@ -1153,7 +1153,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$validate = apply_filters( 'mwb_sfw_add_to_cart_validation', false, $product_id, $quantity );
 
 			if ( ! $validate ) {
-				wc_add_notice( __( 'You can not add multiple subscription product in cart', 'subscriptions-for-woocommerce' ), 'error' );
+				wc_add_notice( __( 'You can not add multiple subscription products in cart', 'subscriptions-for-woocommerce' ), 'error' );
 			}
 		}
 		return apply_filters( 'mwb_sfw_expiry_add_to_cart_validation', $validate, $product_id, $quantity );

@@ -253,7 +253,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
 						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
 					),
-					'description'                      => __( 'This subscriptions are stored.', 'subscriptions-for-woocommerce' ),
+					'description'                      => __( 'These subscriptions are stored.', 'subscriptions-for-woocommerce' ),
 					'public'                           => false,
 					'show_ui'                          => true,
 					'capability_type'                  => 'shop_order',

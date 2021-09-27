@@ -358,7 +358,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
 		} elseif ( $mwb_subscription->get_order_key() !== $order_key ) {
 			$result = false;
-			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Invalid subscription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}
 		return $result;
 	}
@@ -649,7 +649,7 @@ if ( ! function_exists( 'mwb_sfw_recerring_total_price_list_table_callback' ) ) 
 			$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
 
 			/* translators: %s: frequency interval. */
-			$mwb_price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+			$mwb_price .= sprintf( esc_html( ' / %s ' ), $mwb_price_html );
 		}
 		return $mwb_price;
 	}
