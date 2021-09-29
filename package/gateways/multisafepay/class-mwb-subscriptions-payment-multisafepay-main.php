@@ -33,8 +33,15 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Multisafepay_Main' ) ) {
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'mwb_sfw_add_multisafepay_order_statuses_for_payment_complete' ), 10, 2 );
 		}
 
-
-
+		/**
+		 * Function name mwb_sfw_multisafepay_renewal_order.
+		 * this function is used to create renewal order using multisafepay.
+		 *
+		 * @param object $mwb_new_order order object.
+		 * @param int    $subscription_id subscription id.
+		 * @param mixed  $payment_method payment method.
+		 * @return void
+		 */
 		public function mwb_sfw_multisafepay_renewal_order( $mwb_new_order, $subscription_id, $payment_method  ) {
 			if ( 'multisafepay_multisafepay' === $payment_method ) {
 				global $woocommerce;
