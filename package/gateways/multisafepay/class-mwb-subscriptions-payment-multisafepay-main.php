@@ -29,8 +29,10 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Multisafepay_Main' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
+			add_filter( 'mwb_sfw_supported_payment_gateway_for_woocommerce', array( $this, 'mwb_sfw_allow_multisafepay_for_subs'), 10, 2 );
 			add_action( 'mwb_sfw_other_payment_gateway_renewal', array( $this, 'mwb_sfw_multisafepay_renewal_order' ), 20, 3 );
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'mwb_sfw_add_multisafepay_order_statuses_for_payment_complete' ), 10, 2 );
+		
 		}
 
 		/**
@@ -193,6 +195,21 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Multisafepay_Main' ) ) {
 					update_post_meta( $mwb_subscription_id, 'mwb_subscription_status', 'cancelled' );
 				}
 			}
+		}
+	
+		/**
+		 * Function name mwb_sfw_allow_multisafepay_for_subs.
+		 * this function is used to allow multisafepay for payment
+		 *
+		 * @param array $mwb_supported_method
+		 * @param sting $payment_method
+		 * @return void
+		 */
+		public function mwb_sfw_allow_multisafepay_for_subs( $mwb_supported_method, $payment_method ) {
+			if ( 'multisafepay_multisafepay' == $payment_method ) {
+				$supported_payment_method[] = $payment_method;
+			}
+			return $supported_payment_method;
 		}
 	}
 }
