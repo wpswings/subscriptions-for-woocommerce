@@ -240,4 +240,4 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 * New: Compatibility with WPML
 * New: Supported Paypal express checkout payment gateway
 * New: Multistep setting configuration.
-* New: Show renewal
+* New: Show renewal Order log.
