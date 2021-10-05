@@ -23,17 +23,24 @@ global $sfw_mwb_sfw_obj;
 		<div class="sfw-overview__wrapper">
 			<div class="sfw-overview__icons">
 				<a href="https://makewebbetter.com/contact-us/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-contact">
-					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/dial.svg' ); ?>" alt="contact-us-img">
+					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/dial.svg' ); ?>" alt="contact-us-img">
 				</a>
 				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend">
-					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/doc.svg' ); ?>" alt="doc-img">
+					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/doc.svg' ); ?>" alt="doc-img">
 				</a>
-				<?php do_action( 'mwb_sfw_overview_icon' ); ?>
+				<?php
+				// Add icon.
+				do_action( 'mwb_sfw_overview_icon' );
+				?>
 			</div>
 			<div class="sfw-overview__banner-img">
-				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/subscription-overview-banner.png' ); ?>" alt="sfw-banner-img">
+				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/subscription-overview-banner.png' ); ?>" alt="sfw-banner-img">
 			</div>
-			<?php do_action( 'mwb_sfw_before_overview_content' ); ?>
+			<?php
+				// Add content.
+				do_action( 'mwb_sfw_before_overview_content' );
+			?>
+			
 			<div class="sfw-overview__content">
 				<div class="sfw-overview__content-description">
 					<h1><?php esc_html_e( 'Subscriptions for WooCommerce', 'subscriptions-for-woocommerce' ); ?></h1>
@@ -53,10 +60,16 @@ global $sfw_mwb_sfw_obj;
 						<li><?php esc_html_e( 'Convert simple product selling WooCommerce store to subscription-based', 'subscriptions-for-woocommerce' ); ?></li>
 						<li><?php esc_html_e( 'Give free trials to your customers and loyalize them', 'subscriptions-for-woocommerce' ); ?></li>
 					</ul>
-					<?php do_action( 'mwb_sfw_overview_feature_description' ); ?>
+					<?php
+						// Add description.
+						do_action( 'mwb_sfw_overview_feature_description' );
+					?>
 					</div>
 				</div>
-				<?php do_action( 'mwb_sfw_after_overview_description' ); ?>
+				<?php
+					// Add overview description.
+					do_action( 'mwb_sfw_after_overview_description' );
+				?>
 				<div class="sfw-overview__keywords-wrap">
 				<h2> <?php esc_html_e( 'Salient Features of Subscriptions for WooCommerce Plugin', 'subscriptions-for-woocommerce' ); ?></h2>
 				<div class="sfw-overview__keywords">
@@ -64,7 +77,7 @@ global $sfw_mwb_sfw_obj;
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
 
-								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-1.png' ); ?>" alt="feature_one" width="100px">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/feature-1.png' ); ?>" alt="feature_one" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Create Simple Products  As Subscription Product', 'subscriptions-for-woocommerce' ); ?> </h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'You can easily assign a subscription product label to simple product type by simply ticking a checkbox. The product will then be available as a subscription product.', 'subscriptions-for-woocommerce' ); ?>
@@ -75,7 +88,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
-								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-2.png' ); ?>" alt="feature_two" width="100px">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/feature-2.png' ); ?>" alt="feature_two" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Offer Subscription Frequency and Expiry', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									
@@ -87,7 +100,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
-								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-3.png' ); ?>" alt="feature_three" width="100px">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/feature-3.png' ); ?>" alt="feature_three" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Charge Initial Fee with WooCommerce Payment Integrations', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'You can charge extra payment in the form of an initial fee. Stripe payment integration of WooCommerce is supported with the subscription.', 'subscriptions-for-woocommerce' ); ?>
@@ -98,7 +111,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
-								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-4.png' ); ?>" alt="feature_four" width="100px">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/feature-4.png' ); ?>" alt="feature_four" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Offer Free Trial To Users With Both User and Admin Stop Subscription Option', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									
@@ -111,7 +124,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
-								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-5.png' ); ?>" alt="feature_five" width="100px">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/feature-5.png' ); ?>" alt="feature_five" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Complete Subscription Reports', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'With a clean subscription report module, you will get complete subscription data of all users. Find important details like active and inactive subscriptions, next payment dates, product names, subscription expiry dates, and due dates of the respective plans.', 'subscriptions-for-woocommerce' ); ?>
@@ -122,7 +135,7 @@ global $sfw_mwb_sfw_obj;
 					<div class="sfw-overview__keywords-item">
 						<div class="sfw-overview__keywords-card">
 							<div class="sfw-overview__keywords-text">
-								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/src/images/feature-6.png' ); ?>" alt="feature_six" width="100px">
+								<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/feature-6.png' ); ?>" alt="feature_six" width="100px">
 								<h4 class="sfw-overview__keywords-heading"><?php esc_html_e( 'Subscription Details To User and Admin', 'subscriptions-for-woocommerce' ); ?></h4>
 								<p class="sfw-overview__keywords-description">
 									<?php esc_html_e( 'View all details of the subscription plans of every user of your store. The user can see his subscription plan details and history', 'subscriptions-for-woocommerce' ); ?>
@@ -130,10 +143,16 @@ global $sfw_mwb_sfw_obj;
 							</div>
 						</div>
 					</div>
-					<?php do_action( 'mwb_sfw_overview_keywords_description' ); ?>
+					<?php
+						// Add overview description.
+						do_action( 'mwb_sfw_overview_keywords_description' );
+					?>
 				</div>
 				</div>
-				<?php do_action( 'mwb_sfw_after_overview_keywords_wrpa' ); ?>
+				<?php
+					// Add overview description.
+					do_action( 'mwb_sfw_after_overview_keywords_wrpa' );
+				?>
 			</div>
 		</div>
 	</div>

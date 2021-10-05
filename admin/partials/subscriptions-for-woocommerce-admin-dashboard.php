@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $sfw_mwb_sfw_obj;
 global $mwb_sfw_notices;
-$sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-overview';
+$sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-general';
 $sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
 
 if ( $mwb_sfw_notices ) {
@@ -26,11 +26,22 @@ if ( $mwb_sfw_notices ) {
 	$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
 }
 do_action( 'mwb_sfw_notice_message' );
+if ( ! mwb_sfw_check_multistep() ) {
+	?>
+	<div id="react-app"></div>
+	<?php
+	return;
+}
 ?>
 <header>
 	<div class="mwb-header-container mwb-bg-white mwb-r-8">
 		<h1 class="mwb-header-title"><?php echo esc_attr( strtoupper( str_replace( '-', ' ', $sfw_mwb_sfw_obj->sfw_get_plugin_name() ) ) ); ?></h1>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ) . '&sfw_tab=' . esc_attr( 'subscriptions-for-woocommerce-support' ) ); ?>" class="mwb-link"><?php esc_html_e( 'Support', 'subscriptions-for-woocommerce' ); ?></a>
+		<div class="mwb-header-container__links">
+			<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend" class="mwb-link" target="_blank"><?php esc_html_e( 'Documentation', 'subscriptions-for-woocommerce' ); ?></a>
+			<span class="mwb-header-container__links-divider">|</span>
+			<a href="https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-support" class="mwb-link" target="_blank"><?php esc_html_e( 'Support', 'subscriptions-for-woocommerce' ); ?></a>
+		</div>
+
 	</div>
 </header>
 
@@ -65,7 +76,7 @@ do_action( 'mwb_sfw_notice_message' );
 				do_action( 'mwb_sfw_before_general_settings_form' );
 						// if submenu is directly clicked on woocommerce.
 			if ( empty( $sfw_active_tab ) ) {
-				$sfw_active_tab = 'mwb_sfw_plug_general';
+				$sfw_active_tab = 'subscriptions-for-woocommerce-general';
 			}
 
 

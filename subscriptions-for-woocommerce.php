@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
- * Version:           1.0.2
+ * Version:           1.1.0
  * Author:            MakeWebBetter
  * Author URI:        https://makewebbetter.com/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-backend
  * Text Domain:       subscriptions-for-woocommerce
@@ -24,7 +24,7 @@
  * Requires at least:        4.6
  * Tested up to:             5.8
  * WC requires at least:     4.0
- * WC tested up to:          5.5
+ * WC tested up to:          5.7
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -44,7 +44,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.0.2' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.1.0' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://makewebbetter.com' );
@@ -117,7 +117,24 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	require plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce.php';
 
+	if ( ! function_exists( 'mwb_sfw_check_multistep' ) ) {
+		/**
+		 * This function is used to check susbcripton product in cart.
+		 *
+		 * @name mwb_sfw_check_multistep
+		 * @since 1.0.2
+		 */
+		function mwb_sfw_check_multistep() {
+			$bool = false;
+			$mwb_sfw_check = get_option( 'mwb_sfw_multistep_done', false );
+			if ( ! empty( $mwb_sfw_check ) ) {
+				$bool = true;
+			}
+			$bool = apply_filters( 'mwb_sfw_multistep_done', $bool );
 
+			return $bool;
+		}
+	}
 	/**
 	 * Begins execution of the plugin.
 	 *
@@ -174,11 +191,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		if ( strpos( $file, 'subscriptions-for-woocommerce.php' ) !== false ) {
 
 			$row_meta = array(
-				'demo' => '<a target="_blank" href="https://demo.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-demoORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/src/images/Demo.svg" class="mwb-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
+				'demo' => '<a target="_blank" href="https://demo.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-demoORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="mwb-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'docs'    => '<a target="_blank" href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/src/images/Documentation.svg" class="mwb-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
+				'docs'    => '<a target="_blank" href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="mwb-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'support' => '<a target="_blank" href="https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/src/images/Support.svg" class="mwb-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
+				'support' => '<a target="_blank" href="https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Support.svg" class="mwb-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
 
 			);
 
@@ -236,7 +253,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
 						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
 					),
-					'description'                      => __( 'This subscriptions are stored.', 'subscriptions-for-woocommerce' ),
+					'description'                      => __( 'These subscriptions are stored.', 'subscriptions-for-woocommerce' ),
 					'public'                           => false,
 					'show_ui'                          => true,
 					'capability_type'                  => 'shop_order',
@@ -260,6 +277,24 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				)
 			)
 		);
+	}
+	add_action( 'activated_plugin', 'mwb_sfe_redirect_on_settings' );
+
+	if ( ! function_exists( 'mwb_sfe_redirect_on_settings' ) ) {
+		/**
+		 * This function is used to check plugin.
+		 *
+		 * @name mwb_sfe_redirect_on_settings
+		 * @param string $plugin plugin.
+		 * @since 1.0.3
+		 */
+		function mwb_sfe_redirect_on_settings( $plugin ) {
+			if ( plugin_basename( __FILE__ ) === $plugin ) {
+				$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
+				wp_redirect( esc_url( $general_settings_url ) );
+				exit();
+			}
+		}
 	}
 } else {
 	// WooCommerce is not active so deactivate this plugin.

@@ -154,6 +154,15 @@ class Subscriptions_For_Woocommerce {
 
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
 
+		/**
+		 * Include the log file.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-log.php';
+		/**
+		 * Include the cron file.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-scheduler.php';
+
 	}
 	/**
 	 * The function is used to include email class.
@@ -211,10 +220,21 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_filter( 'mwb_add_plugins_menus_array', $sfw_plugin_admin, 'mwb_sfw_admin_submenu_page', 15 );
 
 		$this->loader->add_filter( 'mwb_sfw_general_settings_array', $sfw_plugin_admin, 'mwb_sfw_admin_general_settings_page', 10 );
-		$this->loader->add_filter( 'mwb_sfw_supprot_tab_settings_array', $sfw_plugin_admin, 'mwb_sfw_admin_support_settings_page', 10 );
 
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
+		// Multistep.
+		$this->loader->add_action( 'wp_ajax_mwb_sfw_save_settings_filter', $sfw_plugin_admin, 'mwb_sfw_save_settings_filter' );
+		$this->loader->add_action( 'wp_ajax_nopriv_mwb_sfw_save_settings_filter', $sfw_plugin_admin, 'mwb_sfw_save_settings_filter' );
+
+		$this->loader->add_action( 'wp_ajax_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration' );
+		$this->loader->add_action( 'wp_ajax_nopriv_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration' );
+
+		$this->loader->add_action( 'mwb_sfw_multistep_done', $sfw_plugin_admin, 'mwb_sfw_check_plugin_already_enable' );
+
+		// Developer's Hook Listing.
+		$this->loader->add_action( 'sfw_developer_admin_hooks_array', $sfw_plugin_admin, 'mwb_developer_admin_hooks_listing' );
+		$this->loader->add_action( 'sfw_developer_public_hooks_array', $sfw_plugin_admin, 'mwb_developer_public_hooks_listing' );
 
 		if ( mwb_sfw_check_plugin_enable() ) {
 			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'mwb_sfw_create_subscription_product_type' );
@@ -227,15 +247,12 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_admin_cancel_susbcription' );
 
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_admin_create_order_scheduler' );
-
-			$this->loader->add_action( 'mwb_sfw_create_renewal_order_schedule', $sfw_plugin_admin, 'mwb_sfw_renewal_order_on_scheduler' );
-
-			$this->loader->add_action( 'mwb_sfw_expired_renewal_subscription', $sfw_plugin_admin, 'mwb_sfw_expired_renewal_subscription_callback' );
-
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_register_new_order_statuses' );
+			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'mwb_sfw_register_new_order_statuses' );
 
 			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'mwb_sfw_new_wc_order_statuses' );
+			// WPLM Translation.
+			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'mwb_sfw_add_lock_custom_fields_ids' );
+
 		}
 
 	}
@@ -409,6 +426,11 @@ class Subscriptions_For_Woocommerce {
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-system-status',
+			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+		);
+		$sfw_default_tabs['subscriptions-for-woocommerce-developer'] = array(
+			'title'       => esc_html__( 'Developer', 'subscriptions-for-woocommerce' ),
+			'name'        => 'subscriptions-for-woocommerce-developer',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs_end', $sfw_default_tabs );

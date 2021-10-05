@@ -227,6 +227,7 @@ if ( ! function_exists( 'mwb_sfw_send_email_for_renewal_susbcription' ) ) {
 
 				}
 			}
+			do_action( 'mwb_sfw_renewal_email_notification', $order, $mailer );
 		}
 	}
 }
@@ -357,7 +358,7 @@ if ( ! function_exists( 'mwb_sfw_validate_payment_request' ) ) {
 			wc_add_notice( __( 'Invalid Subscription.', 'subscriptions-for-woocommerce' ), 'error' );
 		} elseif ( $mwb_subscription->get_order_key() !== $order_key ) {
 			$result = false;
-			wc_add_notice( __( 'Invalid susbcription order.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Invalid subscription order.', 'subscriptions-for-woocommerce' ), 'error' );
 		}
 		return $result;
 	}
@@ -648,7 +649,7 @@ if ( ! function_exists( 'mwb_sfw_recerring_total_price_list_table_callback' ) ) 
 			$mwb_price_html = mwb_sfw_get_time_interval_for_price( $mwb_recurring_number, $mwb_recurring_interval );
 
 			/* translators: %s: frequency interval. */
-			$mwb_price .= sprintf( esc_html__( ' / %s ', 'subscriptions-for-woocommerce' ), $mwb_price_html );
+			$mwb_price .= sprintf( esc_html( ' / %s ' ), $mwb_price_html );
 		}
 		return $mwb_price;
 	}
@@ -669,3 +670,105 @@ if ( ! function_exists( 'mwb_sfw_get_file_content' ) ) {
 		return $mwb_file_content;
 	}
 }
+if ( ! function_exists( 'mwb_sfw_is_cart_has_subscription_product' ) ) {
+	/**
+	 * This function is used to check susbcripton product in cart.
+	 *
+	 * @name mwb_sfw_is_cart_has_subscription_product
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_is_cart_has_subscription_product() {
+		$mwb_has_subscription = false;
+
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$mwb_has_subscription = true;
+					break;
+				}
+			}
+		}
+		return $mwb_has_subscription;
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_get_subscription_supported_payment_method' ) ) {
+	/**
+	 * This function is used to get supported payment gateway.
+	 *
+	 * @name mwb_sfw_get_subscription_supported_payment_method
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_get_subscription_supported_payment_method() {
+
+		$gateway =
+			array(
+				array(
+					'id' => 'stripe',
+					'name' => __( 'WooCommerce Stripe Gateway', 'subscriptions-for-woocommerce' ),
+					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-stripe/',
+					'slug' => 'woocommerce-gateway-stripe',
+					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) ? true : false,
+				),
+				array(
+					'id' => 'ppec_paypal',
+					'name' => __( 'WooCommerce PayPal Checkout Payment Gateway', 'subscriptions-for-woocommerce' ),
+					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/',
+					'slug' => 'woocommerce-gateway-paypal-express-checkout',
+					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-paypal-express-checkout/woocommerce-gateway-paypal-express-checkout.php' ) ) ? true : false,
+				),
+
+			);
+
+		$gateway = apply_filters( 'mwb_sfw_supported_data_payment_for_configuration', $gateway );
+		return $gateway;
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_is_enable_usage_tracking' ) ) {
+	/**
+	 * This function is used to check tracking enable.
+	 *
+	 * @name mwb_sfw_is_enable_usage_tracking
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_is_enable_usage_tracking() {
+		$is_enable = false;
+		$mwb_wps_enable = get_option( 'mwb_sfw_enable_tracking', '' );
+		if ( 'on' == $mwb_wps_enable ) {
+			$is_enable = true;
+		}
+		return $is_enable;
+	}
+}
+
+if ( ! function_exists( 'mwb_sfw_check_valid_order' ) ) {
+	/**
+	 * This function is used to check valid order.
+	 *
+	 * @name mwb_sfw_check_valid_order
+	 * @param string $order_id order_id.
+	 * @since 1.0.2
+	 */
+	function mwb_sfw_check_valid_order( $order_id ) {
+		$valid = true;
+		if ( empty( $order_id ) ) {
+			$valid = false;
+		} else {
+			$status = get_post_status( $order_id );
+			$order = wc_get_order( $order_id );
+			if ( 'trash' == $status ) {
+				$valid = false;
+			} elseif ( ! $order ) {
+				$valid = false;
+			}
+		}
+
+		return $valid;
+	}
+}
+
+
+
+
+
