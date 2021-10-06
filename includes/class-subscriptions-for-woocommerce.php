@@ -206,6 +206,7 @@ class Subscriptions_For_Woocommerce {
 	 * @access   private
 	 */
 	private function subscriptions_for_woocommerce_admin_hooks() {
+		global $sfw_plugin_admin;
 
 		$sfw_plugin_admin = new Subscriptions_For_Woocommerce_Admin( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
@@ -265,6 +266,7 @@ class Subscriptions_For_Woocommerce {
 	 * @access   private
 	 */
 	private function subscriptions_for_woocommerce_public_hooks() {
+		global $sfw_plugin_public;
 
 		$sfw_plugin_public = new Subscriptions_For_Woocommerce_Public( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
@@ -337,6 +339,7 @@ class Subscriptions_For_Woocommerce {
 	 * @access   private
 	 */
 	private function subscriptions_for_woocommerce_api_hooks() {
+		global $sfw_plugin_api;
 
 		$sfw_plugin_api = new Subscriptions_For_Woocommerce_Rest_Api( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
@@ -632,8 +635,8 @@ class Subscriptions_For_Woocommerce {
 									</span>
 									<span class="mdc-notched-outline__trailing"></span>
 								</span>
-								<input 
-								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" 
+								<input
+								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>"
 								name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 								type="<?php echo esc_attr( $sfw_component['type'] ); ?>"
@@ -663,8 +666,8 @@ class Subscriptions_For_Woocommerce {
 									</span>
 									<span class="mdc-notched-outline__trailing"></span>
 								</span>
-								<input 
-								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?> mwb-form__password" 
+								<input
+								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?> mwb-form__password"
 								name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 								type="<?php echo esc_attr( $sfw_component['type'] ); ?>"
@@ -752,7 +755,7 @@ class Subscriptions_For_Woocommerce {
 						<div class="mwb-form-group__control mwb-pl-4">
 							<div class="mdc-form-field">
 								<div class="mdc-checkbox">
-									<input 
+									<input
 									name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 									id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 									type="checkbox"
@@ -806,7 +809,7 @@ class Subscriptions_For_Woocommerce {
 											<div class="mdc-radio__ripple"></div>
 										</div>
 										<label for="radio-1"><?php echo esc_html( $sfw_radio_val ); ?></label>
-									</div>	
+									</div>
 									<?php
 								}
 								?>
@@ -867,7 +870,7 @@ class Subscriptions_For_Woocommerce {
 						?>
 					<tr valign="top">
 						<td scope="row">
-							<input type="submit" class="button button-primary" 
+							<input type="submit" class="button button-primary"
 							name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
 							id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 							value="<?php echo esc_attr( $sfw_component['button_text'] ); ?>"
