@@ -2,6 +2,16 @@
     'use strict';
 
     $(document).ready(function() {
+
+        var dateToday = new Date(); 
+        $(function() {
+            $( "#mwb_sfw_subscription_start_date" ).datepicker({
+                showButtonPanel: true,
+                dateFormat: 'yy-mm-dd',
+                minDate: dateToday
+            });
+        });
+
         function mwb_sfw_show_subscription_settings_tab(){
             if( $('#_mwb_sfw_product').prop('checked') ) {
                 
