@@ -5,7 +5,7 @@
 
         var dateToday = new Date(); 
         $(function() {
-            $( "#mwb_sfw_subscription_start_date" ).datepicker({
+            $( ".mwb_sfw_subscription_start_date" ).datepicker({
                 showButtonPanel: true,
                 dateFormat: 'yy-mm-dd',
                 minDate: dateToday

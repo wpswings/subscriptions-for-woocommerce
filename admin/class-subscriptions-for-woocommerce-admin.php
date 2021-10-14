@@ -502,7 +502,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<label for="mwb_sfw_subscription_start_date">
 			<?php esc_html_e( 'Choose Subscription Start Date', 'subscriptions-for-woocommerce' ); ?>
 			</label>
-			<input type="text" class="short wc_input_text" required name="mwb_sfw_subscription_start_date" value="<?php echo esc_attr( $mwb_sfw_subscription_start_date ); ?>" id="mwb_sfw_subscription_start_date"  placeholder="<?php esc_html_e( 'Enter start date', 'subscriptions-for-woocommerce' ); ?>"> 
+			<input type="text" class="short wc_input_text" name="mwb_sfw_subscription_start_date" value="<?php echo esc_attr( $mwb_sfw_subscription_start_date ); ?>" id="mwb_sfw_subscription_start_date"  placeholder="<?php esc_html_e( 'Enter start date', 'subscriptions-for-woocommerce' ); ?>"> 
 		 <?php
 			$description_text = __( 'Choose subscription start date"', 'subscriptions-for-woocommerce' );
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
@@ -588,7 +588,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$mwb_sfw_subscription_free_trial_number = isset( $_POST['mwb_sfw_subscription_free_trial_number'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_free_trial_number'] ) ) : '';
 			$mwb_sfw_subscription_free_trial_interval = isset( $_POST['mwb_sfw_subscription_free_trial_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_free_trial_interval'] ) ) : '';
 
-			$mwb_sfw_subscription_start_date = isset( $_POST['mwb_sfw_subscription_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_start_date'] ) ) : '';
+			$mwb_sfw_subscription_start_date = isset( $_POST['mwb_sfw_subscription_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_start_date'] ) ) : current_time( 'Y-m-d' );
 
 			update_post_meta( $post_id, 'mwb_sfw_subscription_start_date', $mwb_sfw_subscription_start_date );
 
