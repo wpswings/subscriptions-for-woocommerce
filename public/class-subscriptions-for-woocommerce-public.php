@@ -464,17 +464,13 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$mwb_sfw_subscription_number = get_post_meta( $product_id, 'mwb_sfw_subscription_number', true );
 		$mwb_sfw_subscription_interval = get_post_meta( $product_id, 'mwb_sfw_subscription_interval', true );
-		$mwb_sfw_subscription_start_date = get_post_meta( $product_id, 'mwb_sfw_subscription_start_date', true );
 
 		
 		$mwb_recurring_data['mwb_sfw_subscription_number'] = $mwb_sfw_subscription_number;
 		$mwb_recurring_data['mwb_sfw_subscription_interval'] = $mwb_sfw_subscription_interval;
 		$mwb_sfw_subscription_expiry_number = get_post_meta( $product_id, 'mwb_sfw_subscription_expiry_number', true );
 
-		if ( isset( $mwb_sfw_subscription_start_date ) && ! empty( $mwb_sfw_subscription_start_date ) ) {
-			$mwb_recurring_data['mwb_sfw_subscription_start_date'] = $mwb_sfw_subscription_start_date;
-		}
-
+		
 		if ( isset( $mwb_sfw_subscription_expiry_number ) && ! empty( $mwb_sfw_subscription_expiry_number ) ) {
 			$mwb_recurring_data['mwb_sfw_subscription_expiry_number'] = $mwb_sfw_subscription_expiry_number;
 		}
@@ -1076,14 +1072,13 @@ class Subscriptions_For_Woocommerce_Public {
 					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 						foreach ( $mwb_subscriptions as $key => $subscription ) {
 
-							$mwb_sfw_subscription_start_date = get_post_meta( $subscription->ID, 'mwb_sfw_subscription_start_date', true );
-							$current_time = strtotime( $mwb_sfw_subscription_start_date );							
-							if( ( current_time( 'Y-m-d' ) ) === $mwb_sfw_subscription_start_date ) {
+							$status = 'active';
+							$status = apply_filters( 'mwb_sfw_set_subscription_status', $status, $subscription->ID );
+							
+							$current_time = apply_filters( 'mwb_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );						
 
-								update_post_meta( $subscription->ID, 'mwb_subscription_status', 'active' );
-							} else {
-								update_post_meta( $subscription->ID, 'mwb_subscription_status', 'pending' );
-							}
+							
+							update_post_meta( $subscription->ID, 'mwb_subscription_status', $status );
 							update_post_meta( $subscription->ID, 'mwb_schedule_start', $current_time );
 
 							$mwb_susbcription_trial_end = mwb_sfw_susbcription_trial_date( $subscription->ID, $current_time );

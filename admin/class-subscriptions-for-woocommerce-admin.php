@@ -473,7 +473,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 
 		
-		$mwb_sfw_subscription_start_date = get_post_meta( $post_id, 'mwb_sfw_subscription_start_date', true );
 
 		$mwb_sfw_subscription_expiry_number = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_number', true );
 		$mwb_sfw_subscription_expiry_interval = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_interval', true );
@@ -495,16 +494,6 @@ class Subscriptions_For_Woocommerce_Admin {
 				</select>
 		 <?php
 			$description_text = __( 'Choose the subscriptions time interval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
-			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-			?>
-		</p>
-		<p class="form-field mwb_sfw_subscription_start_date_field ">
-			<label for="mwb_sfw_subscription_start_date">
-			<?php esc_html_e( 'Choose Subscription Start Date', 'subscriptions-for-woocommerce' ); ?>
-			</label>
-			<input type="text" class="short wc_input_text" name="mwb_sfw_subscription_start_date" value="<?php echo esc_attr( $mwb_sfw_subscription_start_date ); ?>" id="mwb_sfw_subscription_start_date"  placeholder="<?php esc_html_e( 'Enter start date', 'subscriptions-for-woocommerce' ); ?>"> 
-		 <?php
-			$description_text = __( 'Choose subscription start date"', 'subscriptions-for-woocommerce' );
 			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
 			?>
 		</p>
@@ -587,10 +576,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			$mwb_sfw_subscription_initial_signup_price = isset( $_POST['mwb_sfw_subscription_initial_signup_price'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_initial_signup_price'] ) ) : '';
 			$mwb_sfw_subscription_free_trial_number = isset( $_POST['mwb_sfw_subscription_free_trial_number'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_free_trial_number'] ) ) : '';
 			$mwb_sfw_subscription_free_trial_interval = isset( $_POST['mwb_sfw_subscription_free_trial_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_free_trial_interval'] ) ) : '';
-
-			$mwb_sfw_subscription_start_date = isset( $_POST['mwb_sfw_subscription_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb_sfw_subscription_start_date'] ) ) : current_time( 'Y-m-d' );
-
-			update_post_meta( $post_id, 'mwb_sfw_subscription_start_date', $mwb_sfw_subscription_start_date );
 
 			update_post_meta( $post_id, 'mwb_sfw_subscription_number', $mwb_sfw_subscription_number );
 			update_post_meta( $post_id, 'mwb_sfw_subscription_interval', $mwb_sfw_subscription_interval );
