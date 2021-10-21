@@ -1074,6 +1074,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 							$status = 'active';
 							$status = apply_filters( 'mwb_sfw_set_subscription_status', $status, $subscription->ID );
+							$status = apply_filters( 'mwb_subscription_get_status', $status, $subscription->ID, $order_id );
 							
 							$current_time = apply_filters( 'mwb_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );						
 
@@ -1091,6 +1092,7 @@ class Subscriptions_For_Woocommerce_Public {
 							update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
 
 							$mwb_susbcription_end = mwb_sfw_susbcription_expiry_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
+							$mwb_susbcription_end = apply_filters( 'mwb_sfw_susbcription_end_date', $mwb_susbcription_end, $subscription->ID );
 							update_post_meta( $subscription->ID, 'mwb_susbcription_end', $mwb_susbcription_end );
 
 							// Set billing id.
