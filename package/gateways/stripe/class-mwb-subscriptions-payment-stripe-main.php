@@ -67,8 +67,11 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Stripe_Main' ) ) {
 		 * @param object $customer customer.
 		 * @since    1.0.1
 		 */
-		public function mwb_sfw_stripe_force_save_source( $force_save_source, $customer ) {
+		public function mwb_sfw_stripe_force_save_source( $force_save_source, $customer = false ) {
 
+			if ( ! $customer ) {
+				return;
+			}
 			if ( ! $force_save_source && mwb_sfw_check_plugin_enable() ) {
 				$force_save_source = true;
 			}
