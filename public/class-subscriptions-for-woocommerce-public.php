@@ -1074,8 +1074,6 @@ class Subscriptions_For_Woocommerce_Public {
 
 							$status = 'active';
 							$status = apply_filters( 'mwb_sfw_set_subscription_status', $status, $subscription->ID );
-							$status = apply_filters( 'mwb_subscription_get_status', $status, $subscription->ID, $order_id );
-							
 							$current_time = apply_filters( 'mwb_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );						
 
 							

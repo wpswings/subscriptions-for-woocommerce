@@ -348,6 +348,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 				$mwb_next_payment_date   = get_post_meta( $value->ID, 'mwb_next_payment_date', true );
 				$mwb_susbcription_end   = get_post_meta( $value->ID, 'mwb_susbcription_end', true );
+				if ( $mwb_next_payment_date === $mwb_susbcription_end ) {
+					$mwb_next_payment_date = '';
+				}
 
 				$mwb_customer_id   = get_post_meta( $value->ID, 'mwb_customer_id', true );
 				$user = get_user_by( 'id', $mwb_customer_id );
