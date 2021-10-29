@@ -313,6 +313,8 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_cart_needs_payment', $sfw_plugin_public, 'mwb_sfw_woocommerce_cart_needs_payment', 99, 2 );
 
+			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'mwb_sfw__cancel_subs_woocommerce_order_status_changed', 150, 3 );
+
 		}
 	}
 

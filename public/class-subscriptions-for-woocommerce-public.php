@@ -1206,4 +1206,49 @@ class Subscriptions_For_Woocommerce_Public {
 		return apply_filters( 'mwb_sfw_needs_payment', $mwb_needs_payment, $cart );
 	}
 
+	/**
+	 * This function is used to update susbcription.
+	 *
+	 * @name mwb_sfw_woocommerce_order_status_changed
+	 * @param int    $order_id order_id.
+	 * @param string $old_status old_status.
+	 * @param string $new_status new_status.
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw__cancel_subs_woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
+
+		if ( $old_status != $new_status ) {
+			if ( 'cancelled' === $new_status ) {
+				$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
+				
+				if ( 'yes' == $mwb_has_susbcription ) {
+					$args = array(
+						'numberposts' => -1,
+						'post_type'   => 'mwb_subscriptions',
+						'post_status'   => 'wc-mwb_renewal',
+						'meta_query' => array(
+							'relation' => 'AND',
+							array(
+								'key'   => 'mwb_parent_order',
+								'value' => $order_id,
+							),
+							array(
+								'key'   => 'mwb_subscription_status',
+								'value' => array( 'active', 'pending' ),
+							),
+
+						),
+					);
+					$mwb_subscriptions = get_posts( $args );
+					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+						foreach ( $mwb_subscriptions as $key => $subscription ) {
+							mwb_sfw_send_email_for_cancel_susbcription( $subscription->ID );				
+							update_post_meta( $subscription->ID, 'mwb_subscription_status', 'cancelled' );
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
