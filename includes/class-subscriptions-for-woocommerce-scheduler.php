@@ -274,6 +274,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						mwb_sfw_send_email_for_expired_susbcription( $susbcription_id );
 						update_post_meta( $susbcription_id, 'mwb_subscription_status', 'expired' );
 						update_post_meta( $susbcription_id, 'mwb_next_payment_date', '' );
+						do_action( 'mwb_sfw_expire_subscription_scheduler', $susbcription_id );
 					}
 				}
 			}
