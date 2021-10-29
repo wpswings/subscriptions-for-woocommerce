@@ -1219,7 +1219,9 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw__cancel_subs_woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
 
+		
 		if ( $old_status != $new_status ) {
+			
 			if ( 'cancelled' === $new_status ) {
 				$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
 				
@@ -1238,7 +1240,6 @@ class Subscriptions_For_Woocommerce_Public {
 								'key'   => 'mwb_subscription_status',
 								'value' => array( 'active', 'pending' ),
 							),
-
 						),
 					);
 					$mwb_subscriptions = get_posts( $args );
@@ -1249,8 +1250,70 @@ class Subscriptions_For_Woocommerce_Public {
 						}
 					}
 				}
+			} elseif ( 'failed' === $new_status ) {
+				
+				$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
+				if ( 'yes' == $mwb_has_susbcription ) {
+					$parent_order = get_post_meta( $order_id, 'mwb_sfw_parent_order_id', true );
+					$args = array(
+						'numberposts' => -1,
+						'post_type'   => 'mwb_subscriptions',
+						'post_status'   => 'wc-mwb_renewal',
+						'meta_query' => array(
+							'relation' => 'AND',
+							array(
+								'key'   => 'mwb_parent_order',
+								'value' => $parent_order,
+							),
+							array(
+								'key'   => 'mwb_subscription_status',
+								'value' => array( 'active', 'pending' ),
+							),
+						),
+					);
+
+					$mwb_subscriptions = get_posts( $args );
+					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+						foreach ( $mwb_subscriptions as $key => $subscription ) {			
+							update_post_meta( $subscription->ID, 'mwb_subscription_status', 'on-hold' );
+							do_action( 'mwb_sfw_subscription_on_hold_renewal', $subscription->ID );
+						}
+					}
+				}
+			} elseif ( 'completed' == $new_status || 'processing' == $new_status ) {
+
+				$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
+				if ( 'yes' == $mwb_has_susbcription ) {
+					$parent_order = get_post_meta( $order_id, 'mwb_sfw_parent_order_id', true );
+					$args = array(
+						'numberposts' => -1,
+						'post_type'   => 'mwb_subscriptions',
+						'post_status'   => 'wc-mwb_renewal',
+						'meta_query' => array(
+							'relation' => 'AND',
+							array(
+								'key'   => 'mwb_parent_order',
+								'value' => $parent_order,
+							),
+							array(
+								'key'   => 'mwb_subscription_status',
+								'value' => 'on-hold',
+							),
+						),
+					);
+
+					$mwb_subscriptions = get_posts( $args );
+					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+						foreach ( $mwb_subscriptions as $key => $subscription ) {			
+							update_post_meta( $subscription->ID, 'mwb_subscription_status', 'active' );
+							do_action( 'mwb_sfw_subscription_active_renewal', $subscription->ID );
+
+						}
+					}
+				}
 			}
 		}
 	}
+	public function 
 
 }
