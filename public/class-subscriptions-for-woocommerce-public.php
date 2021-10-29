@@ -593,6 +593,8 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_subtotal = $mwb_args['line_subtotal'];
 				$line_total = $mwb_args['line_total'];
 			} else {
+				$mwb_args['line_subtotal'] = $mwb_args['mwb_recurring_total'];
+				$mwb_args['line_total'] = $mwb_args['mwb_recurring_total'];
 				$line_subtotal = $mwb_args['line_subtotal'];
 				$line_total = $mwb_args['line_total'];
 			}
