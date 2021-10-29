@@ -49,6 +49,10 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 		 */
 		public function mwb_sfw_renewal_order_on_scheduler() {
 
+			$mwb_sfw_pro_plugin_activated = false;
+			if ( in_array( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+				$mwb_sfw_pro_plugin_activated = true;
+			}
 			$current_time = current_time( 'timestamp' );
 
 			$args = array(
@@ -87,6 +91,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$parent_order_id  = $subscription->mwb_parent_order;
 						if ( function_exists( 'mwb_sfw_check_valid_order' ) && ! mwb_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
+						}
+						if ( ! $mwb_sfw_pro_plugin_activated ) {
+							$subp_id = get_post_meta( $value->ID, 'product_id', true );
+							$check_variable = get_post_meta( $subp_id, 'mwb_sfw_variable_product', true );
+							if( 'yes' === $check_variable ) {
+								continue;
+							}
 						}
 						$parent_order = wc_get_order( $parent_order_id );
 						$billing_details = $parent_order->get_address( 'billing' );
