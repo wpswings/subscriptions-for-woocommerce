@@ -356,6 +356,10 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$mwb_next_payment_date = '';
 				}
 
+				if ( 'on-hold' === $mwb_subscription_status ) {
+					$mwb_next_payment_date = '--';
+					$mwb_recurring_total = '--';
+				}
 				$mwb_customer_id   = get_post_meta( $value->ID, 'mwb_customer_id', true );
 				$user = get_user_by( 'id', $mwb_customer_id );
 
