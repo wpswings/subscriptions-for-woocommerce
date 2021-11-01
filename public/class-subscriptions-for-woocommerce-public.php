@@ -93,6 +93,7 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		$price = apply_filters( 'mwb_rbpfw_price', $price, $product );
 		$price = $this->mwb_sfw_subscription_product_get_price_html( $price, $product );
+		do_action( 'mwb_sfw_show_start_date_frontend', $product );
 		return $price;
 	}
 
