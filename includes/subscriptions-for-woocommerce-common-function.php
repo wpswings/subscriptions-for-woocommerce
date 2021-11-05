@@ -35,6 +35,24 @@ if ( ! function_exists( 'mwb_sfw_get_the_wordpress_date_format' ) ) {
 	}
 }
 
+
+if ( ! function_exists( 'mwb_sfw_all_stripe_gayeways' ) ) {
+
+	/**
+	 * This function is used to get all stripe gateways.
+	 *
+	 * @name mwb_sfw_all_stripe_gayeways
+	 * @since 1.2.0
+	 */
+	function mwb_sfw_all_stripe_gayeways( ) {
+		$all_gateways = array( 'stripe', 'stripe_sepa', 'stripe_giropay', 'stripe_ideal', 'stripe_bancontact', 'stripe_eps', 'stripe_sofort', 'stripe_p24', 'stripe_alipay', 'stripe_multibanco' );
+		return $all_gateways;
+	}
+}
+
+
+
+
 if ( ! function_exists( 'mwb_sfw_next_payment_date' ) ) {
 
 	/**

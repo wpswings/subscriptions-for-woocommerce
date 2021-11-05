@@ -822,7 +822,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
-					$mwb_supported_method = array( 'stripe' );
+					$mwb_supported_method = mwb_sfw_all_stripe_gayeways();
 					// Supported paymnet gateway.
 					$mwb_payment_method = apply_filters( 'mwb_sfw_supported_payment_gateway_for_woocommerce', $mwb_supported_method, $key );
 
