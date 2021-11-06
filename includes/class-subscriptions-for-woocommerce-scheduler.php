@@ -189,9 +189,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
 						update_post_meta( $subscription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
-						$mwb_all_stripe_gateways = mwb_sfw_all_stripe_gayeways();
-
-						if ( in_array( $payment_method, $mwb_all_stripe_gateways ) ) {
+						if ( 'stripe' == $payment_method ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
 								$result = $mwb_stripe->mwb_sfw_process_renewal_payment( $order_id, $parent_order_id );
