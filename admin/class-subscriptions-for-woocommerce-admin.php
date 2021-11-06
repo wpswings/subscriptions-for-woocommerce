@@ -882,5 +882,15 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		return $bool;
 	}
+	/**
+	 * this fucntion is used to add submenu inside woocommerce menu.
+	 *
+	 * @return void
+	 */
+	public function mwb_sfw_add_woocommerce_submenu() {
+		global $submenu;
+		$permalink = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' );
+		$submenu['woocommerce'][] = array( __( 'Mwb Subscriptions', 'ssubscriptions-for-woocommerce' ), 'manage_options', $permalink );
+	}
 
 }

@@ -92,6 +92,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( function_exists( 'mwb_sfw_check_valid_order' ) && ! mwb_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
 						}
+						if ( apply_filters( 'mwb_sfw_stop_creating_renewal_multisafepay', false, $subscription_id ) ) {
+							continue;
+						}
 						if ( ! $mwb_sfw_pro_plugin_activated ) {
 							$subp_id = get_post_meta( $value->ID, 'product_id', true );
 							$check_variable = get_post_meta( $subp_id, 'mwb_sfw_variable_product', true );
@@ -186,7 +189,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
 						update_post_meta( $subscription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
-
 						if ( 'stripe' == $payment_method ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
