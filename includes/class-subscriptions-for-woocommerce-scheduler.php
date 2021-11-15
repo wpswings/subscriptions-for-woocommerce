@@ -98,7 +98,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( ! $mwb_sfw_pro_plugin_activated ) {
 							$subp_id = get_post_meta( $value->ID, 'product_id', true );
 							$check_variable = get_post_meta( $subp_id, 'mwb_sfw_variable_product', true );
-							if( 'yes' === $check_variable ) {
+							if ( 'yes' === $check_variable ) {
 								continue;
 							}
 						}

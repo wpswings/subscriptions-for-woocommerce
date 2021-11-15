@@ -209,7 +209,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function mwb_sfw_options_page() {
 		global $submenu;
 		if ( empty( $GLOBALS['admin_page_hooks']['mwb-plugins'] ) ) {
-			
+
 			add_menu_page( 'MakeWebBetter', 'MakeWebBetter', 'manage_options', 'mwb-plugins', array( $this, 'mwb_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/mwb-logo.png', 15 );
 			// Add menus.
 			if ( mwb_sfw_check_multistep() ) {
@@ -225,8 +225,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			$is_home = false;
 			if ( ! empty( $submenu['mwb-plugins'] ) ) {
 				foreach ( $submenu['mwb-plugins'] as $key => $value ) {
-					if ( $value[0] == 'Home') {
-						$is_home =true;
+					if ( 'Home' === $value[0] ) {
+						$is_home = true;
 					}
 				}
 				if ( ! $is_home ) {
@@ -514,8 +514,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		if ( empty( $mwb_sfw_subscription_interval ) ) {
 			$mwb_sfw_subscription_interval = 'day';
 		}
-
-		
 
 		$mwb_sfw_subscription_expiry_number = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_number', true );
 		$mwb_sfw_subscription_expiry_interval = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_interval', true );

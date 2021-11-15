@@ -466,12 +466,10 @@ class Subscriptions_For_Woocommerce_Public {
 		$mwb_sfw_subscription_number = get_post_meta( $product_id, 'mwb_sfw_subscription_number', true );
 		$mwb_sfw_subscription_interval = get_post_meta( $product_id, 'mwb_sfw_subscription_interval', true );
 
-		
 		$mwb_recurring_data['mwb_sfw_subscription_number'] = $mwb_sfw_subscription_number;
 		$mwb_recurring_data['mwb_sfw_subscription_interval'] = $mwb_sfw_subscription_interval;
 		$mwb_sfw_subscription_expiry_number = get_post_meta( $product_id, 'mwb_sfw_subscription_expiry_number', true );
 
-		
 		if ( isset( $mwb_sfw_subscription_expiry_number ) && ! empty( $mwb_sfw_subscription_expiry_number ) ) {
 			$mwb_recurring_data['mwb_sfw_subscription_expiry_number'] = $mwb_sfw_subscription_expiry_number;
 		}
@@ -1077,9 +1075,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 							$status = 'active';
 							$status = apply_filters( 'mwb_sfw_set_subscription_status', $status, $subscription->ID );
-							$current_time = apply_filters( 'mwb_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );						
+							$current_time = apply_filters( 'mwb_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );
 
-							
 							update_post_meta( $subscription->ID, 'mwb_subscription_status', $status );
 							update_post_meta( $subscription->ID, 'mwb_schedule_start', $current_time );
 
@@ -1220,12 +1217,11 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function mwb_sfw__cancel_subs_woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
 
-		
 		if ( $old_status != $new_status ) {
-			
+
 			if ( 'cancelled' === $new_status ) {
 				$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
-				
+
 				if ( 'yes' == $mwb_has_susbcription ) {
 					$args = array(
 						'numberposts' => -1,
@@ -1246,7 +1242,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$mwb_subscriptions = get_posts( $args );
 					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 						foreach ( $mwb_subscriptions as $key => $subscription ) {
-							mwb_sfw_send_email_for_cancel_susbcription( $subscription->ID );				
+							mwb_sfw_send_email_for_cancel_susbcription( $subscription->ID );
 							update_post_meta( $subscription->ID, 'mwb_subscription_status', 'cancelled' );
 						}
 					}
@@ -1289,7 +1285,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$mwb_subscriptions = get_posts( $args );
 			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
-				foreach ( $mwb_subscriptions as $key => $subscription ) {			
+				foreach ( $mwb_subscriptions as $key => $subscription ) {
 					update_post_meta( $subscription->ID, 'mwb_subscription_status', 'on-hold' );
 					do_action( 'mwb_sfw_subscription_on_hold_renewal', $subscription->ID );
 				}
@@ -1314,7 +1310,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$mwb_subscriptions = get_posts( $args );
 			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
-				foreach ( $mwb_subscriptions as $key => $subscription ) {			
+				foreach ( $mwb_subscriptions as $key => $subscription ) {
 					update_post_meta( $subscription->ID, 'mwb_subscription_status', 'on-hold' );
 					do_action( 'mwb_sfw_subscription_on_hold_renewal', $subscription->ID );
 				}
