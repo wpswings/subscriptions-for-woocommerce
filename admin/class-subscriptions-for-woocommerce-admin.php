@@ -209,15 +209,44 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function mwb_sfw_options_page() {
 		global $submenu;
 		if ( empty( $GLOBALS['admin_page_hooks']['mwb-plugins'] ) ) {
+			
 			add_menu_page( 'MakeWebBetter', 'MakeWebBetter', 'manage_options', 'mwb-plugins', array( $this, 'mwb_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/mwb-logo.png', 15 );
 			// Add menus.
+			if ( mwb_sfw_check_multistep() ) {
+				add_submenu_page( 'mwb-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'mwb_sfw_welcome_callback_function' ) );
+			}
 			$sfw_menus = apply_filters( 'mwb_add_plugins_menus_array', array() );
 			if ( is_array( $sfw_menus ) && ! empty( $sfw_menus ) ) {
 				foreach ( $sfw_menus as $sfw_key => $sfw_value ) {
 					add_submenu_page( 'mwb-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_options', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
 				}
 			}
+		} else {
+			$is_home = false;
+			if ( ! empty( $submenu['mwb-plugins'] ) ) {
+				foreach ( $submenu['mwb-plugins'] as $key => $value ) {
+					if ( $value[0] == 'Home') {
+						$is_home =true;
+					}
+				}
+				if ( ! $is_home ) {
+					if ( mwb_sfw_check_multistep() ) {
+						add_submenu_page( 'mwb-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'mwb_sfw_welcome_callback_function' ), 1 );
+					}
+				}
+			}
 		}
+	}
+
+	/**
+	 *
+	 * Adding the default menu into the wordpress menu
+	 *
+	 * @name makewebbetter_callback_function
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_welcome_callback_function() {
+		include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/partials/subscriptions-for-woocommerce-welcome.php';
 	}
 
 	/**
