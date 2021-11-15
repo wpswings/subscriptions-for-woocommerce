@@ -236,6 +236,20 @@ class Subscriptions_For_Woocommerce_Admin {
 				}
 			}
 		}
+		add_submenu_page( 'woocommerce', __( 'Mwb Subscriptions', 'subscriptions-for-woocommerce' ), __( 'Mwb Subscriptions', 'subscriptions-for-woocommerce' ), 'manage_options', 'subscriptions-for-woocommerce', array( $this, 'mwb_sfw_addsubmenu_woocommerce' ) );
+
+	}
+
+	/**
+	 * This function is used to add submenu of subscription inside woocommerce.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function mwb_sfw_addsubmenu_woocommerce() {
+		$permalink = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' );
+		wp_safe_redirect( $permalink );
+		exit;
 	}
 
 	/**
@@ -863,10 +877,11 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		return $public_hooks;
 	}
+
 	/**
-	 * Developer_hooks_function
+	 * Developer_hooks_function.
 	 *
-	 * @name mwb_developer_hooks_function
+	 * @name mwb_developer_hooks_function.
 	 * @param string $path Path of the file.
 	 */
 	public function mwb_developer_hooks_function( $path ) {
@@ -899,7 +914,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	/**
 	 * Check for multistep.
 	 *
-	 * @name mwb_sfw_check_plugin_already_enable
+	 * @name mwb_sfw_check_plugin_already_enable.
 	 * @param bool $bool bool.
 	 */
 	public function mwb_sfw_check_plugin_already_enable( $bool ) {
@@ -911,15 +926,4 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		return $bool;
 	}
-	/**
-	 * this fucntion is used to add submenu inside woocommerce menu.
-	 *
-	 * @return void
-	 */
-	public function mwb_sfw_add_woocommerce_submenu() {
-		global $submenu;
-		$permalink = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' );
-		$submenu['woocommerce'][] = array( __( 'Mwb Subscriptions', 'ssubscriptions-for-woocommerce' ), 'manage_options', $permalink );
-	}
-
 }
