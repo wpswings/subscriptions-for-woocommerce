@@ -1294,6 +1294,31 @@ class Subscriptions_For_Woocommerce_Public {
 					do_action( 'mwb_sfw_subscription_on_hold_renewal', $subscription->ID );
 				}
 			}
+		} else {
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'mwb_subscriptions',
+				'post_status'   => 'wc-mwb_renewal',
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key'   => 'mwb_parent_order',
+						'value' => $order_id,
+					),
+					array(
+						'key'   => 'mwb_subscription_status',
+						'value' => array( 'active', 'pending' ),
+					),
+				),
+			);
+
+			$mwb_subscriptions = get_posts( $args );
+			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+				foreach ( $mwb_subscriptions as $key => $subscription ) {			
+					update_post_meta( $subscription->ID, 'mwb_subscription_status', 'on-hold' );
+					do_action( 'mwb_sfw_subscription_on_hold_renewal', $subscription->ID );
+				}
+			}
 		}
 
 	}
