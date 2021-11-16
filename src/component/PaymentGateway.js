@@ -1,8 +1,8 @@
 import React,{useState, useContext} from 'react';
-import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import qs from 'qs';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+const { __ } = wp.i18n;
 import { Button, 
     ListItem,ListItemText,
     IconButton,

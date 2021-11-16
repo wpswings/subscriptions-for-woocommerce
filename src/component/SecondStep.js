@@ -1,7 +1,7 @@
 import React,{useContext} from 'react';
 import { Select, FormGroup, InputLabel, MenuItem, Checkbox, FormControlLabel, FormControl, TextField,TextareaAutosize } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { __ } from '@wordpress/i18n';
+const { __ } = wp.i18n;
 import Context from '../store/store';
 const useStyles = makeStyles({
       margin: {
