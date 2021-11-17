@@ -477,12 +477,12 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'required' => 'yes',
 				'class' => 'sfw-radio-class',
 				'options' => array(
-					'temporary-deactivation-for-debug'      => 'It is a temporary deactivation. I am just debugging an issue.',
-					'site-layout-broke'         => 'The plugin broke my layout or some functionality.',
-					'complicated-configuration'         => 'The plugin is too complicated to configure.',
-					'no-longer-need'        => 'I no longer need the plugin',
-					'found-better-plugin'       => 'I found a better plugin',
-					'other'         => 'Other',
+					'temporary-deactivation-for-debug'      => __( 'It is a temporary deactivation. I am just debugging an issue.', 'subscriptions-for-woocommerce' ),
+					'site-layout-broke'         => __( 'The plugin broke my layout or some functionality.', 'subscriptions-for-woocommerce' ),
+					'complicated-configuration'         => __( 'The plugin is too complicated to configure.', 'subscriptions-for-woocommerce' ),
+					'no-longer-need'        => __( 'I no longer need the plugin', 'subscriptions-for-woocommerce' ),
+					'found-better-plugin'   => __( 'I found a better plugin', 'subscriptions-for-woocommerce' ),
+					'other'         => __( 'Other', 'subscriptions-for-woocommerce' ),
 				),
 			),
 
