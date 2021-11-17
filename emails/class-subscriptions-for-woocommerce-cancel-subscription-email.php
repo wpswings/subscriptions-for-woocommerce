@@ -73,7 +73,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 		 * @return void
 		 */
 		public function trigger( $mwb_subscription ) {
-			
+
 			if ( $mwb_subscription ) {
 
 				$this->object = $mwb_subscription;
@@ -86,9 +86,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 			if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
 				return;
 			}
-			
+
 			$this->send( get_option( 'admin_email' ), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-		
+
 			$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 		}
 
