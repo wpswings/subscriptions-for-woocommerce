@@ -42,12 +42,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 			$this->template_base  = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'emails/templates/';
 
 			parent::__construct();
-
-			$this->recipient = $this->get_option( 'recipient' );
-
-			if ( ! $this->recipient ) {
-				$this->recipient = get_option( 'admin_email' );
-			}
 		}
 
 		/**
@@ -79,12 +73,22 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 		 * @return void
 		 */
 		public function trigger( $mwb_subscription ) {
-			$this->object = $mwb_subscription;
+			
+			if ( $mwb_subscription ) {
+
+				$this->object = $mwb_subscription;
+				$mwb_parent_order_id = get_post_meta( $mwb_subscription, 'mwb_parent_order', true );
+				$mwb_parent_order = wc_get_order( $mwb_parent_order_id );
+				$user_email = $mwb_parent_order->get_billing_email();
+				$this->recipient = $user_email;
+			}
 
 			if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
 				return;
 			}
-
+			
+			$this->send( get_option( 'admin_email' ), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+		
 			$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 		}
 
