@@ -8,7 +8,7 @@ import ThirdStep from './component/ThirdStep';
 import FinalStep from './component/FinalStep';
 import Context from './store/store';
 import axios from 'axios';
-import { __ } from '@wordpress/i18n';
+const { __ } = wp.i18n;
 import qs from 'qs';
 const useStyles = makeStyles((theme) => ({
     instructions: {

@@ -28,14 +28,14 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Stripe_Main' ) ) {
 		/**
 		 * Constructor
 		 */
-		public function __construct() {			
+		public function __construct() {
 			add_action( 'mwb_sfw_subscription_cancel', array( $this, 'mwb_sfw_cancel_stripe_subscription' ), 10, 2 );
 			add_filter( 'wc_stripe_force_save_source', array( $this, 'mwb_sfw_stripe_force_save_source' ), 10, 2 );
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'mwb_sfw_add_stripe_order_statuses_for_payment_complete' ), 10, 2 );
 
 			include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php';
 		}
-		
+
 		/**
 		 * This function is add subscription order status.
 		 *

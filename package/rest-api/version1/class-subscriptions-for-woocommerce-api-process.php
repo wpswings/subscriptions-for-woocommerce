@@ -6,7 +6,7 @@
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce
- * @subpackage Subscriptions_For_Woocommerce/includes
+ * @subpackage Subscriptions_For_Woocommerce/package/rest-api/version1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,8 +20,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Api_Process' ) ) {
 	 * This is used to define the functions and data manipulation for custom endpoints.
 	 *
 	 * @since      1.0.0
-	 * @package    Hydroshop_Api_Management
-	 * @subpackage Hydroshop_Api_Management/includes
+	 * @package    Subscriptions_For_Woocommerce
+	 * @subpackage Subscriptions_For_Woocommerce/package/rest-api/version1
 	 * @author     MakeWebBetter <makewebbetter.com>
 	 */
 	class Subscriptions_For_Woocommerce_Api_Process {

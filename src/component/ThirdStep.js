@@ -1,7 +1,7 @@
 import React,{useContext,useState} from 'react';
 import Context from '../store/store';
 import { List,ListSubheader } from '@material-ui/core';
-import { __ } from '@wordpress/i18n';
+const { __ } = wp.i18n;
 import { makeStyles } from '@material-ui/core/styles';
 import PaymentGateway from './PaymentGateway';
 const useStyles = makeStyles({

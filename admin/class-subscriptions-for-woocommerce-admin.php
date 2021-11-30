@@ -209,15 +209,58 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function mwb_sfw_options_page() {
 		global $submenu;
 		if ( empty( $GLOBALS['admin_page_hooks']['mwb-plugins'] ) ) {
+
 			add_menu_page( 'MakeWebBetter', 'MakeWebBetter', 'manage_options', 'mwb-plugins', array( $this, 'mwb_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/mwb-logo.png', 15 );
 			// Add menus.
+			if ( mwb_sfw_check_multistep() ) {
+				add_submenu_page( 'mwb-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'mwb_sfw_welcome_callback_function' ) );
+			}
 			$sfw_menus = apply_filters( 'mwb_add_plugins_menus_array', array() );
 			if ( is_array( $sfw_menus ) && ! empty( $sfw_menus ) ) {
 				foreach ( $sfw_menus as $sfw_key => $sfw_value ) {
 					add_submenu_page( 'mwb-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_options', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
 				}
 			}
+		} else {
+			$is_home = false;
+			if ( ! empty( $submenu['mwb-plugins'] ) ) {
+				foreach ( $submenu['mwb-plugins'] as $key => $value ) {
+					if ( 'Home' === $value[0] ) {
+						$is_home = true;
+					}
+				}
+				if ( ! $is_home ) {
+					if ( mwb_sfw_check_multistep() ) {
+						add_submenu_page( 'mwb-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'mwb_sfw_welcome_callback_function' ), 1 );
+					}
+				}
+			}
 		}
+		add_submenu_page( 'woocommerce', __( 'Mwb Subscriptions', 'subscriptions-for-woocommerce' ), __( 'Mwb Subscriptions', 'subscriptions-for-woocommerce' ), 'manage_options', 'subscriptions-for-woocommerce', array( $this, 'mwb_sfw_addsubmenu_woocommerce' ) );
+
+	}
+
+	/**
+	 * This function is used to add submenu of subscription inside woocommerce.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function mwb_sfw_addsubmenu_woocommerce() {
+		$permalink = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' );
+		wp_safe_redirect( $permalink );
+		exit;
+	}
+
+	/**
+	 *
+	 * Adding the default menu into the wordpress menu
+	 *
+	 * @name makewebbetter_callback_function
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw_welcome_callback_function() {
+		include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/partials/subscriptions-for-woocommerce-welcome.php';
 	}
 
 	/**
@@ -471,8 +514,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		if ( empty( $mwb_sfw_subscription_interval ) ) {
 			$mwb_sfw_subscription_interval = 'day';
 		}
-
-		
 
 		$mwb_sfw_subscription_expiry_number = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_number', true );
 		$mwb_sfw_subscription_expiry_interval = get_post_meta( $post_id, 'mwb_sfw_subscription_expiry_interval', true );
@@ -834,10 +875,11 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		return $public_hooks;
 	}
+
 	/**
-	 * Developer_hooks_function
+	 * Developer_hooks_function.
 	 *
-	 * @name mwb_developer_hooks_function
+	 * @name mwb_developer_hooks_function.
 	 * @param string $path Path of the file.
 	 */
 	public function mwb_developer_hooks_function( $path ) {
@@ -870,7 +912,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	/**
 	 * Check for multistep.
 	 *
-	 * @name mwb_sfw_check_plugin_already_enable
+	 * @name mwb_sfw_check_plugin_already_enable.
 	 * @param bool $bool bool.
 	 */
 	public function mwb_sfw_check_plugin_already_enable( $bool ) {
@@ -882,15 +924,4 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		return $bool;
 	}
-	/**
-	 * this fucntion is used to add submenu inside woocommerce menu.
-	 *
-	 * @return void
-	 */
-	public function mwb_sfw_add_woocommerce_submenu() {
-		global $submenu;
-		$permalink = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' );
-		$submenu['woocommerce'][] = array( __( 'Mwb Subscriptions', 'ssubscriptions-for-woocommerce' ), 'manage_options', $permalink );
-	}
-
 }
