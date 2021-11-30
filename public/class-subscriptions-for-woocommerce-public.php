@@ -93,6 +93,7 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		$price = apply_filters( 'mwb_rbpfw_price', $price, $product );
 		$price = $this->mwb_sfw_subscription_product_get_price_html( $price, $product );
+		do_action( 'mwb_sfw_show_start_date_frontend', $product );
 		return $price;
 	}
 
@@ -464,9 +465,11 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$mwb_sfw_subscription_number = get_post_meta( $product_id, 'mwb_sfw_subscription_number', true );
 		$mwb_sfw_subscription_interval = get_post_meta( $product_id, 'mwb_sfw_subscription_interval', true );
+
 		$mwb_recurring_data['mwb_sfw_subscription_number'] = $mwb_sfw_subscription_number;
 		$mwb_recurring_data['mwb_sfw_subscription_interval'] = $mwb_sfw_subscription_interval;
 		$mwb_sfw_subscription_expiry_number = get_post_meta( $product_id, 'mwb_sfw_subscription_expiry_number', true );
+
 		if ( isset( $mwb_sfw_subscription_expiry_number ) && ! empty( $mwb_sfw_subscription_expiry_number ) ) {
 			$mwb_recurring_data['mwb_sfw_subscription_expiry_number'] = $mwb_sfw_subscription_expiry_number;
 		}
@@ -589,6 +592,8 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_subtotal = $mwb_args['line_subtotal'];
 				$line_total = $mwb_args['line_total'];
 			} else {
+				$mwb_args['line_subtotal'] = $mwb_args['mwb_recurring_total'];
+				$mwb_args['line_total'] = $mwb_args['mwb_recurring_total'];
 				$line_subtotal = $mwb_args['line_subtotal'];
 				$line_total = $mwb_args['line_total'];
 			}
@@ -1067,9 +1072,12 @@ class Subscriptions_For_Woocommerce_Public {
 
 					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 						foreach ( $mwb_subscriptions as $key => $subscription ) {
-							$current_time = current_time( 'timestamp' );
 
-							update_post_meta( $subscription->ID, 'mwb_subscription_status', 'active' );
+							$status = 'active';
+							$status = apply_filters( 'mwb_sfw_set_subscription_status', $status, $subscription->ID );
+							$current_time = apply_filters( 'mwb_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );
+
+							update_post_meta( $subscription->ID, 'mwb_subscription_status', $status );
 							update_post_meta( $subscription->ID, 'mwb_schedule_start', $current_time );
 
 							$mwb_susbcription_trial_end = mwb_sfw_susbcription_trial_date( $subscription->ID, $current_time );
@@ -1082,6 +1090,7 @@ class Subscriptions_For_Woocommerce_Public {
 							update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
 
 							$mwb_susbcription_end = mwb_sfw_susbcription_expiry_date( $subscription->ID, $current_time, $mwb_susbcription_trial_end );
+							$mwb_susbcription_end = apply_filters( 'mwb_sfw_susbcription_end_date', $mwb_susbcription_end, $subscription->ID );
 							update_post_meta( $subscription->ID, 'mwb_susbcription_end', $mwb_susbcription_end );
 
 							// Set billing id.
@@ -1195,6 +1204,160 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 
 		return apply_filters( 'mwb_sfw_needs_payment', $mwb_needs_payment, $cart );
+	}
+
+	/**
+	 * This function is used to update susbcription.
+	 *
+	 * @name mwb_sfw_woocommerce_order_status_changed
+	 * @param int    $order_id order_id.
+	 * @param string $old_status old_status.
+	 * @param string $new_status new_status.
+	 * @since 1.0.0
+	 */
+	public function mwb_sfw__cancel_subs_woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
+
+		if ( $old_status != $new_status ) {
+
+			if ( 'cancelled' === $new_status ) {
+				$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
+
+				if ( 'yes' == $mwb_has_susbcription ) {
+					$args = array(
+						'numberposts' => -1,
+						'post_type'   => 'mwb_subscriptions',
+						'post_status'   => 'wc-mwb_renewal',
+						'meta_query' => array(
+							'relation' => 'AND',
+							array(
+								'key'   => 'mwb_parent_order',
+								'value' => $order_id,
+							),
+							array(
+								'key'   => 'mwb_subscription_status',
+								'value' => array( 'active', 'pending' ),
+							),
+						),
+					);
+					$mwb_subscriptions = get_posts( $args );
+					if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+						foreach ( $mwb_subscriptions as $key => $subscription ) {
+							mwb_sfw_send_email_for_cancel_susbcription( $subscription->ID );
+							update_post_meta( $subscription->ID, 'mwb_subscription_status', 'cancelled' );
+						}
+					}
+				}
+			} elseif ( 'failed' === $new_status ) {
+				$this->mwb_sfw_hold_subscription( $order_id );
+			} elseif ( 'completed' == $new_status || 'processing' == $new_status ) {
+				$this->mwb_sfw_active_after_on_hold( $order_id );
+			}
+		}
+	}
+
+	/**
+	 * This function is used to hold the subscription when order failed.
+	 *
+	 * @param int $order_id order_id.
+	 * @return void
+	 */
+	public function mwb_sfw_hold_subscription( $order_id ) {
+
+		$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
+		if ( 'yes' == $mwb_has_susbcription ) {
+			$parent_order = get_post_meta( $order_id, 'mwb_sfw_parent_order_id', true );
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'mwb_subscriptions',
+				'post_status'   => 'wc-mwb_renewal',
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key'   => 'mwb_parent_order',
+						'value' => $parent_order,
+					),
+					array(
+						'key'   => 'mwb_subscription_status',
+						'value' => array( 'active', 'pending' ),
+					),
+				),
+			);
+
+			$mwb_subscriptions = get_posts( $args );
+			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+				foreach ( $mwb_subscriptions as $key => $subscription ) {
+					update_post_meta( $subscription->ID, 'mwb_subscription_status', 'on-hold' );
+					do_action( 'mwb_sfw_subscription_on_hold_renewal', $subscription->ID );
+				}
+			}
+		} else {
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'mwb_subscriptions',
+				'post_status'   => 'wc-mwb_renewal',
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key'   => 'mwb_parent_order',
+						'value' => $order_id,
+					),
+					array(
+						'key'   => 'mwb_subscription_status',
+						'value' => array( 'active', 'pending' ),
+					),
+				),
+			);
+
+			$mwb_subscriptions = get_posts( $args );
+			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+				foreach ( $mwb_subscriptions as $key => $subscription ) {
+					update_post_meta( $subscription->ID, 'mwb_subscription_status', 'on-hold' );
+					do_action( 'mwb_sfw_subscription_on_hold_renewal', $subscription->ID );
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * This function is used to activate subscription after on hold.
+	 *
+	 * @param int $order_id order_id.
+	 * @return void
+	 */
+	public function mwb_sfw_active_after_on_hold( $order_id ) {
+
+		$mwb_has_susbcription = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
+		if ( 'yes' == $mwb_has_susbcription ) {
+			$parent_order = get_post_meta( $order_id, 'mwb_sfw_parent_order_id', true );
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'mwb_subscriptions',
+				'post_status'   => 'wc-mwb_renewal',
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key'   => 'mwb_parent_order',
+						'value' => $parent_order,
+					),
+					array(
+						'key'   => 'mwb_subscription_status',
+						'value' => 'on-hold',
+					),
+				),
+			);
+
+			$mwb_subscriptions = get_posts( $args );
+			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
+				foreach ( $mwb_subscriptions as $key => $subscription ) {
+					$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription->ID, current_time( 'timestamp' ), 0 );
+					update_post_meta( $subscription->ID, 'mwb_subscription_status', 'active' );
+					update_post_meta( $subscription->ID, 'mwb_next_payment_date', $mwb_next_payment_date );
+					do_action( 'mwb_sfw_subscription_active_renewal', $subscription->ID );
+
+				}
+			}
+		}
 	}
 
 }

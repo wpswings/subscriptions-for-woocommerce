@@ -2,7 +2,7 @@ import React,{useContext,Fragment} from 'react';
 import Context from '../store/store';
 import {Radio,RadioGroup, FormControlLabel, FormControl, FormLabel, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { __ } from '@wordpress/i18n';
+const { __ } = wp.i18n;
 const useStyles = makeStyles({
       margin: {
         marginBottom: '20px',

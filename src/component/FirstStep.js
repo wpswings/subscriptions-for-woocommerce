@@ -2,7 +2,7 @@ import React,{useContext} from 'react';
 import { FormGroup,FormControlLabel,Checkbox,FormControl, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Context from '../store/store';
-import { __ } from '@wordpress/i18n';
+const { __ } = wp.i18n;
 const useStyles = makeStyles({
     margin: {
       marginBottom: '20px',
@@ -24,7 +24,7 @@ const FirstStep = (props) => {
                         color="primary"
                     />
                     }
-                    label= {__('Check this box to enable the subscription','subscriptions-for-woocommerce')}
+                    label= {__('Check this box to enable the subscription for woo','subscriptions-for-woocommerce')}
                     className="mwbFormLabel" />
             </FormGroup>
             <FormControl component="fieldset" fullWidth className="fieldsetWrapper">

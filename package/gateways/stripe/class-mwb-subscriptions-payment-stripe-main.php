@@ -46,7 +46,6 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Stripe_Main' ) ) {
 		 */
 		public function mwb_sfw_add_stripe_order_statuses_for_payment_complete( $order_status, $order ) {
 			if ( $order && is_object( $order ) ) {
-
 				$order_id = $order->get_id();
 				$payment_method = get_post_meta( $order_id, '_payment_method', true );
 				$mwb_sfw_renewal_order = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
@@ -67,8 +66,11 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Stripe_Main' ) ) {
 		 * @param object $customer customer.
 		 * @since    1.0.1
 		 */
-		public function mwb_sfw_stripe_force_save_source( $force_save_source, $customer ) {
+		public function mwb_sfw_stripe_force_save_source( $force_save_source, $customer = false ) {
 
+			if ( ! $customer ) {
+				return;
+			}
 			if ( ! $force_save_source && mwb_sfw_check_plugin_enable() ) {
 				$force_save_source = true;
 			}
