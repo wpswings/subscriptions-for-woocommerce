@@ -1,12 +1,12 @@
-=== Subscriptions For WooCommerce ===
+=== Subscriptions For WooCommerce - Subscription plugin for collecting recurring revenue, sell membership subscription services & products ===
 Contributors: makewebbetter
 Donate link:  https://makewebbetter.com/
 Tags: subscription, subscriptions, woocommerce, recurring revenue, woocommerce subscription
 Requires at least: 4.6
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 WC requires at least: 4.0
-WC tested up to: 5.7.1
-Stable tag: 1.1.0
+WC tested up to: 5.9
+Stable tag: 1.2.0
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -32,6 +32,8 @@ Subscriptions for WooCommerce Plugin allows WooCommerce merchants to provide the
 * Limit the free trial and set frequency for it
 * Charge initial fees on subscription-based products and services
 * Cancel WooCommerce subscriptions anytime
+* Subscription status will be on hold when order status fails
+* Subscription will automatically be cancelled when the order is cancelled.
 * Full control of subscriptions management 
 * Show Recurring Frequency in subscription List Table  
 * Multistep setup for auto configurations of the subscription plugin and its requirements. 
@@ -40,20 +42,26 @@ Subscriptions for WooCommerce Plugin allows WooCommerce merchants to provide the
 
 == Plugin Compatibility ==
 
-**1)** [**Wallet System For WooCommerce**](https://wordpress.org/plugins/wallet-system-for-woocommerce/)
+**1)** [**Membership For WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://makewebbetter.com/product/membership-for-woocommerce-pro/?utm_source=subscriptions-org&utm_medium=membership-pro)
+Offer subscription of membership plans on your store with the Membership for WooCommerce WordPress plugin. Create multiple membership plans and allow limited access to those plans to users. Set membership subscription expiry period from days, weeks, months and years. 
+
+
+**2)** [**Wallet System For WooCommerce**](https://wordpress.org/plugins/wallet-system-for-woocommerce/)
 The wallet system enables a digital wallet on your eCommerce store for users. Its compatibility allows users to pay for their subscriptions via a digital wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on wallet amount
 
-**2)** [**MWB Multi-Currency Switcher For WooCommerce**](https://wordpress.org/plugins/mwb-multi-currency-switcher-for-woocommerce/)
+**3)** [**MWB Multi-Currency Switcher For WooCommerce**](https://wordpress.org/plugins/mwb-multi-currency-switcher-for-woocommerce/)
 Multi-currency switcher compatibility allows the admin to display subscriptions price in users' local currency. Set upto three currencies on your store and accept subscription payments. The multi-currency switcher changes the subscription product price based on currency. 
 
-The renewal order will also be placed based on the currency selected at the time of subscription order. Moreover, the subscription coupons will also work based on the same selected currency.
+The renewal order will also be placed based on the currency selected at the time of the subscription order. Moreover, the subscription coupons will also work based on the same selected currency.
 
-**3)** [**MWB Role Based Pricing for WooCommerce**](https://wordpress.org/plugins/mwb-role-based-pricing-for-woocommerce/)
+**4)** [**MWB Role Based Pricing for WooCommerce**](https://wordpress.org/plugins/mwb-role-based-pricing-for-woocommerce/)
 Offer different subscription prices based on user roles on your eCommerce store. Enable user-role-based discounts on subscription plans. It is compatible with both subscription plugins, free and pro versions.
 
-**4)** **WPML Compatibility**
-Subscriptions for WooCommerce WPML compatibility enables the admin to create text in different languages. It allows simple language translation in your store.  
+**5)** [**Abandoned Cart for WooCommerce**](https://wordpress.org/plugins/abandoned-cart-for-woocommerce/)
+Use the Abandoned cart for WooCommerce WordPress plugin that is compatible with Subscriptions for WooCommerce. The admin can efficiently use this compatibility for recovering the abandoned subscriptions by the users. Select user roles to track abandoned subscription plans and send abandoned cart emails for the same. 
 
+**6)** **WPML Compatibility**
+Subscriptions for WooCommerce WPML compatibility enables the admin to create text in different languages. It allows simple language translation in your store.  
 
 == PLUGIN MEETS YOUR REQUIREMENT, SO ==
 [**Download Now!!**](https://downloads.wordpress.org/plugin/subscriptions-for-woocommerce.zip)
@@ -120,6 +128,10 @@ Visit [**Subscriptions For WooCommerce Documentation**](http://docs.makewebbette
 If you need support or have any questions then kindly use our online chat window [here](https://makewebbetter.com/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions-org) or  connect with us then or  connect with us then [**Generate a Ticket**](https://makewebbetter.com/submit-query/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions-org)
 If our documentation doesn't contain the solution to your problem, you can visit the [**MakeWebBetter Forums**](https://forums.makewebbetter.com/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions-org) with your question.
 
+== CONTRIBUTE AND TRANSLATE ==
+
+Subscriptions for WooCommerce is translated into multiple languages Dutch, Albanian, Spanish and many more. Help localize Subscriptions for WooCommerce even further by adding your locale Language. [**Click Here**](https://translate.wordpress.org/projects/wp-plugins/subscriptions-for-woocommerce/)
+
 == Installation ==
 
 = Automatic installation =
@@ -179,6 +191,10 @@ This is not possible in the free plugin, the client can add multiple subscriptio
 
 Yes, we have our Premium Version of [WooCommerce Subscriptions Pro](https://makewebbetter.com/product/woocommerce-subscriptions-pro/?utm_source=MWB-subscriptions-org&utm_medium=MWB-ORG-Page&utm_campaign=MWB-subscriptions-pro) to manage subscriptions with many features.
 
+= Is this Subscription plugin working with the variable products too? =
+
+ No in a free plugin it will only work with the simple product but in the pro version of Subscriptions for WooCommerce, it will work with simple and pro both.
+
 = My question is not listed? =
 
 Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com/wordpress-plugins-knowledge-base/category/subscriptions-for-woocommerce-kb/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions-faq) and for more details visit [Subscriptions For WooCommerce Documentation](https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=MWB-subscriptions-faq).
@@ -196,6 +212,14 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 == Changelog ==
 
+= 1.2.0 - RELEASED ON 30 November 2021 =
+
+* Fix: Minor bugs and issues.
+* New: Compatibility with [**Membership For WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/).
+* New: Compatibility with [**Membership for WooCommerce Pro**](https://makewebbetter.com/product/membership-for-woocommerce-pro/?utm_source=subscriptions-org&utm_medium=membership-pro).
+* New: Compatibility with [**Abandoned Cart for WooCommerce**](https://wordpress.org/plugins/abandoned-cart-for-woocommerce/).
+* New: On-hold subscription status added when order status is failed.
+
 = 1.1.0 - RELEASED ON 1 October 2021 =
 
 * New: Compatibility with [Wallet System For WooCommerce](https://wordpress.org/plugins/wallet-system-for-woocommerce/)
@@ -204,7 +228,7 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 * New: Compatibility with WPML
 * New: Supported Paypal express checkout payment gateway
 * New: Multistep setting configuration.
-* New: Show renewal order log.
+* New: Show renewal
 
 = 1.0.3 - RELEASED ON 31 August 2021 =
 
@@ -232,12 +256,10 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 == Upgrade Notice ==
 
-= 1.1.0 - RELEASED ON 1 October 2021 =
+= 1.2.0 - RELEASED ON 30 November 2021 =
 
-* New: Compatibility with [Wallet System For WooCommerce](https://wordpress.org/plugins/wallet-system-for-woocommerce/)
-* New: Compatibility with [MWB Multi-Currency Switcher](https://wordpress.org/plugins/mwb-multi-currency-switcher-for-woocommerce/)
-* New: Compatibility with [MWB Role Based Pricing for WooCommerce](https://wordpress.org/plugins/mwb-role-based-pricing-for-woocommerce/)
-* New: Compatibility with WPML
-* New: Supported Paypal express checkout payment gateway
-* New: Multistep setting configuration.
-* New: Show renewal Order log.
+* Fix: Minor bugs and issues.
+* New: Compatibility with [**Membership For WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/).
+* New: Compatibility with [**Membership for WooCommerce Pro**](https://makewebbetter.com/product/membership-for-woocommerce-pro/?utm_source=subscriptions-org&utm_medium=membership-pro).
+* New: Compatibility with [**Abandoned Cart for WooCommerce**](https://wordpress.org/plugins/abandoned-cart-for-woocommerce/).
+* New: On-hold subscription status added when order status is failed.
