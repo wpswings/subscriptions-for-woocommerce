@@ -1,5 +1,5 @@
-[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-600%2B-brightgreen) ![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-5.8.1-brightgreen) ![WC tested](https://img.shields.io/badge/WC%20tested-5.7.1-brightgreen) ![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
-# Subscriptions For WooCommerce
+[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-1000%2B-brightgreen) ![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-5.8.2-brightgreen) ![WC tested](https://img.shields.io/badge/WC%20tested-5.9-brightgreen) ![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
+# Subscriptions For WooCommerce - Subscription plugin for collecting recurring revenue, sell membership subscription services & products
 ![Subscriptions For WooCommerce](https://ps.w.org/subscriptions-for-woocommerce/assets/banner-772x250.png?rev=2512168)
 * Contributors: MakeWebBetter
 * Author URI: https://makewebbetter.com/
@@ -24,6 +24,8 @@ _GET SUBSCRIPTIONS FOR WOOCOMMERCE AND INCREASE RECURRING REVENUE. MANAGE WOOCOM
 - Charge initial fees on subscription-based products and services
 - Cancel WooCommerce subscriptions anytime
 - Full control of subscriptions management 
+- Subscription status will be on hold when order status fails
+- Subscription will automatically be cancelled when the order is cancelled.
 - Show Recurring Frequency in subscription List Table  
 - Multistep setup for auto configurations of the subscription plugin and its requirements. 
 - Enable log. Store managers require these log files, and WooCommerce developers automatically generate them based on specific logging parameters. 
@@ -31,20 +33,25 @@ _GET SUBSCRIPTIONS FOR WOOCOMMERCE AND INCREASE RECURRING REVENUE. MANAGE WOOCOM
 
 ## Plugin Compatibility 
 
-### 1) [**Wallet System For WooCommerce**](https://wordpress.org/plugins/wallet-system-for-woocommerce/)
+### 1) [**Membership For WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://makewebbetter.com/product/membership-for-woocommerce-pro/?utm_source=subscriptions-org&utm_medium=membership-pro)
+Offer subscription of membership plans on your store with the Membership for WooCommerce WordPress plugin. Create multiple membership plans and allow limited access to those plans to users. Set membership subscription expiry period from days, weeks, months and years. 
+
+### 2) [**Wallet System For WooCommerce**](https://wordpress.org/plugins/wallet-system-for-woocommerce/)
 The wallet system enables a digital wallet on your eCommerce store for users. Its compatibility allows users to pay for their subscriptions via a digital wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on wallet amount
 
-### 2) [**MWB Multi-Currency Switcher For WooCommerce**](https://wordpress.org/plugins/mwb-multi-currency-switcher-for-woocommerce/)
+### 3) [**MWB Multi-Currency Switcher For WooCommerce**](https://wordpress.org/plugins/mwb-multi-currency-switcher-for-woocommerce/)
 Multi-currency switcher compatibility allows the admin to display subscriptions price in users' local currency. Set upto three currencies on your store and accept subscription payments. The multi-currency switcher changes the subscription product price based on currency. 
 
 The renewal order will also be placed based on the currency selected at the time of subscription order. Moreover, the subscription coupons will also work based on the same selected currency.
 
-### 3) [**MWB Role Based Pricing for WooCommerce**](https://wordpress.org/plugins/mwb-role-based-pricing-for-woocommerce/)
+### 4) [**MWB Role Based Pricing for WooCommerce**](https://wordpress.org/plugins/mwb-role-based-pricing-for-woocommerce/)
 Offer different subscription prices based on user roles on your eCommerce store. Enable user-role-based discounts on subscription plans. It is compatible with both subscription plugins, free and pro versions.
 
-### 4) WPML Compatibility
+### 5) [**Abandoned Cart for WooCommerce**](https://wordpress.org/plugins/ultimate-wishlist-for-woocommerce/)
+Use the Abandoned cart for WooCommerce WordPress plugin that is compatible with Subscriptions for WooCommerce. The admin can efficiently use this compatibility for recovering the abandoned subscriptions by the users. Select user roles to track abandoned subscription plans and send abandoned cart emails for the same. 
+
+### 6) WPML Compatibility
 Subscriptions for WooCommerce WPML compatibility enables the admin to create text in different languages. It allows simple language translation in your store.  
-  
 
 ### PLUGIN MEETS YOUR REQUIREMENT, SO 
 [**Download Now !!**](https://downloads.wordpress.org/plugin/subscriptions-for-woocommerce.zip) 
