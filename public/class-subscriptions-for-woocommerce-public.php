@@ -53,7 +53,6 @@ class Subscriptions_For_Woocommerce_Public {
 		$this->version = $version;
 
 	}
-
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
@@ -807,7 +806,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( is_admin() || ! is_checkout() ) {
 			return $available_gateways;
 		}
-
+		
 		$mwb_has_subscription = false;
 
 		foreach ( WC()->cart->get_cart_contents() as $key => $values ) {
@@ -820,6 +819,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
+					
 					$mwb_supported_method = array( 'stripe' );
 					// Supported paymnet gateway.
 					$mwb_payment_method = apply_filters( 'mwb_sfw_supported_payment_gateway_for_woocommerce', $mwb_supported_method, $key );
@@ -829,7 +829,7 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 			}
-		}
+		} 
 		return $available_gateways;
 	}
 
@@ -1358,6 +1358,29 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Check gateway
+	 *
+	 * @return array
+	 */
+	public function mwb_sfw_check_payment_gateway( $available_gateways ) {
+		if ( isset( $available_gateways['stripe'] ) ) {
+			$payment_methods = $available_gateways['stripe']->payment_methods;
+			foreach ( $payment_methods as $key => $value ) {
+				if ( 'card' !== $key ) {
+					unset( $available_gateways['stripe']->payment_methods[ $key ] );
+					$check = $available_gateways['stripe']->settings[ 'upe_checkout_experience_accepted_payments' ];
+					for($i=0 ; $i<count( $check ) ; $i++){
+						if( 'card' !== $check[$i] ) {
+							unset( $available_gateways['stripe']->settings[ 'upe_checkout_experience_accepted_payments' ][$i] );
+						}
+					}	
+				}
+			}
+		}	
+		return $available_gateways;
 	}
 
 }

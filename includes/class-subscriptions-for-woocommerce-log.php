@@ -43,13 +43,15 @@ class Subscriptions_For_Woocommerce_Log {
 		if ( 'on' != $enable_log ) {
 			return;
 		}
+		
 		if ( apply_filters( 'mwb_sfw_logging', true, $message ) ) {
 			if ( empty( self::$logger ) ) {
 				self::$logger = wc_get_logger();
 			}
-
+			
 			$log_entry  = "\n" . '====Log Details: ===' . "\n";
 			$log_entry .= '====Start Log====' . "\n" . $message . "\n" . '====End Log====' . "\n\n";
+			
 
 			self::$logger->debug( $log_entry, array( 'source' => self::WC_LOG_FILENAME ) );
 		}
