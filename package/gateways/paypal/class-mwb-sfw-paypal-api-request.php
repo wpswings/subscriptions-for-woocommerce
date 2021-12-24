@@ -206,8 +206,9 @@ class Mwb_Sfw_Paypal_Api_Request {
 				array(
 					'AMT'              => $total_amount,
 					'CURRENCYCODE'     => $order->get_currency(),
-					'ITEMAMT'          => round( $order_subtotal + $order->get_cart_tax() ),
-					'SHIPPINGAMT'      => round( $order->get_total_shipping() + $order->get_shipping_tax() ),
+					'ITEMAMT'          => round( $order_subtotal ),
+					'SHIPPINGAMT'      => round( $order->get_total_shipping() ),
+					'TAXAMT'           => round( $order->get_total_tax() ),
 					'INVNUM'           => $this->invoice_prefix . $order->get_order_number(),
 					'PAYMENTACTION'    => $payment_action,
 					'PAYMENTREQUESTID' => $order->get_id(),
@@ -299,7 +300,6 @@ class Mwb_Sfw_Paypal_Api_Request {
 			)
 		);
 		$this->mwb_sfw_get_order_express_checkout_params( $order, $args['payment_action'] );
-
 		return $this->payment_args;
 	}
 

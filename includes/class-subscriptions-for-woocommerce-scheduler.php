@@ -81,7 +81,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 				),
 			);
 			$mwb_subscriptions = get_posts( $args );
-			
+
 			Subscriptions_For_Woocommerce_Log::log( 'MWB Renewal Subscriptions: ' . wc_print_r( $mwb_subscriptions, true ) );
 			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 				foreach ( $mwb_subscriptions as $key => $value ) {
@@ -119,7 +119,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							'status'      => $new_status,
 							'customer_id' => $user_id,
 						);
-					
 						$mwb_new_order = wc_create_order( $args );
 						$mwb_new_order->set_currency( $parent_order_currency );
 
@@ -180,19 +179,18 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							update_post_meta( $subscription_id, 'mwb_wsp_renewal_order_data', $mwb_renewal_order_data );
 						}
 						update_post_meta( $subscription_id, 'mwb_wsp_last_renewal_order_id', $order_id );
-						
+
 						do_action( 'mwb_sfw_renewal_order_creation', $mwb_new_order, $subscription_id );
 
-						
 						/*if trial period enable*/
 						if ( '' == $mwb_old_payment_method ) {
 							$parent_order_id = $subscription_id;
 						}
 						/*update next payment date*/
 						$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription_id, $current_time, 0 );
-						
+
 						update_post_meta( $subscription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
-						
+
 						if ( 'stripe' == $payment_method ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
@@ -201,7 +199,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 							}
 						}
-
 						do_action( 'mwb_sfw_other_payment_gateway_renewal', $mwb_new_order, $subscription_id, $payment_method );
 
 					}

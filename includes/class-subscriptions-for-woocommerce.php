@@ -314,7 +314,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'mwb_sfw__cancel_subs_woocommerce_order_status_changed', 150, 3 );
 
-			$this->loader->add_filter( 'woocommerce_available_payment_gateways', $sfw_plugin_public, 'mwb_sfw_check_payment_gateway', 10, 1 );
+			$this->loader->add_filter( 'woocommerce_checkout_registration_required', $sfw_plugin_public, 'mwb_sfw_registration_required', 900 );
 
 		}
 	}

@@ -51,19 +51,19 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 *
 		 * @name mwb_wsp_woo_cybs_save_payment_token.
 		 * @param object $payment_token payment_token.
-		 * @param int $order_id order_id.
+		 * @param int    $order_id order_id.
 		 * @since 2.0.0
 		 * @return void
 		 */
 		public function mwb_wsp_woo_cybs_save_payment_token( $payment_token, $order_id ) {
-			if ( !empty( $payment_token ) ) {
+			if ( ! empty( $payment_token ) ) {
 				$mwb_has_subscription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
 				$mwb_subscription_id = get_post_meta( $order_id, 'mwb_subscription_id', true );
-				if ( 'yes' == $mwb_has_subscription ) {
-					 update_post_meta( $mwb_subscription_id,'_woo_cybs_payment_token', $payment_token );
+				if ( 'yes' === $mwb_has_subscription ) {
+					update_post_meta( $mwb_subscription_id, '_woo_cybs_payment_token', $payment_token );
 				}
 			}
-			
+
 		}
 
 
@@ -71,8 +71,8 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * Allow recurring payment.
 		 *
 		 * @name mwb_wsp_woo_cybs_create_payment_token.
-		 * @param bool   $bool bool.
-		 * @param int $order_id order_id.
+		 * @param bool $bool bool.
+		 * @param int  $order_id order_id.
 		 * @since 2.0.0
 		 * @return boolean
 		 */
@@ -80,31 +80,31 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 			if ( ! mwb_sfw_check_plugin_enable() ) {
 				return $bool;
 			}
-			if ( ! isset( $_POST['wc-cybs-payment-token'] ) && ! $bool ) {
-            	$mwb_has_subscription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
-				if ( 'yes' == $mwb_has_subscription ) {
-					$bool = true;
-				}
-            }
-            elseif ( isset( $_POST['wc-cybs-payment-token'] ) && 'new' == $_POST['wc-cybs-payment-token'] && ! $bool ) {
-            	$mwb_has_subscription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
-				if ( 'yes' == $mwb_has_subscription ) {
-					$bool = true;
-				}
-            }
-            elseif (is_user_logged_in() && isset($_POST['wc-cybs-payment-token']) && 'new' !== $_POST['wc-cybs-payment-token']) {
-                $token_id = $_POST['wc-cybs-payment-token'];
-                $token = WC_Payment_Tokens::get($token_id);
-
-                //Verify token belongs to the logged in user
-                if ($token->get_user_id() == get_current_user_id()) {
-                   $mwb_has_subscription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
-					$mwb_subscription_id = get_post_meta( $order_id, 'mwb_subscription_id', true );
-					if ( 'yes' == $mwb_has_subscription ) {
-						 update_post_meta( $mwb_subscription_id,'_woo_cybs_payment_token', $token->get_token() );
+			if ( isset( $_POST['woocommerce-process-checkout-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['woocommerce-process-checkout-nonce'] ) ), 'woocommerce-process_checkout' ) ) {
+				if ( ! isset( $_POST['wc-cybs-payment-token'] ) && ! $bool ) {
+					$mwb_has_subscription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
+					if ( 'yes' === $mwb_has_subscription ) {
+						$bool = true;
 					}
-                }
-            }
+				} elseif ( isset( $_POST['wc-cybs-payment-token'] ) && 'new' == $_POST['wc-cybs-payment-token'] && ! $bool ) {
+					$mwb_has_subscription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
+					if ( 'yes' === $mwb_has_subscription ) {
+						$bool = true;
+					}
+				} elseif ( is_user_logged_in() && isset( $_POST['wc-cybs-payment-token'] ) && 'new' !== $_POST['wc-cybs-payment-token'] ) {
+					$token_id = sanitize_text_field( wp_unslash( $_POST['wc-cybs-payment-token'] ) );
+					$token = WC_Payment_Tokens::get( $token_id );
+
+					// Verify token belongs to the logged in user.
+					if ( $token->get_user_id() == get_current_user_id() ) {
+						$mwb_has_subscription = get_post_meta( $order_id, 'mwb_sfw_order_has_subscription', true );
+						$mwb_subscription_id = get_post_meta( $order_id, 'mwb_subscription_id', true );
+						if ( 'yes' == $mwb_has_subscription ) {
+							update_post_meta( $mwb_subscription_id, '_woo_cybs_payment_token', $token->get_token() );
+						}
+					}
+				}
+			}
 			return $bool;
 		}
 
@@ -134,16 +134,15 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 					return;
 				}
 
-
 				if ( class_exists( 'CybsSoapiCC' ) ) {
 					$payment_token = '';
-					$woo_cybs_payment_token = get_post_meta( $subscription_id, '_woo_cybs_payment_token',true );
-					$mwb_parent_order_id = get_post_meta( $subscription_id, 'mwb_parent_order',true );
+					$woo_cybs_payment_token = get_post_meta( $subscription_id, '_woo_cybs_payment_token', true );
+					$mwb_parent_order_id = get_post_meta( $subscription_id, 'mwb_parent_order', true );
 
 					$user_id = $order->get_user_id();
 					$tokens = WC_Payment_Tokens::get_tokens( $user_id );
 					if ( ! empty( $tokens ) && is_array( $tokens ) ) {
-						foreach ($tokens as $token ) {
+						foreach ( $tokens as $token ) {
 							if ( $woo_cybs_payment_token == $token->get_token() ) {
 								$payment_token = $token;
 								break;
@@ -162,51 +161,48 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 						$order->payment_complete();
 						return;
 					}
-					$soap_client = new CybsSoapiCC($payment_method_obj->merchantId,$payment_method_obj->transactionKey, $payment_method_obj->wsdl_version, $payment_method_obj->testmode);
+					$soap_client = new CybsSoapiCC( $payment_method_obj->merchantId, $payment_method_obj->transactionKey, $payment_method_obj->wsdl_version, $payment_method_obj->testmode );
 
-		            $request = $soap_client->createRequest($order_id);
-		            $soap_client->setAuthInRequest($request);
+					$request = $soap_client->createRequest( $order_id );
+					$soap_client->setAuthInRequest( $request );
 
-		            // Request capture of funds if immediate capture/settlement enabled.
-		            if ('yes' == $payment_method_obj->capture) {
-		                $soap_client->setCaptureInRequest($request);
-		            }
+					// Request capture of funds if immediate capture/settlement enabled.
+					if ( 'yes' == $payment_method_obj->capture ) {
+						$soap_client->setCaptureInRequest( $request );
+					}
 
-		            $payment_method_obj->setBillToInRequest($request, $order, $payment_method_obj->deviceFingerPrint);
-		            $payment_method_obj->setShipToInRequest($request, $order);
-		            $soap_client->setPurchaseTotals($request, $order->get_currency(), $order->get_total());
-		            $payment_method_obj->setDeviceFingerInRequest($request, $payment_method_obj->deviceFingerPrint);
+					$payment_method_obj->setBillToInRequest( $request, $order, $payment_method_obj->deviceFingerPrint );
+					$payment_method_obj->setShipToInRequest( $request, $order );
+					$soap_client->setPurchaseTotals( $request, $order->get_currency(), $order->get_total() );
+					$payment_method_obj->setDeviceFingerInRequest( $request, $payment_method_obj->deviceFingerPrint );
 
-		            $soap_client->setTokenInRequest( $request, $payment_token->get_token() );
-		            $reply = $soap_client->runTransaction($request);
-		            $decision = $reply->decision;
-            		$reasonCode = $reply->reasonCode;
+					$soap_client->setTokenInRequest( $request, $payment_token->get_token() );
+					$reply = $soap_client->runTransaction( $request );
+					$decision = $reply->decision;
+					$reason_code = $reply->reasonCode;
 
-            		if (strcmp($decision, 'ACCEPT') == 0 && strcmp($reasonCode, '100') == 0) {
+					if ( strcmp( $decision, 'ACCEPT' ) == 0 && strcmp( $reason_code, '100' ) == 0 ) {
 
+						foreach ( $reply as $key => $value ) {
+							update_post_meta( $order_id, $key, $value );
+						}
 
-		                foreach ($reply as $key => $value) {
-		                    update_post_meta($order_id, $key, $value);
-		                }
+						$numero_cuenta = substr( $token->get_token(), -4 );
 
-		                $numeroCuenta = substr( $token->get_token(), -4 );
+						$card_name = get_post_meta( $mwb_parent_order_id, 'cardholder', true );
+						$brand_card = get_post_meta( $mwb_parent_order_id, 'brand_card', true );
+						// Save last 4 digits.
+						update_post_meta( $order_id, 'last_digits', $numero_cuenta );
+						update_post_meta( $order_id, 'transaction_time', date( 'd-m-Y H:i', current_time( 'timestamp', 0 ) ) );
+						update_post_meta( $order_id, 'cardholder', $card_name );
+						update_post_meta( $order_id, 'brand_card', $brand_card );
+						$audit_cybs_number = str_pad( (int) get_option( 'audit_cybs_number' ) + 1, 10, '0', STR_PAD_LEFT );
+						update_option( 'audit_cybs_number', $audit_cybs_number );
 
-		                
-		                $card_name = get_post_meta( $mwb_parent_order_id, 'cardholder', true );
-		                $brand_card = get_post_meta( $mwb_parent_order_id, 'brand_card', true );
-		                // Save last 4 digits
-		                update_post_meta($order_id, 'last_digits', $numeroCuenta);
-		                update_post_meta($order_id, 'transaction_time', date('d-m-Y H:i', current_time('timestamp', 0)));
-		                update_post_meta($order_id, 'cardholder', $card_name);
-                		update_post_meta($order_id, 'brand_card', $brand_card);
-		                $audit_cybs_number = str_pad((int) get_option('audit_cybs_number') + 1, 10, '0', STR_PAD_LEFT);
-		                update_option('audit_cybs_number', $audit_cybs_number);
-
-		                
-		                $order->payment_complete();
-		                
-		                $order->add_order_note( sprintf( __( 'Renewal Order is successfully payed!. Cardholder: %s Last 4 card digits: : %s', 'subscriptions-for-woocommerce' ), $card_name, $numeroCuenta ) );
-		           } 
+						$order->payment_complete();
+						/* translators: %s: card name */
+						$order->add_order_note( sprintf( __( 'Renewal Order is successfully payed!. Cardholder: %1$s Last 4 card digits: : %2$s', 'subscriptions-for-woocommerce' ), $card_name, $numero_cuenta ) );
+					}
 				}
 			}
 		}
@@ -225,7 +221,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 			if ( $this->mwb_wsp_check_supported_payment_options( $payment_method ) ) {
 				$supported_payment_method[] = $payment_method;
 			}
-			return apply_filters('mwb_wsp_supported_payment_woocybs', $supported_payment_method, $payment_method );
+			return apply_filters( 'mwb_wsp_supported_payment_woocybs', $supported_payment_method, $payment_method );
 		}
 
 		/**

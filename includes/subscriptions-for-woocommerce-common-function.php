@@ -77,7 +77,6 @@ if ( ! function_exists( 'mwb_sfw_susbcription_expiry_date' ) ) {
 		$mwb_sfw_expiry_date = 0;
 		$expiry_number = get_post_meta( $subscription_id, 'mwb_sfw_subscription_expiry_number', true );
 		$expiry_interval = get_post_meta( $subscription_id, 'mwb_sfw_subscription_expiry_interval', true );
-
 		if ( isset( $expiry_number ) && ! empty( $expiry_number ) ) {
 			if ( 0 != $trial_end ) {
 				$mwb_sfw_expiry_date = mwb_sfw_susbcription_calculate_time( $trial_end, $expiry_number, $expiry_interval );

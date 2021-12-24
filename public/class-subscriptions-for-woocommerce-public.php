@@ -806,7 +806,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( is_admin() || ! is_checkout() ) {
 			return $available_gateways;
 		}
-		
 		$mwb_has_subscription = false;
 
 		foreach ( WC()->cart->get_cart_contents() as $key => $values ) {
@@ -819,7 +818,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $mwb_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
-					
 					$mwb_supported_method = array( 'stripe' );
 					// Supported paymnet gateway.
 					$mwb_payment_method = apply_filters( 'mwb_sfw_supported_payment_gateway_for_woocommerce', $mwb_supported_method, $key );
@@ -829,7 +827,23 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 			}
-		} 
+
+			// if ( isset( $available_gateways['stripe'] ) ) {
+			// 	$payment_methods = $available_gateways['stripe']->payment_methods;
+			// 	foreach ( $payment_methods as $key => $value ) {
+			// 		if ( 'card' !== $key ) {
+			// 			unset( $available_gateways['stripe']->payment_methods[ $key ] );
+			// 		}
+			// 	}
+			// 	$accept_payment = $available_gateways['stripe']->settings['upe_checkout_experience_accepted_payments'];
+			// 	foreach ( $accept_payment as $key => $value ) {
+			// 		if ( 'card' !== $value ) {
+			// 			unset( $available_gateways['stripe']->settings['upe_checkout_experience_accepted_payments'][ $key ] );
+			// 		}
+			// 	}
+			// 	$available_gateways['stripe']->settings['upe_checkout_experience_enabled'] = 'no';
+			// }
+		}
 		return $available_gateways;
 	}
 
@@ -1359,28 +1373,25 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 		}
 	}
-	
+
 	/**
-	 * Check gateway
+	 * Registration required if have subscription products for guest user.
 	 *
-	 * @return array
+	 * @param boolean $registration_required .
 	 */
-	public function mwb_sfw_check_payment_gateway( $available_gateways ) {
-		if ( isset( $available_gateways['stripe'] ) ) {
-			$payment_methods = $available_gateways['stripe']->payment_methods;
-			foreach ( $payment_methods as $key => $value ) {
-				if ( 'card' !== $key ) {
-					unset( $available_gateways['stripe']->payment_methods[ $key ] );
-					$check = $available_gateways['stripe']->settings[ 'upe_checkout_experience_accepted_payments' ];
-					for($i=0 ; $i<count( $check ) ; $i++){
-						if( 'card' !== $check[$i] ) {
-							unset( $available_gateways['stripe']->settings[ 'upe_checkout_experience_accepted_payments' ][$i] );
-						}
-					}	
+	public function mwb_sfw_registration_required( $registration_required ) {
+		$mwb_has_subscription = false;
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$mwb_has_subscription = true;
+					break;
 				}
 			}
-		}	
-		return $available_gateways;
+		}
+		if ( $mwb_has_subscription && ! $registration_required ) {
+			$registration_required = true;
+		}
+		return $registration_required;
 	}
-
 }

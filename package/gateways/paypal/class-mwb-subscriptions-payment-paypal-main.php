@@ -208,11 +208,11 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * @since    1.0.2
 		 */
 		public function mwb_sfw_process_subscription_payment( $order, $subscription_id, $payment_method ) {
-
 			if ( $order && is_object( $order ) ) {
 				$order_id = $order->get_id();
 				$payment_method = get_post_meta( $order_id, '_payment_method', true );
 				$mwb_sfw_renewal_order = get_post_meta( $order_id, 'mwb_sfw_renewal_order', true );
+
 				if ( 'paypal' == $payment_method && 'yes' == $mwb_sfw_renewal_order ) {
 					if ( $this->mwb_sfw_paypal_check_settings() && $this->mwb_sfw_paypal_credential_set() ) {
 						if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
@@ -234,7 +234,6 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 						}
 					}
 				} elseif ( 'ppec_paypal' == $payment_method && 'yes' == $mwb_sfw_renewal_order ) {
-
 					if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
 						$paypal_profile_id = get_post_meta( $subscription_id, '_mwb_paypal_subscription_id', true );
 
@@ -291,10 +290,10 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		public function mwb_sfw_paypal_payment_gateway_for_woocommerce( $supported_payment_method, $payment_method ) {
 
-			if ( 'paypal' == $payment_method ) {
+			if ( 'paypal' == $payment_method && $this->mwb_sfw_paypal_check_settings() && $this->mwb_sfw_paypal_credential_set() ) {
 				$supported_payment_method[] = $payment_method;
 			}
-			if ( 'ppec_paypal' == $payment_method ) {
+			if ( 'ppec_paypal' == $payment_method && $this->mwb_sfw_paypal_check_settings() && $this->mwb_sfw_paypal_credential_set() ) {
 				$supported_payment_method[] = $payment_method;
 			}
 
@@ -395,10 +394,10 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 
 					if ( '' != $mwb_paypal_settings['sandbox_api_username'] && '' != $mwb_paypal_settings['sandbox_api_password'] && '' != $mwb_paypal_settings['sandbox_api_signature'] ) {
 
-						 $this->mwb_sfw_api_username = $mwb_paypal_settings['sandbox_api_username'];
-						 $this->mwb_sfw_api_password = $mwb_paypal_settings['sandbox_api_password'];
-						 $this->mwb_sfw_api_signature = $mwb_paypal_settings['sandbox_api_signature'];
-						 $this->mwb_sfw_api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
+						$this->mwb_sfw_api_username = $mwb_paypal_settings['sandbox_api_username'];
+						$this->mwb_sfw_api_password = $mwb_paypal_settings['sandbox_api_password'];
+						$this->mwb_sfw_api_signature = $mwb_paypal_settings['sandbox_api_signature'];
+						$this->mwb_sfw_api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
 						$mwb_credential_set = true;
 
 					}
@@ -442,6 +441,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 
 			$payments_args = $request_obj->mwb_sfw_get_express_checkout_param( $args );
 			$response = $this->mwb_sfw_process_request( $payments_args );
+
 			return $response;
 		}
 
