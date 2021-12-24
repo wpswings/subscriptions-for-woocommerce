@@ -59,11 +59,12 @@ class Subscriptions_For_Woocommerce_Stripe {
 				return;
 			}
 			$source   = $gateway->prepare_order_source( $parent_order );
+
 			// show the data in log file.
 
 			WC_Stripe_Logger::log( 'MWB source: ' . wc_print_r( $source, true ) );
-			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ), 'payment_intents' );
-			print_r($response);die;
+			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ), 'payment_intents/create' );
+
 			// show the data in log file.
 
 			WC_Stripe_Logger::log( 'MWB response: ' . wc_print_r( $response, true ) );
