@@ -766,7 +766,23 @@ if ( ! function_exists( 'mwb_sfw_check_valid_order' ) ) {
 		return $valid;
 	}
 }
-
+if ( ! function_exists( 'mwb_sfw_cart_has_subscrtion' ) ) {
+	/**
+	 * Return true if cart has subscription products
+	 */
+	function mwb_sfw_cart_has_subscrtion() {
+		$mwb_has_subscription = false;
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				if ( mwb_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$mwb_has_subscription = true;
+					break;
+				}
+			}
+		}
+		return $mwb_has_subscription;
+	}
+}
 
 
 

@@ -9,3 +9,6 @@
  .mwb_sfw_free_trial, .mwb_sfw_signup_fee {
     display: block;
 }
+.mwb_sfw_experimental_feature_notice {
+    color: red;
+}

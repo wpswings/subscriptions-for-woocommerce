@@ -316,6 +316,8 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_checkout_registration_required', $sfw_plugin_public, 'mwb_sfw_registration_required', 900 );
 
+			$this->loader->add_filter( 'woocommerce_gateway_description', $sfw_plugin_public, 'mwb_sfw_change_payment_gateway_description', 10, 2 );
+
 		}
 	}
 
