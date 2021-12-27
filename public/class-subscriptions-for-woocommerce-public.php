@@ -827,22 +827,6 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 			}
-
-			// if ( isset( $available_gateways['stripe'] ) ) {
-			// 	$payment_methods = $available_gateways['stripe']->payment_methods;
-			// 	foreach ( $payment_methods as $key => $value ) {
-			// 		if ( 'card' !== $key ) {
-			// 			unset( $available_gateways['stripe']->payment_methods[ $key ] );
-			// 		}
-			// 	}
-			// 	$accept_payment = $available_gateways['stripe']->settings['upe_checkout_experience_accepted_payments'];
-			// 	foreach ( $accept_payment as $key => $value ) {
-			// 		if ( 'card' !== $value ) {
-			// 			unset( $available_gateways['stripe']->settings['upe_checkout_experience_accepted_payments'][ $key ] );
-			// 		}
-			// 	}
-			// 	$available_gateways['stripe']->settings['upe_checkout_experience_enabled'] = 'no';
-			// }
 		}
 		return $available_gateways;
 	}

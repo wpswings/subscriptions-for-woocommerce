@@ -58,15 +58,13 @@ class Subscriptions_For_Woocommerce_Stripe {
 				$order->update_status( 'failed', $order_note );
 				return;
 			}
-			$source   = $gateway->prepare_order_source( $parent_order );
+			$source = $gateway->prepare_order_source( $parent_order );
 
 			// show the data in log file.
-
 			WC_Stripe_Logger::log( 'MWB source: ' . wc_print_r( $source, true ) );
-			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ), 'payment_intents/create' );
+			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ) );
 
 			// show the data in log file.
-
 			WC_Stripe_Logger::log( 'MWB response: ' . wc_print_r( $response, true ) );
 			// Log here complete response.
 			if ( is_wp_error( $response ) ) {
@@ -121,7 +119,6 @@ class Subscriptions_For_Woocommerce_Stripe {
 	 * @return array()
 	 */
 	public function mwb_sfw_generate_payment_request( $order, $source ) {
-
 		$order_id = $order->get_id();
 		$charge_amount = $order->get_total();
 
@@ -131,7 +128,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 		$post_data['amount']      = WC_Stripe_Helper::get_stripe_amount( $charge_amount, $post_data['currency'] );
 		/* translators: 1$: site name,2$: order number */
 		$post_data['description'] = sprintf( __( '%1$s - Order %2$s - Renewal Order.', 'subscriptions-for-woocommerce' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
-		$post_data['capture_method']  = $gateway->capture ? 'automatic' : 'manual';
+		$post_data['capture']     = 'true';
 		$billing_first_name       = $order->get_billing_first_name();
 		$billing_last_name        = $order->get_billing_last_name();
 		$billing_email            = $order->get_billing_email( $order, 'billing_email' );
@@ -142,14 +139,18 @@ class Subscriptions_For_Woocommerce_Stripe {
 		$metadata              = array(
 			'customer_name'  => sanitize_text_field( $billing_first_name ) . ' ' . sanitize_text_field( $billing_last_name ),
 			'customer_email' => sanitize_email( $billing_email ),
-			'order_id'       => $order_id,
+			'order_id'                                           => $order_id,
 		);
+		$post_data['expand[]'] = 'balance_transaction';
 		$post_data['metadata'] = apply_filters( 'wc_stripe_payment_metadata', $metadata, $order, $source );
 
 		if ( $source->customer ) {
 			$post_data['customer']  = ! empty( $source->customer ) ? $source->customer : '';
 		}
 
+		if ( $source->source ) {
+			$post_data['source']  = ! empty( $source->source ) ? $source->source : '';
+		}
 		return apply_filters( 'wc_stripe_generate_payment_request', $post_data, $order, $source );
 	}
 
