@@ -1364,7 +1364,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param boolean $registration_required .
 	 */
 	public function mwb_sfw_registration_required( $registration_required ) {
-		$mwb_has_subscription = mwb_sfw_cart_has_subscrtion();
+		$mwb_has_subscription = mwb_sfw_is_cart_has_subscription_product();
 		if ( $mwb_has_subscription && ! $registration_required ) {
 			$registration_required = true;
 		}
@@ -1383,7 +1383,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( isset( $available_gateways['stripe'] ) ) {
 			$experimental_feature = $available_gateways['stripe']->settings['upe_checkout_experience_enabled'];
 		}
-		$mwb_has_subscription = mwb_sfw_cart_has_subscrtion();
+		$mwb_has_subscription = mwb_sfw_is_cart_has_subscription_product();
 
 		if ( 'stripe' === $gateway_id && $mwb_has_subscription && 'yes' === $experimental_feature ) {
 			$description .= '<i><span class="mwb_sfw_experimental_feature_notice">' . esc_html__( 'Only the Card is supported for the recurring payment', 'subscriptions-for-woocommerce' ) . '</span><i><br>';
