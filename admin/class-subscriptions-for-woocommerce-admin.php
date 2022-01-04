@@ -171,6 +171,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 
 		if ( isset( $screen->id ) && 'product' == $screen->id ) {
+
 			wp_register_script( 'mwb-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscription-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'mwb-sfw-admin-single-product-js' );
 

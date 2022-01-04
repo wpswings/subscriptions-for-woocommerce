@@ -31,6 +31,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 		public function __construct() {
 
 			if ( mwb_sfw_check_plugin_enable() ) {
+
 				add_action( 'init', array( $this, 'mwb_sfw_admin_create_order_scheduler' ) );
 				add_action( 'mwb_sfw_create_renewal_order_schedule', array( $this, 'mwb_sfw_renewal_order_on_scheduler' ) );
 				add_action( 'mwb_sfw_expired_renewal_subscription', array( $this, 'mwb_sfw_expired_renewal_subscription_callback' ) );

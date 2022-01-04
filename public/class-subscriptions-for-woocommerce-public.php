@@ -407,6 +407,7 @@ class Subscriptions_For_Woocommerce_Public {
 						$price = $cart_item['data']->get_regular_price();
 					}
 					$mwb_recurring_total = $price * $cart_item['quantity'];
+					$mwb_recurring_total += $order->get_shipping_total();
 
 					$product_id = $cart_item['data']->get_id();
 

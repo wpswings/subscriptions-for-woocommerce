@@ -767,7 +767,29 @@ if ( ! function_exists( 'mwb_sfw_check_valid_order' ) ) {
 	}
 }
 
-
+if ( ! function_exists( 'wcs_order_contains_subscription' ) ) {
+	/**
+	 * This function is used to check if order has subcription.
+	 *
+	 * @name wcs_order_contains_subscription
+	 * @param string $order_id order_id.
+	 * @since 1.0.2
+	 */
+	function wcs_order_contains_subscription( $order_id ) {
+		$mwb_has_subscription = false;
+		$order                = wc_get_order( $order_id );
+		if ( ! empty( $order ) ) {
+			foreach ( $order->get_items() as $item_id => $item ) {
+				$product = $item->get_product();
+				if ( mwb_sfw_check_product_is_subscription( $product ) ) {
+					$mwb_has_subscription = true;
+					break;
+				}
+			}
+		}
+		return $mwb_has_subscription;
+	}
+}
 
 
 
