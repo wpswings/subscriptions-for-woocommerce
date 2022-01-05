@@ -144,9 +144,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$product_qty,
 							$mwb_pro_args
 						);
-
-						$mwb_new_order->update_taxes();
-						$mwb_new_order->calculate_totals();
+						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
+							$mwb_new_order->update_taxes();
+							$mwb_new_order->calculate_totals();
+						} else {
+							$mwb_new_order->calculate_totals( false );
+						}
 						$mwb_new_order->save();
 
 						$order_id = $mwb_new_order->get_id();
