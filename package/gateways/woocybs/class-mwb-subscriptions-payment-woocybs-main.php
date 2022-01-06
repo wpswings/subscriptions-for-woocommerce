@@ -201,7 +201,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 						$order->payment_complete();
 						/* translators: %s: card name */
-						$order->add_order_note( sprintf( __( 'Renewal Order is successfully payed!. Cardholder: %1$s Last 4 card digits: : %2$s', 'subscriptions-for-woocommerce' ), $card_name, $numero_cuenta ) );
+						$order->add_order_note( sprintf( __( 'Renewal Order is successfully paid!. Cardholder: %1$s Last 4 card digits: : %2$s', 'subscriptions-for-woocommerce' ), $card_name, $numero_cuenta ) );
 					}
 				}
 			}
