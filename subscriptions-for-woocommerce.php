@@ -291,7 +291,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		function mwb_sfe_redirect_on_settings( $plugin ) {
 			if ( plugin_basename( __FILE__ ) === $plugin ) {
 				$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
-				wp_redirect( esc_url( $general_settings_url ) );
+				wp_safe_redirect( esc_url( $general_settings_url ) );
 				exit();
 			}
 		}

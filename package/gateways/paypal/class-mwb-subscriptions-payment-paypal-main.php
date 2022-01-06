@@ -828,7 +828,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 
 					wc_add_notice( __( 'An error occurred, please try again or try an alternate form of payment.', 'subscriptions-for-woocommerce' ), 'error' );
 
-					wp_redirect( wc_get_cart_url() );
+					wp_safe_redirect( wc_get_cart_url() );
 					exit;
 				}
 			}

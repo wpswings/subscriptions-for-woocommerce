@@ -741,7 +741,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_notice = __( 'Please enable payment method', 'subscriptions-for-woocommerce' );
 				wc_add_notice( $mwb_notice, 'error' );
 				$result_redirect = wc_get_endpoint_url( 'show-subscription', $mwb_subscription->get_id(), wc_get_page_permalink( 'myaccount' ) );
-				wp_redirect( $result_redirect );
+				wp_safe_redirect( $result_redirect );
 				exit;
 			}
 			$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
@@ -766,7 +766,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 				$mwb_notice = __( 'Payment Method Added Successfully', 'subscriptions-for-woocommerce' );
 				wc_add_notice( $mwb_notice );
-				wp_redirect( $result['redirect'] );
+				wp_safe_redirect( $result['redirect'] );
 				exit;
 			}
 		}

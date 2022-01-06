@@ -81,7 +81,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.0.0';
+			$this->version = '1.3.0';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';

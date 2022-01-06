@@ -189,11 +189,11 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 						$numero_cuenta = substr( $token->get_token(), -4 );
 
-						$card_name = get_post_meta( $mwb_parent_order_id, 'cardholder', true );
+						$card_name  = get_post_meta( $mwb_parent_order_id, 'cardholder', true );
 						$brand_card = get_post_meta( $mwb_parent_order_id, 'brand_card', true );
 						// Save last 4 digits.
 						update_post_meta( $order_id, 'last_digits', $numero_cuenta );
-						update_post_meta( $order_id, 'transaction_time', date( 'd-m-Y H:i', current_time( 'timestamp', 0 ) ) );
+						update_post_meta( $order_id, 'transaction_time', gmdate( 'd-m-Y H:i', current_time( 'timestamp', 0 ) ) );
 						update_post_meta( $order_id, 'cardholder', $card_name );
 						update_post_meta( $order_id, 'brand_card', $brand_card );
 						$audit_cybs_number = str_pad( (int) get_option( 'audit_cybs_number' ) + 1, 10, '0', STR_PAD_LEFT );
