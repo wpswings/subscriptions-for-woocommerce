@@ -3,7 +3,7 @@
  * The admin-specific payment integration functionality of the plugin.
  *
  * @link       https://makewebbetter.com
- * @since      2.0.0
+ * @since      1.3.0
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
@@ -52,7 +52,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * @name mwb_wsp_woo_cybs_save_payment_token.
 		 * @param object $payment_token payment_token.
 		 * @param int    $order_id order_id.
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return void
 		 */
 		public function mwb_wsp_woo_cybs_save_payment_token( $payment_token, $order_id ) {
@@ -73,7 +73,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * @name mwb_wsp_woo_cybs_create_payment_token.
 		 * @param bool $bool bool.
 		 * @param int  $order_id order_id.
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return boolean
 		 */
 		public function mwb_wsp_woo_cybs_create_payment_token( $bool, $order_id ) {
@@ -115,7 +115,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * @param object $order order.
 		 * @param int    $subscription_id subscription_id.
 		 * @param string $payment_method payment_method.
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return void
 		 */
 		public function mwb_wsp_woo_cybs_process_subscription_payment( $order, $subscription_id, $payment_method ) {
@@ -213,7 +213,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * @name mwb_wsp_woo_cybs_payment_gateway_for_woocommerce.
 		 * @param array  $supported_payment_method supported_payment_method.
 		 * @param string $payment_method payment_method.
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return array
 		 */
 		public function mwb_wsp_woo_cybs_payment_gateway_for_woocommerce( $supported_payment_method, $payment_method ) {
@@ -230,7 +230,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * @name mwb_wsp_add_woocybs_order_statuses_for_payment_complete
 		 * @param array  $order_status order_status.
 		 * @param object $order order.
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return mixed
 		 */
 		public function mwb_wsp_add_woocybs_order_statuses_for_payment_complete( $order_status, $order ) {
@@ -254,7 +254,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * @name mwb_wsp_cancel_woo_cybs_subscription
 		 * @param int    $mwb_subscription_id mwb_subscription_id.
 		 * @param string $status status.
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return void
 		 */
 		public function mwb_wsp_cancel_woo_cybs_subscription( $mwb_subscription_id, $status ) {
@@ -273,7 +273,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 *
 		 * @name mwb_wsp_check_supported_payment_options
 		 * @param string $payment_method payment_method.
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return boolean
 		 */
 		public function mwb_wsp_check_supported_payment_options( $payment_method ) {
@@ -288,7 +288,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 * Check woo cybs enable.
 		 *
 		 * @name mwb_sfw_check_woo_cybs_enable
-		 * @since 2.0.0
+		 * @since 1.3.0
 		 * @return boolean
 		 */
 		public function mwb_sfw_check_woo_cybs_enable() {
