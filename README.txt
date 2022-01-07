@@ -5,8 +5,8 @@ Tags: subscription, subscriptions, woocommerce, recurring revenue, woocommerce s
 Requires at least: 4.6
 Tested up to: 5.8.2
 WC requires at least: 4.0
-WC tested up to: 5.9
-Stable tag: 1.2.0
+WC tested up to: 6.0.0
+Stable tag: 1.3.0
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -74,7 +74,13 @@ Visit [**Subscriptions For WooCommerce Documentation**](https://docs.makewebbett
 You can assign a subscription product label to simple products by simply ticking a checkbox. The selected product will then be available as a WooCommerce subscription simple product. No particular subscription-type product will be made here.
 
 **2)** **WooCommerce Payment Gateway Compatible**
-Subscriptions For WooCommerce is compatible with the [*WooCommerce Stripe Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-stripe/), WooCommerce PayPal Standard, [*WooCommerce PayPal Checkout Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/), and our [*Integration with Authorize.net for WooCommerce*](https://makewebbetter.com/product/integration-with-authorize-net-for-woocommerce/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=authorize-net-subscription-org). We will try to add more official payment gateways with different updates. However, you can [*contact us*](https://makewebbetter.com/contact-us/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=contact-us) for customized payment compatibility.   
+Subscriptions For WooCommerce is compatible with the following payment Gateways:
+* [*WooCommerce Stripe Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-stripe/)
+* WooCommerce PayPal Standard
+* [*WooCommerce PayPal Checkout Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/)
+* [*Integration with Authorize.net for WooCommerce*](https://makewebbetter.com/product/integration-with-authorize-net-for-woocommerce/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=authorize-net-subscription-org)
+* [*WooEpay*](https://wooepay.asesoresenweb.com/producto/woocommerce-wooepay-suscripcion/)
+We will try to add more official payment gateways with different updates. However, you can [*contact us*](https://makewebbetter.com/contact-us/?utm_source=MWB-subscriptions-org&utm_medium=MWB-org-page&utm_campaign=contact-us) for customized payment compatibility.   
 
 **3)** **Offer Subscription Frequency for Subscription-based products**
 You can set the recurring frequency options for subscribed products for the user. Regulating the WooCommerce recurring payments of these subscription-based products or services monthly, weekly, or yearly is also a feature for the admin. Admin can manage the frequency of free trials as well.
@@ -212,6 +218,14 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 == Changelog ==
 
+= 1.3.0 - RELEASED ON 06 January 2022 =
+
+* Fix: Stripe payment gateway issue with a newer version
+* Fix: Prevent guest users to place an order if it has a subscription product.
+* Fix: WooEpay payment gateway compatibility
+* Fix: Compatibility with latest WP and WC
+* Fix: Other minor bugs in the plug-in
+
 = 1.2.0 - RELEASED ON 30 November 2021 =
 
 * Fix: Minor bugs and issues.
@@ -256,10 +270,10 @@ Please visit the [MakeWebBetter Knowledgebase](https://support.makewebbetter.com
 
 == Upgrade Notice ==
 
-= 1.2.0 - RELEASED ON 30 November 2021 =
+= = 1.3.0 - RELEASED ON 06 January 2022 =
 
-* Fix: Minor bugs and issues.
-* New: Compatibility with [**Membership For WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/).
-* New: Compatibility with [**Membership for WooCommerce Pro**](https://makewebbetter.com/product/membership-for-woocommerce-pro/?utm_source=subscriptions-org&utm_medium=membership-pro).
-* New: Compatibility with [**Abandoned Cart for WooCommerce**](https://wordpress.org/plugins/abandoned-cart-for-woocommerce/).
-* New: On-hold subscription status added when order status is failed.
+* Fix: Stripe payment gateway issue with a newer version
+* Fix: Prevent guest users to place an order if it has a subscription product.
+* Fix: WooEpay payment gateway compatibility
+* Fix: Compatibility with latest WP and WC
+* Fix: Other minor bugs in the plug-in
