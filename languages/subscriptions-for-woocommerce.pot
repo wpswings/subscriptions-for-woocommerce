@@ -1,8 +1,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriptions For WooCommerce 1.2.0\n"
-"POT-Creation-Date: 2021-11-17 21:55+0530\n"
+"Project-Id-Version: Subscriptions For WooCommerce 1.3.0\n"
+"POT-Creation-Date: 2022-01-07 18:46+0530\n"
 "PO-Revision-Date: 2021-11-17 21:15+0530\n"
 "Last-Translator: \n"
 "Language-Team: MakeWebBetter\n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
@@ -19,30 +19,26 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:180 build/index.js:56242
-#: includes/subscriptions-for-woocommerce-common-function.php:420
-#: includes/subscriptions-for-woocommerce-common-function.php:441
-#: src/component/SecondStep.js:71
+#: includes/subscriptions-for-woocommerce-common-function.php:419
+#: includes/subscriptions-for-woocommerce-common-function.php:440
 msgid "Days"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:181 build/index.js:56244
-#: includes/subscriptions-for-woocommerce-common-function.php:421
-#: includes/subscriptions-for-woocommerce-common-function.php:442
-#: src/component/SecondStep.js:72
+#: includes/subscriptions-for-woocommerce-common-function.php:420
+#: includes/subscriptions-for-woocommerce-common-function.php:441
 msgid "Weeks"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:182 build/index.js:56246
-#: includes/subscriptions-for-woocommerce-common-function.php:422
-#: includes/subscriptions-for-woocommerce-common-function.php:443
-#: src/component/SecondStep.js:73
+#: includes/subscriptions-for-woocommerce-common-function.php:421
+#: includes/subscriptions-for-woocommerce-common-function.php:442
 msgid "Months"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:183 build/index.js:56248
-#: includes/subscriptions-for-woocommerce-common-function.php:423
-#: includes/subscriptions-for-woocommerce-common-function.php:444
-#: src/component/SecondStep.js:74
+#: includes/subscriptions-for-woocommerce-common-function.php:422
+#: includes/subscriptions-for-woocommerce-common-function.php:443
 msgid "Years"
 msgstr ""
 
@@ -244,7 +240,6 @@ msgstr ""
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:57
 #: build/index.js:56172
 #: public/partials/templates/myaccount/mwb-show-subscription-details.php:111
-#: src/component/SecondStep.js:24
 msgid "Product Name"
 msgstr ""
 
@@ -279,7 +274,7 @@ msgid "Delete"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:421
-#: public/class-subscriptions-for-woocommerce-public.php:873
+#: public/class-subscriptions-for-woocommerce-public.php:871
 #: subscriptions-for-woocommerce.php:241 subscriptions-for-woocommerce.php:254
 msgid "Subscriptions"
 msgstr ""
@@ -486,50 +481,49 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: build/index.js:55781 build/index.js:55993 src/App.js:45
-#: src/component/FirstStep.js:16
+#: build/index.js:55781 build/index.js:55993
 msgid "General Settings"
 msgstr ""
 
-#: build/index.js:55781 src/App.js:45
+#: build/index.js:55781
 msgid "Create Subscription"
 msgstr ""
 
-#: build/index.js:55781 src/App.js:45
+#: build/index.js:55781
 msgid "Subscription Payment Gateway Configuration"
 msgstr ""
 
-#: build/index.js:55781 src/App.js:45
+#: build/index.js:55781
 msgid "Final Step"
 msgstr ""
 
-#: build/index.js:55805 src/App.js:63
+#: build/index.js:55805
 msgid "Thanks for your details"
 msgstr ""
 
-#: build/index.js:55808 src/App.js:65
+#: build/index.js:55808
 msgid "Unknown stepIndex"
 msgstr ""
 
-#: build/index.js:55868 src/App.js:126
+#: build/index.js:55868
 msgid "Welcome to Subscriptions For WooCommerce"
 msgstr ""
 
-#: build/index.js:55868 src/App.js:127
+#: build/index.js:55868
 msgid "Complete steps to start selling subscriptions"
 msgstr ""
 
-#: build/index.js:55930 src/component/FinalStep.js:17
+#: build/index.js:55930
 msgid ""
 "Bingo! You are all set to take advantage of your subscription business. "
 "Lastly, we urge you to allow us collect some"
 msgstr ""
 
-#: build/index.js:55933 src/component/FinalStep.js:17
+#: build/index.js:55933
 msgid "information"
 msgstr ""
 
-#: build/index.js:55933 src/component/FinalStep.js:17
+#: build/index.js:55933
 msgid ""
 "in order to improve this plugin and provide better support. If you want, you "
 "can dis-allow anytime settings, We never track down your personal data. "
@@ -544,62 +538,61 @@ msgstr ""
 msgid "No, not required."
 msgstr ""
 
-#: build/index.js:56000 src/component/FirstStep.js:27
+#: build/index.js:56000
 msgid "Check this box to enable the subscription for woo"
 msgstr ""
 
-#: build/index.js:56011 src/component/FirstStep.js:36
+#: build/index.js:56011
 msgid ""
-"Enter text to dispaly on \"Add to cart\" button for subscription products"
+"Enter text to display on \"Add to cart\" button for subscription products"
 msgstr ""
 
-#: build/index.js:56012 src/component/FirstStep.js:37
+#: build/index.js:56012
 msgid " \"Add to cart\" button label"
 msgstr ""
 
-#: build/index.js:56024 src/component/FirstStep.js:45
+#: build/index.js:56024
 msgid ""
-"Enter text to dispaly on \"Place order\" button for subscription products"
+"Enter text to display on \"Place order\" button for subscription products"
 msgstr ""
 
-#: build/index.js:56025 src/component/FirstStep.js:46
+#: build/index.js:56025
 msgid " \"Place order\" button label"
 msgstr ""
 
-#: build/index.js:56101 src/component/PaymentGateway.js:38
+#: build/index.js:56101
 msgid "Download & activate"
 msgstr ""
 
-#: build/index.js:56109 src/component/PaymentGateway.js:44
+#: build/index.js:56109
 msgid "Installed"
 msgstr ""
 
-#: build/index.js:56163 src/component/SecondStep.js:16
+#: build/index.js:56163
 msgid "Create Subscription Product"
 msgstr ""
 
-#: build/index.js:56184 src/component/SecondStep.js:32
+#: build/index.js:56184
 msgid "Product Short Description"
 msgstr ""
 
-#: build/index.js:56197 src/component/SecondStep.js:41
+#: build/index.js:56197
 msgid "Product Description"
 msgstr ""
 
-#: build/index.js:56210 src/component/SecondStep.js:51
+#: build/index.js:56210
 msgid "Subscription Price"
 msgstr ""
 
-#: build/index.js:56222 src/component/SecondStep.js:59
+#: build/index.js:56222
 msgid "Subscription Interval"
 msgstr ""
 
-#: build/index.js:56232 build/index.js:56238 src/component/SecondStep.js:62
-#: src/component/SecondStep.js:69
+#: build/index.js:56232 build/index.js:56238
 msgid "Subscription Frequency"
 msgstr ""
 
-#: build/index.js:56328 src/component/ThirdStep.js:23
+#: build/index.js:56328
 msgid "Supported payment gateways for subscription"
 msgstr ""
 
@@ -700,21 +693,21 @@ msgstr ""
 
 #: emails/templates/plain/mwb-sfw-cancel-subscription-email-template.php:29
 #: emails/templates/plain/mwb-sfw-expired-subscription-email-template.php:27
-#: includes/subscriptions-for-woocommerce-common-function.php:292
+#: includes/subscriptions-for-woocommerce-common-function.php:291
 #: public/partials/templates/myaccount/mwb-add-new-payment-details.php:21
 msgid "Product"
 msgstr ""
 
 #: emails/templates/plain/mwb-sfw-cancel-subscription-email-template.php:33
 #: emails/templates/plain/mwb-sfw-expired-subscription-email-template.php:31
-#: includes/subscriptions-for-woocommerce-common-function.php:293
+#: includes/subscriptions-for-woocommerce-common-function.php:292
 #: public/partials/templates/myaccount/mwb-add-new-payment-details.php:22
 msgid "Quantity"
 msgstr ""
 
 #: emails/templates/plain/mwb-sfw-cancel-subscription-email-template.php:37
 #: emails/templates/plain/mwb-sfw-expired-subscription-email-template.php:35
-#: includes/subscriptions-for-woocommerce-common-function.php:294
+#: includes/subscriptions-for-woocommerce-common-function.php:293
 msgid "Price"
 msgstr ""
 
@@ -878,147 +871,147 @@ msgstr ""
 msgid "Unexpected Error Occured"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:410
+#: includes/class-subscriptions-for-woocommerce.php:414
 msgid "Overview"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:415
+#: includes/class-subscriptions-for-woocommerce.php:419
 msgid "General Setting"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:422
+#: includes/class-subscriptions-for-woocommerce.php:426
 msgid "Subscription Table"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:428
+#: includes/class-subscriptions-for-woocommerce.php:432
 msgid "System Status"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:433
+#: includes/class-subscriptions-for-woocommerce.php:437
 msgid "Developer"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:456
+#: includes/class-subscriptions-for-woocommerce.php:460
 #, php-format
 msgid ""
 "Unable to locate file at location \"%s\". Some features may not work "
 "properly in this plugin. Please contact us!"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:514
+#: includes/class-subscriptions-for-woocommerce.php:518
 msgid "N/A (phpversion function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:523
+#: includes/class-subscriptions-for-woocommerce.php:527
 msgid "N/A (make sure exec function is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:526
+#: includes/class-subscriptions-for-woocommerce.php:530
 msgid "N/A (ABSPATH constant not defined)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:529
+#: includes/class-subscriptions-for-woocommerce.php:533
 msgid "N/A (php_uname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:532
+#: includes/class-subscriptions-for-woocommerce.php:536
 msgid "N/A (get_bloginfo function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:535
+#: includes/class-subscriptions-for-woocommerce.php:539
 msgid "N/A (get_option function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:538
-#: includes/class-subscriptions-for-woocommerce.php:541
-#: includes/class-subscriptions-for-woocommerce.php:544
+#: includes/class-subscriptions-for-woocommerce.php:542
+#: includes/class-subscriptions-for-woocommerce.php:545
+#: includes/class-subscriptions-for-woocommerce.php:548
 msgid "Yes"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:538
-#: includes/class-subscriptions-for-woocommerce.php:541
-#: includes/class-subscriptions-for-woocommerce.php:544
+#: includes/class-subscriptions-for-woocommerce.php:542
+#: includes/class-subscriptions-for-woocommerce.php:545
+#: includes/class-subscriptions-for-woocommerce.php:548
 msgid "No"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:547
+#: includes/class-subscriptions-for-woocommerce.php:551
 msgid "N/A (count_users function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:553
-#: includes/class-subscriptions-for-woocommerce.php:559
-#: includes/class-subscriptions-for-woocommerce.php:562
-#: includes/class-subscriptions-for-woocommerce.php:590
-#: includes/class-subscriptions-for-woocommerce.php:593
+#: includes/class-subscriptions-for-woocommerce.php:557
+#: includes/class-subscriptions-for-woocommerce.php:563
+#: includes/class-subscriptions-for-woocommerce.php:566
+#: includes/class-subscriptions-for-woocommerce.php:594
+#: includes/class-subscriptions-for-woocommerce.php:597
 msgid "N/A (ini_get function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:556
+#: includes/class-subscriptions-for-woocommerce.php:560
 msgid "N/A"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:574
+#: includes/class-subscriptions-for-woocommerce.php:578
 msgid "N/A (gethostname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:577
-#: includes/class-subscriptions-for-woocommerce.php:586
+#: includes/class-subscriptions-for-woocommerce.php:581
+#: includes/class-subscriptions-for-woocommerce.php:590
 msgid "N/A (make sure exec is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:596
+#: includes/class-subscriptions-for-woocommerce.php:600
 msgid "N/A (mwb_sfw_get_file_content function does not exist)"
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:355
+#: includes/subscriptions-for-woocommerce-common-function.php:354
 msgid "There was an error with your request."
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:358
+#: includes/subscriptions-for-woocommerce-common-function.php:357
 msgid "Invalid Subscription."
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:361
+#: includes/subscriptions-for-woocommerce-common-function.php:360
 msgid "Invalid subscription order."
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:486
-#: includes/subscriptions-for-woocommerce-common-function.php:524
+#: includes/subscriptions-for-woocommerce-common-function.php:485
+#: includes/subscriptions-for-woocommerce-common-function.php:523
 #, php-format
 msgid "%s Day"
 msgid_plural "%s Days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:490
-#: includes/subscriptions-for-woocommerce-common-function.php:528
+#: includes/subscriptions-for-woocommerce-common-function.php:489
+#: includes/subscriptions-for-woocommerce-common-function.php:527
 #, php-format
 msgid "%s Week"
 msgid_plural "%s Weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:494
-#: includes/subscriptions-for-woocommerce-common-function.php:532
+#: includes/subscriptions-for-woocommerce-common-function.php:493
+#: includes/subscriptions-for-woocommerce-common-function.php:531
 #, php-format
 msgid "%s Month"
 msgid_plural "%s Months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:498
-#: includes/subscriptions-for-woocommerce-common-function.php:536
+#: includes/subscriptions-for-woocommerce-common-function.php:497
+#: includes/subscriptions-for-woocommerce-common-function.php:535
 #, php-format
 msgid "%s Year"
 msgid_plural "%s Years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:708
+#: includes/subscriptions-for-woocommerce-common-function.php:707
 msgid "WooCommerce Stripe Gateway"
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:715
+#: includes/subscriptions-for-woocommerce-common-function.php:714
 msgid "WooCommerce PayPal Checkout Payment Gateway"
 msgstr ""
 
@@ -1055,7 +1048,7 @@ msgstr ""
 msgid "Total Discount"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-api-request.php:257
+#: package/gateways/paypal/class-mwb-sfw-paypal-api-request.php:258
 #, php-format
 msgctxt "data sent to PayPal"
 msgid "Orders with %s"
@@ -1112,73 +1105,89 @@ msgstr ""
 msgid "MWB Subscription %s"
 msgstr ""
 
-#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:56
+#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:57
 msgid "Stripe payment gateway not activated."
 msgstr ""
 
-#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:72
+#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:75
 msgid "Something Went Wrong. Please see the log file for more info."
 msgstr ""
 
-#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:79
-#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:102
+#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:82
+#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:105
 msgid "Stripe Transaction Failed"
 msgstr ""
 
-#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:88
+#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:91
 #, php-format
 msgid "Stripe Renewal Transaction Successful (%s)"
 msgstr ""
 
-#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:128
+#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:130
 #, php-format
 msgid "%1$s - Order %2$s - Renewal Order."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:131
+#: package/gateways/woocybs/class-mwb-subscriptions-payment-woocybs-main.php:154
+#, php-format
+msgid "Payment token not found %s"
+msgstr ""
+
+#: package/gateways/woocybs/class-mwb-subscriptions-payment-woocybs-main.php:204
+#, php-format
+msgid ""
+"Renewal Order is successfully paid!. Cardholder: %1$s Last 4 card digits: : "
+"%2$s"
+msgstr ""
+
+#: public/class-subscriptions-for-woocommerce-public.php:130
 #, php-format
 msgid " For %s "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:177
+#: public/class-subscriptions-for-woocommerce-public.php:176
 #, php-format
 msgid " and %s  Sign up fee"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:198
+#: public/class-subscriptions-for-woocommerce-public.php:197
 #, php-format
 msgid " and %s  free trial"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:538
+#: public/class-subscriptions-for-woocommerce-public.php:537
 msgctxt "subscription post title. \"Subscriptions order - <this>\""
 msgid "%1$b %2$d, %Y @ %I:%M %p"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:547
+#: public/class-subscriptions-for-woocommerce-public.php:546
 #, php-format
 msgctxt "Subscription post title"
 msgid "MWB Subscription &ndash; %s"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:742
+#: public/class-subscriptions-for-woocommerce-public.php:741
 msgid "Please enable payment method"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:768
+#: public/class-subscriptions-for-woocommerce-public.php:767
 msgid "Payment Method Added Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:981
+#: public/class-subscriptions-for-woocommerce-public.php:979
 msgid "Not a valid subscription"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1026
+#: public/class-subscriptions-for-woocommerce-public.php:1024
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1165
+#: public/class-subscriptions-for-woocommerce-public.php:1163
 msgid "You can not add multiple subscription products in cart"
+msgstr ""
+
+#: public/class-subscriptions-for-woocommerce-public.php:1389
+msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
 #: public/partials/templates/myaccount/mwb-add-new-payment-details.php:23

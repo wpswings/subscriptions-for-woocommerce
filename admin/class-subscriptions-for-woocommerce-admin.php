@@ -114,7 +114,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			if ( ! mwb_sfw_check_multistep() ) {
 
 				// Js for the multistep from.
-				$script_path      = '../../build/index.js';
+				$script_path       = '../../build/index.js';
 				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index.asset.php';
 				$script_asset      = file_exists( $script_asset_path )
 					? require $script_asset_path
@@ -925,3 +925,4 @@ class Subscriptions_For_Woocommerce_Admin {
 		return $bool;
 	}
 }
+

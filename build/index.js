@@ -56008,7 +56008,7 @@ const FirstStep = props => {
     onChange: ctx.changeHandler,
     id: "AddToCartText",
     name: "AddToCartText",
-    helperText: __('Enter text to dispaly on "Add to cart" button for subscription products', 'subscriptions-for-woocommerce'),
+    helperText: __('Enter text to display on "Add to cart" button for subscription products', 'subscriptions-for-woocommerce'),
     label: __(' "Add to cart" button label', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin
@@ -56021,7 +56021,7 @@ const FirstStep = props => {
     onChange: ctx.changeHandler,
     id: "PlaceOrderText",
     name: "PlaceOrderText",
-    helperText: __('Enter text to dispaly on "Place order" button for subscription products', 'subscriptions-for-woocommerce'),
+    helperText: __('Enter text to display on "Place order" button for subscription products', 'subscriptions-for-woocommerce'),
     label: __(' "Place order" button label', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin

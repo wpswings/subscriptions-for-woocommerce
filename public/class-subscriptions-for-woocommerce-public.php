@@ -53,7 +53,6 @@ class Subscriptions_For_Woocommerce_Public {
 		$this->version = $version;
 
 	}
-
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
@@ -742,7 +741,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_notice = __( 'Please enable payment method', 'subscriptions-for-woocommerce' );
 				wc_add_notice( $mwb_notice, 'error' );
 				$result_redirect = wc_get_endpoint_url( 'show-subscription', $mwb_subscription->get_id(), wc_get_page_permalink( 'myaccount' ) );
-				wp_redirect( $result_redirect );
+				wp_safe_redirect( $result_redirect );
 				exit;
 			}
 			$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
@@ -767,7 +766,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 				$mwb_notice = __( 'Payment Method Added Successfully', 'subscriptions-for-woocommerce' );
 				wc_add_notice( $mwb_notice );
-				wp_redirect( $result['redirect'] );
+				wp_safe_redirect( $result['redirect'] );
 				exit;
 			}
 		}
@@ -807,7 +806,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( is_admin() || ! is_checkout() ) {
 			return $available_gateways;
 		}
-
 		$mwb_has_subscription = false;
 
 		foreach ( WC()->cart->get_cart_contents() as $key => $values ) {
@@ -1360,4 +1358,37 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 	}
 
+	/**
+	 * Registration required if have subscription products for guest user.
+	 *
+	 * @param boolean $registration_required .
+	 */
+	public function mwb_sfw_registration_required( $registration_required ) {
+		$mwb_has_subscription = mwb_sfw_is_cart_has_subscription_product();
+		if ( $mwb_has_subscription && ! $registration_required ) {
+			$registration_required = true;
+		}
+		return $registration_required;
+	}
+
+	/**
+	 * Show the notice for stripe payment description.
+	 *
+	 * @param string  $description .
+	 * @param integer $gateway_id .
+	 */
+	public function mwb_sfw_change_payment_gateway_description( $description, $gateway_id ) {
+		$available_gateways   = WC()->payment_gateways->get_available_payment_gateways();
+		$experimental_feature = 'no';
+		if ( isset( $available_gateways['stripe'] ) ) {
+			$experimental_feature = $available_gateways['stripe']->settings['upe_checkout_experience_enabled'];
+		}
+		$mwb_has_subscription = mwb_sfw_is_cart_has_subscription_product();
+
+		if ( 'stripe' === $gateway_id && $mwb_has_subscription && 'yes' === $experimental_feature ) {
+			$description .= '<i><span class="mwb_sfw_experimental_feature_notice">' . esc_html__( 'Only the Card is supported for the recurring payment', 'subscriptions-for-woocommerce' ) . '</span><i><br>';
+		}
+		return $description;
+
+	}
 }

@@ -29,6 +29,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
+
 			if ( mwb_sfw_check_plugin_enable() ) {
 				add_action( 'init', array( $this, 'mwb_sfw_admin_create_order_scheduler' ) );
 				add_action( 'mwb_sfw_create_renewal_order_schedule', array( $this, 'mwb_sfw_renewal_order_on_scheduler' ) );
@@ -80,13 +81,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 				),
 			);
 			$mwb_subscriptions = get_posts( $args );
+
 			Subscriptions_For_Woocommerce_Log::log( 'MWB Renewal Subscriptions: ' . wc_print_r( $mwb_subscriptions, true ) );
 			if ( isset( $mwb_subscriptions ) && ! empty( $mwb_subscriptions ) && is_array( $mwb_subscriptions ) ) {
 				foreach ( $mwb_subscriptions as $key => $value ) {
 					$subscription_id = $value->ID;
 
 					if ( mwb_sfw_check_valid_subscription( $subscription_id ) ) {
-
 						$subscription = get_post( $subscription_id );
 						$parent_order_id  = $subscription->mwb_parent_order;
 						if ( function_exists( 'mwb_sfw_check_valid_order' ) && ! mwb_sfw_check_valid_order( $parent_order_id ) ) {
@@ -143,9 +144,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$product_qty,
 							$mwb_pro_args
 						);
-
-						$mwb_new_order->update_taxes();
-						$mwb_new_order->calculate_totals();
+						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
+							$mwb_new_order->update_taxes();
+							$mwb_new_order->calculate_totals();
+						} else {
+							$mwb_new_order->calculate_totals( false );
+						}
 						$mwb_new_order->save();
 
 						$order_id = $mwb_new_order->get_id();
@@ -189,6 +193,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$mwb_next_payment_date = mwb_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
 						update_post_meta( $subscription_id, 'mwb_next_payment_date', $mwb_next_payment_date );
+
 						if ( 'stripe' == $payment_method ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$mwb_stripe = new Subscriptions_For_Woocommerce_Stripe();
@@ -197,7 +202,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								mwb_sfw_send_email_for_renewal_susbcription( $order_id );
 							}
 						}
-
 						do_action( 'mwb_sfw_other_payment_gateway_renewal', $mwb_new_order, $subscription_id, $payment_method );
 
 					}

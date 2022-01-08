@@ -1,11 +1,8 @@
 node_modules
 node_modules/*
-.github
-.github/*
+vendor
+vendor/*
 .history
-.history/*
-.vscode
-.vscode/*
 # ignore compiled files
 *.com
 *.class
@@ -23,4 +20,3 @@ node_modules/*
 *.rar
 *.tar
 *.zip
-*.json

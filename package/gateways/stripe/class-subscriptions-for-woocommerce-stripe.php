@@ -52,15 +52,18 @@ class Subscriptions_For_Woocommerce_Stripe {
 			}
 
 			$gateway = $this->mwb_sfw_get_wc_gateway();
+
 			if ( ! $gateway ) {
 				$order_note = __( 'Stripe payment gateway not activated.', 'subscriptions-for-woocommerce' );
 				$order->update_status( 'failed', $order_note );
 				return;
 			}
-			$source   = $gateway->prepare_order_source( $parent_order );
+			$source = $gateway->prepare_order_source( $parent_order );
+
 			// show the data in log file.
 			WC_Stripe_Logger::log( 'MWB source: ' . wc_print_r( $source, true ) );
 			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ) );
+
 			// show the data in log file.
 			WC_Stripe_Logger::log( 'MWB response: ' . wc_print_r( $response, true ) );
 			// Log here complete response.
@@ -109,14 +112,13 @@ class Subscriptions_For_Woocommerce_Stripe {
 	 * Generate the request for the payment.
 	 *
 	 * @name mwb_sfw_generate_payment_request.
-	 * @since  1.0.0
+	 * @since  1.0.00
 	 * @param  object $order order.
 	 * @param  object $source source.
 	 *
 	 * @return array()
 	 */
 	public function mwb_sfw_generate_payment_request( $order, $source ) {
-
 		$order_id = $order->get_id();
 		$charge_amount = $order->get_total();
 
@@ -126,7 +128,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 		$post_data['amount']      = WC_Stripe_Helper::get_stripe_amount( $charge_amount, $post_data['currency'] );
 		/* translators: 1$: site name,2$: order number */
 		$post_data['description'] = sprintf( __( '%1$s - Order %2$s - Renewal Order.', 'subscriptions-for-woocommerce' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
-		$post_data['capture']     = $gateway->capture ? 'true' : 'false';
+		$post_data['capture']     = 'true';
 		$billing_first_name       = $order->get_billing_first_name();
 		$billing_last_name        = $order->get_billing_last_name();
 		$billing_email            = $order->get_billing_email( $order, 'billing_email' );
@@ -149,7 +151,6 @@ class Subscriptions_For_Woocommerce_Stripe {
 		if ( $source->source ) {
 			$post_data['source']  = ! empty( $source->source ) ? $source->source : '';
 		}
-
 		return apply_filters( 'wc_stripe_generate_payment_request', $post_data, $order, $source );
 	}
 

@@ -43,6 +43,7 @@ class Subscriptions_For_Woocommerce_Log {
 		if ( 'on' != $enable_log ) {
 			return;
 		}
+
 		if ( apply_filters( 'mwb_sfw_logging', true, $message ) ) {
 			if ( empty( self::$logger ) ) {
 				self::$logger = wc_get_logger();
