@@ -24,7 +24,7 @@ $sfw_onboarding_form_fields = apply_filters( 'mwb_sfw_on_boarding_form_fields', 
 						<a href="#"><span class="sfw-close-form material-icons mwb-sfw-close-icon mdc-dialog__button" data-mdc-dialog-action="close">clear</span></a>
 					</div>
 
-					<h3 class="mwb-sfw-on-boarding-heading mdc-dialog__title"><?php esc_html_e( 'Welcome to MakeWebBetter', 'subscriptions-for-woocommerce' ); ?> </h3>
+					<h3 class="mwb-sfw-on-boarding-heading mdc-dialog__title"><?php esc_html_e( 'Welcome to WP Swings', 'subscriptions-for-woocommerce' ); ?> </h3>
 					<p class="mwb-sfw-on-boarding-desc"><?php esc_html_e( 'We love making new friends! Subscribe below and we promise to keep you up-to-date with our latest new plugins, updates, awesome deals and a few special offers.', 'subscriptions-for-woocommerce' ); ?></p>
 
 					<form action="#" method="post" class="mwb-sfw-on-boarding-form">

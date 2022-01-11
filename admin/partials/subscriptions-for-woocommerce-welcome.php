@@ -24,7 +24,7 @@ $sfw_tab_key = '';
 	do_action( 'mwb_sfw_settings_saved_notice' );
 	?>
 	<div class="mwb-header-container mwb-bg-white mwb-r-8">
-		<h1 class="mwb-header-title"><?php echo esc_attr( 'MakeWebBetter' ); ?></h1>
+		<h1 class="mwb-header-title"><?php echo esc_attr( 'WP Swings' ); ?></h1>
 	</div>
 </header>
 <main class="mwb-main mwb-bg-white mwb-r-8">
@@ -89,7 +89,7 @@ $sfw_tab_key = '';
 	<div class="centered">
 		<section class="cards">
 			<?php foreach ( get_plugins() as $key => $value ) : ?>
-				<?php if ( 'MakeWebBetter' === $value['Author'] ) : ?>
+				<?php if ( 'WP Swings' === $value['Author'] ) : ?>
 					<article class="card">
 						<div class="container">
 							<h4><b><?php echo esc_html( $value['Name'] ); ?></b></h4> 

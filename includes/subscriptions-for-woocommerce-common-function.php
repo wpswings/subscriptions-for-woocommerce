@@ -372,7 +372,7 @@ if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
 	 */
 	function mwb_sfw_get_page_screen() {
 
-		$mwb_screen_id = sanitize_title( 'MakeWebBetter' );
+		$mwb_screen_id = sanitize_title( 'WP Swings' );
 		$screen_ids   = array(
 			'toplevel_page_' . $mwb_screen_id,
 			$mwb_screen_id . '_page_subscriptions_for_woocommerce_menu',

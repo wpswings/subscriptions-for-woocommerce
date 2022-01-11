@@ -15,8 +15,8 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
- * Version:           1.3.0
- * Author:            MakeWebBetter
+ * Version:           1.3.1
+ * Author:            WP Swings
  * Author URI:        https://makewebbetter.com/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-backend
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
@@ -44,7 +44,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.3.0' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.3.1' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://makewebbetter.com' );
@@ -64,6 +64,74 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		if ( ! defined( $key ) ) {
 
 			define( $key, $value );
+		}
+	}
+
+	// Upgrade notice.
+	add_action( 'after_plugin_row_' . plugin_basename( __FILE__ ), 'mwb_tyo_upgrade_notice' );
+	/**
+	 * Displays notice to upgrade to PayPal Payments.
+	 *
+	 * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+	 * @param array $plugin_data An array of plugin data.
+	 * @param string $status Status filter currently applied to the plugin list.
+	 */
+	function mwb_tyo_upgrade_notice() {
+
+	?>
+
+	<tr class="plugin-update-tr active notice-warning notice-alt">
+		<td colspan="4" class="plugin-update colspanchange">
+			<div class="notice notice-error inline update-message notice-alt">
+				<div class='ppec-notice-title ppec-notice-section'>
+					<p><strong>IMPORTANT NOTICE-</strong></p>
+				</div>
+				<div class='ppec-notice-content ppec-notice-section'><?php
+					echo esc_html( 'From this update[Version 1.3.1]onwards, the plugin and its support will be handled by WP Swings. WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.', 'subscriptions-for-woocommerce');
+					?>
+				</div>
+				<div class='ppec-notice-content ppec-notice-section'><strong><?php
+					echo esc_html('Please connect with us for all setup, support, and update related queries without hesitation.', 'subscriptions-for-woocommerce' );
+					?>
+				</strong></div>
+				
+			</div>
+		</td>
+	</tr>
+
+	<?php
+
+	}
+
+	add_action( 'admin_notices', 'mwb_wsfw_plugin_upgrade_notice', 20 );
+
+/**
+* Displays notice to upgrade for Wallet.
+*
+* @param string $plugin_file Path to the plugin file relative to the plugins directory.
+* @param array $plugin_data An array of plugin data.
+* @param string $status Status filter currently applied to the plugin list.
+*/
+function mwb_wsfw_plugin_upgrade_notice() {
+	$screen = get_current_screen();
+	if (isset($screen->id) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
+		?>
+		
+		<tr class="plugin-update-tr active notice-warning notice-alt">
+			<td colspan="4" class="plugin-update colspanchange">
+				<div class="notice notice-error inline update-message notice-alt">
+					<div class='ppec-notice-title ppec-notice-section'>
+						<p><strong>IMPORTANT NOTICE-</strong></p>
+					</div>
+					<div class='ppec-notice-content ppec-notice-section'>
+						<p>From this update[Version 1.3.1]onwards, the plugin and its support will be handled by WP Swings. WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.</p>
+						<p>Please connect with us for all setup, support, and update related queries without hesitation.</p>
+					</div>
+				</div>
+			</td>
+		</tr>
+		
+		<?php
 		}
 	}
 
@@ -310,7 +378,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 	}
-
+	
 	// Add admin error notice.
 	add_action( 'admin_notices', 'mwb_sfw_activation_failure_admin_notice' );
 
