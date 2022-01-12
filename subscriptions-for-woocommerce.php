@@ -81,23 +81,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	?>
 
 	<tr class="plugin-update-tr active notice-warning notice-alt">
-		<td colspan="4" class="plugin-update colspanchange">
-			<div class="notice notice-error inline update-message notice-alt">
-				<div class='ppec-notice-title ppec-notice-section'>
-					<p><strong>IMPORTANT NOTICE:</strong></p>
-				</div>
-				<div class='ppec-notice-content ppec-notice-section'><?php
-					echo esc_html( 'From this update [here] onwards, the plugin and its support will be handled by WP Swings.', 'subscriptions-for-woocommerce');
-					?>
-				</div>
-				<div class='ppec-notice-content ppec-notice-section'><strong><?php
-					echo esc_html('WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end. Please connect with us for all setup, support, and update related queries without hesitation.', 'subscriptions-for-woocommerce' );
-					?>
-				</strong></div>
-				
+	<td colspan="4" class="plugin-update colspanchange">
+		<div class="notice notice-success inline update-message notice-alt">
+			<div class='wps-notice-title wps-notice-section'>
+				<p><strong>IMPORTANT NOTICE:</strong></p>
 			</div>
-		</td>
+			<div class='wps-notice-content wps-notice-section'>
+				<p>From this update [here] onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
+				Please connect with us for all setup, support, and update related queries without hesitation.</p>
+			</div>
+		</div>
+	</td>
 	</tr>
+	<style>
+	.wps-notice-section > p:before {
+		content: none;
+	}
+	</style>
 
 	<?php
 
@@ -118,18 +118,23 @@ function mwb_wsfw_plugin_upgrade_notice() {
 		?>
 		
 		<tr class="plugin-update-tr active notice-warning notice-alt">
-			<td colspan="4" class="plugin-update colspanchange">
-				<div class="notice notice-error inline update-message notice-alt">
-					<div class='ppec-notice-title ppec-notice-section'>
-						<p><strong>IMPORTANT NOTICE:</strong></p>
-					</div>
-					<div class='ppec-notice-content ppec-notice-section'>
-						<p>From this update [here] onwards, the plugin and its support will be handled by WP Swings.</p>
-						<p>WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end. Please connect with us for all setup, support, and update related queries without hesitation.</p>
-					</div>
+		<td colspan="4" class="plugin-update colspanchange">
+			<div class="notice notice-success inline update-message notice-alt">
+				<div class='wps-notice-title wps-notice-section'>
+					<p><strong>IMPORTANT NOTICE:</strong></p>
 				</div>
-			</td>
+				<div class='wps-notice-content wps-notice-section'>
+					<p>From this update [here] onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
+					Please connect with us for all setup, support, and update related queries without hesitation.</p>
+				</div>
+			</div>
+		</td>
 		</tr>
+	<style>
+		.wps-notice-section > p:before {
+			content: none;
+		}
+	</style>
 		
 		<?php
 		}
