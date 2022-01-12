@@ -84,14 +84,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		<td colspan="4" class="plugin-update colspanchange">
 			<div class="notice notice-error inline update-message notice-alt">
 				<div class='ppec-notice-title ppec-notice-section'>
-					<p><strong>IMPORTANT NOTICE-</strong></p>
+					<p><strong>IMPORTANT NOTICE:</strong></p>
 				</div>
 				<div class='ppec-notice-content ppec-notice-section'><?php
-					echo esc_html( 'From this update[Version 1.3.1]onwards, the plugin and its support will be handled by WP Swings. WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.', 'subscriptions-for-woocommerce');
+					echo esc_html( 'From this update [here] onwards, the plugin and its support will be handled by WP Swings.', 'subscriptions-for-woocommerce');
 					?>
 				</div>
 				<div class='ppec-notice-content ppec-notice-section'><strong><?php
-					echo esc_html('Please connect with us for all setup, support, and update related queries without hesitation.', 'subscriptions-for-woocommerce' );
+					echo esc_html('WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end. Please connect with us for all setup, support, and update related queries without hesitation.', 'subscriptions-for-woocommerce' );
 					?>
 				</strong></div>
 				
@@ -121,11 +121,11 @@ function mwb_wsfw_plugin_upgrade_notice() {
 			<td colspan="4" class="plugin-update colspanchange">
 				<div class="notice notice-error inline update-message notice-alt">
 					<div class='ppec-notice-title ppec-notice-section'>
-						<p><strong>IMPORTANT NOTICE-</strong></p>
+						<p><strong>IMPORTANT NOTICE:</strong></p>
 					</div>
 					<div class='ppec-notice-content ppec-notice-section'>
-						<p>From this update[Version 1.3.1]onwards, the plugin and its support will be handled by WP Swings. WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.</p>
-						<p>Please connect with us for all setup, support, and update related queries without hesitation.</p>
+						<p>From this update [here] onwards, the plugin and its support will be handled by WP Swings.</p>
+						<p>WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end. Please connect with us for all setup, support, and update related queries without hesitation.</p>
 					</div>
 				</div>
 			</td>
