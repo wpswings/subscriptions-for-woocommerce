@@ -17,7 +17,7 @@
  * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
  * Version:           1.3.1
  * Author:            WP Swings
- * Author URI:        https://makewebbetter.com/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-backend
+ * Author URI:        https://wpswings.com/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-backend
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
@@ -47,7 +47,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.3.1' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://makewebbetter.com' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_ITEM_REFERENCE', 'Subscriptions For Woocommerce' );
 	}
 
@@ -87,7 +87,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				<p><strong>IMPORTANT NOTICE:</strong></p>
 			</div>
 			<div class='wps-notice-content wps-notice-section'>
-				<p>From this update [here] onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
+				<p>From this update <strong>Version 1.3.1</strong> onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
 				Please connect with us for all setup, support, and update related queries without hesitation.</p>
 			</div>
 		</div>
@@ -124,7 +124,7 @@ function mwb_wsfw_plugin_upgrade_notice() {
 					<p><strong>IMPORTANT NOTICE:</strong></p>
 				</div>
 				<div class='wps-notice-content wps-notice-section'>
-					<p>From this update [here] onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
+					<p>From this update <strong>Version 1.3.1</strong> onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
 					Please connect with us for all setup, support, and update related queries without hesitation.</p>
 				</div>
 			</div>
@@ -245,7 +245,7 @@ function mwb_wsfw_plugin_upgrade_notice() {
 		);
 		if ( ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 
-			$my_link['goPro'] = '<a class="mwb-sfw-go-pro" target="_blank" href="https://makewebbetter.com/product/woocommerce-subscriptions-pro/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-gopro">' . esc_html__( 'GO PRO', 'subscriptions-for-woocommerce' ) . '</a>';
+			$my_link['goPro'] = '<a class="mwb-sfw-go-pro" target="_blank" href="https://wpswings.com/product/woocommerce-subscriptions-pro/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-gopro">' . esc_html__( 'GO PRO', 'subscriptions-for-woocommerce' ) . '</a>';
 		}
 		return array_merge( $my_link, $links );
 	}

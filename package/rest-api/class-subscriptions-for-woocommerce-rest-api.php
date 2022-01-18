@@ -23,7 +23,7 @@
  * @since      1.0.0
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/package/rest-api/version1
- * @author     makewebbetter <webmaster@makewebbetter.com>
+ * @author     WP Swings <webmaster@wpswings.com>
  */
 class Subscriptions_For_Woocommerce_Rest_Api {
 

@@ -18,7 +18,7 @@
 
  * @subpackage  Subscriptions_For_Woocommerce/includes
 
- * @author      makewebbetter <webmaster@makewebbetter.com>
+ * @author      WP Swings <webmaster@wpswings.com>
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
