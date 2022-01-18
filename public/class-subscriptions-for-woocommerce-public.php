@@ -627,7 +627,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$mwb_args['product_qty'],
 				$mwb_pro_args,
 			);
-			if ( $check_ava_activate && isset( $mwb_args['line_tax_data'] ) && ! empty( $mwb_args['line_tax_data'] ) ) {
+			if ( $check_ava_activate ) {
 				wc_avatax()->get_order_handler()->calculate_order_tax( $new_order, false, true );
 			}
 			$order_shipping = $order->get_items( 'shipping' );
