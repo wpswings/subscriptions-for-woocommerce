@@ -1,0 +1,414 @@
+/*===================================
+=            FONT-FAMILY            =
+===================================*/
+
+@font-face {
+    font-family: 'NunitoSans-Black';
+    src: url('../fonts/nunito/NunitoSans-Black.eot');
+    src: url('../fonts/nunito/NunitoSans-Black.eot?#iefix') format('embedded-opentype'), url('../fonts/nunito/NunitoSans-Black.woff2') format('woff2'), url('../fonts/nunito/NunitoSans-Black.woff') format('woff'), url('../fonts/nunito/NunitoSans-Black.ttf') format('truetype'), url('../fonts/nunito/NunitoSans-Black.svg#NunitoSans-Black') format('svg');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NunitoSans-Italic';
+    src: url('../fonts/nunito/NunitoSans-Italic.eot');
+    src: url('../fonts/nunito/NunitoSans-Italic.eot?#iefix') format('embedded-opentype'), url('../fonts/nunito/NunitoSans-Italic.woff2') format('woff2'), url('../fonts/nunito/NunitoSans-Italic.woff') format('woff'), url('../fonts/nunito/NunitoSans-Italic.ttf') format('truetype'), url('../fonts/nunito/NunitoSans-Italic.svg#NunitoSans-Italic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NunitoSans-ExtraBold';
+    src: url('../fonts/nunito/NunitoSans-ExtraBold.eot');
+    src: url('../fonts/nunito/NunitoSans-ExtraBold.eot?#iefix') format('embedded-opentype'), url('../fonts/nunito/NunitoSans-ExtraBold.woff2') format('woff2'), url('../fonts/nunito/NunitoSans-ExtraBold.woff') format('woff'), url('../fonts/nunito/NunitoSans-ExtraBold.ttf') format('truetype'), url('../fonts/nunito/NunitoSans-ExtraBold.svg#NunitoSans-ExtraBold') format('svg');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NunitoSans-Bold';
+    src: url('../fonts/nunito/NunitoSans-Bold.eot');
+    src: url('../fonts/nunito/NunitoSans-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/nunito/NunitoSans-Bold.woff2') format('woff2'), url('../fonts/nunito/NunitoSans-Bold.woff') format('woff'), url('../fonts/nunito/NunitoSans-Bold.ttf') format('truetype'), url('../fonts/nunito/NunitoSans-Bold.svg#NunitoSans-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NunitoSans-SemiBold';
+    src: url('../fonts/nunito/NunitoSans-SemiBold.eot');
+    src: url('../fonts/nunito/NunitoSans-SemiBold.eot?#iefix') format('embedded-opentype'), url('../fonts/nunito/NunitoSans-SemiBold.woff2') format('woff2'), url('../fonts/nunito/NunitoSans-SemiBold.woff') format('woff'), url('../fonts/nunito/NunitoSans-SemiBold.ttf') format('truetype'), url('../fonts/nunito/NunitoSans-SemiBold.svg#NunitoSans-SemiBold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NunitoSans-Light';
+    src: url('../fonts/nunito/NunitoSans-Light.eot');
+    src: url('../fonts/nunito/NunitoSans-Light.eot?#iefix') format('embedded-opentype'), url('../fonts/nunito/NunitoSans-Light.woff2') format('woff2'), url('../fonts/nunito/NunitoSans-Light.woff') format('woff'), url('../fonts/nunito/NunitoSans-Light.ttf') format('truetype'), url('../fonts/nunito/NunitoSans-Light.svg#NunitoSans-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NunitoSans-Regular';
+    src: url('../fonts/nunito/NunitoSans-Regular.eot');
+    src: url('../fonts/nunito/NunitoSans-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/nunito/NunitoSans-Regular.woff2') format('woff2'), url('../fonts/nunito/NunitoSans-Regular.woff') format('woff'), url('../fonts/nunito/NunitoSans-Regular.ttf') format('truetype'), url('../fonts/nunito/NunitoSans-Regular.svg#NunitoSans-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/*=====  End of FONT-FAMILY  ======*/
+
+
+/*===================================
+=         GLOBAL CSS               =
+===================================*/
+
+:root {
+    --mdc-theme-primary: #2196f3;
+    --mdc-theme-secondary: #2196f3;
+}
+
+body,
+html {
+    font-family: 'NunitoSans-Regular', sans-serif;
+    margin: 0;
+}
+
+body {
+    background-color: #E5F4FE;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+a,
+a:hover,
+a:focus {
+    text-decoration: none;
+}
+
+a:focus {
+    box-shadow: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+input[type=checkbox]:focus,
+input[type=color]:focus,
+input[type=date]:focus,
+input[type=datetime-local]:focus,
+input[type=datetime]:focus,
+input[type=email]:focus,
+input[type=month]:focus,
+input[type=number]:focus,
+input[type=password]:focus,
+input[type=radio]:focus,
+input[type=search]:focus,
+input[type=tel]:focus,
+input[type=text]:focus,
+input[type=time]:focus,
+input[type=url]:focus,
+input[type=week]:focus,
+select:focus,
+textarea:focus {
+    box-shadow: none!important;
+}
+
+select,
+option {
+    color: rgba(0, 0, 0, .7)!important;
+    box-shadow: none!important;
+    border-color: rgba(0, 0, 0, .38)!important;
+}
+
+select {
+    padding: 10px 30px 10px 15px;
+}
+
+
+/*=====  End of GLOBAL CSS  ======*/
+
+.mwb-link {
+    font-family: 'NunitoSans-Bold';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.3px;
+    color: #3F4756;
+    display: inline-block;
+}
+
+.active {
+    color: #004EB6;
+    position: relative;
+}
+
+.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 3px solid var( --mdc-theme-primary);
+    border-radius: 2px;
+}
+
+.mwb-bg-white {
+    background-color: #ffffff;
+    margin-right: 15px;
+}
+
+.mwb-r-8 {
+    border-radius: 8px;
+}
+
+.mwb-pl-4 {
+    padding: 0 4px!important;
+}
+
+.mwb-errorr-8 {
+    width: 97%;
+}
+
+.mwb-header-container {
+    padding: 28px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    margin-right: 15px;
+}
+
+.mdc-floating-label {
+    color: var( --mdc-theme-primary);
+}
+
+.mdc-floating-label--float-above,
+.mdc-floating-label--shake {
+    color: var( --mdc-theme-primary)!important;
+}
+
+.mwb-header-title {
+    font-family: 'NunitoSans-ExtraBold';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.3px;
+    color: var(--mdc-theme-primary);
+    flex: 0 0 100%;
+    max-width: calc(100% - 100px);
+}
+
+.mwb-navbar {
+    padding: 0 32px;
+    border-bottom: 1px solid rgba(63, 71, 86, 0.25);
+}
+
+.mwb-navbar__items {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mwb-navbar__items li {
+    margin-right: 32px;
+    margin-bottom: 0;
+}
+
+.mwb-navbar__items li a {
+    padding: 18px 0;
+    color: var(--mdc-theme-primary);
+}
+
+.mwb-section {
+    padding: 28px 32px;
+}
+
+.mwb-form-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px 35px;
+}
+
+.mwb-form-group__label {
+    flex: 0 0 100%;
+    max-width: 200px;
+    padding: 0 15px;
+}
+
+.mwb-form-group__control {
+    flex: 0 0 100%;
+    max-width: calc(100% - 200px);
+    padding: 0 15px;
+}
+
+.mwb-form-label {
+    font-family: 'NunitoSans-SemiBold';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.3px;
+}
+
+.mwb-form-select:hover select {
+    border-color: rgba(0, 0, 0, .87)!important;
+    color: rgba(0, 0, 0, .87);
+}
+
+.mwb-form-select:focus select {
+    border-color: #2196f3!important;
+}
+
+.mdc-button {
+    border-radius: 35px!important;
+    padding: 12px 24px!important;
+    height: 100%;
+}
+
+#mwb-sfw-table-inner-container {
+    width: 100%;
+}
+
+#mwb-sfw-table-inner-container table thead th {
+    font-weight: bold;
+    font-size: medium;
+    font-family: 'NunitoSans-ExtraBold';
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 5px rgb(63 71 86 / 10%);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.mwb-col-wrap {
+    margin-bottom: 35px;
+}
+
+.mwb-shadow-panel {
+    background: #FFFFFF;
+    box-shadow: 0px 2px 5px rgba(63, 71, 86, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.mwb-password-hidden {
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s linear;
+    user-select: none;
+}
+
+.mwb-password-hidden:hover {
+    opacity: 1;
+}
+
+.mwb-options {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)!important;
+}
+
+.content-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.content-wrap .content {
+    flex: 0 0 100%;
+    max-width: 70%;
+    padding: 0 15px;
+}
+
+.content-wrap .cta-wrap {
+    flex: 0 0 100%;
+    max-width: 30%;
+    padding: 0 15px;
+    text-align: right;
+}
+
+.mwb-cta-btn {
+    flex: 0 0 100%;
+    max-width: 100px;
+    text-align: right;
+    margin: 20px 15px;
+}
+
+.mwb-cta-btn a {
+    color: #ffffff;
+}
+
+.mwb-form-group__control .mdc-switch__native-control {
+    width: 68px;
+    height: 48px;
+}
+
+.mwb-btn-primary {
+    color: #ffffff;
+    background-color: #6200ee;
+    border-color: #004EB6;
+}
+
+.mwb-btn {
+    display: inline-block;
+    font-family: 'NunitoSans-Bold';
+    font-weight: bold;
+    line-height: 16px;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 16px 32px;
+    font-size: 14px;
+    border-radius: 35px;
+    letter-spacing: 0.3px;
+    text-transform: capitalize;
+}
+
+.mwb-btn-primary:hover {
+    color: #fff;
+}
+
+.mwb-shadow-panel h3 {
+    display: block;
+    font-size: 1.17em;
+    font-weight: bold;
+}

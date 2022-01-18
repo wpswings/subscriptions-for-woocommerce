@@ -1,0 +1,16 @@
+<wpml-config>
+	<admin-texts>
+		<key name="mwb_sfw_add_to_cart_text"/>
+		<key name="mwb_sfw_place_order_button_text" />
+	</admin-texts>
+    <custom-fields>
+        <custom-field action="copy">_mwb_sfw_product</custom-field>
+        <custom-field action="copy">mwb_sfw_subscription_number</custom-field>
+        <custom-field action="copy">mwb_sfw_subscription_interval</custom-field>
+        <custom-field action="copy">mwb_sfw_subscription_expiry_number</custom-field>
+        <custom-field action="copy">mwb_sfw_subscription_expiry_interval</custom-field>
+        <custom-field action="copy">mwb_sfw_subscription_initial_signup_price</custom-field>
+        <custom-field action="copy">mwb_sfw_subscription_free_trial_number</custom-field>
+        <custom-field action="copy">mwb_sfw_subscription_free_trial_interval</custom-field>
+    </custom-fields>
+</wpml-config>
