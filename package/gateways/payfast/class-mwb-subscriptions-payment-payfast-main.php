@@ -24,7 +24,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Payfast_Main' ) ) {
 	/**
 	 * Define class and module for woo stripe.
 	 */
-	class Mwb_Subscriptions_Payment_Redsys_Main {
+	class Mwb_Subscriptions_Payment_Payfast_Main {
 		/**
 		 * Constructor
 		 */
@@ -129,7 +129,6 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Payfast_Main' ) ) {
             $token = get_post_meta( $parent_id, 'mwb_sfw_user_token', true );
 		    $response = $payfast_gateway_object->submit_ad_hoc_payment( $token, 100, 'product test', 'this is description' );
             return $response;
-
 		}
 
 		/**
