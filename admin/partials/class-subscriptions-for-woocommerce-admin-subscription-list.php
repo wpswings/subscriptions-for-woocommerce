@@ -20,7 +20,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @name Subscriptions_For_Woocommerce_Admin_Subscription_List
  * @since      1.0.0
  * @category Class
- * @author makewebbetter<ticket@makewebbetter.com>
+ * @author WP Swings<ticket@wpswings.com>
  * @link https://www.makewebbetter.com/
  */
 class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Table {
@@ -44,7 +44,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 *
 	 * @name get_columns.
 	 * @since      1.0.0
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function get_columns() {
@@ -71,7 +71,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @since      1.0.0
 	 * @param int    $subscription_id subscription_id.
 	 * @param String $status status.
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function mwb_sfw_cancel_url( $subscription_id, $status ) {
@@ -94,7 +94,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 *
 	 * @name column_default.
 	 * @since      1.0.0
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 * @param array  $item  array of the items.
 	 * @param string $column_name name of the colmn.
@@ -136,7 +136,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * Perform admin bulk action setting for susbcription table.
 	 *
 	 * @name process_bulk_action.
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function process_bulk_action() {
@@ -169,7 +169,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name process_bulk_action.
 	 * @since      1.0.0
 	 * @return array
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function get_bulk_actions() {
@@ -185,7 +185,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name get_sortable_columns.
 	 * @since      1.0.0
 	 * @return array
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function get_sortable_columns() {
@@ -202,7 +202,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 *
 	 * @name prepare_items.
 	 * @since      1.0.0
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function prepare_items() {
@@ -237,7 +237,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name mwb_sfw_usort_reorder.
 	 * @since      1.0.0
 	 * @return array
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 * @param array $cloumna column of the susbcriptions.
 	 * @param array $cloumnb column of the susbcriptions.
@@ -269,7 +269,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name column_cb.
 	 * @since      1.0.0
 	 * @return array
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 * @param array $item array of the items.
 	 */
@@ -287,7 +287,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name mwb_sfw_get_subscription_list.
 	 * @since      1.0.0
 	 * @return array
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function mwb_sfw_get_subscription_list() {
@@ -398,7 +398,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name extra_tablenav.
 	 * @since      1.0.0
 	 * @param string $which which.
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	public function extra_tablenav( $which ) {

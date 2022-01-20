@@ -547,7 +547,7 @@ if ( ! function_exists( 'mwb_sfw_pro_active' ) ) {
 	 * @since 1.0.0
 	 * @name mwb_sfw_pro_active
 	 * @return boolean
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	function mwb_sfw_pro_active() {
@@ -562,7 +562,7 @@ if ( ! function_exists( 'mwb_sfw_delete_failed_subscription' ) ) {
 	 * @since 1.0.0
 	 * @name mwb_sfw_delete_failed_subscription
 	 * @param int $order_id order_id.
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	function mwb_sfw_delete_failed_subscription( $order_id ) {
@@ -603,7 +603,7 @@ if ( ! function_exists( 'mwb_sfw_include_process_directory' ) ) {
 	 * @name mwb_sfw_include_process_directory
 	 * @param string $mwb_sfw_dir mwb_sfw_dir.
 	 * @param string $mwb_selected_dir mwb_selected_dir.
-	 * @author makewebbetter<ticket@makewebbetter.com>
+	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.makewebbetter.com/
 	 */
 	function mwb_sfw_include_process_directory( $mwb_sfw_dir, $mwb_selected_dir = '' ) {

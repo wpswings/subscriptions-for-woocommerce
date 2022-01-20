@@ -18,11 +18,11 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Api_Process' ) ) {
 	 * The plugin API class.
 	 *
 	 * This is used to define the functions and data manipulation for custom endpoints.
-	 *
+	 * 
 	 * @since      1.0.0
 	 * @package    Subscriptions_For_Woocommerce
 	 * @subpackage Subscriptions_For_Woocommerce/package/rest-api/version1
-	 * @author     MakeWebBetter <makewebbetter.com>
+	 * @author     WP Swings <wpswings.com>
 	 */
 	class Subscriptions_For_Woocommerce_Api_Process {
 
