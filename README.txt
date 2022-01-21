@@ -20,11 +20,13 @@ With Subscriptions for WooCommerce, turn your physical or online store into a Wo
 
 Subscriptions for WooCommerce Plugin allows WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store. The free Subscriptions for WooCommerce plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, online courses to eCommerce stores, revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business. 
 
-IMPORTANT NOTICE:
+***
+>**IMPORTANT NOTICE:**
 
-From this update Version 1.2.4 onwards, the plugin and its support will be handled by WP Swings.
+>_**From this update Version 1.0.5 onwards, the plugin and its support will be handled by [**WP Swings**](https://wpswings.com/?utm_source=wpswings-official&utm_medium=subs-org-page&utm_campaign=official).**_
 
-WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end. Please [connect with us](https://wpswings.com/contact-us/?utm_source=wpswings-subs-contact-us&utm_medium=subs-org-page&utm_campaign=contact-us) for all setup, support, and update related queries without hesitation.
+>_**WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end. Please [**connect with us**](https://wpswings.com/contact-us/?utm_source=wpswings-subs-pro-notice&utm_medium=subs-org-page&utm_campaign=notice) for all setup, support, and update related queries without hesitation."**_
+***
 
 [youtube https://www.youtube.com/watch?v=QZO0Q_DT0ik]
 
@@ -70,7 +72,7 @@ Visit [**Subscriptions For WooCommerce Documentation**](https://docs.wpswings.co
 You can assign a subscription product label to simple products by simply ticking a checkbox. The selected product will then be available as a WooCommerce subscription simple product. No particular subscription-type product will be made here.
 
 **2)** **WooCommerce Payment Gateway Compatible**
-Subscriptions For WooCommerce is compatible with the [*WooCommerce Stripe Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-stripe/), WooCommerce PayPal Standard, [*WooCommerce PayPal Checkout Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/), [*Integration with Authorize.net for WooCommerce*], [*WooEpay*](https://wooepay.asesoresenweb.com/producto/woocommerce-wooepay-suscripcion/). We will try to add more official payment gateways with different updates. However, you can [*contact us*](https://wpswings.com/contact-us/?utm_source=wpswings-subs-contactus&utm_medium=subs-org-page&utm_campaign=contactus) for customized payment compatibility.   
+Subscriptions For WooCommerce is compatible with the [*WooCommerce Stripe Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-stripe/), WooCommerce PayPal Standard, [*WooCommerce PayPal Checkout Payment Gateway*](https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/), [*WooEpay*](https://wooepay.asesoresenweb.com/producto/woocommerce-wooepay-suscripcion/). We will try to add more official payment gateways with different updates. However, you can [*contact us*](https://wpswings.com/contact-us/?utm_source=wpswings-subs-contactus&utm_medium=subs-org-page&utm_campaign=contactus) for customized payment compatibility.   
 
 **3)** **Offer Subscription Frequency for Subscription-based products**
 You can set the recurring frequency options for subscribed products for the user. Regulating the WooCommerce recurring payments of these subscription-based products or services monthly, weekly, or yearly is also a feature for the admin. Admin can manage the frequency of free trials as well.
@@ -176,15 +178,15 @@ Yes, The plugin has a feature by using that Admin can charge a fee.
 
 = Can the customer add multiple subscriptions to the cart at a single time? =
 
-No, the customer can only add a single subscription in the cart in the free plugin. If you want to add multiple subscriptions to the cart, kindly check our pro plugin from [here](https://makewebbetter.com/product/woocommerce-subscriptions-pro/?utm_source=MWB-subscriptions-org&utm_medium=MWB-ORG-Page&utm_campaign=MWB-subscriptions-pro). Our Subscription for WooCommerce pro plugin allows customers to add multiple subscriptions to the cart at once.
+No, the customer can only add a single subscription in the cart in the free plugin. If you want to add multiple subscriptions to the cart, kindly check our pro plugin from [our premium WooCommerce Subscription plugin](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subscriptions-org&utm_medium=wpswings-org-page&utm_campaign=subscriptions-pro). Our Subscription for WooCommerce pro plugin allows customers to add multiple subscriptions to the cart at once.
 
 = Can the client add multiple subscriptions in the cart? =
 
-This is not possible in the free plugin, the client can add multiple subscriptions in the cart in our [*Subscriptions for WooCommerce Pro plugin*](https://wpswings.com/product/woocommerce-subscriptions-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro)
+This is not possible in the free plugin, the client can add multiple subscriptions in the cart in our [*Subscriptions for WooCommerce Pro plugin*](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro)
 
 = Do we have any premium or paid version of the WooCommerce Subscription Management plugin? =
 
-Yes, we have our Premium Version of [Subscriptions for WooCommerce Pro](https://wpswings.com/product/woocommerce-subscriptions-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro) to manage subscriptions with many features.
+Yes, we have our Premium Version of [Subscriptions for WooCommerce Pro](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro) to manage subscriptions with many features.
 
 = Is this Subscription plugin working with the variable products too? =
 
@@ -203,14 +205,16 @@ Yes, we have our Premium Version of [Subscriptions for WooCommerce Pro](https://
 
 == Changelog ==
 
-= 1.3.1 - RELEASED ON 20 January 2022 =
+= 1.3.1 - RELEASED ON 21 January 2022 =
 
-* New: Notice display of current version for WP Swings.
+* New: Notice display of current version for [WP Swings](https://wpswings.com/?utm_source=wpswings-subs-home&utm_medium=subs-org-page&utm_campaign=official).
 * New: Minor Bug fixes
 * New: Compatible with latest WP and WC 
-* Fix: Stripe payment gateway issue with a newer version
+
+= 1.3.0 – RELEASED ON 07 JANUARY 2022 =
+
 * Fix: Prevent guest users to place an order if it has a subscription product.
-* Fix: WooCybs payment gateway compatibility
+* Fix: WooEpay payment gateway compatibility
 * Fix: Compatibility with latest WP and WC
 * Fix: Other minor bugs in the plug-in
 
@@ -255,8 +259,8 @@ Yes, we have our Premium Version of [Subscriptions for WooCommerce Pro](https://
 
 == Upgrade Notice ==
 
-= 1.3.1 - RELEASED ON 20 January 2022 =
+= 1.3.1 - RELEASED ON 21 January 2022 =
 
 * New: Notice display of current version for WP Swings.
 * New: Minor Bug fixes
-* New: Compatible with latest WP and WC
+* New: Compatible with latest WP and WC 
