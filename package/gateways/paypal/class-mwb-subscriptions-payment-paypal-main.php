@@ -290,10 +290,10 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Paypal_Main' ) ) {
 		 */
 		public function mwb_sfw_paypal_payment_gateway_for_woocommerce( $supported_payment_method, $payment_method ) {
 
-			if ( 'paypal' == $payment_method && $this->mwb_sfw_paypal_check_settings() && $this->mwb_sfw_paypal_credential_set() ) {
+			if ( 'paypal' == $payment_method ) {
 				$supported_payment_method[] = $payment_method;
 			}
-			if ( 'ppec_paypal' == $payment_method && $this->mwb_sfw_paypal_check_settings() && $this->mwb_sfw_paypal_credential_set() ) {
+			if ( 'ppec_paypal' == $payment_method ) {
 				$supported_payment_method[] = $payment_method;
 			}
 
