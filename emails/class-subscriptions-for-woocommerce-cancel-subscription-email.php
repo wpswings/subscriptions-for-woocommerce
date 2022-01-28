@@ -2,7 +2,7 @@
 /**
  * Cancelled Email template
  *
- * @link       https://makewebbetter.com/
+ * @link       https://wpswing.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce
@@ -18,7 +18,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 	/**
 	 * Cancelled Email template Class
 	 *
-	 * @link       https://makewebbetter.com/
+	 * @link       https://wpswing.com/
 	 * @since      1.0.0
 	 *
 	 * @package    Subscriptions_For_Woocommerce

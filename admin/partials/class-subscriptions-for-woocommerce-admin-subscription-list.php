@@ -21,7 +21,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @since      1.0.0
  * @category Class
  * @author WP Swings<ticket@wpswings.com>
- * @link https://www.makewebbetter.com/
+ * @link https://www.wpswing.com/
  */
 class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Table {
 	/**
@@ -45,7 +45,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name get_columns.
 	 * @since      1.0.0
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function get_columns() {
 
@@ -72,7 +72,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @param int    $subscription_id subscription_id.
 	 * @param String $status status.
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function mwb_sfw_cancel_url( $subscription_id, $status ) {
 		$mwb_link = add_query_arg(
@@ -95,7 +95,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name column_default.
 	 * @since      1.0.0
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 * @param array  $item  array of the items.
 	 * @param string $column_name name of the colmn.
 	 */
@@ -137,7 +137,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 *
 	 * @name process_bulk_action.
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function process_bulk_action() {
 
@@ -170,7 +170,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @since      1.0.0
 	 * @return array
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
@@ -186,7 +186,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @since      1.0.0
 	 * @return array
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
@@ -203,7 +203,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @name prepare_items.
 	 * @since      1.0.0
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function prepare_items() {
 		$per_page              = 10;
@@ -238,7 +238,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @since      1.0.0
 	 * @return array
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 * @param array $cloumna column of the susbcriptions.
 	 * @param array $cloumnb column of the susbcriptions.
 	 */
@@ -270,7 +270,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @since      1.0.0
 	 * @return array
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 * @param array $item array of the items.
 	 */
 	public function column_cb( $item ) {
@@ -288,7 +288,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @since      1.0.0
 	 * @return array
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function mwb_sfw_get_subscription_list() {
 		$mwb_sfw_pro_plugin_activated = false;
@@ -399,7 +399,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @since      1.0.0
 	 * @param string $which which.
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	public function extra_tablenav( $which ) {
 		// Add list option.

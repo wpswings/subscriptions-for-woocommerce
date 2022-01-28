@@ -5,7 +5,7 @@
  * A class definition that includes attributes and functions used across both the
  * public-facing side of the site and the admin area.
  *
- * @link       https://makewebbetter.com/
+ * @link       https://wpswing.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce

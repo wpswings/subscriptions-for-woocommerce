@@ -2,7 +2,7 @@
 /**
  * The admin-specific payment integration functionality of the plugin.
  *
- * @link       https://makewebbetter.com
+ * @link       https://wpswing.com
  * @since      1.3.0
  *
  * @package     Subscriptions_For_Woocommerce
@@ -162,7 +162,6 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Woocybs_Main' ) ) {
 						return;
 					}
 					$soap_client = new CybsSoapiCC( $payment_method_obj->merchantId, $payment_method_obj->transactionKey, $payment_method_obj->wsdl_version, $payment_method_obj->testmode );
-
 					$request = $soap_client->createRequest( $order_id );
 					$soap_client->setAuthInRequest( $request );
 

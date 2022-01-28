@@ -55928,7 +55928,7 @@ function FinalStep(props) {
     component: "legend",
     className: "mwbFormLabel"
   }, __('Bingo! You are all set to take advantage of your subscription business. Lastly, we urge you to allow us collect some', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("a", {
-    href: "https://makewebbetter.com/plugin-usage-tracking/",
+    href: "https://wpswing.com/plugin-usage-tracking/",
     target: "_blank"
   }, __('information', 'subscriptions-for-woocommerce')), " ", __('in order to improve this plugin and provide better support. If you want, you can dis-allow anytime settings, We never track down your personal data. Promise!', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["RadioGroup"], {
     "aria-label": "gender",

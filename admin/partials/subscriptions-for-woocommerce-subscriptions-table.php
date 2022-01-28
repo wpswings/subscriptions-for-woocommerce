@@ -4,7 +4,7 @@
  *
  * This file is used to markup the html field for general tab.
  *
- * @link       https://makewebbetter.com/
+ * @link       https://wpswing.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce

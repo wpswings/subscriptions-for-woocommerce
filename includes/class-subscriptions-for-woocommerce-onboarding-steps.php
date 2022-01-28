@@ -2,7 +2,7 @@
 /**
  * The admin-specific on-boarding functionality of the plugin.
  *
- * @link       https://makewebbetter.com
+ * @link       https://wpswing.com
  * @since      1.0.0
  *
  * @package     Subscriptions_For_Woocommerce
@@ -157,10 +157,10 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * This function is provided for demonstration purposes only.
 	 *
 	 * An instance of this class should be passed to the run() function
-	 * defined in Makewebbetter_Onboarding_Loader as all of the hooks are defined
+	 * defined in wpswing_Onboarding_Loader as all of the hooks are defined
 	 * in that particular class.
 	 *
-	 * The Makewebbetter_Onboarding_Loader will then create the relationship
+	 * The wpswing_Onboarding_Loader will then create the relationship
 	 * between the defined hooks and the functions defined in this
 	 * class.
 	 */
@@ -189,10 +189,10 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * This function is provided for demonstration purposes only.
 	 *
 	 * An instance of this class should be passed to the run() function
-	 * defined in Makewebbetter_Onboarding_Loader as all of the hooks are defined
+	 * defined in wpswing_Onboarding_Loader as all of the hooks are defined
 	 * in that particular class.
 	 *
-	 * The Makewebbetter_Onboarding_Loader will then create the relationship
+	 * The wpswing_Onboarding_Loader will then create the relationship
 	 * between the defined hooks and the functions defined in this
 	 * class.
 	 */

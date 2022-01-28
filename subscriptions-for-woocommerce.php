@@ -7,7 +7,7 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              https://makewebbetter.com/
+ * @link              https://wpswings.com/
  * @since             1.0.0
  * @package           Subscriptions_For_Woocommerce
  *
@@ -68,17 +68,16 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	}
 
 	// Upgrade notice.
-	add_action( 'after_plugin_row_' . plugin_basename( __FILE__ ), 'mwb_tyo_upgrade_notice' );
-	/**
-	 * Displays notice to upgrade to PayPal Payments.
-	 *
-	 * @param string $plugin_file Path to the plugin file relative to the plugins directory.
-	 * @param array $plugin_data An array of plugin data.
-	 * @param string $status Status filter currently applied to the plugin list.
-	 */
-	function mwb_tyo_upgrade_notice() {
+	add_action( 'after_plugin_row_' . plugin_basename( __FILE__ ), 'sfw_upgrade_notice' );
 
-	?>
+	/**
+	 * Upgrade Notice for Subscription Plugin.
+	 *
+	 * @return void
+	 */
+	function sfw_upgrade_notice() {
+
+		?>
 
 	<tr class="plugin-update-tr active notice-warning notice-alt">
 	<td colspan="4" class="plugin-update colspanchange">
@@ -99,23 +98,21 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	}
 	</style>
 
-	<?php
+		<?php
 
 	}
 
-	add_action( 'admin_notices', 'mwb_wsfw_plugin_upgrade_notice', 20 );
+	add_action( 'admin_notices', 'mwb_sfw_plugin_upgrade_notice', 20 );
 
-/**
-* Displays notice to upgrade for Wallet.
-*
-* @param string $plugin_file Path to the plugin file relative to the plugins directory.
-* @param array $plugin_data An array of plugin data.
-* @param string $status Status filter currently applied to the plugin list.
-*/
-function mwb_wsfw_plugin_upgrade_notice() {
-	$screen = get_current_screen();
-	if (isset($screen->id) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
-		?>
+	/**
+	 * Upgrade Notice for Subscription Plugin.
+	 *
+	 * @return void
+	 */
+	function mwb_sfw_plugin_upgrade_notice() {
+		$screen = get_current_screen();
+		if ( isset( $screen->id ) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
+			?>
 		
 		<tr class="plugin-update-tr active notice-warning notice-alt">
 		<td colspan="4" class="plugin-update colspanchange">
@@ -136,7 +133,7 @@ function mwb_wsfw_plugin_upgrade_notice() {
 		}
 	</style>
 		
-		<?php
+			<?php
 		}
 	}
 
@@ -287,7 +284,7 @@ function mwb_wsfw_plugin_upgrade_notice() {
 	 * @name mwb_sfw_flush_rewrite_rules
 	 * @since 1.0.0.
 	 * @author WP Swings<ticket@wpswings.com>
-	 * @link https://www.makewebbetter.com/
+	 * @link https://www.wpswing.com/
 	 */
 	function mwb_sfw_flush_rewrite_rules() {
 		add_rewrite_endpoint( 'mwb_subscriptions', EP_PAGES );
@@ -383,7 +380,7 @@ function mwb_wsfw_plugin_upgrade_notice() {
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 	}
-	
+
 	// Add admin error notice.
 	add_action( 'admin_notices', 'mwb_sfw_activation_failure_admin_notice' );
 

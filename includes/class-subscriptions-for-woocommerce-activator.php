@@ -2,7 +2,7 @@
 /**
  * Fired during plugin activation
  *
- * @link       https://makewebbetter.com/
+ * @link       https://wpswing.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce
