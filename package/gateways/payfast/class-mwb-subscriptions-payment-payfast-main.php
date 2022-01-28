@@ -92,7 +92,7 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Payfast_Main' ) ) {
 		 */
 		public function mwb_wsp_check_supported_payment_options( $payment_method ) {
 			$result = false;
-			if ( 'redsys' == $payment_method ) {
+			if ( 'payfast' == $payment_method ) {
 				$result = true;
 			}
 			return $result;
@@ -160,17 +160,17 @@ if ( ! class_exists( 'Mwb_Subscriptions_Payment_Payfast_Main' ) ) {
 
         */
 
-        public function checking_payfast_token() {
+        public function mwb_sfw_save_payfast_token() {
 
             $data  = $_POST;
 
-            $token = sanitize_text_field( $data['signature'] );
+            $token = sanitize_text_field( $data['token'] );
 
             $parent_id = sanitize_text_field( $data['custom_str3'] );
 
             update_post_meta( $parent_id, 'mwb_sfw_user_token', $token );
 
-            update_post_meta( $parent_id, 'mwb_sfw_user_token_data', $data );
+            // update_post_meta( $parent_id, 'mwb_sfw_user_token_data', $data );
 
             // return $this->api_request( 'cancel', $token, array(), 'PUT' );
 
