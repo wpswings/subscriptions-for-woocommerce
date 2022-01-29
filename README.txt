@@ -3,9 +3,9 @@ Contributors: WP Swings
 Donate link:  https://wpswings.com/
 Tags: subscription, subscriptions, woocommerce, recurring revenue, woocommerce subscription
 Requires at least: 4.6
-Tested up to: 5.8.3
+Tested up to: 5.9
 WC requires at least: 4.0
-WC tested up to: 6.1.0
+WC tested up to: 6.1.1
 Stable tag: 1.3.1
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
