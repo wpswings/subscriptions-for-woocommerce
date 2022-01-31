@@ -261,7 +261,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		if ( strpos( $file, 'subscriptions-for-woocommerce.php' ) !== false ) {
 
 			$row_meta = array(
-				'demo' => '<a target="_blank" href="https://demo.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-demo&utm_medium=subs-org-backend&utm_campaign=demo"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="mwb-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
+				'demo' => '<a target="_blank" href="https://demo.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-demo&utm_medium=subs-org-backend&utm_campaign=demo"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="mwb-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
 
 				'docs'    => '<a target="_blank" href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="mwb-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 

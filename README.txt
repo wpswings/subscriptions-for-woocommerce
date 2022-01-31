@@ -95,7 +95,7 @@ With a clean WooCommerce subscription plan report module, you will get the compl
 **9)** **Cancel WooCommerce Subscription Plan Anytime via User or Admin**
 With the free Subscriptions for WooCommerce plugin, both users and admin can cancel the WooCommerce subscription plans anytime. This way, subscription management becomes flexible enough. 
 
- [**Free demo of Subscriptions for WooCommerce**](https://demo.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-demo&utm_medium=subs-org-page&utm_campaign=free-demo)
+ [**Free demo of Subscriptions for WooCommerce**](https://demo.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-demo&utm_medium=subs-org-page&utm_campaign=free-demo)
 
 Visit [**Subscriptions For WooCommerce Documentation**](https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-page&utm_campaign=subscription-doc) and learn more about the features and working of the plugin.
 
