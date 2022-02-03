@@ -2,7 +2,7 @@
 /**
  * The admin-specific paypal functionality of the plugin.
  *
- * @link       https://makewebbetter.com
+ * @link       https://wpswing.com
  * @since      1.0.2
  *
  * @package     Subscriptions_For_Woocommerce
@@ -18,7 +18,7 @@
 
  * @subpackage  Subscriptions_For_Woocommerce/includes
 
- * @author      makewebbetter <ticket@makewebbetter.com>
+ * @author      WP Swings <webmaster@wpswings.com>
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/public
- * @author     makewebbetter <ticket@makewebbetter.com>
+ * @author     WP Swings <webmaster@wpswings.com>
  */
 class Mwb_Sfw_Paypal_Api_Request {
 

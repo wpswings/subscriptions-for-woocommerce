@@ -2,7 +2,7 @@
 /**
  * The admin-specific on-boarding functionality of the plugin.
  *
- * @link       https://makewebbetter.com
+ * @link       https://wpswing.com
  * @since      1.0.0
  *
  * @package     Subscriptions_For_Woocommerce
@@ -14,7 +14,7 @@
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
- * @author      makewebbetter <webmaster@makewebbetter.com>
+ * @author      WP Swings <webmaster@wpswings.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

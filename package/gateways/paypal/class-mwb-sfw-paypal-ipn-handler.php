@@ -2,7 +2,7 @@
 /**
  * The public-facing functionality of the plugin.
  *
- * @link       https://makewebbetter.com/
+ * @link       https://wpswing.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce
@@ -23,7 +23,7 @@ if ( ! class_exists( 'MWB_Sfw_PayPal_IPN_Handler' ) ) {
 	 *
 	 * @package    Subscriptions_For_Woocommerce
 	 * @subpackage Subscriptions_For_Woocommerce/public
-	 * @author     makewebbetter <webmaster@makewebbetter.com>
+	 * @author     WP Swings <webmaster@wpswings.com>
 	 */
 	class MWB_Sfw_PayPal_IPN_Handler extends WC_Gateway_Paypal_IPN_Handler {
 
@@ -49,7 +49,7 @@ if ( ! class_exists( 'MWB_Sfw_PayPal_IPN_Handler' ) ) {
 			 * Initialize plugin and registers actions and filters to be used
 			 *
 			 * @since  1.0.0
-			 * @author     makewebbetter <webmaster@makewebbetter.com>
+			 * @author     WP Swings <webmaster@wpswings.com>
 			 *
 			 * @param bool   $sandbox sandbox.
 			 * @param string $receiver_email receiver_email.

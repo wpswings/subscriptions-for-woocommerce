@@ -372,7 +372,7 @@ if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
 	 */
 	function mwb_sfw_get_page_screen() {
 
-		$mwb_screen_id = sanitize_title( 'MakeWebBetter' );
+		$mwb_screen_id = sanitize_title( 'WP Swings' );
 		$screen_ids   = array(
 			'toplevel_page_' . $mwb_screen_id,
 			$mwb_screen_id . '_page_subscriptions_for_woocommerce_menu',
@@ -547,8 +547,8 @@ if ( ! function_exists( 'mwb_sfw_pro_active' ) ) {
 	 * @since 1.0.0
 	 * @name mwb_sfw_pro_active
 	 * @return boolean
-	 * @author makewebbetter<ticket@makewebbetter.com>
-	 * @link https://www.makewebbetter.com/
+	 * @author WP Swings<ticket@wpswings.com>
+	 * @link https://www.wpswing.com/
 	 */
 	function mwb_sfw_pro_active() {
 		return apply_filters( 'mwb_wsp_pro_active', false );
@@ -562,8 +562,8 @@ if ( ! function_exists( 'mwb_sfw_delete_failed_subscription' ) ) {
 	 * @since 1.0.0
 	 * @name mwb_sfw_delete_failed_subscription
 	 * @param int $order_id order_id.
-	 * @author makewebbetter<ticket@makewebbetter.com>
-	 * @link https://www.makewebbetter.com/
+	 * @author WP Swings<ticket@wpswings.com>
+	 * @link https://www.wpswing.com/
 	 */
 	function mwb_sfw_delete_failed_subscription( $order_id ) {
 		if ( isset( $order_id ) && ! empty( $order_id ) ) {
@@ -603,8 +603,8 @@ if ( ! function_exists( 'mwb_sfw_include_process_directory' ) ) {
 	 * @name mwb_sfw_include_process_directory
 	 * @param string $mwb_sfw_dir mwb_sfw_dir.
 	 * @param string $mwb_selected_dir mwb_selected_dir.
-	 * @author makewebbetter<ticket@makewebbetter.com>
-	 * @link https://www.makewebbetter.com/
+	 * @author WP Swings<ticket@wpswings.com>
+	 * @link https://www.wpswing.com/
 	 */
 	function mwb_sfw_include_process_directory( $mwb_sfw_dir, $mwb_selected_dir = '' ) {
 

@@ -4,7 +4,7 @@
  *
  * This file is used to markup the html field for general tab.
  *
- * @link       https://makewebbetter.com/
+ * @link       https://wpswing.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce
@@ -22,10 +22,10 @@ global $sfw_mwb_sfw_obj;
 	<div class="mwb_sfw_table_wrapper mwb_sfw_overview-wrapper">
 		<div class="sfw-overview__wrapper">
 			<div class="sfw-overview__icons">
-				<a href="https://makewebbetter.com/contact-us/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-ORG-backend&utm_campaign=MWB-contact">
+				<a href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support">
 					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/dial.svg' ); ?>" alt="contact-us-img">
 				</a>
-				<a href="https://docs.makewebbetter.com/subscriptions-for-woocommerce/?utm_source=MWB-subscriptions-backend&utm_medium=MWB-docORG-backend&utm_campaign=MWB-backend">
+				<a href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation">
 					<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/doc.svg' ); ?>" alt="doc-img">
 				</a>
 				<?php

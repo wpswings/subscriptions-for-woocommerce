@@ -2,7 +2,7 @@
 /**
  * The admin-specific on-boarding functionality of the plugin.
  *
- * @link       https://makewebbetter.com
+ * @link       https://wpswing.com
  * @since      1.0.0
  *
  * @package     Subscriptions_For_Woocommerce
@@ -14,7 +14,7 @@
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/includes
- * @author      makewebbetter <webmaster@makewebbetter.com>
+ * @author      WP Swings <webmaster@wpswings.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -49,7 +49,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * @since 1.0.0
 	 * @var string Portal id.
 	 */
-	private static $mwb_sfw_portal_id = '6493626';
+	private static $mwb_sfw_portal_id = '25444144'; // Wp Swings portal.
 
 	/**
 	 * Form id of hubspot api for subscriptions-for-woocommerce.
@@ -57,7 +57,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * @since 1.0.0
 	 * @var string Form id.
 	 */
-	private static $mwb_sfw_onboarding_form_id = 'd94dcb10-c9c1-4155-a9ad-35354f2c3b52';
+	private static $mwb_sfw_onboarding_form_id = '2a2fe23c-0024-43f5-9473-cbfefdb06fe2';
 
 	/**
 	 * Form id of hubspot api for subscriptions-for-woocommerce.
@@ -65,7 +65,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * @since 1.0.0
 	 * @var string Form id.
 	 */
-	private static $mwb_sfw_deactivation_form_id = '329ffc7a-0e8c-4e11-8b41-960815c31f8d';
+	private static $mwb_sfw_deactivation_form_id = '67feecaa-9a93-4fda-8f85-f73168da2672';
 
 	/**
 	 * Define some variables for subscriptions-for-woocommerce.
@@ -157,10 +157,10 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * This function is provided for demonstration purposes only.
 	 *
 	 * An instance of this class should be passed to the run() function
-	 * defined in Makewebbetter_Onboarding_Loader as all of the hooks are defined
+	 * defined in wpswing_Onboarding_Loader as all of the hooks are defined
 	 * in that particular class.
 	 *
-	 * The Makewebbetter_Onboarding_Loader will then create the relationship
+	 * The wpswing_Onboarding_Loader will then create the relationship
 	 * between the defined hooks and the functions defined in this
 	 * class.
 	 */
@@ -189,10 +189,10 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	 * This function is provided for demonstration purposes only.
 	 *
 	 * An instance of this class should be passed to the run() function
-	 * defined in Makewebbetter_Onboarding_Loader as all of the hooks are defined
+	 * defined in wpswing_Onboarding_Loader as all of the hooks are defined
 	 * in that particular class.
 	 *
-	 * The Makewebbetter_Onboarding_Loader will then create the relationship
+	 * The wpswing_Onboarding_Loader will then create the relationship
 	 * between the defined hooks and the functions defined in this
 	 * class.
 	 */
@@ -685,9 +685,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 
 		$url = 'submissions/v3/integration/submit/' . self::$mwb_sfw_portal_id . '/' . $form_id;
 
-		$headers = array(
-			'Content-Type' => 'application/json',
-		);
+		$headers = 'Content-Type: application/json';
 
 		$form_data = json_encode(
 			array(

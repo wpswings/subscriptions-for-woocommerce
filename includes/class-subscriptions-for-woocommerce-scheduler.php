@@ -2,7 +2,7 @@
 /**
  * The admin-specific cron functionality of the plugin.
  *
- * @link       https://makewebbetter.com
+ * @link       https://wpswing.com
  * @since      1.0.0
  *
  * @package     Subscriptions_For_Woocommerce
@@ -14,7 +14,7 @@
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
- * @author      makewebbetter <webmaster@makewebbetter.com>
+ * @author      WP Swings <webmaster@wpswings.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -325,8 +325,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 			);
 
 			$params = apply_filters( 'makewebbetter_tracker_params', $params );
-
-			$api_url = 'https://tracking.makewebbetter.com/wp-json/mps-route/v1/mps-testing-data/';
+			$api_url = 'https://tracking.wpswings.com/wp-json/mps-route/v1/mps-testing-data/';
 			$sucess = wp_safe_remote_post(
 				$api_url,
 				array(

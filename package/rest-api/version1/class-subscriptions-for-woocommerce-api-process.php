@@ -2,7 +2,7 @@
 /**
  * Fired during plugin activation
  *
- * @link       https://makewebbetter.com/
+ * @link       https://wpswing.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce
@@ -22,7 +22,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Api_Process' ) ) {
 	 * @since      1.0.0
 	 * @package    Subscriptions_For_Woocommerce
 	 * @subpackage Subscriptions_For_Woocommerce/package/rest-api/version1
-	 * @author     MakeWebBetter <makewebbetter.com>
+	 * @author     WP Swings <wpswings.com>
 	 */
 	class Subscriptions_For_Woocommerce_Api_Process {
 
