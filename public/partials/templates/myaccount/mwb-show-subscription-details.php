@@ -1,6 +1,6 @@
 <?php
 /**
- * The add new payment.
+ * Subscription detail page
  *
  * @link       https://wpswing.com/
  * @since      1.0.0
