@@ -1,0 +1,22 @@
+node_modules
+node_modules/*
+vendor
+vendor/*
+.history
+# ignore compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# ignore packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
