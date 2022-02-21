@@ -27,7 +27,7 @@ class Subscriptions_For_Woocommerce_Log {
 	 */
 	public static $logger;
 
-	const WC_LOG_FILENAME = 'mwb-sfw-log';
+	const WC_LOG_FILENAME = 'wps-sfw-log';
 
 	/**
 	 * Utilize WC logger class
@@ -39,12 +39,12 @@ class Subscriptions_For_Woocommerce_Log {
 		if ( ! class_exists( 'WC_Logger' ) ) {
 			return;
 		}
-		$enable_log = get_option( 'mwb_sfw_enable_subscription_log', 'off' );
+		$enable_log = get_option( 'wps_sfw_enable_subscription_log', 'off' );
 		if ( 'on' != $enable_log ) {
 			return;
 		}
 
-		if ( apply_filters( 'mwb_sfw_logging', true, $message ) ) {
+		if ( apply_filters( 'wps_sfw_logging', true, $message ) ) {
 			if ( empty( self::$logger ) ) {
 				self::$logger = wc_get_logger();
 			}

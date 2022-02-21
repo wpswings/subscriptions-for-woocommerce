@@ -231,14 +231,14 @@ msgid "Parent Order ID"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:56
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:44
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:24
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:44
+#: public/partials/templates/myaccount/wps-susbcrptions.php:24
 msgid "Status"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:57
 #: build/index.js:56172
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:111
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:111
 msgid "Product Name"
 msgstr ""
 
@@ -251,7 +251,7 @@ msgid "User Name"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:60
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:62
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:62
 msgid "Next Payment Date"
 msgstr ""
 
@@ -260,7 +260,7 @@ msgid "Subscription Expiry Date"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:87
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:147
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:147
 msgid "Cancel"
 msgstr ""
 
@@ -675,42 +675,42 @@ msgstr ""
 msgid "Subscription Expired"
 msgstr ""
 
-#: emails/templates/mwb-sfw-cancel-subscription-email-template.php:18
-#: emails/templates/plain/mwb-sfw-cancel-subscription-email-template.php:20
+#: emails/templates/wps-sfw-cancel-subscription-email-template.php:18
+#: emails/templates/plain/wps-sfw-cancel-subscription-email-template.php:20
 #, php-format
 msgid ""
 "A subscription [#%s] has been cancelled. Their subscription's details are as "
 "follows:"
 msgstr ""
 
-#: emails/templates/mwb-sfw-expired-subscription-email-template.php:18
+#: emails/templates/wps-sfw-expired-subscription-email-template.php:18
 #, php-format
 msgid ""
 "A subscription [#%s] has been Expired. Their subscription's details are as "
 "follows:"
 msgstr ""
 
-#: emails/templates/plain/mwb-sfw-cancel-subscription-email-template.php:29
-#: emails/templates/plain/mwb-sfw-expired-subscription-email-template.php:27
+#: emails/templates/plain/wps-sfw-cancel-subscription-email-template.php:29
+#: emails/templates/plain/wps-sfw-expired-subscription-email-template.php:27
 #: includes/subscriptions-for-woocommerce-common-function.php:291
-#: public/partials/templates/myaccount/mwb-add-new-payment-details.php:21
+#: public/partials/templates/myaccount/wps-add-new-payment-details.php:21
 msgid "Product"
 msgstr ""
 
-#: emails/templates/plain/mwb-sfw-cancel-subscription-email-template.php:33
-#: emails/templates/plain/mwb-sfw-expired-subscription-email-template.php:31
+#: emails/templates/plain/wps-sfw-cancel-subscription-email-template.php:33
+#: emails/templates/plain/wps-sfw-expired-subscription-email-template.php:31
 #: includes/subscriptions-for-woocommerce-common-function.php:292
-#: public/partials/templates/myaccount/mwb-add-new-payment-details.php:22
+#: public/partials/templates/myaccount/wps-add-new-payment-details.php:22
 msgid "Quantity"
 msgstr ""
 
-#: emails/templates/plain/mwb-sfw-cancel-subscription-email-template.php:37
-#: emails/templates/plain/mwb-sfw-expired-subscription-email-template.php:35
+#: emails/templates/plain/wps-sfw-cancel-subscription-email-template.php:37
+#: emails/templates/plain/wps-sfw-expired-subscription-email-template.php:35
 #: includes/subscriptions-for-woocommerce-common-function.php:293
 msgid "Price"
 msgstr ""
 
-#: emails/templates/plain/mwb-sfw-expired-subscription-email-template.php:18
+#: emails/templates/plain/wps-sfw-expired-subscription-email-template.php:18
 #, php-format
 msgid ""
 "A subscription [#%s] has been expired. Their subscription's details are as "
@@ -959,7 +959,7 @@ msgid "N/A (make sure exec is enabled)"
 msgstr ""
 
 #: includes/class-subscriptions-for-woocommerce.php:600
-msgid "N/A (mwb_sfw_get_file_content function does not exist)"
+msgid "N/A (wps_sfw_get_file_content function does not exist)"
 msgstr ""
 
 #: includes/subscriptions-for-woocommerce-common-function.php:354
@@ -1037,71 +1037,71 @@ msgstr ""
 msgid "Skip For Now"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-api-request.php:86
+#: package/gateways/paypal/class-wps-sfw-paypal-api-request.php:86
 #, php-format
 msgctxt "data sent to paypal"
 msgid "Orders with %s"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-api-request.php:192
+#: package/gateways/paypal/class-wps-sfw-paypal-api-request.php:192
 msgid "Total Discount"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-api-request.php:258
+#: package/gateways/paypal/class-wps-sfw-paypal-api-request.php:258
 #, php-format
 msgctxt "data sent to PayPal"
 msgid "Orders with %s"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:210
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:210
 msgid "IPN subscription started"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:270
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:284
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:310
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:270
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:284
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:310
 msgid "IPN subscription payment completed."
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:331
-msgid "MWB-IPN subscription cancelled for this order."
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:331
+msgid "WPS-IPN subscription cancelled for this order."
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:363
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:371
-msgid "MWB - IPN Failed payment for  %$ "
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:363
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:371
+msgid "WPS - IPN Failed payment for  %$ "
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-sfw-paypal-ipn-handler.php:373
-msgid "MWB - IPN Failed payment"
+#: package/gateways/paypal/class-wps-sfw-paypal-ipn-handler.php:373
+msgid "WPS - IPN Failed payment"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-subscriptions-payment-paypal-main.php:744
+#: package/gateways/paypal/class-wps-subscriptions-payment-paypal-main.php:744
 #, php-format
 msgid "PayPal payment approved (ID: %s)"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-subscriptions-payment-paypal-main.php:750
+#: package/gateways/paypal/class-wps-subscriptions-payment-paypal-main.php:750
 msgid "PayPal Transaction Held:"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-subscriptions-payment-paypal-main.php:785
+#: package/gateways/paypal/class-wps-subscriptions-payment-paypal-main.php:785
 msgid "Unable to find order for PayPal billing agreement."
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-subscriptions-payment-paypal-main.php:829
+#: package/gateways/paypal/class-wps-subscriptions-payment-paypal-main.php:829
 msgid ""
 "An error occurred, please try again or try an alternate form of payment."
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-subscriptions-payment-paypal-main.php:1025
+#: package/gateways/paypal/class-wps-subscriptions-payment-paypal-main.php:1025
 #, php-format
 msgid "Order %s"
 msgstr ""
 
-#: package/gateways/paypal/class-mwb-subscriptions-payment-paypal-main.php:1074
+#: package/gateways/paypal/class-wps-subscriptions-payment-paypal-main.php:1074
 #, php-format
-msgid "MWB Subscription %s"
+msgid "WPS Subscription %s"
 msgstr ""
 
 #: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:57
@@ -1127,12 +1127,12 @@ msgstr ""
 msgid "%1$s - Order %2$s - Renewal Order."
 msgstr ""
 
-#: package/gateways/woocybs/class-mwb-subscriptions-payment-woocybs-main.php:154
+#: package/gateways/woocybs/class-wps-subscriptions-payment-woocybs-main.php:154
 #, php-format
 msgid "Payment token not found %s"
 msgstr ""
 
-#: package/gateways/woocybs/class-mwb-subscriptions-payment-woocybs-main.php:204
+#: package/gateways/woocybs/class-wps-subscriptions-payment-woocybs-main.php:204
 #, php-format
 msgid ""
 "Renewal Order is successfully paid!. Cardholder: %1$s Last 4 card digits: : "
@@ -1162,7 +1162,7 @@ msgstr ""
 #: public/class-subscriptions-for-woocommerce-public.php:546
 #, php-format
 msgctxt "Subscription post title"
-msgid "MWB Subscription &ndash; %s"
+msgid "WPS Subscription &ndash; %s"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:741
@@ -1189,67 +1189,67 @@ msgstr ""
 msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-add-new-payment-details.php:23
+#: public/partials/templates/myaccount/wps-add-new-payment-details.php:23
 msgid "Totals"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-add-new-payment-details.php:46
+#: public/partials/templates/myaccount/wps-add-new-payment-details.php:46
 msgid "Add payment method"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:41
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:41
 msgid "Subscription Details"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:53
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:53
 msgid "Subscription Date"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:76
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:76
 msgid "Trial End Date"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:95
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:95
 msgid "Add Payment Method"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:107
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:107
 msgid "Subscription Order Details"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-show-subscription-details.php:114
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:114
 msgid "Total"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:23
+#: public/partials/templates/myaccount/wps-susbcrptions.php:23
 msgid "ID"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:25
+#: public/partials/templates/myaccount/wps-susbcrptions.php:25
 msgid "Next payment date"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:26
+#: public/partials/templates/myaccount/wps-susbcrptions.php:26
 msgid "Recurring Total"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:27
+#: public/partials/templates/myaccount/wps-susbcrptions.php:27
 msgid "Action"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:67
+#: public/partials/templates/myaccount/wps-susbcrptions.php:67
 msgid "Show"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:83
+#: public/partials/templates/myaccount/wps-susbcrptions.php:83
 msgid "Previous"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:87
+#: public/partials/templates/myaccount/wps-susbcrptions.php:87
 msgid "Next"
 msgstr ""
 
-#: public/partials/templates/myaccount/mwb-susbcrptions.php:93
+#: public/partials/templates/myaccount/wps-susbcrptions.php:93
 msgid "You do not have any active subscription(s)."
 msgstr ""
 

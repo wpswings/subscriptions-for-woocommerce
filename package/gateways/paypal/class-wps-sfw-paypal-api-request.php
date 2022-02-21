@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @subpackage Subscriptions_For_Woocommerce/public
  * @author     WP Swings <webmaster@wpswings.com>
  */
-class Mwb_Sfw_Paypal_Api_Request {
+class Wps_Sfw_Paypal_Api_Request {
 
 	/**
 	 * The payment_args variable.
@@ -55,32 +55,32 @@ class Mwb_Sfw_Paypal_Api_Request {
 	/**
 	 * Define the paypal functionality of the plugin.
 	 *
-	 * @param string $mwb_sfw_api_username mwb_sfw_api_username.
-	 * @param string $mwb_sfw_api_password mwb_sfw_api_password.
-	 * @param string $mwb_sfw_api_signature mwb_sfw_api_signature.
-	 * @param string $mwb_sfw_api_version mwb_sfw_api_version.
-	 * @param string $mwb_sfw_invoice_prefix mwb_sfw_invoice_prefix.
+	 * @param string $wps_sfw_api_username wps_sfw_api_username.
+	 * @param string $wps_sfw_api_password wps_sfw_api_password.
+	 * @param string $wps_sfw_api_signature wps_sfw_api_signature.
+	 * @param string $wps_sfw_api_version wps_sfw_api_version.
+	 * @param string $wps_sfw_invoice_prefix wps_sfw_invoice_prefix.
 	 * @since    1.0.2
 	 */
-	public function __construct( $mwb_sfw_api_username, $mwb_sfw_api_password, $mwb_sfw_api_signature, $mwb_sfw_api_version, $mwb_sfw_invoice_prefix ) {
+	public function __construct( $wps_sfw_api_username, $wps_sfw_api_password, $wps_sfw_api_signature, $wps_sfw_api_version, $wps_sfw_invoice_prefix ) {
 
-		$this->payment_args['USER'] = $mwb_sfw_api_username;
-		$this->payment_args['PWD'] = $mwb_sfw_api_password;
-		$this->payment_args['SIGNATURE'] = $mwb_sfw_api_signature;
-		$this->payment_args['VERSION'] = $mwb_sfw_api_version;
+		$this->payment_args['USER'] = $wps_sfw_api_username;
+		$this->payment_args['PWD'] = $wps_sfw_api_password;
+		$this->payment_args['SIGNATURE'] = $wps_sfw_api_signature;
+		$this->payment_args['VERSION'] = $wps_sfw_api_version;
 
-		$this->invoice_prefix = $mwb_sfw_invoice_prefix;
+		$this->invoice_prefix = $wps_sfw_invoice_prefix;
 
 	}
 
 	/**
 	 * Get express checkout params.
 	 *
-	 * @name mwb_sfw_get_express_checkout_param.
+	 * @name wps_sfw_get_express_checkout_param.
 	 * @param array $args args for payment.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_get_express_checkout_param( $args ) {
+	public function wps_sfw_get_express_checkout_param( $args ) {
 
 		// translators: placeholder is blogname.
 		$default_description = sprintf( _x( 'Orders with %s', 'data sent to paypal', 'subscriptions-for-woocommerce' ), get_bloginfo( 'name' ) );
@@ -105,7 +105,7 @@ class Mwb_Sfw_Paypal_Api_Request {
 			$this->payment_args,
 			array(
 				'L_BILLINGTYPE0'                 => $args['billing_type'],
-				'L_BILLINGAGREEMENTDESCRIPTION0' => $this->mwb_sfw_billing_agreement_description( $args['billing_description'] ),
+				'L_BILLINGAGREEMENTDESCRIPTION0' => $this->wps_sfw_billing_agreement_description( $args['billing_description'] ),
 				'L_BILLINGAGREEMENTCUSTOM0'      => $args['custom'],
 
 				'RETURNURL'                      => $args['return_url'],
@@ -138,7 +138,7 @@ class Mwb_Sfw_Paypal_Api_Request {
 
 			} else {
 
-				$this->mwb_sfw_get_order_express_checkout_params( $args['order'], $args['payment_action'] );
+				$this->wps_sfw_get_order_express_checkout_params( $args['order'], $args['payment_action'] );
 			}
 		}
 		return $this->payment_args;
@@ -147,13 +147,13 @@ class Mwb_Sfw_Paypal_Api_Request {
 	/**
 	 * Get order express checkout params.
 	 *
-	 * @name mwb_sfw_get_order_express_checkout_params.
+	 * @name wps_sfw_get_order_express_checkout_params.
 	 * @param object $order order.
 	 * @param string $payment_action payment_action.
 	 * @param string $is_reference_payment is_reference_payment.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_get_order_express_checkout_params( $order, $payment_action, $is_reference_payment = '' ) {
+	public function wps_sfw_get_order_express_checkout_params( $order, $payment_action, $is_reference_payment = '' ) {
 
 		$order_subtotal   = 0;
 		$item_count       = 0;
@@ -165,8 +165,8 @@ class Mwb_Sfw_Paypal_Api_Request {
 			$product = new WC_Product( $item['product_id'] );
 
 			$order_items[] = array(
-				'NAME'    => $this->mwb_get_paypal_item_name( $product->get_title() ),
-				'DESC'    => $this->mwb_get_paypal_item_name( $product->get_description() ),
+				'NAME'    => $this->wps_get_paypal_item_name( $product->get_title() ),
+				'DESC'    => $this->wps_get_paypal_item_name( $product->get_description() ),
 				'AMT'     => round( $order->get_item_subtotal( $item ) ),
 				'QTY'     => ( ! empty( $item['qty'] ) ) ? absint( $item['qty'] ) : 1,
 				'ITEMURL' => $product->get_permalink(),
@@ -178,7 +178,7 @@ class Mwb_Sfw_Paypal_Api_Request {
 		foreach ( $order->get_fees() as $fee ) {
 
 			$order_items[] = array(
-				'NAME' => $this->mwb_get_paypal_item_name( $fee['name'] ),
+				'NAME' => $this->wps_get_paypal_item_name( $fee['name'] ),
 				'AMT'  => round( $fee['line_total'] ),
 				'QTY'  => 1,
 			);
@@ -198,7 +198,7 @@ class Mwb_Sfw_Paypal_Api_Request {
 		if ( 'reference_payment' == $is_reference_payment ) {
 
 			foreach ( $order_items as $item ) {
-				$this->mwb_sfw_add_line_item_params( $item, $item_count++, $is_reference_payment );
+				$this->wps_sfw_add_line_item_params( $item, $item_count++, $is_reference_payment );
 			}
 
 			$this->payment_args = array_merge(
@@ -223,7 +223,7 @@ class Mwb_Sfw_Paypal_Api_Request {
 
 		} else {
 			foreach ( $order_items as $item ) {
-				$this->mwb_sfw_add_line_item_params( $item, $item_count++ );
+				$this->wps_sfw_add_line_item_params( $item, $item_count++ );
 			}
 			$this->payment_args = array_merge(
 				$this->payment_args,
@@ -250,10 +250,10 @@ class Mwb_Sfw_Paypal_Api_Request {
 	/**
 	 * Get billing description.
 	 *
-	 * @name mwb_sfw_billing_agreement_description.
+	 * @name wps_sfw_billing_agreement_description.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_billing_agreement_description() {
+	public function wps_sfw_billing_agreement_description() {
 		/* Translators: placeholder is blogname. */
 		$description = sprintf( _x( 'Orders with %s', 'data sent to PayPal', 'subscriptions-for-woocommerce' ), get_bloginfo( 'name' ) );
 
@@ -267,28 +267,28 @@ class Mwb_Sfw_Paypal_Api_Request {
 	/**
 	 * Get billing description.
 	 *
-	 * @name mwb_get_paypal_item_name.
-	 * @param string $mwb_item_name mwb_item_name.
+	 * @name wps_get_paypal_item_name.
+	 * @param string $wps_item_name wps_item_name.
 	 * @since    1.0.2
 	 */
-	public function mwb_get_paypal_item_name( $mwb_item_name ) {
+	public function wps_get_paypal_item_name( $wps_item_name ) {
 
-		if ( strlen( $mwb_item_name ) > 127 ) {
-			$mwb_item_name = substr( $mwb_item_name, 0, 124 ) . '...';
+		if ( strlen( $wps_item_name ) > 127 ) {
+			$wps_item_name = substr( $wps_item_name, 0, 124 ) . '...';
 		}
-		return html_entity_decode( $mwb_item_name, ENT_NOQUOTES, 'UTF-8' );
+		return html_entity_decode( $wps_item_name, ENT_NOQUOTES, 'UTF-8' );
 	}
 
 	/**
 	 * Get do express checkout parameters.
 	 *
-	 * @name mwb_sfw_do_express_checkout_params.
+	 * @name wps_sfw_do_express_checkout_params.
 	 * @param string $token token.
 	 * @param object $order order.
 	 * @param array  $args args.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_do_express_checkout_params( $token, $order, $args ) {
+	public function wps_sfw_do_express_checkout_params( $token, $order, $args ) {
 
 		$this->payment_args['METHOD']  = 'DoExpressCheckoutPayment';
 		$this->payment_args = array_merge(
@@ -296,21 +296,21 @@ class Mwb_Sfw_Paypal_Api_Request {
 			array(
 				'TOKEN'            => $token,
 				'PAYERID'          => $args['payer_id'],
-				'BUTTONSOURCE'     => 'MWB_Cart',
+				'BUTTONSOURCE'     => 'WPS_Cart',
 			)
 		);
-		$this->mwb_sfw_get_order_express_checkout_params( $order, $args['payment_action'] );
+		$this->wps_sfw_get_order_express_checkout_params( $order, $args['payment_action'] );
 		return $this->payment_args;
 	}
 
 	/**
 	 * Get get do express checkout parameters.
 	 *
-	 * @name mwb_sfw_get_express_checkout_params.
+	 * @name wps_sfw_get_express_checkout_params.
 	 * @param string $token token.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_get_express_checkout_params( $token ) {
+	public function wps_sfw_get_express_checkout_params( $token ) {
 		$this->payment_args['METHOD']  = 'GetExpressCheckoutDetails';
 		$this->payment_args['TOKEN']  = $token;
 
@@ -320,11 +320,11 @@ class Mwb_Sfw_Paypal_Api_Request {
 	/**
 	 * Create billing parameters.
 	 *
-	 * @name mwb_sfw_create_billing_agreement_params.
+	 * @name wps_sfw_create_billing_agreement_params.
 	 * @param string $token token.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_create_billing_agreement_params( $token ) {
+	public function wps_sfw_create_billing_agreement_params( $token ) {
 
 		$this->payment_args['METHOD']  = 'CreateBillingAgreement';
 		$this->payment_args['TOKEN']  = $token;
@@ -336,14 +336,14 @@ class Mwb_Sfw_Paypal_Api_Request {
 	/**
 	 * Create billing parameters.
 	 *
-	 * @name mwb_sfw_do_reference_transaction_params.
+	 * @name wps_sfw_do_reference_transaction_params.
 	 * @param string $reference_id reference_id.
 	 * @param string $order order.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_do_reference_transaction_params( $reference_id, $order ) {
+	public function wps_sfw_do_reference_transaction_params( $reference_id, $order ) {
 
-		$mwb_params = array(
+		$wps_params = array(
 			'payment_action'       => 'Sale',
 			'return_fraud_filters' => 1,
 			'notify_url'           => WC()->api_request_url( 'WC_Gateway_Paypal' ),
@@ -355,13 +355,13 @@ class Mwb_Sfw_Paypal_Api_Request {
 			$this->payment_args,
 			array(
 				'REFERENCEID'      => $reference_id,
-				'BUTTONSOURCE'     => 'MWB_Cart',
-				'RETURNFMFDETAILS' => $mwb_params['return_fraud_filters'],
-				'NOTIFYURL'        => $mwb_params['notify_url'],
+				'BUTTONSOURCE'     => 'WPS_Cart',
+				'RETURNFMFDETAILS' => $wps_params['return_fraud_filters'],
+				'NOTIFYURL'        => $wps_params['notify_url'],
 			)
 		);
 
-		$this->mwb_sfw_get_order_express_checkout_params( $order, $mwb_params['payment_action'], 'reference_payment' );
+		$this->wps_sfw_get_order_express_checkout_params( $order, $wps_params['payment_action'], 'reference_payment' );
 		return $this->payment_args;
 
 	}
@@ -369,15 +369,15 @@ class Mwb_Sfw_Paypal_Api_Request {
 	/**
 	 * Add line item parameters.
 	 *
-	 * @name mwb_sfw_add_line_item_params.
-	 * @param array  $mwb_args mwb_args.
+	 * @name wps_sfw_add_line_item_params.
+	 * @param array  $wps_args wps_args.
 	 * @param int    $item_count item_count.
 	 * @param string $reference_payment reference_payment.
 	 * @since    1.0.2
 	 */
-	public function mwb_sfw_add_line_item_params( $mwb_args, $item_count, $reference_payment = '' ) {
+	public function wps_sfw_add_line_item_params( $wps_args, $item_count, $reference_payment = '' ) {
 
-		foreach ( $mwb_args as $key => $value ) {
+		foreach ( $wps_args as $key => $value ) {
 			if ( 'reference_payment' == $reference_payment ) {
 
 				$this->payment_args[ "L_{$key}{$item_count}" ] = $value;

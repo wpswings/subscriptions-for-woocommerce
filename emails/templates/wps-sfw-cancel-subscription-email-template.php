@@ -1,6 +1,6 @@
 <?php
 /**
- * Expired Email template
+ * Cancelled Email template
  *
  * @link       https://wpswing.com/
  * @since      1.0.0
@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
-<?php /* translators: %s: susbcription ID */ ?>
-<p><?php printf( esc_html__( 'A subscription [#%s] has been Expired. Their subscription\'s details are as follows:', 'subscriptions-for-woocommerce' ), esc_html( $mwb_subscription ) ); ?></p>
+<?php /* translators: %s: subscription ID */ ?>
+<p><?php printf( esc_html__( 'A subscription [#%s] has been cancelled. Their subscription\'s details are as follows:', 'subscriptions-for-woocommerce' ), esc_html( $wps_subscription ) ); ?></p>
 
 <?php
-mwb_sfw_email_subscriptions_details( $mwb_subscription );
+wps_sfw_email_subscriptions_details( $wps_subscription );
 
 do_action( 'woocommerce_email_footer', $email );

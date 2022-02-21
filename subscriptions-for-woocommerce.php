@@ -102,14 +102,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 	}
 
-	add_action( 'admin_notices', 'mwb_sfw_plugin_upgrade_notice', 20 );
+	add_action( 'admin_notices', 'wps_sfw_plugin_upgrade_notice', 20 );
 
 	/**
 	 * Upgrade Notice for Subscription Plugin.
 	 *
 	 * @return void
 	 */
-	function mwb_sfw_plugin_upgrade_notice() {
+	function wps_sfw_plugin_upgrade_notice() {
 		$screen = get_current_screen();
 		if ( isset( $screen->id ) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
 			?>
@@ -144,20 +144,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function activate_subscriptions_for_woocommerce() {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce-activator.php';
 		Subscriptions_For_Woocommerce_Activator::subscriptions_for_woocommerce_activate();
-		$mwb_sfw_active_plugin = get_option( 'mwb_all_plugins_active', false );
-		if ( is_array( $mwb_sfw_active_plugin ) && ! empty( $mwb_sfw_active_plugin ) ) {
-			$mwb_sfw_active_plugin['subscriptions-for-woocommerce'] = array(
+		$wps_sfw_active_plugin = get_option( 'wps_all_plugins_active', false );
+		if ( is_array( $wps_sfw_active_plugin ) && ! empty( $wps_sfw_active_plugin ) ) {
+			$wps_sfw_active_plugin['subscriptions-for-woocommerce'] = array(
 				'plugin_name' => __( 'Subscriptions For Woocommerce', 'subscriptions-for-woocommerce' ),
 				'active' => '1',
 			);
 		} else {
-			$mwb_sfw_active_plugin = array();
-			$mwb_sfw_active_plugin['subscriptions-for-woocommerce'] = array(
+			$wps_sfw_active_plugin = array();
+			$wps_sfw_active_plugin['subscriptions-for-woocommerce'] = array(
 				'plugin_name' => __( 'Subscriptions For Woocommerce', 'subscriptions-for-woocommerce' ),
 				'active' => '1',
 			);
 		}
-		update_option( 'mwb_all_plugins_active', $mwb_sfw_active_plugin );
+		update_option( 'wps_all_plugins_active', $wps_sfw_active_plugin );
 	}
 
 	/**
@@ -167,15 +167,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function deactivate_subscriptions_for_woocommerce() {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce-deactivator.php';
 		Subscriptions_For_Woocommerce_Deactivator::subscriptions_for_woocommerce_deactivate();
-		$mwb_sfw_deactive_plugin = get_option( 'mwb_all_plugins_active', false );
-		if ( is_array( $mwb_sfw_deactive_plugin ) && ! empty( $mwb_sfw_deactive_plugin ) ) {
-			foreach ( $mwb_sfw_deactive_plugin as $mwb_sfw_deactive_key => $mwb_sfw_deactive ) {
-				if ( 'subscriptions-for-woocommerce' === $mwb_sfw_deactive_key ) {
-					$mwb_sfw_deactive_plugin[ $mwb_sfw_deactive_key ]['active'] = '0';
+		$wps_sfw_deactive_plugin = get_option( 'wps_all_plugins_active', false );
+		if ( is_array( $wps_sfw_deactive_plugin ) && ! empty( $wps_sfw_deactive_plugin ) ) {
+			foreach ( $wps_sfw_deactive_plugin as $wps_sfw_deactive_key => $wps_sfw_deactive ) {
+				if ( 'subscriptions-for-woocommerce' === $wps_sfw_deactive_key ) {
+					$wps_sfw_deactive_plugin[ $wps_sfw_deactive_key ]['active'] = '0';
 				}
 			}
 		}
-		update_option( 'mwb_all_plugins_active', $mwb_sfw_deactive_plugin );
+		update_option( 'wps_all_plugins_active', $wps_sfw_deactive_plugin );
 	}
 
 	register_activation_hook( __FILE__, 'activate_subscriptions_for_woocommerce' );
@@ -187,20 +187,19 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	require plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce.php';
 
-	if ( ! function_exists( 'mwb_sfw_check_multistep' ) ) {
+	if ( ! function_exists( 'wps_sfw_check_multistep' ) ) {
 		/**
 		 * This function is used to check susbcripton product in cart.
 		 *
-		 * @name mwb_sfw_check_multistep
+		 * @name wps_sfw_check_multistep
 		 * @since 1.0.2
 		 */
-		function mwb_sfw_check_multistep() {
+		function wps_sfw_check_multistep() {
 			$bool = false;
-			$mwb_sfw_check = get_option( 'mwb_sfw_multistep_done', false );
-			if ( ! empty( $mwb_sfw_check ) ) {
+			$wps_sfw_check = get_option( 'wps_sfw_multistep_done', false );
+			if ( ! empty( $wps_sfw_check ) ) {
 				$bool = true;
 			}
-			$bool = apply_filters( 'mwb_sfw_multistep_done', $bool );
 
 			return $bool;
 		}
@@ -217,10 +216,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function run_subscriptions_for_woocommerce() {
 		define_subscriptions_for_woocommerce_constants();
 
-		$sfw_plugin_standard = new Subscriptions_For_Woocommerce();
-		$sfw_plugin_standard->sfw_run();
-		$GLOBALS['sfw_mwb_sfw_obj'] = $sfw_plugin_standard;
-		$GLOBALS['mwb_sfw_notices'] = false;
+		$sfw_sfw_plugin_standard = new Subscriptions_For_Woocommerce();
+		$sfw_sfw_plugin_standard->sfw_run();
+		$GLOBALS['sfw_wps_sfw_obj'] = $sfw_sfw_plugin_standard;
+		$GLOBALS['wps_sfw_notices'] = false;
 
 	}
 	run_subscriptions_for_woocommerce();
@@ -242,30 +241,30 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		);
 		if ( ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 
-			$my_link['goPro'] = '<a class="mwb-sfw-go-pro" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro">' . esc_html__( 'GO PRO', 'subscriptions-for-woocommerce' ) . '</a>';
+			$my_link['goPro'] = '<a class="wps-sfw-go-pro" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro">' . esc_html__( 'GO PRO', 'subscriptions-for-woocommerce' ) . '</a>';
 		}
 		return array_merge( $my_link, $links );
 	}
 
-	add_filter( 'plugin_row_meta', 'mwb_sfw_doc_and_premium_link', 10, 2 );
+	add_filter( 'plugin_row_meta', 'wps_sfw_doc_and_premium_link', 10, 2 );
 
 	/**
 	 * Callable function for adding plugin row meta.
 	 *
-	 * @name mwb_sfw_doc_and_premium_link.
+	 * @name wps_sfw_doc_and_premium_link.
 	 * @param string $links link of the constant.
 	 * @param array  $file name of the plugin.
 	 */
-	function mwb_sfw_doc_and_premium_link( $links, $file ) {
+	function wps_sfw_doc_and_premium_link( $links, $file ) {
 
 		if ( strpos( $file, 'subscriptions-for-woocommerce.php' ) !== false ) {
 
 			$row_meta = array(
-				'demo' => '<a target="_blank" href="https://demo.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-demo&utm_medium=subs-org-backend&utm_campaign=demo"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="mwb-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
+				'demo' => '<a target="_blank" href="https://demo.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-demo&utm_medium=subs-org-backend&utm_campaign=demo"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="wps-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'docs'    => '<a target="_blank" href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="mwb-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
+				'docs'    => '<a target="_blank" href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="wps-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'support' => '<a target="_blank" href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Support.svg" class="mwb-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
+				'support' => '<a target="_blank" href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Support.svg" class="wps-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
 
 			);
 
@@ -275,37 +274,37 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		return (array) $links;
 	}
 
-	register_activation_hook( __FILE__, 'mwb_sfw_flush_rewrite_rules' );
-	register_deactivation_hook( __FILE__, 'mwb_sfw_flush_rewrite_rules' );
+	register_activation_hook( __FILE__, 'wps_sfw_flush_rewrite_rules' );
+	register_deactivation_hook( __FILE__, 'wps_sfw_flush_rewrite_rules' );
 
 	/**
 	 * This function is used to create tabs
 	 *
-	 * @name mwb_sfw_flush_rewrite_rules
+	 * @name wps_sfw_flush_rewrite_rules
 	 * @since 1.0.0.
 	 * @author WP Swings<ticket@wpswings.com>
 	 * @link https://www.wpswing.com/
 	 */
-	function mwb_sfw_flush_rewrite_rules() {
-		add_rewrite_endpoint( 'mwb_subscriptions', EP_PAGES );
+	function wps_sfw_flush_rewrite_rules() {
+		add_rewrite_endpoint( 'wps_subscriptions', EP_PAGES );
 		add_rewrite_endpoint( 'show-subscription', EP_PAGES );
-		add_rewrite_endpoint( 'mwb-add-payment-method', EP_PAGES );
+		add_rewrite_endpoint( 'wps-add-payment-method', EP_PAGES );
 		flush_rewrite_rules();
 	}
 
-	add_action( 'init', 'mwb_sfw_register_custom_order_types' );
+	add_action( 'init', 'wps_sfw_register_custom_order_types' );
 
 	/**
 	 * This function is used to create custom post type for subscription.
 	 *
-	 * @name mwb_sfw_register_custom_order_types
+	 * @name wps_sfw_register_custom_order_types
 	 * @since 1.0.0
 	 */
-	function mwb_sfw_register_custom_order_types() {
+	function wps_sfw_register_custom_order_types() {
 		wc_register_order_type(
-			'mwb_subscriptions',
+			'wps_subscriptions',
 			apply_filters(
-				'mwb_sfw_register_custom_order_types',
+				'wps_sfw_register_custom_order_types',
 				array(
 					'labels'                           => array(
 						'name'               => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
@@ -348,17 +347,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			)
 		);
 	}
-	add_action( 'activated_plugin', 'mwb_sfe_redirect_on_settings' );
+	add_action( 'activated_plugin', 'wps_sfe_redirect_on_settings' );
 
-	if ( ! function_exists( 'mwb_sfe_redirect_on_settings' ) ) {
+	if ( ! function_exists( 'wps_sfe_redirect_on_settings' ) ) {
 		/**
 		 * This function is used to check plugin.
 		 *
-		 * @name mwb_sfe_redirect_on_settings
+		 * @name wps_sfe_redirect_on_settings
 		 * @param string $plugin plugin.
 		 * @since 1.0.3
 		 */
-		function mwb_sfe_redirect_on_settings( $plugin ) {
+		function wps_sfe_redirect_on_settings( $plugin ) {
 			if ( plugin_basename( __FILE__ ) === $plugin ) {
 				$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
 				wp_safe_redirect( esc_url( $general_settings_url ) );
@@ -368,29 +367,29 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	}
 } else {
 	// WooCommerce is not active so deactivate this plugin.
-	add_action( 'admin_init', 'mwb_sfw_activation_failure' );
+	add_action( 'admin_init', 'wps_sfw_activation_failure' );
 
 	/**
 	 * Deactivate this plugin.
 	 *
-	 * @name mwb_sfw_activation_failure
+	 * @name wps_sfw_activation_failure
 	 * @since 1.0.0
 	 */
-	function mwb_sfw_activation_failure() {
+	function wps_sfw_activation_failure() {
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 	}
 
 	// Add admin error notice.
-	add_action( 'admin_notices', 'mwb_sfw_activation_failure_admin_notice' );
+	add_action( 'admin_notices', 'wps_sfw_activation_failure_admin_notice' );
 
 	/**
 	 * This function is used to display admin error notice when WooCommerce is not active.
 	 *
-	 * @name mwb_sfw_activation_failure_admin_notice
+	 * @name wps_sfw_activation_failure_admin_notice
 	 * @since 1.0.0
 	 */
-	function mwb_sfw_activation_failure_admin_notice() {
+	function wps_sfw_activation_failure_admin_notice() {
 
 		// to hide Plugin activated notice.
 		unset( $_GET['activate'] );

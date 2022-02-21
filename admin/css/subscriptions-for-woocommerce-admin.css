@@ -179,23 +179,23 @@
 	padding-left: 20px;
 }
 
-.mwb_sfw_video_wrapper iframe {
+.wps_sfw_video_wrapper iframe {
 	width: 50%;
 	height: 300px;
 }
 /*Support and doc link*/
-.mwb-header-container__links {
+.wps-header-container__links {
     margin: 10px 0 0 auto;
 }
 
-.mwb-header-container__links span {
+.wps-header-container__links span {
     padding: 0 5px;
 }
-.mwb-header-container .mwb-header-title {
+.wps-header-container .wps-header-title {
  	flex: 0 0 50%;
  	max-width: 50%;
  }
- .mwb-header-container .mwb-header-container__links {
+ .wps-header-container .wps-header-container__links {
  	flex: 0 0 calc(50% - 15px);
  	max-width: calc(50% - 15px);
  	margin: 0 !important;
@@ -203,12 +203,12 @@
  	text-align: right;
  }
 @media only screen and (max-width: 767px) {
- 	.mwb-header-container .mwb-header-title {
+ 	.wps-header-container .wps-header-title {
  		flex: 0 0 100%;
  		max-width: 100%;
  		margin-bottom: 20px;
  	}
- 	.mwb-header-container .mwb-header-container__links {
+ 	.wps-header-container .wps-header-container__links {
  		flex: 0 0 100%;
  		max-width: 100%;
  		padding-left: 0;
@@ -270,21 +270,21 @@
 
  /* General Settings */
 
- .mwb-form-group:last-of-type .mwb-form-group__label {
+ .wps-form-group:last-of-type .wps-form-group__label {
 	display: none;
 }
 
 
-.mwb_sfw_list_table table .updates-table tbody td.check-column, .widefat tbody th.check-column, .widefat tfoot td.check-column, .widefat thead td.check-column {
+.wps_sfw_list_table table .updates-table tbody td.check-column, .widefat tbody th.check-column, .widefat tfoot td.check-column, .widefat thead td.check-column {
 	padding: 9px 0 0 3px;
 }
 
 
 @media screen and (max-width: 782px) {
-	.mwb_sfw_list_table table .updates-table tbody td.check-column, .widefat tbody th.check-column, .widefat tfoot td.check-column, .widefat thead td.check-column {
+	.wps_sfw_list_table table .updates-table tbody td.check-column, .widefat tbody th.check-column, .widefat tfoot td.check-column, .widefat thead td.check-column {
 		padding: 5px 0 0 3px;
 	}
-	.mwb_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
+	.wps_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
 		margin-bottom: 5px;
 	}
 	.search-box {
@@ -297,34 +297,34 @@
 		position: absolute;
 		width: 100% !important;
 	}
-	.mwb_sfw_list_table .wp-list-table .toggle-row:focus:before {
+	.wps_sfw_list_table .wp-list-table .toggle-row:focus:before {
 		box-shadow: none;
 		color: #4f94d4;
 	}
-	.mwb_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+	.wps_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
 		font-weight: 700;
 	}
-	.mwb_sfw_list_table table td b {
+	.wps_sfw_list_table table td b {
 		font-weight: 400;
 	}
-	.mwb_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
+	.wps_sfw_list_table .wp-list-table tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
 		padding: 3px 8px 3px 52%;
 	}
 }
  @media only screen and (max-width: 767px) {
-	.mwb-sfw-gen-section-form .mwb-form-group__label {
+	.wps-sfw-gen-section-form .wps-form-group__label {
 		flex: 0 0 100%;
 		margin-bottom: 15px;
 		max-width: 100%;
 	}
-	.mwb-sfw-gen-section-form .mwb-form-group__control {
+	.wps-sfw-gen-section-form .wps-form-group__control {
 		flex: 0 0 100%;
 		max-width: 100%
 	}
-	.mwb-sfw-gen-section-form .mwb-form-group__control label {
+	.wps-sfw-gen-section-form .wps-form-group__control label {
 		display: block;
 	}
-	.mwb-sfw-gen-section-form .mwb-form-group__control .mdc-text-field-helper-line {
+	.wps-sfw-gen-section-form .wps-form-group__control .mdc-text-field-helper-line {
 		margin-top: 10px;
 	}
 	.sfw-overview__banner-img {
@@ -341,27 +341,27 @@
 	}
 }
 
-.mwb_sfw_video_wrapper {
+.wps_sfw_video_wrapper {
 	margin-top: 70px;
 	text-align: center;
 }
 
 @media screen and (max-width: 767px) {
-.mwb_sfw_video_wrapper iframe {
+.wps_sfw_video_wrapper iframe {
 	height: 370px;
 	max-width: 100%;
 	width: 100%;
 }
 }
 @media screen and (max-width: 480px) {
-.mwb_sfw_video_wrapper iframe {
+.wps_sfw_video_wrapper iframe {
 	height: 210px;
 	max-width: 100%;
 	width: 100%;
 }
 }
 @media screen and (max-width: 375px) {
-.mwb_sfw_video_wrapper iframe {
+.wps_sfw_video_wrapper iframe {
 	height: 185px;
 	max-width: 100%;
 	width: 100%;

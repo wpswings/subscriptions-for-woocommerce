@@ -16,17 +16,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit(); // Exit if accessed directly.
 }
 
-global $sfw_mwb_sfw_obj;
-global $mwb_sfw_notices;
+global $sfw_wps_sfw_obj;
+global $wps_sfw_notices;
 $sfw_active_tab   = isset( $_GET['sfw_tab'] ) ? sanitize_key( $_GET['sfw_tab'] ) : 'subscriptions-for-woocommerce-general';
-$sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
+$sfw_default_tabs = $sfw_wps_sfw_obj->wps_sfw_plug_default_tabs();
 
-if ( $mwb_sfw_notices ) {
-	$mwb_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
-	$sfw_mwb_sfw_obj->mwb_sfw_plug_admin_notice( $mwb_sfw_error_text, 'success' );
+if ( $wps_sfw_notices ) {
+	$wps_sfw_error_text = esc_html__( 'Settings saved !', 'subscriptions-for-woocommerce' );
+	$sfw_wps_sfw_obj->wps_sfw_plug_admin_notice( $wps_sfw_error_text, 'success' );
 }
-do_action( 'mwb_sfw_notice_message' );
-if ( ! mwb_sfw_check_multistep() ) {
+do_action( 'wps_sfw_notice_message' );
+if ( ! wps_sfw_check_multistep() ) {
 	?>
 	<div id="react-app"></div>
 	<?php
@@ -34,27 +34,27 @@ if ( ! mwb_sfw_check_multistep() ) {
 }
 ?>
 <header>
-	<div class="mwb-header-container mwb-bg-white mwb-r-8">
-		<h1 class="mwb-header-title"><?php echo esc_attr( strtoupper( str_replace( '-', ' ', $sfw_mwb_sfw_obj->sfw_get_plugin_name() ) ) ); ?></h1>
-		<div class="mwb-header-container__links">
-			<a href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation" class="mwb-link" target="_blank"><?php esc_html_e( 'Documentation', 'subscriptions-for-woocommerce' ); ?></a>
-			<span class="mwb-header-container__links-divider">|</span>
-			<a href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support" class="mwb-link" target="_blank"><?php esc_html_e( 'Support', 'subscriptions-for-woocommerce' ); ?></a>
+	<div class="wps-header-container wps-bg-white wps-r-8">
+		<h1 class="wps-header-title"><?php echo esc_attr( strtoupper( str_replace( '-', ' ', $sfw_wps_sfw_obj->sfw_get_plugin_name() ) ) ); ?></h1>
+		<div class="wps-header-container__links">
+			<a href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation" class="wps-link" target="_blank"><?php esc_html_e( 'Documentation', 'subscriptions-for-woocommerce' ); ?></a>
+			<span class="wps-header-container__links-divider">|</span>
+			<a href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support" class="wps-link" target="_blank"><?php esc_html_e( 'Support', 'subscriptions-for-woocommerce' ); ?></a>
 		</div>
 
 	</div>
 </header>
 
-<main class="mwb-main mwb-bg-white mwb-r-8">
+<main class="wps-main wps-bg-white wps-r-8">
 	
-	<nav class="mwb-navbar">
-		<ul class="mwb-navbar__items">
+	<nav class="wps-navbar">
+		<ul class="wps-navbar__items">
 			<?php
 			if ( is_array( $sfw_default_tabs ) && ! empty( $sfw_default_tabs ) ) {
 
 				foreach ( $sfw_default_tabs as $sfw_tab_key => $sfw_default_tab ) {
 
-					$sfw_tab_classes = 'mwb-link ';
+					$sfw_tab_classes = 'wps-link ';
 
 					if ( ! empty( $sfw_active_tab ) && $sfw_active_tab === $sfw_tab_key ) {
 						$sfw_tab_classes .= 'active';
@@ -70,10 +70,10 @@ if ( ! mwb_sfw_check_multistep() ) {
 		</ul>
 	</nav>
 
-	<section class="mwb-section">
+	<section class="wps-section">
 		<div>
 			<?php
-				do_action( 'mwb_sfw_before_general_settings_form' );
+				do_action( 'wps_sfw_before_general_settings_form' );
 						// if submenu is directly clicked on woocommerce.
 			if ( empty( $sfw_active_tab ) ) {
 				$sfw_active_tab = 'subscriptions-for-woocommerce-general';
@@ -88,9 +88,9 @@ if ( ! mwb_sfw_check_multistep() ) {
 			}
 				$sfw_tab_content_path = $file_path . 'admin/partials/' . $sfw_active_tab . '.php';
 
-				$sfw_mwb_sfw_obj->mwb_sfw_plug_load_template( $sfw_tab_content_path );
+				$sfw_wps_sfw_obj->wps_sfw_plug_load_template( $sfw_tab_content_path );
 
-				do_action( 'mwb_sfw_after_general_settings_form' );
+				do_action( 'wps_sfw_after_general_settings_form' );
 			?>
 		</div>
 	</section>

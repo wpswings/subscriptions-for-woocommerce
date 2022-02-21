@@ -14,25 +14,25 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit(); // Exit if accessed directly.
 }
-global $sfw_mwb_sfw_obj;
-$sfw_default_tabs = $sfw_mwb_sfw_obj->mwb_sfw_plug_default_tabs();
+global $sfw_wps_sfw_obj;
+$sfw_default_tabs = $sfw_wps_sfw_obj->wps_sfw_plug_default_tabs();
 $sfw_tab_key = '';
 ?>
 <header>
 	<?php
 	// desc - This hook is used for trial.
-	do_action( 'mwb_sfw_settings_saved_notice' );
+	do_action( 'wps_sfw_settings_saved_notice' );
 	?>
-	<div class="mwb-header-container mwb-bg-white mwb-r-8">
-		<h1 class="mwb-header-title"><?php echo esc_attr( 'WP Swings' ); ?></h1>
+	<div class="wps-header-container wps-bg-white wps-r-8">
+		<h1 class="wps-header-title"><?php echo esc_attr( 'WP Swings' ); ?></h1>
 	</div>
 </header>
-<main class="mwb-main mwb-bg-white mwb-r-8">
-	<section class="mwb-section">
+<main class="wps-main wps-bg-white wps-r-8">
+	<section class="wps-section">
 		<div>
 			<?php
 				// desc - This hook is used for trial.
-			do_action( 'mwb_sfw_before_common_settings_form' );
+			do_action( 'wps_sfw_before_common_settings_form' );
 				// if submenu is directly clicked on woocommerce.
 			$sfw_genaral_settings = apply_filters(
 				'sfw_home_settings_array',
@@ -40,8 +40,8 @@ $sfw_tab_key = '';
 					array(
 						'title' => __( 'Enable Tracking', 'subscriptions-for-woocommerce' ),
 						'type'  => 'radio-switch',
-						'id'    => 'mwb_sfw_enable_tracking',
-						'value' => get_option( 'mwb_sfw_enable_tracking' ),
+						'id'    => 'wps_sfw_enable_tracking',
+						'value' => get_option( 'wps_sfw_enable_tracking' ),
 						'class' => 'sfw-radio-switch-class',
 						'options' => array(
 							'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
@@ -57,17 +57,17 @@ $sfw_tab_key = '';
 				)
 			);
 			?>
-			<form action="" method="POST" class="mwb-sfw-gen-section-form">
+			<form action="" method="POST" class="wps-sfw-gen-section-form">
 				<div class="sfw-secion-wrap">
 					<?php
-					$sfw_general_html = $sfw_mwb_sfw_obj->mwb_sfw_plug_generate_html( $sfw_genaral_settings );
+					$sfw_general_html = $sfw_wps_sfw_obj->wps_sfw_plug_generate_html( $sfw_genaral_settings );
 					echo esc_html( $sfw_general_html );
-					wp_nonce_field( 'mwb-sfw-general-nonce', 'mwb-sfw-general-nonce-field' );
+					wp_nonce_field( 'wps-sfw-general-nonce', 'wps-sfw-general-nonce-field' );
 					?>
 				</div>
 			</form>
 			<?php
-			do_action( 'mwb_sfw_before_common_settings_form' );
+			do_action( 'wps_sfw_before_common_settings_form' );
 			$all_plugins = get_plugins();
 			?>
 		</div>

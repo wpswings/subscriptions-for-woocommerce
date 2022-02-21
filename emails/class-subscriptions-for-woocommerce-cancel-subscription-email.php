@@ -32,13 +32,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 		 */
 		public function __construct() {
 
-			$this->id          = 'mwb_sfw_cancel_subscription';
+			$this->id          = 'wps_sfw_cancel_subscription';
 			$this->title       = __( 'Cancelled Subscription Email Notification', 'subscriptions-for-woocommerce' );
 
 			$this->description = __( 'This Email Notification Send if any subscription is Cancelled', 'subscriptions-for-woocommerce' );
 
-			$this->template_html  = 'mwb-sfw-cancel-subscription-email-template.php';
-			$this->template_plain = 'plain/mwb-sfw-cancel-subscription-email-template.php';
+			$this->template_html  = 'wps-sfw-cancel-subscription-email-template.php';
+			$this->template_plain = 'plain/wps-sfw-cancel-subscription-email-template.php';
 			$this->template_base  = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'emails/templates/';
 
 			parent::__construct();
@@ -68,18 +68,18 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 		 * This function is used to trigger for email.
 		 *
 		 * @since  1.0.0
-		 * @param int $mwb_subscription mwb_subscription.
+		 * @param int $wps_subscription wps_subscription.
 		 * @access public
 		 * @return void
 		 */
-		public function trigger( $mwb_subscription ) {
+		public function trigger( $wps_subscription ) {
 
-			if ( $mwb_subscription ) {
+			if ( $wps_subscription ) {
 
-				$this->object = $mwb_subscription;
-				$mwb_parent_order_id = get_post_meta( $mwb_subscription, 'mwb_parent_order', true );
-				$mwb_parent_order = wc_get_order( $mwb_parent_order_id );
-				$user_email = $mwb_parent_order->get_billing_email();
+				$this->object = $wps_subscription;
+				$wps_parent_order_id = get_post_meta( $wps_subscription, 'wps_parent_order', true );
+				$wps_parent_order = wc_get_order( $wps_parent_order_id );
+				$user_email = $wps_parent_order->get_billing_email();
 				$this->recipient = $user_email;
 			}
 
@@ -102,7 +102,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 			return wc_get_template_html(
 				$this->template_html,
 				array(
-					'mwb_subscription'       => $this->object,
+					'wps_subscription'       => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'sent_to_admin'      => true,
 					'plain_text'         => false,
@@ -123,7 +123,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 			return wc_get_template_html(
 				$this->template_plain,
 				array(
-					'mwb_subscription'       => $this->object,
+					'wps_subscription'       => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'sent_to_admin'      => true,
 					'plain_text'         => true,

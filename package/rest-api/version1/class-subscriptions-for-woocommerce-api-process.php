@@ -40,16 +40,16 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Api_Process' ) ) {
 		 *
 		 * @since    1.0.0
 		 * @param   Array $sfw_request  data of requesting headers and other information.
-		 * @return  Array $mwb_sfw_rest_response    returns processed data and status of operations.
+		 * @return  Array $wps_sfw_rest_response    returns processed data and status of operations.
 		 */
-		public function mwb_sfw_default_process( $sfw_request ) {
-			$mwb_sfw_rest_response = array();
+		public function wps_sfw_default_process( $sfw_request ) {
+			$wps_sfw_rest_response = array();
 
 			// Write your custom code here.
 
-			$mwb_sfw_rest_response['status'] = 200;
-			$mwb_sfw_rest_response['data'] = $sfw_request->get_headers();
-			return $mwb_sfw_rest_response;
+			$wps_sfw_rest_response['status'] = 200;
+			$wps_sfw_rest_response['data'] = $sfw_request->get_headers();
+			return $wps_sfw_rest_response;
 		}
 	}
 }

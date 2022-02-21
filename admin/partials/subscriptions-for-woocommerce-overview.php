@@ -14,12 +14,12 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-global $sfw_mwb_sfw_obj;
+global $sfw_wps_sfw_obj;
 
 ?>
 <!--  template file for admin settings. -->
 <div class="sfw-section-wrap">
-	<div class="mwb_sfw_table_wrapper mwb_sfw_overview-wrapper">
+	<div class="wps_sfw_table_wrapper wps_sfw_overview-wrapper">
 		<div class="sfw-overview__wrapper">
 			<div class="sfw-overview__icons">
 				<a href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support">
@@ -30,7 +30,7 @@ global $sfw_mwb_sfw_obj;
 				</a>
 				<?php
 				// Add icon.
-				do_action( 'mwb_sfw_overview_icon' );
+				do_action( 'wps_sfw_overview_icon' );
 				?>
 			</div>
 			<div class="sfw-overview__banner-img">
@@ -38,7 +38,7 @@ global $sfw_mwb_sfw_obj;
 			</div>
 			<?php
 				// Add content.
-				do_action( 'mwb_sfw_before_overview_content' );
+				do_action( 'wps_sfw_before_overview_content' );
 			?>
 			
 			<div class="sfw-overview__content">
@@ -46,7 +46,7 @@ global $sfw_mwb_sfw_obj;
 					<h1><?php esc_html_e( 'Subscriptions for WooCommerce', 'subscriptions-for-woocommerce' ); ?></h1>
 					<p> <?php esc_html_e( 'Subscriptions for WooCommerce Plugin allows the WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store.', 'subscriptions-for-woocommerce' ); ?>
 					</p>
-					<div class="mwb_sfw_video_wrapper">
+					<div class="wps_sfw_video_wrapper">
 						<iframe src="https://www.youtube.com/embed/QZO0Q_DT0ik" frameborder="0" allow="fullscreen accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 					</div>
 					<div class="sfw-overview__features">
@@ -62,13 +62,13 @@ global $sfw_mwb_sfw_obj;
 					</ul>
 					<?php
 						// Add description.
-						do_action( 'mwb_sfw_overview_feature_description' );
+						do_action( 'wps_sfw_overview_feature_description' );
 					?>
 					</div>
 				</div>
 				<?php
 					// Add overview description.
-					do_action( 'mwb_sfw_after_overview_description' );
+					do_action( 'wps_sfw_after_overview_description' );
 				?>
 				<div class="sfw-overview__keywords-wrap">
 				<h2> <?php esc_html_e( 'Salient Features of Subscriptions for WooCommerce Plugin', 'subscriptions-for-woocommerce' ); ?></h2>
@@ -145,13 +145,13 @@ global $sfw_mwb_sfw_obj;
 					</div>
 					<?php
 						// Add overview description.
-						do_action( 'mwb_sfw_overview_keywords_description' );
+						do_action( 'wps_sfw_overview_keywords_description' );
 					?>
 				</div>
 				</div>
 				<?php
 					// Add overview description.
-					do_action( 'mwb_sfw_after_overview_keywords_wrpa' );
+					do_action( 'wps_sfw_after_overview_keywords_wrpa' );
 				?>
 			</div>
 		</div>

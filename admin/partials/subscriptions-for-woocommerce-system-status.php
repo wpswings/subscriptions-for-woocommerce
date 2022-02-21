@@ -15,16 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 // Template for showing information about system status.
-global $sfw_mwb_sfw_obj;
-$sfw_default_status = $sfw_mwb_sfw_obj->mwb_sfw_plug_system_status();
+global $sfw_wps_sfw_obj;
+$sfw_default_status = $sfw_wps_sfw_obj->wps_sfw_plug_system_status();
 $sfw_wordpress_details = is_array( $sfw_default_status['wp'] ) && ! empty( $sfw_default_status['wp'] ) ? $sfw_default_status['wp'] : array();
 $sfw_php_details = is_array( $sfw_default_status['php'] ) && ! empty( $sfw_default_status['php'] ) ? $sfw_default_status['php'] : array();
 ?>
-<div class="mwb-sfw-table-wrap">
-	<div class="mwb-col-wrap">
-		<div id="mwb-sfw-table-inner-container" class="table-responsive mdc-data-table">
+<div class="wps-sfw-table-wrap">
+	<div class="wps-col-wrap">
+		<div id="wps-sfw-table-inner-container" class="table-responsive mdc-data-table">
 			<div class="mdc-data-table__table-container">
-				<table class="mwb-sfw-table mdc-data-table__table mwb-table" id="mwb-sfw-wp">
+				<table class="wps-sfw-table mdc-data-table__table wps-table" id="wps-sfw-wp">
 					<thead>
 						<tr>
 							<th class="mdc-data-table__header-cell"><?php esc_html_e( 'WP Variables', 'subscriptions-for-woocommerce' ); ?></th>
@@ -47,10 +47,10 @@ $sfw_php_details = is_array( $sfw_default_status['php'] ) && ! empty( $sfw_defau
 			</div>
 		</div>
 	</div>
-	<div class="mwb-col-wrap">
-		<div id="mwb-sfw-table-inner-container" class="table-responsive mdc-data-table">
+	<div class="wps-col-wrap">
+		<div id="wps-sfw-table-inner-container" class="table-responsive mdc-data-table">
 			<div class="mdc-data-table__table-container">
-				<table class="mwb-sfw-table mdc-data-table__table mwb-table" id="mwb-sfw-sys">
+				<table class="wps-sfw-table mdc-data-table__table wps-table" id="wps-sfw-sys">
 					<thead>
 						<tr>
 							<th class="mdc-data-table__header-cell"><?php esc_html_e( 'System Variables', 'subscriptions-for-woocommerce' ); ?></th>
