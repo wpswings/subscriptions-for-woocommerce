@@ -1,7 +1,7 @@
 import { Stepper, StepLabel, Step} from '@material-ui/core';
 const stepper = (props) => {
     return(
-        <Stepper activeStep={props.activeStep} className="mwbStepper">
+        <Stepper activeStep={props.activeStep} className="wpsStepper">
             {props.steps.map((label) => (
                 <Step key={label}>
                     <StepLabel>{label}</StepLabel>

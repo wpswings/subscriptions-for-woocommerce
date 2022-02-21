@@ -20,8 +20,8 @@ const PaymentGateway = (props) => {
         setLoading(true);
         const user = {
             'slug':item.slug,
-            'action': 'mwb_sfw_install_plugin_configuration',
-            nonce: frontend_ajax_object.mwb_sfw_react_nonce,   // pass the nonce here
+            'action': 'wps_sfw_install_plugin_configuration',
+            nonce: frontend_ajax_object.wps_sfw_react_nonce,   // pass the nonce here
         };
         axios.post(frontend_ajax_object.ajaxurl, qs.stringify(user) )
             .then(res => {

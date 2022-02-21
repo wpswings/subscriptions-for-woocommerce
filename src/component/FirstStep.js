@@ -13,7 +13,7 @@ const FirstStep = (props) => {
     const ctx = useContext(Context);
     return(
         <> 
-            <h3 className="mwb-title">{ __( 'General Settings', 'subscriptions-for-woocommerce' ) }</h3>
+            <h3 className="wps-title">{ __( 'General Settings', 'subscriptions-for-woocommerce' ) }</h3>
             <FormGroup>
                 <FormControlLabel
                     control={
@@ -25,7 +25,7 @@ const FirstStep = (props) => {
                     />
                     }
                     label= {__('Check this box to enable the subscription for woo','subscriptions-for-woocommerce')}
-                    className="mwbFormLabel" />
+                    className="wpsFormLabel" />
             </FormGroup>
             <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
                 <TextField 
