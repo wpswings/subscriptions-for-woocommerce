@@ -141,7 +141,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 					$user_id = $order->get_user_id();
 					$tokens = WC_Payment_Tokens::get_tokens( $user_id );
-					if ( ! empty( $tokens ) && is_array( $tokens ) ) {
+					if ( ! empty( $tokens ) ) {
 						foreach ( $tokens as $token ) {
 							if ( $woo_cybs_payment_token == $token->get_token() ) {
 								$payment_token = $token;

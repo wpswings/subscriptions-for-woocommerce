@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
- * Version:           1.3.1
+ * Version:           1.3.2
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-home&utm_medium=subs-org-backend&utm_campaign=home
  * Text Domain:       subscriptions-for-woocommerce
@@ -44,7 +44,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.3.1' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.3.2' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -86,7 +86,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				<p><strong>IMPORTANT NOTICE:</strong></p>
 			</div>
 			<div class='wps-notice-content wps-notice-section'>
-				<p>From this update <strong>Version 1.3.1</strong> onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
+				<p>From this update <strong>Version 1.3.2</strong> onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
 				Please connect with us for all setup, support, and update related queries without hesitation.</p>
 			</div>
 		</div>
@@ -121,7 +121,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					<p><strong>IMPORTANT NOTICE:</strong></p>
 				</div>
 				<div class='wps-notice-content wps-notice-section'>
-					<p>From this update <strong>Version 1.3.1</strong> onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
+					<p>From this update <strong>Version 1.3.2</strong> onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
 					Please connect with us for all setup, support, and update related queries without hesitation.</p>
 				</div>
 			</div>
