@@ -223,6 +223,9 @@ class Subscriptions_For_Woocommerce {
 
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
+		// updating db key.
+		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'subscriptions_for_woocommerce_upgrade_wp_postmeta' );
+		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'subscriptions_for_woocommerce_upgrade_wp_options' );
 		// Multistep.
 		$this->loader->add_action( 'wp_ajax_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
 		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
