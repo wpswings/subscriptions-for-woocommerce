@@ -39,7 +39,7 @@ if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-
 
 	deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
 	$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
-	header( 'Location: '. $general_settings_url );
+	header( 'Location: ' . $general_settings_url );
 }
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
