@@ -36,13 +36,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
-	$plugins = get_plugins(); //phpcs:ignore
-	if ( isset( $plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
-		if ( $plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.0.2' ) {
-					unset( $_GET['activate'] );
-					deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
-		}
-	}
+
+	deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
+	$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
+	header( 'Location: '. $general_settings_url );
 }
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
@@ -443,7 +440,6 @@ function migration_work_for_db_key() {
 
 		update_option( 'wps_upgrade_sfw_wp_migration_option_check', 'done' );
 	}
-
 }
 
 /**
