@@ -34,7 +34,16 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
-
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
+if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+	$plugins = get_plugins(); //phpcs:ignore
+	if ( isset( $plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
+		if ( $plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.0.2' ) {
+					unset( $_GET['activate'] );
+					deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
+		}
+	}
+}
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
 	/**
@@ -91,6 +100,21 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			</div>
 		</div>
 	</td>
+	</tr>
+	<tr class="plugin-update-tr active notice-warning notice-alt">
+		<td colspan="4" class="plugin-update colspanchange">
+			<div class="notice notice-error inline update-message notice-alt">
+				<div class='ppec-notice-title ppec-notice-section'>
+					<p><strong>IMPORTANT NOTICE-</strong></p>
+				</div>
+				<div class='ppec-notice-content ppec-notice-section'><strong>
+				<?php
+					echo esc_html( 'Heads up, Please backup before upgrade! The latest update includes some substantial changes across different areas of the plugin. We highly recommend you backup your site before upgrading Also please Deactivate org plugin and reactivate again.', 'subscriptions-for-woocommerce' );
+				?>
+				</strong></div>
+
+			</div>
+		</td>
 	</tr>
 	<style>
 	.wps-notice-section > p:before {
@@ -214,6 +238,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * @since    1.0.0
 	 */
 	function run_subscriptions_for_woocommerce() {
+
 		define_subscriptions_for_woocommerce_constants();
 
 		$sfw_sfw_plugin_standard = new Subscriptions_For_Woocommerce();
@@ -239,7 +264,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		$my_link = array(
 			'<a href="' . admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ) . '">' . __( 'Settings', 'subscriptions-for-woocommerce' ) . '</a>',
 		);
-		if ( ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+		if ( ! is_plugin_active( 'subscriptions-for-wooCommerce-pro/woocommerce-subscriptions-pro.php' ) ) {
 
 			$my_link['goPro'] = '<a class="wps-sfw-go-pro" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro">' . esc_html__( 'GO PRO', 'subscriptions-for-woocommerce' ) . '</a>';
 		}
@@ -402,4 +427,203 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		<?php
 	}
+}
+add_action( 'admin_init', 'migration_work_for_db_key' );
+/**
+ * Migration_work_for_db_key function.
+ *
+ * @return void
+ */
+function migration_work_for_db_key() {
+	$wps_upgrade_sfw_wp_migration_option_check = get_option( 'wps_upgrade_sfw_wp_migration_option_check', 'not_done' );
+	if ( 'not_done' == $wps_upgrade_sfw_wp_migration_option_check ) {
+
+		subscriptions_for_woocommerce_upgrade_wp_postmeta();
+		subscriptions_for_woocommerce_upgrade_wp_options();
+
+		update_option( 'wps_upgrade_sfw_wp_migration_option_check', 'done' );
+	}
+
+}
+
+/**
+ * Short Description. (use period)
+ *
+ * Long Description.
+ *
+ * @since    1.0.0
+ */
+function subscriptions_for_woocommerce_upgrade_wp_postmeta() {
+		$post_meta_keys = array(
+			'_mwb_sfw_product',
+			'mwb_sfw_subscription_number',
+			'mwb_sfw_subscription_interval',
+			'mwb_sfw_subscription_expiry_number',
+			'mwb_sfw_subscription_expiry_interval',
+			'mwb_sfw_subscription_initial_signup_price',
+			'mwb_sfw_subscription_free_trial_number',
+			'mwb_sfw_subscription_free_trial_interval',
+			'mwb_sfw_subscription',
+			'mwb_sfw_renewal_order',
+			'mwb_sfw_parent_order_id',
+			'mwb_renewal_subscription_order',
+			'mwb_wsp_no_of_renewal_order',
+			'mwb_wsp_renewal_order_data',
+			'mwb_wsp_last_renewal_order_id',
+			'mwb_next_payment_date',
+			'mwb_subscription_status',
+			'_mwb_paypal_transaction_ids',
+			'_mwb_sfw_payment_transaction_id',
+			'_mwb_paypal_subscription_id',
+			'mwb_upgrade_downgrade_data',
+			'mwb_susbcription_trial_end',
+			'mwb_susbcription_end',
+			'mwb_sfw_order_has_subscription',
+			'mwb_subscription_id',
+			'mwb_schedule_start',
+			'mwb_sfw_subscription_activated',
+			'mwb_parent_order',
+			'mwb_recurring_total',
+			'mwb_customer_id',
+			'mwb_sfw_variable_product',
+			'mwb_susbcription_end',
+		);
+
+		foreach ( $post_meta_keys as $key => $meta_keys ) {
+			$products = get_posts(
+				array(
+					'numberposts' => -1,
+					'post_status' => array( 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+					'fields'      => 'ids', // return only ids.
+					'meta_key'    => $meta_keys, //phpcs:ignore
+					'post_type'   => 'product',
+					'order'       => 'ASC',
+				)
+			);
+			if ( ! empty( $products ) && is_array( $products ) ) {
+				foreach ( $products as $k => $product_id ) {
+					$value   = get_post_meta( $product_id, $meta_keys, true );
+					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+						continue;
+					}
+					update_post_meta( $product_id, $new_key, $value );
+				}
+			}
+		}
+		foreach ( $post_meta_keys as $key => $meta_keys ) {
+			$products = get_posts(
+				array(
+					'numberposts' => -1,
+					'post_status' => 'wc-mwb_renewal',
+					'fields'      => 'ids', // return only ids.
+					'meta_key'    => $meta_keys, //phpcs:ignore
+					'post_type'   => 'mwb_subscriptions',
+					'order'       => 'ASC',
+				)
+			);
+			if ( ! empty( $products ) && is_array( $products ) ) {
+				foreach ( $products as $k => $product_id ) {
+					$value   = get_post_meta( $product_id, $meta_keys, true );
+					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+						continue;
+					}
+					update_post_meta( $product_id, $new_key, $value );
+				}
+			}
+		}
+		foreach ( $post_meta_keys as $key => $meta_keys ) {
+			$products = get_posts(
+				array(
+					'numberposts' => -1,
+					'post_status' => array( 'wc-mwb_renewal', 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+					'fields'      => 'ids', // return only ids.
+					'meta_key'    => $meta_keys, //phpcs:ignore
+					'post_type'   => 'shop_order',
+					'order'       => 'ASC',
+				)
+			);
+			if ( ! empty( $products ) && is_array( $products ) ) {
+				foreach ( $products as $k => $product_id ) {
+					$value   = get_post_meta( $product_id, $meta_keys, true );
+					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+						continue;
+					}
+					update_post_meta( $product_id, $new_key, $value );
+				}
+			}
+		}
+		$args = array(
+			'numberposts' => -1,
+			'post_type'   => 'mwb_subscriptions',
+			'post_status' => 'wc-mwb_renewal',
+			'meta_query' => array(
+				array(
+					'key'   => 'mwb_customer_id',
+					'compare' => 'EXISTS',
+				),
+			),
+		);
+		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
+			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+			$args['meta_query'] = array(
+				array(
+					'key'   => 'mwb_parent_order',
+					'value' => $data,
+					'compare' => 'LIKE',
+				),
+			);
+		}
+
+		$wps_subscriptions = get_posts( $args );
+
+		foreach ( $wps_subscriptions as $key => $value ) {
+			$args = array();
+			foreach ( $value as $key2 => $value2 ) {
+
+				$new_value1 = str_replace( 'MWB', 'WPS', $value2 );
+				$new_value = str_replace( 'mwb', 'wps', $new_value1 );
+
+				$args[ $key2 ] = $new_value;
+
+			}
+
+			wp_update_post( $args );
+		}
+}
+/**
+ * Short Description. (use period)
+ *
+ * Long Description.
+ *
+ * @since    1.0.0
+ */
+function subscriptions_for_woocommerce_upgrade_wp_options() {
+
+		$wp_options = array(
+			'mwb_sfw_enable_tracking'                       => '',
+			'mwb_sfw_enable_plugin'                         => '',
+			'mwb_sfw_add_to_cart_text'                      => '',
+			'mwb_sfw_place_order_button_text'               => '',
+			'mwb_sfw_multistep_product_create_done'         => '',
+			'mwb_sfw_multistep_done'                        => '',
+			'mwb_sfw_onboarding_data_skipped'               => '',
+			'mwb_sfw_onboarding_data_sent'                  => '',
+		);
+
+		foreach ( $wp_options as $key => $value ) {
+			$new_key = str_replace( 'mwb_', 'wps_', $key );
+
+			if ( ! empty( get_option( $new_key ) ) ) {
+				continue;
+			}
+
+			$new_value = get_option( $key, $value );
+			update_option( $new_key, $new_value );
+		}
 }
