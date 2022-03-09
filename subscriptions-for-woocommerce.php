@@ -98,21 +98,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		</div>
 	</td>
 	</tr>
-	<tr class="plugin-update-tr active notice-warning notice-alt">
-		<td colspan="4" class="plugin-update colspanchange">
-			<div class="notice notice-error inline update-message notice-alt">
-				<div class='ppec-notice-title ppec-notice-section'>
-					<p><strong>IMPORTANT NOTICE-</strong></p>
-				</div>
-				<div class='ppec-notice-content ppec-notice-section'><strong>
-				<?php
-					echo esc_html( 'Heads up, Please backup before upgrade! The latest update includes some substantial changes across different areas of the plugin. We highly recommend you backup your site before upgrading Also please Deactivate org plugin and reactivate again.', 'subscriptions-for-woocommerce' );
-				?>
-				</strong></div>
-
-			</div>
-		</td>
-	</tr>
 	<style>
 	.wps-notice-section > p:before {
 		content: none;
@@ -261,7 +246,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		$my_link = array(
 			'<a href="' . admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ) . '">' . __( 'Settings', 'subscriptions-for-woocommerce' ) . '</a>',
 		);
-		if ( ! is_plugin_active( 'subscriptions-for-wooCommerce-pro/woocommerce-subscriptions-pro.php' ) ) {
+		if ( ! is_plugin_active( 'subscriptions-for-woocommerce-pro/subscriptions-for-woocommerce-pro.php' ) ) {
 
 			$my_link['goPro'] = '<a class="wps-sfw-go-pro" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro">' . esc_html__( 'GO PRO', 'subscriptions-for-woocommerce' ) . '</a>';
 		}
