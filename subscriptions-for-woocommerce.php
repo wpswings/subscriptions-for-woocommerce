@@ -22,9 +22,9 @@
  * Domain Path:       /languages
  *
  * Requires at least:        4.6
- * Tested up to:             5.9
+ * Tested up to:             5.9.2
  * WC requires at least:     4.0
- * WC tested up to:          6.1.1
+ * WC tested up to:          6.3.1
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -408,6 +408,28 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		</div>
 
 		<?php
+	}
+}
+add_action( 'admin_notices', 'wps_subscripition_plugin_updation_notice' );
+/**
+ * Migration Notice.
+ *
+ * @return void
+ */
+function wps_subscripition_plugin_updation_notice() {
+	$sfw_plugins = get_plugins();
+	if ( function_exists( 'get_current_screen' ) ) {
+		$screen = get_current_screen();
+		if ( ! empty( $screen->id ) && 'plugins' === $screen->id ) {
+			if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.0.2' && ! isset( $sfw_plugins['subscriptions-for-woocommerce-pro/subscriptions-for-woocommerce-pro.php'] ) ) {
+				?>
+	
+				<div class="notice notice-error is-dismissible">
+					<p><strong><?php esc_html_e( 'Version 2.0.2 of Woocommerce Subcription Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>
+				</div>
+				<?php
+			}
+		}
 	}
 }
 add_action( 'admin_init', 'migration_work_for_db_key' );

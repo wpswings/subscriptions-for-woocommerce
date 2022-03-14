@@ -275,3 +275,10 @@ Yes, we have our Premium Version of [Subscriptions for WooCommerce Pro](https://
 * New: Minor Bug fixes
 * New: Compatible with latest WP and WC
 
+= 1.3.2 - RELEASED ON 14 March 2022 =
+
+* New : Some substantial changes across different areas of the plugin.
+* New : Minor Bug Fixes
+* New : Compatible with latest WP and WC
+* New : Inclusive Tax Problem Fixed
+

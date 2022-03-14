@@ -34,7 +34,7 @@ global $sfw_wps_sfw_obj;
 				?>
 			</div>
 			<div class="sfw-overview__banner-img">
-				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/subscription-overview-banner.png' ); ?>" alt="sfw-banner-img">
+				<img src="<?php echo esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/org-banner.jpg' ); ?>" alt="sfw-banner-img">
 			</div>
 			<?php
 				// Add content.
