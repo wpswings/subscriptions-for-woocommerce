@@ -14,7 +14,7 @@ _GET SUBSCRIPTIONS FOR WOOCOMMERCE AND INCREASE RECURRING REVENUE. MANAGE WOOCOM
 ***
 >**IMPORTANT NOTICE:**
 
->_**From this update Version 1.3.1 onwards, the plugin and its support will be handled by [**WP Swings**](https://wpswings.com/?utm_source=wpswings-official&utm_medium=subs-github-page&utm_campaign=official).**_
+>_**From this update Version 1.3.2 onwards, the plugin and its support will be handled by [**WP Swings**](https://wpswings.com/?utm_source=wpswings-official&utm_medium=subs-github-page&utm_campaign=official).**_
 
 >_**WP Swings is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end. Please [**Connect with us**](https://wpswings.com/contact-us/?utm_source=wpswings-subs-contactus&utm_medium=subs-github-page&utm_campaign=contactus) for all setup, support, and update related queries without hesitation."**_
 
