@@ -336,7 +336,22 @@ if ( ! function_exists( 'wps_sfw_check_plugin_enable' ) ) {
 		return $is_enable;
 	}
 }
-
+if ( ! function_exists( 'mwb_sfw_check_plugin_enable' ) ) {
+	/**
+	 * This function is used to check plugin is enable.
+	 *
+	 * @name mwb_sfw_check_plugin_enable
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_check_plugin_enable() {
+		$is_enable = false;
+		$wps_sfw_enable_plugin = get_option( 'wps_sfw_enable_plugin', '' );
+		if ( 'on' == $wps_sfw_enable_plugin ) {
+			$is_enable = true;
+		}
+		return $is_enable;
+	}
+}
 if ( ! function_exists( 'wps_sfw_validate_payment_request' ) ) {
 	/**
 	 * This function is used to check plugin is enable.
@@ -371,6 +386,24 @@ if ( ! function_exists( 'wps_sfw_get_page_screen' ) ) {
 	 * @since 1.0.0
 	 */
 	function wps_sfw_get_page_screen() {
+
+		$wps_screen_id = sanitize_title( 'WP Swings' );
+		$screen_ids   = array(
+			'toplevel_page_' . $wps_screen_id,
+			$wps_screen_id . '_page_subscriptions_for_woocommerce_menu',
+		);
+
+		return apply_filters( 'wps_sfw_page_screen', $screen_ids );
+	}
+}
+if ( ! function_exists( 'mwb_sfw_get_page_screen' ) ) {
+	/**
+	 * This function is used to get current screen.
+	 *
+	 * @name mwb_sfw_get_page_screen
+	 * @since 1.0.0
+	 */
+	function mwb_sfw_get_page_screen() {
 
 		$wps_screen_id = sanitize_title( 'WP Swings' );
 		$screen_ids   = array(
@@ -607,6 +640,43 @@ if ( ! function_exists( 'wps_sfw_include_process_directory' ) ) {
 	 * @link https://www.wpswing.com/
 	 */
 	function wps_sfw_include_process_directory( $wps_sfw_dir, $wps_selected_dir = '' ) {
+
+		if ( is_dir( $wps_sfw_dir ) ) {
+			$wps_dh = opendir( $wps_sfw_dir );
+			if ( $wps_dh ) {
+
+				while ( ( $wps_file = readdir( $wps_dh ) ) !== false ) {
+
+					if ( '.' == $wps_file[0] ) {
+						continue; // skip dirs . and .. by first char test.
+					}
+
+					if ( is_dir( $wps_sfw_dir . '/' . $wps_file ) ) {
+
+						wps_sfw_include_process_directory( $wps_sfw_dir . '/' . $wps_file, $wps_file );
+
+					} elseif ( 'class-wps-subscriptions-payment-' . $wps_selected_dir . '-main.php' == $wps_file ) {
+
+						include $wps_sfw_dir . '/' . $wps_file;
+					}
+				}
+				closedir( $wps_dh );
+			}
+		}
+	}
+}
+if ( ! function_exists( 'mwb_sfw_include_process_directory' ) ) {
+	/**
+	 * This function is used to include payment file.
+	 *
+	 * @since 1.0.0
+	 * @name mwb_sfw_include_process_directory
+	 * @param string $wps_sfw_dir wps_sfw_dir.
+	 * @param string $wps_selected_dir wps_selected_dir.
+	 * @author WP Swings<ticket@wpswings.com>
+	 * @link https://www.wpswing.com/
+	 */
+	function mwb_sfw_include_process_directory( $wps_sfw_dir, $wps_selected_dir = '' ) {
 
 		if ( is_dir( $wps_sfw_dir ) ) {
 			$wps_dh = opendir( $wps_sfw_dir );
