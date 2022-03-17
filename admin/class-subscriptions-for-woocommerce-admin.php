@@ -992,8 +992,12 @@ class Subscriptions_For_Woocommerce_Admin {
 					// if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
 					// 	continue;
 					// }
-					update_post_meta( $product_id, $new_key, $value );
-					delete_post_meta( $product_id, $meta_keys );
+					if ( empty( $value ) ) {
+						delete_post_meta( $product_id, $meta_keys );
+					} else {
+						update_post_meta( $product_id, $new_key, $value );
+						delete_post_meta( $product_id, $meta_keys );
+					}
 				}
 				// do_action( 'wps_sfw_product_migration', $product_id );
 				update_post_meta( $product_id, 'wps_sfw_migrated', true );
@@ -1049,8 +1053,12 @@ class Subscriptions_For_Woocommerce_Admin {
 					// if ( ! empty( get_post_meta( $order_id, $new_key, true ) ) ) {
 					// 	continue;
 					// }
-					update_post_meta( $order_id, $new_key, $value );
-					delete_post_meta( $order_id, $meta_keys );
+					if ( empty( $value ) ) {
+						delete_post_meta( $order_id, $meta_keys );
+					} else {
+						update_post_meta( $order_id, $new_key, $value );
+						delete_post_meta( $order_id, $meta_keys );
+					}
 				}
 
 				$wps_get_post = get_post( $order_id );
@@ -1137,8 +1145,12 @@ class Subscriptions_For_Woocommerce_Admin {
 					// if ( ! empty( get_post_meta( $subscription_id, $new_key, true ) ) ) {
 					// 	continue;
 					// }
-					update_post_meta( $subscription_id, $new_key, $value );
-					delete_post_meta( $subscription_id, $meta_keys );
+					if ( empty( $value ) ) {
+						delete_post_meta( $subscription_id, $meta_keys );
+					} else {
+						update_post_meta( $subscription_id, $new_key, $value );
+						delete_post_meta( $subscription_id, $meta_keys );
+					}
 				}
 
 				$wps_get_post = get_post( $subscription_id );
