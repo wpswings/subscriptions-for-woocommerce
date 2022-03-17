@@ -442,163 +442,164 @@ function migration_work_for_db_key() {
 	$wps_upgrade_sfw_wp_migration_option_check = get_option( 'wps_upgrade_sfw_wp_migration_option_check', 'not_done' );
 	if ( 'not_done' == $wps_upgrade_sfw_wp_migration_option_check ) {
 
-		subscriptions_for_woocommerce_upgrade_wp_postmeta();
+		// subscriptions_for_woocommerce_upgrade_wp_postmeta();
 		subscriptions_for_woocommerce_upgrade_wp_options();
 
 		update_option( 'wps_upgrade_sfw_wp_migration_option_check', 'done' );
 	}
 }
 
-/**
- * Short Description. (use period)
- *
- * Long Description.
- *
- * @since    1.0.0
- */
-function subscriptions_for_woocommerce_upgrade_wp_postmeta() {
-		$post_meta_keys = array(
-			'_mwb_sfw_product',
-			'mwb_sfw_subscription_number',
-			'mwb_sfw_subscription_interval',
-			'mwb_sfw_subscription_expiry_number',
-			'mwb_sfw_subscription_expiry_interval',
-			'mwb_sfw_subscription_initial_signup_price',
-			'mwb_sfw_subscription_free_trial_number',
-			'mwb_sfw_subscription_free_trial_interval',
-			'mwb_sfw_subscription',
-			'mwb_sfw_renewal_order',
-			'mwb_sfw_parent_order_id',
-			'mwb_renewal_subscription_order',
-			'mwb_wsp_no_of_renewal_order',
-			'mwb_wsp_renewal_order_data',
-			'mwb_wsp_last_renewal_order_id',
-			'mwb_next_payment_date',
-			'mwb_subscription_status',
-			'_mwb_paypal_transaction_ids',
-			'_mwb_sfw_payment_transaction_id',
-			'_mwb_paypal_subscription_id',
-			'mwb_upgrade_downgrade_data',
-			'mwb_susbcription_trial_end',
-			'mwb_susbcription_end',
-			'mwb_sfw_order_has_subscription',
-			'mwb_subscription_id',
-			'mwb_schedule_start',
-			'mwb_sfw_subscription_activated',
-			'mwb_parent_order',
-			'mwb_recurring_total',
-			'mwb_customer_id',
-			'mwb_sfw_variable_product',
-			'mwb_susbcription_end',
-		);
+// /**
+//  * Short Description. (use period)
+//  *
+//  * Long Description.
+//  *
+//  * @since    1.0.0
+//  */
+// function subscriptions_for_woocommerce_upgrade_wp_postmeta() {
+// 		$post_meta_keys = array(
+// 			'_mwb_sfw_product',
+// 			'mwb_sfw_subscription_number',
+// 			'mwb_sfw_subscription_interval',
+// 			'mwb_sfw_subscription_expiry_number',
+// 			'mwb_sfw_subscription_expiry_interval',
+// 			'mwb_sfw_subscription_initial_signup_price',
+// 			'mwb_sfw_subscription_free_trial_number',
+// 			'mwb_sfw_subscription_free_trial_interval',
+// 			'mwb_sfw_subscription',
+// 			'mwb_sfw_renewal_order',
+// 			'mwb_sfw_parent_order_id',
+// 			'mwb_renewal_subscription_order',
+// 			'mwb_wsp_no_of_renewal_order',
+// 			'mwb_wsp_renewal_order_data',
+// 			'mwb_wsp_last_renewal_order_id',
+// 			'mwb_next_payment_date',
+// 			'mwb_subscription_status',
+// 			'_mwb_paypal_transaction_ids',
+// 			'_mwb_sfw_payment_transaction_id',
+// 			'_mwb_paypal_subscription_id',
+// 			'mwb_upgrade_downgrade_data',
+// 			'mwb_susbcription_trial_end',
+// 			'mwb_susbcription_end',
+// 			'mwb_sfw_order_has_subscription',
+// 			'mwb_subscription_id',
+// 			'mwb_schedule_start',
+// 			'mwb_sfw_subscription_activated',
+// 			'mwb_parent_order',
+// 			'mwb_recurring_total',
+// 			'mwb_customer_id',
+// 			'mwb_sfw_variable_product',
+// 			'mwb_susbcription_end',
+// 		);
 
-		foreach ( $post_meta_keys as $key => $meta_keys ) {
-			$products = get_posts(
-				array(
-					'numberposts' => -1,
-					'post_status' => array( 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
-					'fields'      => 'ids', // return only ids.
-					'meta_key'    => $meta_keys, //phpcs:ignore
-					'post_type'   => 'product',
-					'order'       => 'ASC',
-				)
-			);
-			if ( ! empty( $products ) && is_array( $products ) ) {
-				foreach ( $products as $k => $product_id ) {
-					$value   = get_post_meta( $product_id, $meta_keys, true );
-					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+// 		foreach ( $post_meta_keys as $key => $meta_keys ) {
+// 			$products = get_posts(
+// 				array(
+// 					'numberposts' => -1,
+// 					'post_status' => array( 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+// 					'fields'      => 'ids', // return only ids.
+// 					'meta_key'    => $meta_keys, //phpcs:ignore
+// 					'post_type'   => 'product',
+// 					'order'       => 'ASC',
+// 				)
+// 			);
+// 			if ( ! empty( $products ) && is_array( $products ) ) {
+// 				foreach ( $products as $k => $product_id ) {
+// 					$value   = get_post_meta( $product_id, $meta_keys, true );
+// 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
-						continue;
-					}
-					update_post_meta( $product_id, $new_key, $value );
-				}
-			}
-		}
-		foreach ( $post_meta_keys as $key => $meta_keys ) {
-			$products = get_posts(
-				array(
-					'numberposts' => -1,
-					'post_status' => 'wc-mwb_renewal',
-					'fields'      => 'ids', // return only ids.
-					'meta_key'    => $meta_keys, //phpcs:ignore
-					'post_type'   => 'mwb_subscriptions',
-					'order'       => 'ASC',
-				)
-			);
-			if ( ! empty( $products ) && is_array( $products ) ) {
-				foreach ( $products as $k => $product_id ) {
-					$value   = get_post_meta( $product_id, $meta_keys, true );
-					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+// 					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+// 						continue;
+// 					}
+// 					update_post_meta( $product_id, $new_key, $value );
+// 				}
+// 			}
+// 		}
+// 		//order
+// 		foreach ( $post_meta_keys as $key => $meta_keys ) {
+// 			$products = get_posts(
+// 				array(
+// 					'numberposts' => -1,
+// 					'post_status' => 'wc-mwb_renewal',
+// 					'fields'      => 'ids', // return only ids.
+// 					'meta_key'    => $meta_keys, //phpcs:ignore
+// 					'post_type'   => 'mwb_subscriptions',
+// 					'order'       => 'ASC',
+// 				)
+// 			);
+// 			if ( ! empty( $products ) && is_array( $products ) ) {
+// 				foreach ( $products as $k => $product_id ) {
+// 					$value   = get_post_meta( $product_id, $meta_keys, true );
+// 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
-						continue;
-					}
-					update_post_meta( $product_id, $new_key, $value );
-				}
-			}
-		}
-		foreach ( $post_meta_keys as $key => $meta_keys ) {
-			$products = get_posts(
-				array(
-					'numberposts' => -1,
-					'post_status' => array( 'wc-mwb_renewal', 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
-					'fields'      => 'ids', // return only ids.
-					'meta_key'    => $meta_keys, //phpcs:ignore
-					'post_type'   => 'shop_order',
-					'order'       => 'ASC',
-				)
-			);
-			if ( ! empty( $products ) && is_array( $products ) ) {
-				foreach ( $products as $k => $product_id ) {
-					$value   = get_post_meta( $product_id, $meta_keys, true );
-					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+// 					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+// 						continue;
+// 					}
+// 					update_post_meta( $product_id, $new_key, $value );
+// 				}
+// 			}
+// 		}
+// 		foreach ( $post_meta_keys as $key => $meta_keys ) {
+// 			$products = get_posts(
+// 				array(
+// 					'numberposts' => -1,
+// 					'post_status' => array( 'wc-mwb_renewal', 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+// 					'fields'      => 'ids', // return only ids.
+// 					'meta_key'    => $meta_keys, //phpcs:ignore
+// 					'post_type'   => 'shop_order',
+// 					'order'       => 'ASC',
+// 				)
+// 			);
+// 			if ( ! empty( $products ) && is_array( $products ) ) {
+// 				foreach ( $products as $k => $product_id ) {
+// 					$value   = get_post_meta( $product_id, $meta_keys, true );
+// 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
-						continue;
-					}
-					update_post_meta( $product_id, $new_key, $value );
-				}
-			}
-		}
-		$args = array(
-			'numberposts' => -1,
-			'post_type'   => 'mwb_subscriptions',
-			'post_status' => 'wc-mwb_renewal',
-			'meta_query' => array(
-				array(
-					'key'   => 'mwb_customer_id',
-					'compare' => 'EXISTS',
-				),
-			),
-		);
-		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-			$args['meta_query'] = array(
-				array(
-					'key'   => 'mwb_parent_order',
-					'value' => $data,
-					'compare' => 'LIKE',
-				),
-			);
-		}
+// 					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+// 						continue;
+// 					}
+// 					update_post_meta( $product_id, $new_key, $value );
+// 				}
+// 			}
+// 		}
+// 		$args = array(
+// 			'numberposts' => -1,
+// 			'post_type'   => 'mwb_subscriptions',
+// 			'post_status' => 'wc-mwb_renewal',
+// 			'meta_query' => array(
+// 				array(
+// 					'key'   => 'mwb_customer_id',
+// 					'compare' => 'EXISTS',
+// 				),
+// 			),
+// 		);
+// 		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
+// 			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+// 			$args['meta_query'] = array(
+// 				array(
+// 					'key'   => 'mwb_parent_order',
+// 					'value' => $data,
+// 					'compare' => 'LIKE',
+// 				),
+// 			);
+// 		}
 
-		$wps_subscriptions = get_posts( $args );
+// 		$wps_subscriptions = get_posts( $args );
 
-		foreach ( $wps_subscriptions as $key => $value ) {
-			$args = array();
-			foreach ( $value as $key2 => $value2 ) {
+// 		foreach ( $wps_subscriptions as $key => $value ) {
+// 			$args = array();
+// 			foreach ( $value as $key2 => $value2 ) {
 
-				$new_value1 = str_replace( 'MWB', 'WPS', $value2 );
-				$new_value = str_replace( 'mwb', 'wps', $new_value1 );
+// 				$new_value1 = str_replace( 'MWB', 'WPS', $value2 );
+// 				$new_value = str_replace( 'mwb', 'wps', $new_value1 );
 
-				$args[ $key2 ] = $new_value;
+// 				$args[ $key2 ] = $new_value;
 
-			}
+// 			}
 
-			wp_update_post( $args );
-		}
-}
+// 			wp_update_post( $args );
+// 		}
+// }
 /**
  * Short Description. (use period)
  *

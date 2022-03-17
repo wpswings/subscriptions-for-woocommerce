@@ -199,8 +199,35 @@ class Subscriptions_For_Woocommerce_Admin {
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		}
-	}
+		//migration
+		$screen        = get_current_screen();
+		$valid_screens = wps_sfw_get_page_screen();
+		if ( isset( $screen->id ) ) {
+			$pagescreen = $screen->id;
+			if ( in_array( $pagescreen, $valid_screens, true ) ) {
 
+				wp_register_script( $this->plugin_name . 'admin-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-admin.js', array( 'jquery' ), $this->version, false );
+
+// print_r($this->wps_sfw_get_count( 'pending', 'result', 'orders' ));die;
+				wp_localize_script(
+					$this->plugin_name . 'admin-js',
+					'sfw_admin_param',
+					array(
+						'ajaxurl' 		   => admin_url( 'admin-ajax.php' ),
+						'wps_sfw_react_nonce'            => wp_create_nonce( 'ajax-nonce' ),
+						'wps_sfw_callback'         => 'wps_sfw_ajax_callbacks',
+						'wps_sfw_pending_product'       => $this->wps_sfw_get_count( 'pending', 'result', 'products' ),
+						'wps_sfw_pending_product_count' => $this->wps_sfw_get_count( 'pending', 'count', 'products' ),
+						// 'wps_sfw_pending_order'        => $this->wps_sfw_get_count( 'pending', 'result', 'orders' ),
+						// 'wps_sfw_pending_order_count'  => $this->wps_sfw_get_count( 'pending', 'count', 'orders' ),
+					)
+				);
+				wp_enqueue_script( $this->plugin_name . 'admin-js' );
+				wp_enqueue_script( $this->plugin_name . 'sfw-swal.js' , SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swal.js', array( 'jquery' ), $this->version, false );
+			}
+		}
+		//migration
+	}
 	/**
 	 * Adding settings menu for Subscriptions For Woocommerce.
 	 *
@@ -329,6 +356,12 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function wps_sfw_admin_general_settings_page( $sfw_settings_general ) {
 
 		$sfw_settings_general = array(
+			array(
+				'type'  => 'button',
+				'id'    => 'migration-button',
+				'button_text' => __( 'Migration key', 'subscriptions-for-woocommerce' ),
+				'class' => 'cls-migration-button',
+			),
 
 			array(
 				'title' => __( 'Enable/Disable Subscription', 'subscriptions-for-woocommerce' ),
@@ -907,6 +940,234 @@ class Subscriptions_For_Woocommerce_Admin {
 			$response['hooks'] = $all_hooks;
 		}
 		return $response;
+	}
+	/**
+	 * Ajax Call back.
+	 */
+	public function wps_sfw_ajax_callbacks() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+		$event = ! empty( $_POST['event'] ) ? sanitize_text_field( wp_unslash( $_POST['event'] ) ) : '';
+		if ( method_exists( $this, $event ) ) {
+			$data = $this->$event( $_POST );
+		} else {
+			$data = esc_html__( 'method not found', 'subscriptions-for-woocommerce' );
+		}
+		echo wp_json_encode( $data );
+		wp_die();
+	}
+	/**
+	 * Import product callback.
+	 *
+	 * @param array $product_data The $_POST data.
+	 */
+	public function wps_sfw_import_single_product( $product_data = array() ) {
+		$products = ! empty( $product_data['products'] ) ? $product_data['products'] : array();
+		// return $products;
+		if ( empty( $products ) ) {
+			return array();
+		}
+
+		// Remove this product from request.
+		foreach ( $products as $key => $product ) {
+			$product_id = ! empty( $product['post_id'] ) ? $product['post_id'] : false;
+			unset( $products[ $key ] );
+			break;
+		}
+
+		// Attempt for one product.
+		if ( ! empty( $product_id ) ) {
+
+			try {
+
+				$post_meta_keys = array(
+					'_mwb_sfw_product',
+					'mwb_sfw_subscription_number',
+					'mwb_sfw_subscription_interval',
+					'mwb_sfw_subscription_expiry_number',
+					'mwb_sfw_subscription_expiry_interval',
+					'mwb_sfw_subscription_initial_signup_price',
+					'mwb_sfw_subscription_free_trial_number',
+					'mwb_sfw_subscription_free_trial_interval',
+					'mwb_upgrade_downgrade_data',
+					'mwb_sfw_variable_product',
+					//order
+					'mwb_sfw_subscription',
+					'mwb_sfw_renewal_order',
+					'mwb_sfw_parent_order_id',
+					'mwb_renewal_subscription_order',
+					'mwb_wsp_no_of_renewal_order',
+					'mwb_wsp_renewal_order_data',
+					'mwb_wsp_last_renewal_order_id',
+					'mwb_next_payment_date',
+					'mwb_subscription_status',
+					'_mwb_paypal_transaction_ids',
+					'_mwb_sfw_payment_transaction_id',
+					'_mwb_paypal_subscription_id',
+					'mwb_susbcription_trial_end',
+					'mwb_susbcription_end',
+					'mwb_sfw_order_has_subscription',
+					'mwb_subscription_id',
+					'mwb_schedule_start',
+					'mwb_sfw_subscription_activated',
+					'mwb_parent_order',
+					'mwb_recurring_total',
+					'mwb_customer_id',
+				);
+				foreach ( $post_meta_keys as $key => $meta_keys ) {
+					$products_check = get_posts(
+						array(
+							'numberposts' => -1,
+							'post_status' => array( 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+							'fields'      => 'ids', // return only ids.
+							'meta_key'    => $meta_keys, //phpcs:ignore
+							'post_type'   => 'product',
+							'order'       => 'ASC',
+						)
+					);
+					if ( ! empty( $products_check ) && is_array( $products_check ) ) {
+						foreach ( $products_check as $k => $product_check_id ) {
+							$value   = get_post_meta( $product_check_id, $meta_keys, true );
+							$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+							if ( ! empty( get_post_meta( $product_check_id, $new_key, true ) ) ) {
+								continue;
+							}
+							update_post_meta( $product_check_id, $new_key, $value );
+							delete_post_meta( $product_check_id, $meta_keys );
+						}
+					}
+				}
+				foreach ( $post_meta_keys as $key => $meta_keys ) {
+					$products_check = get_posts(
+						array(
+							'numberposts' => -1,
+							'post_status' => 'wc-mwb_renewal',
+							'fields'      => 'ids', // return only ids.
+							'meta_key'    => $meta_keys, //phpcs:ignore
+							'post_type'   => 'mwb_subscriptions',
+							'order'       => 'ASC',
+						)
+					);
+					if ( ! empty( $products_check ) && is_array( $products_check ) ) {
+						foreach ( $products_check as $k => $product_check_id ) {
+							$value   = get_post_meta( $product_id, $meta_keys, true );
+							$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+							if ( ! empty( get_post_meta( $product_check_id, $new_key, true ) ) ) {
+								continue;
+							}
+							// do_action( 'wps_data', $product_id );
+							update_post_meta( $product_check_id, $new_key, $value );
+							delete_post_meta( $product_check_id, $meta_keys );
+						}
+					}
+				}
+				foreach ( $post_meta_keys as $key => $meta_keys ) {
+					$products_check = get_posts(
+						array(
+							'numberposts' => -1,
+							'post_status' => array( 'wc-mwb_renewal', 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+							'fields'      => 'ids', // return only ids.
+							'meta_key'    => $meta_keys, //phpcs:ignore
+							'post_type'   => 'shop_order',
+							'order'       => 'ASC',
+						)
+					);
+					if ( ! empty( $products_check ) && is_array( $products_check ) ) {
+						foreach ( $products_check as $k => $product_check_id ) {
+							$value   = get_post_meta( $product_check_id, $meta_keys, true );
+							$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+							if ( ! empty( get_post_meta( $product_check_id, $new_key, true ) ) ) {
+								continue;
+							}
+							update_post_meta( $product_check_id, $new_key, $value );
+							delete_post_meta( $product_check_id, $meta_keys );
+							// update_post_meta( $product_id, '_copy' . $new_key, $value );
+						}
+					}
+				}
+				$args = array(
+					'numberposts' => -1,
+					'post_type'   => 'mwb_subscriptions',
+					'post_status' => 'wc-mwb_renewal',
+					'meta_query' => array(
+						array(
+							'key'   => 'mwb_customer_id',
+							'compare' => 'EXISTS',
+						),
+					),
+				);
+
+					$args['meta_query'] = array(
+						array(
+							'key'   => 'mwb_parent_order',
+							'compare' => 'LIKE',
+						),
+					);
+
+					$wps_subscriptions = get_posts( $args );
+
+					foreach ( $wps_subscriptions as $key => $value ) {
+						$args = array();
+						foreach ( $value as $key2 => $value2 ) {
+
+							$new_value1 = str_replace( 'MWB', 'WPS', $value2 );
+							$new_value = str_replace( 'mwb', 'wps', $new_value1 );
+
+							$args[ $key2 ] = $new_value;
+						}
+
+						wp_update_post( $args );
+					}
+
+				update_post_meta( $product_id, 'wps_sfw_migrated', true );
+			} catch ( \Throwable $th ) {
+				wp_die( esc_html( $th->getMessage() ) );
+			}
+		}
+		return compact( 'products' );
+	}
+	/**
+	 * Get Count
+	 *
+	 * @param string  $status .
+	 * @param string  $action .
+	 * @param boolean $type .
+	 * @return $result .
+	 */
+	public function wps_sfw_get_count( $status = 'all', $action = 'count', $type = false ) {
+		if ( 'products' === $type ) {
+			switch ( $status ) {
+				case 'pending':
+					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE ( `meta_key` LIKE '%mwb_sfw_%' 
+						OR 'meta_key' LIKE 'mwb_recurring_total' OR 'meta_key' LIKE 'mwb_order_currency' 
+						OR 'meta_key' LIKE 'mwb_order_currency' OR 'meta_key' LIKE 'mwb_subscription_status' 
+						OR 'meta_key' LIKE 'mwb_renewal_subscription_order' OR 'meta_key' LIKE 'mwb_wsp_no_of_renewal_order'
+						OR 'meta_key' LIKE 'mwb_wsp_renewal_order_data' OR 'meta_key' LIKE 'mwb_wsp_last_renewal_order_id' 
+						OR 'meta_key' LIKE 'mwb_next_payment_date' OR 'meta_key' LIKE 'mwb_subscription_status'
+						OR 'meta_key' LIKE '_mwb_paypal_transaction_ids' OR 'meta_key' LIKE '_mwb_paypal_subscription_id'
+						OR 'meta_key' LIKE 'mwb_susbcription_trial_end' OR 'meta_key' LIKE 'mwb_susbcription_end'
+						OR 'meta_key' LIKE 'mwb_subscription_id' OR 'meta_key' LIKE 'mwb_schedule_start' OR 'meta_key' LIKE 'mwb_parent_order' OR 'meta_key' LIKe 'mwb_customer_id')";
+					break;
+				default:
+					$sql = false;
+					break;
+			}
+		}
+		$sql = apply_filters( 'wps_sfw_pro_get_pro_data', $sql );
+
+		if ( empty( $sql ) ) {
+			return 0;
+		}
+		global $wpdb;
+		$result = $wpdb->get_results( $sql, ARRAY_A ); // @codingStandardsIgnoreLine.
+
+		if ( 'count' === $action ) {
+			$result = ! empty( $result ) ? count( $result ) : 0;
+		}
+
+		return $result;
 	}
 }
 
