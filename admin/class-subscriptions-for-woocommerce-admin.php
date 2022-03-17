@@ -208,25 +208,26 @@ class Subscriptions_For_Woocommerce_Admin {
 
 				wp_register_script( $this->plugin_name . 'admin-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-admin.js', array( 'jquery' ), $this->version, false );
 
-// print_r($this->wps_sfw_get_count( 'pending', 'result', 'orders' ));die;
 				wp_localize_script(
 					$this->plugin_name . 'admin-js',
 					'sfw_admin_param',
 					array(
 						'ajaxurl' 		   => admin_url( 'admin-ajax.php' ),
 						'wps_sfw_react_nonce'            => wp_create_nonce( 'ajax-nonce' ),
-						'wps_sfw_callback'         => 'wps_sfw_ajax_callbacks',
-						'wps_sfw_pending_product'       => $this->wps_sfw_get_count( 'pending', 'result', 'products' ),
-						'wps_sfw_pending_product_count' => $this->wps_sfw_get_count( 'pending', 'count', 'products' ),
-						// 'wps_sfw_pending_order'        => $this->wps_sfw_get_count( 'pending', 'result', 'orders' ),
-						// 'wps_sfw_pending_order_count'  => $this->wps_sfw_get_count( 'pending', 'count', 'orders' ),
+						'wps_sfw_callback'               => 'wps_sfw_ajax_callbacks',
+						'wps_sfw_pending_product'        => $this->wps_sfw_get_count( 'pending', 'result', 'products' ),
+						'wps_sfw_pending_product_count'  => $this->wps_sfw_get_count( 'pending', 'count', 'products' ),
+						'wps_sfw_pending_orders'         => $this->wps_sfw_get_count( 'pending', 'result', 'mwb_renewal_orders' ),
+						'wps_sfw_pending_orders_count'   => $this->wps_sfw_get_count( 'pending', 'count', 'mwb_renewal_orders' ),
+						'wps_sfw_pending_subs'           => $this->wps_sfw_get_count( 'pending', 'result', 'post_type_subscription' ),
+						'wps_sfw_pending_subs_count'     => $this->wps_sfw_get_count( 'pending', 'count', 'post_type_subscription' ),
+
 					)
 				);
 				wp_enqueue_script( $this->plugin_name . 'admin-js' );
 				wp_enqueue_script( $this->plugin_name . 'sfw-swal.js' , SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swal.js', array( 'jquery' ), $this->version, false );
 			}
 		}
-		//migration
 	}
 	/**
 	 * Adding settings menu for Subscriptions For Woocommerce.
@@ -356,13 +357,6 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function wps_sfw_admin_general_settings_page( $sfw_settings_general ) {
 
 		$sfw_settings_general = array(
-			array(
-				'type'  => 'button',
-				'id'    => 'migration-button',
-				'button_text' => __( 'Migration key', 'subscriptions-for-woocommerce' ),
-				'class' => 'cls-migration-button',
-			),
-
 			array(
 				'title' => __( 'Enable/Disable Subscription', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
@@ -844,7 +838,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					$wps_obj = new Plugin_Upgrader( $wps_ajax_obj );
 					$wps_install = $wps_obj->install( $wps_plugin_api->download_link );
 					activate_plugin( $wps_plugin_file_path );
-					 $response = true;
+					$response = true;
 				}
 			}
 		}
@@ -962,7 +956,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_import_single_product( $product_data = array() ) {
 		$products = ! empty( $product_data['products'] ) ? $product_data['products'] : array();
-		// return $products;
+
 		if ( empty( $products ) ) {
 			return array();
 		}
@@ -988,12 +982,117 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_sfw_subscription_initial_signup_price',
 					'mwb_sfw_subscription_free_trial_number',
 					'mwb_sfw_subscription_free_trial_interval',
-					'mwb_upgrade_downgrade_data',
 					'mwb_sfw_variable_product',
-					//order
-					'mwb_sfw_subscription',
+				);
+				$post_meta_keys = apply_filters( 'wps_sfw_pro_product_keys', $post_meta_keys );
+				foreach ( $post_meta_keys as $key => $meta_keys ) {
+					$value   = get_post_meta( $product_id, $meta_keys, true );
+					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+					// if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+					// 	continue;
+					// }
+					update_post_meta( $product_id, $new_key, $value );
+					delete_post_meta( $product_id, $meta_keys );
+				}
+				// do_action( 'wps_sfw_product_migration', $product_id );
+				update_post_meta( $product_id, 'wps_sfw_migrated', true );
+			} catch ( \Throwable $th ) {
+				wp_die( esc_html( $th->getMessage() ) );
+			}
+		}
+		return compact( 'products' );
+	}
+	/**
+	 * Import product callback.
+	 *
+	 * @param array $order_data The $_POST data.
+	 */
+	public function wps_sfw_import_single_renewal( $order_data = array() ) {
+		$orders = ! empty( $order_data['orders'] ) ? $order_data['orders'] : array();
+
+		if ( empty( $orders ) ) {
+			return array();
+		}
+
+		// Remove this product from request.
+		foreach ( $orders as $key => $order ) {
+			$order_id = ! empty( $order['post_id'] ) ? $order['post_id'] : false;
+			unset( $orders[ $key ] );
+			break;
+		}
+
+		// Attempt for one product.
+		if ( ! empty( $order_id ) ) {
+
+			try {
+				$post_meta_keys = array(
 					'mwb_sfw_renewal_order',
+					'mwb_sfw_subscription',
 					'mwb_sfw_parent_order_id',
+					'mwb_order_currency',
+					'mwb_wsp_first_payment_date',
+				);
+				$post_meta_keys = apply_filters( 'wps_sfw_pro_renewal_order_keys', $post_meta_keys );
+				foreach ( $post_meta_keys as $key => $meta_keys ) {
+					$value   = get_post_meta( $order_id, $meta_keys, true );
+					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+
+					// if ( ! empty( get_post_meta( $order_id, $new_key, true ) ) ) {
+					// 	continue;
+					// }
+					update_post_meta( $order_id, $new_key, $value );
+					delete_post_meta( $order_id, $meta_keys );
+				}
+
+				$wps_get_post = get_post( $order_id );
+				$args         = array();
+				if ( ! empty( $wps_get_post ) ) {
+					foreach( $wps_get_post as $key => $value ) {
+						if ( 'post_status' === $key || 'post_type' === $key || 'post_name' === $key ) {
+							$value        = str_replace( 'MWB', 'WPS', $value );
+							$value        = str_replace( 'mwb', 'wps', $value );
+							$args[ $key ] = $value;
+						} else {
+							$args[ $key ] = $value;
+						}
+					}
+					wp_update_post( $args );
+				}
+				// do_action( 'wps_sfw_renewal_order_migration', $order_id );
+				update_post_meta( $order_id, 'wps_sfw_migrated', true );
+			} catch ( \Throwable $th ) {
+				wp_die( esc_html( $th->getMessage() ) );
+			}
+		}
+		return compact( 'orders' );
+	}
+	/**
+	 * Import subscription callback.
+	 *
+	 * @param array $subscriptions_data The $_POST data.
+	 */
+	public function wps_sfw_import_single_subscription( $subscriptions_data = array() ) {
+		$subscriptions = ! empty( $subscriptions_data['subscriptions'] ) ? $subscriptions_data['subscriptions'] : array();
+
+		if ( empty( $subscriptions ) ) {
+			return array();
+		}
+
+		// Remove this product from request.
+		foreach ( $subscriptions as $key => $subscription ) {
+			$subscription_id = ! empty( $subscription['post_id'] ) ? $subscription['post_id'] : false;
+			unset( $subscriptions[ $key ] );
+			break;
+		}
+
+		// Attempt for one product.
+		if ( ! empty( $subscription_id ) ) {
+
+			try {
+
+				$post_meta_keys = array(
+					'mwb_upgrade_downgrade_data',
 					'mwb_renewal_subscription_order',
 					'mwb_wsp_no_of_renewal_order',
 					'mwb_wsp_renewal_order_data',
@@ -1012,121 +1111,42 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_parent_order',
 					'mwb_recurring_total',
 					'mwb_customer_id',
+					'mwb_order_currency',
+					'mwb_wsp_first_payment_date',
 				);
+				$post_meta_keys = apply_filters( 'wps_sfw_pro_subscription_keys', $post_meta_keys );
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
-					$products_check = get_posts(
-						array(
-							'numberposts' => -1,
-							'post_status' => array( 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
-							'fields'      => 'ids', // return only ids.
-							'meta_key'    => $meta_keys, //phpcs:ignore
-							'post_type'   => 'product',
-							'order'       => 'ASC',
-						)
-					);
-					if ( ! empty( $products_check ) && is_array( $products_check ) ) {
-						foreach ( $products_check as $k => $product_check_id ) {
-							$value   = get_post_meta( $product_check_id, $meta_keys, true );
-							$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
+					$value   = get_post_meta( $subscription_id, $meta_keys, true );
+					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-							if ( ! empty( get_post_meta( $product_check_id, $new_key, true ) ) ) {
-								continue;
-							}
-							update_post_meta( $product_check_id, $new_key, $value );
-							delete_post_meta( $product_check_id, $meta_keys );
-						}
-					}
+					// if ( ! empty( get_post_meta( $subscription_id, $new_key, true ) ) ) {
+					// 	continue;
+					// }
+					update_post_meta( $subscription_id, $new_key, $value );
+					delete_post_meta( $subscription_id, $meta_keys );
 				}
-				foreach ( $post_meta_keys as $key => $meta_keys ) {
-					$products_check = get_posts(
-						array(
-							'numberposts' => -1,
-							'post_status' => 'wc-mwb_renewal',
-							'fields'      => 'ids', // return only ids.
-							'meta_key'    => $meta_keys, //phpcs:ignore
-							'post_type'   => 'mwb_subscriptions',
-							'order'       => 'ASC',
-						)
-					);
-					if ( ! empty( $products_check ) && is_array( $products_check ) ) {
-						foreach ( $products_check as $k => $product_check_id ) {
-							$value   = get_post_meta( $product_id, $meta_keys, true );
-							$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-							if ( ! empty( get_post_meta( $product_check_id, $new_key, true ) ) ) {
-								continue;
-							}
-							// do_action( 'wps_data', $product_id );
-							update_post_meta( $product_check_id, $new_key, $value );
-							delete_post_meta( $product_check_id, $meta_keys );
+				$wps_get_post = get_post( $subscription_id );
+				$args         = array();
+				if ( ! empty( $wps_get_post ) ) {
+					foreach ( $wps_get_post as $key => $value ) {
+						if ( 'post_status' === $key || 'post_type' === $key || 'post_name' === $key ) {
+							$value        = str_replace( 'MWB', 'WPS', $value );
+							$value        = str_replace( 'mwb', 'wps', $value );
+							$args[ $key ] = $value;
+						} else {
+							$args[ $key ] = $value;
 						}
 					}
+					wp_update_post( $args );
 				}
-				foreach ( $post_meta_keys as $key => $meta_keys ) {
-					$products_check = get_posts(
-						array(
-							'numberposts' => -1,
-							'post_status' => array( 'wc-mwb_renewal', 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
-							'fields'      => 'ids', // return only ids.
-							'meta_key'    => $meta_keys, //phpcs:ignore
-							'post_type'   => 'shop_order',
-							'order'       => 'ASC',
-						)
-					);
-					if ( ! empty( $products_check ) && is_array( $products_check ) ) {
-						foreach ( $products_check as $k => $product_check_id ) {
-							$value   = get_post_meta( $product_check_id, $meta_keys, true );
-							$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
-
-							if ( ! empty( get_post_meta( $product_check_id, $new_key, true ) ) ) {
-								continue;
-							}
-							update_post_meta( $product_check_id, $new_key, $value );
-							delete_post_meta( $product_check_id, $meta_keys );
-							// update_post_meta( $product_id, '_copy' . $new_key, $value );
-						}
-					}
-				}
-				$args = array(
-					'numberposts' => -1,
-					'post_type'   => 'mwb_subscriptions',
-					'post_status' => 'wc-mwb_renewal',
-					'meta_query' => array(
-						array(
-							'key'   => 'mwb_customer_id',
-							'compare' => 'EXISTS',
-						),
-					),
-				);
-
-					$args['meta_query'] = array(
-						array(
-							'key'   => 'mwb_parent_order',
-							'compare' => 'LIKE',
-						),
-					);
-
-					$wps_subscriptions = get_posts( $args );
-
-					foreach ( $wps_subscriptions as $key => $value ) {
-						$args = array();
-						foreach ( $value as $key2 => $value2 ) {
-
-							$new_value1 = str_replace( 'MWB', 'WPS', $value2 );
-							$new_value = str_replace( 'mwb', 'wps', $new_value1 );
-
-							$args[ $key2 ] = $new_value;
-						}
-
-						wp_update_post( $args );
-					}
-
-				update_post_meta( $product_id, 'wps_sfw_migrated', true );
+				// do_action( 'wps_sfw_subscription_migration', $subscription_id );
+				update_post_meta( $subscription_id, 'wps_sfw_migrated', true );
 			} catch ( \Throwable $th ) {
 				wp_die( esc_html( $th->getMessage() ) );
 			}
 		}
-		return compact( 'products' );
+		return compact( 'subscriptions' );
 	}
 	/**
 	 * Get Count
@@ -1137,30 +1157,78 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @return $result .
 	 */
 	public function wps_sfw_get_count( $status = 'all', $action = 'count', $type = false ) {
+		global $wpdb;
 		if ( 'products' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE ( `meta_key` LIKE '%mwb_sfw_%' 
-						OR 'meta_key' LIKE 'mwb_recurring_total' OR 'meta_key' LIKE 'mwb_order_currency' 
-						OR 'meta_key' LIKE 'mwb_order_currency' OR 'meta_key' LIKE 'mwb_subscription_status' 
-						OR 'meta_key' LIKE 'mwb_renewal_subscription_order' OR 'meta_key' LIKE 'mwb_wsp_no_of_renewal_order'
-						OR 'meta_key' LIKE 'mwb_wsp_renewal_order_data' OR 'meta_key' LIKE 'mwb_wsp_last_renewal_order_id' 
-						OR 'meta_key' LIKE 'mwb_next_payment_date' OR 'meta_key' LIKE 'mwb_subscription_status'
-						OR 'meta_key' LIKE '_mwb_paypal_transaction_ids' OR 'meta_key' LIKE '_mwb_paypal_subscription_id'
-						OR 'meta_key' LIKE 'mwb_susbcription_trial_end' OR 'meta_key' LIKE 'mwb_susbcription_end'
-						OR 'meta_key' LIKE 'mwb_subscription_id' OR 'meta_key' LIKE 'mwb_schedule_start' OR 'meta_key' LIKE 'mwb_parent_order' OR 'meta_key' LIKe 'mwb_customer_id')";
+					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE `meta_key` LIKE 'mwb_recurring_total'
+						OR `meta_key` LIKE '_mwb_sfw_product' 
+					 	OR `meta_key` LIKE 'mwb_sfw_subscription_number' 
+						OR `meta_key` LIKE 'mwb_sfw_subscription_interval'
+						OR `meta_key` LIKE 'mwb_sfw_subscription_expiry_number'
+						OR `meta_key` LIKE 'mwb_sfw_subscription_expiry_interval'
+						OR `meta_key` LIKE 'mwb_sfw_subscription_initial_signup_price' 
+						OR `meta_key` LIKE 'mwb_sfw_subscription_free_trial_number'
+						OR `meta_key` LIKE 'mwb_sfw_subscription_free_trial_interval'
+						OR `meta_key` LIKE 'mwb_sfw_variable_product'";
+					$sql = apply_filters( 'wps_sfw_product_migration_sql', $sql );
+					break;
+				default:
+					$sql = false;
+					break;
+			}
+		} elseif ( 'post_type_subscription' === $type ) {
+			switch ( $status ) {
+				case 'pending':
+					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE `meta_key` LIKE 'mwb_sfw_subscription' 
+						OR `meta_key` LIKE 'mwb_upgrade_downgrade_data' 
+						OR `meta_key` LIKE 'mwb_renewal_subscription_order'
+						OR `meta_key` LIKE 'mwb_wsp_no_of_renewal_order'
+						OR `meta_key` LIKE 'mwb_wsp_renewal_order_data'
+						OR `meta_key` LIKE 'mwb_wsp_last_renewal_order_id' 
+						OR `meta_key` LIKE 'mwb_next_payment_date'
+						OR `meta_key` LIKE 'mwb_subscription_status'
+						OR `meta_key` LIKE '_mwb_paypal_transaction_ids'
+						OR `meta_key` LIKE '_mwb_sfw_payment_transaction_id' 
+						OR `meta_key` LIKE '_mwb_paypal_subscription_id' 
+						OR `meta_key` LIKE 'mwb_susbcription_trial_end'
+						OR `meta_key` LIKE 'mwb_susbcription_end'
+						OR `meta_key` LIKE 'mwb_sfw_order_has_subscription'
+						OR `meta_key` LIKE 'mwb_subscription_id' 
+						OR `meta_key` LIKE 'mwb_schedule_start'
+						OR `meta_key` LIKE 'mwb_sfw_subscription_activated'
+						OR `meta_key` LIKE 'mwb_parent_order'
+						OR `meta_key` LIKE 'mwb_recurring_total'
+						OR `meta_key` LIKE 'mwb_customer_id'
+						OR `meta_key` LIKE 'mwb_order_currency'
+						OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
+						";
+					$sql = apply_filters( 'wps_sfw_renewal_order_migration_sql', $sql );
+					break;
+				default:
+					$sql = false;
+					break;
+			}
+		} elseif ( 'mwb_renewal_orders' === $type ) {
+			switch ( $status ) {
+				case 'pending':
+					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE `meta_key` LIKE 'mwb_sfw_renewal_order'
+					OR `meta_key` LIKE 'mwb_sfw_subscription'
+					OR `meta_key` LIKE 'mwb_sfw_parent_order_id'
+					OR `meta_key` LIKE 'mwb_order_currency'
+					OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
+					";
+					$sql = apply_filters( 'wps_sfw_subscription_migration_sql', $sql );
 					break;
 				default:
 					$sql = false;
 					break;
 			}
 		}
-		$sql = apply_filters( 'wps_sfw_pro_get_pro_data', $sql );
 
 		if ( empty( $sql ) ) {
 			return 0;
 		}
-		global $wpdb;
 		$result = $wpdb->get_results( $sql, ARRAY_A ); // @codingStandardsIgnoreLine.
 
 		if ( 'count' === $action ) {

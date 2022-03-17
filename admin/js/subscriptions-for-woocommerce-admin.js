@@ -62,14 +62,19 @@
 		const action           = sfw_admin_param.wps_sfw_callback;
 		const pending_product 	   = sfw_admin_param.wps_sfw_pending_product;
 		const pending_product_count  = sfw_admin_param.wps_sfw_pending_product_count;
-		console.log(pending_product);
-		// const sfw_pending_order      = sfw_admin_param.wps_sfw_pending_order;
-		// const sfw_pending_order_count = sfw_admin_param.wps_sfw_pending_order_count
-		$( document ).on( 'click', '#migration-button', function(e) {
+
+		const pending_orders 	   = sfw_admin_param.wps_sfw_pending_orders;
+		const pending_orders_count  = sfw_admin_param.wps_sfw_pending_orders_count;
+
+		const pending_subscription 	   = sfw_admin_param.wps_sfw_pending_subs;
+		const pending_subscription_count  = sfw_admin_param.wps_sfw_pending_subs_count;
+		console.log(sfw_admin_param);
+		
+		$( document ).on( 'click', '#wps_sfw_migration-button', function(e) {
 			e.preventDefault();
 			Swal.fire({
 				icon: 'warning',
-				title: 'We Have got ' + pending_product_count + ' Products<br/> And ' + ' Data',
+				title: 'We have got ' + pending_product_count + ' Product,</br> ' + pending_orders_count + ' Renewal order</br>And ' + pending_subscription_count + ' Subscription Related Data',
 				text: 'Click to start import',
 				footer: 'Please do not reload/close this page until prompted',
 				showCloseButton: true,
@@ -84,14 +89,14 @@
 			}).then((result)=>{
 				if (result.isConfirmed) {
 					Swal.fire({
-						title   : 'Product are being imported!',
+						title   : 'Product Data are being migrated!',
 						html    : 'Do not reload/close this tab.',
 						footer  : '<span class="order-progress-report">' + pending_product_count + ' are left to import',
 						didOpen: () => {
 							Swal.showLoading()
 						}
 					});
-						startImport( pending_product  );
+					startImport( pending_product  );
 				} else if (result.isDismissed) {
 					Swal.fire('Import Stopped', '', 'info');
 				}
@@ -102,72 +107,105 @@
 			var count;
 			var event   = 'wps_sfw_import_single_product';
 			var request = { action, event, nonce, products };
-			// console.log(request);
 			jQuery.post( ajaxUrl , request ).done(function( response ){
-				console.log(response);
 				products = JSON.parse( response );
 			}).then(
 				function( products ) {
 					products = JSON.parse( products ).products;
-					count = Object.keys(products).length;
+					if ( jQuery.isEmptyObject(products) ) {
+						count = 0;
+					} else {
+						count = Object.keys(products).length;
+					}
 					// count = products.length;
 					jQuery('.order-progress-report').text( count + ' are left to import' );
 
 					if( ! jQuery.isEmptyObject(products) ) {
 						startImport(products);
 					} else{
-						// All products imported!
 						Swal.fire({
-								title   : 'All of the Data are Migrated successfully!',
-							});
+							title   : 'Renewal Orders Data are being migrated!',
+							html    : 'Do not reload/close this tab.',
+							footer  : '<span class="order-progress-report">' + pending_orders_count + ' are left to import',
+							didOpen: () => {
+								Swal.showLoading()
+							}
+						});
+						// All products imported!
+						startRenImport( pending_orders );
 						
 					}
-					// else {
-					// 	// All products imported!
-					// 	Swal.fire({
-					// 		title   : 'Order are being imported!',
-					// 		html    : 'Do not reload/close this tab.',
-					// 		footer  : '<span class="order-progress-report">' + sfw_pending_order_count + ' are left to import',
-					// 		didOpen: () => {
-					// 		Swal.showLoading()
-					// 		}
-					// 	});
-					// 	// startImportOrders( sfw_pending_order );
-					// }
 			}, function(error) {
 				console.error(error);
 			});
 		}
 
-		// const startImportOrders = ( orders ) => {
-		// 	// console.log(orders);
-		// 	var count;
-		// 	var event   = 'wps_sfw_import_single_order';
-		// 	var request = { action, event, nonce, orders };
-		// 	jQuery.post( ajaxUrl , request ).done(function( response ){
-		// 		orders = JSON.parse( response );
-		// 	}).then(
-		// 	function( orders ) {
-		// 		orders = JSON.parse( orders ).orders;
-		// 		if( ! orders == undefined ){
+		const startRenImport = ( orders ) => {
+			var count;
+			var event   = 'wps_sfw_import_single_renewal';
+			var request = { action, event, nonce, orders };
+		
+			jQuery.post( ajaxUrl , request ).done(function( response ){
+				orders = JSON.parse( response );
+			}).then(
+				function( orders ) {
+					orders = JSON.parse( orders ).orders;
+					if ( jQuery.isEmptyObject(orders) ) {
+						count = 0;
+					} else {
+						count = Object.keys(orders).length;
+					}
+					// count = products.length;
+					jQuery('.order-progress-report').text( count + ' are left to import' );
+					if( ! jQuery.isEmptyObject(orders) ) {
+						startRenImport(orders);
+					} else{
+						Swal.fire({
+							title   : 'Subscriptions Orders Data are being migrated!',
+							html    : 'Do not reload/close this tab.',
+							footer  : '<span class="order-progress-report">' + pending_subscription_count + ' are left to import',
+							didOpen: () => {
+								Swal.showLoading()
+							}
+						});
+						startSubImport( pending_subscription )
+						
+					}
+			}, function(error) {
+				console.error(error);
+			});
+		}
+		const startSubImport = ( subscriptions ) => {
+			var count;
+			var event   = 'wps_sfw_import_single_subscription';
+			var request = { action, event, nonce, subscriptions };
+		
+			jQuery.post( ajaxUrl , request ).done(function( response ){
+				subscriptions = JSON.parse( response );
+			}).then(
+				function( subscriptions ) {
+					subscriptions = JSON.parse( subscriptions ).subscriptions;
+					if ( jQuery.isEmptyObject(subscriptions) ) {
+						count = 0;
+					} else {
+						count = Object.keys(subscriptions).length;
+					}
+					// count = products.length;
+					jQuery('.order-progress-report').text( count + ' are left to import' );
 
-		// 			count = Object.keys(orders).length;
-		// 			// count = orders.length;
-		// 			jQuery('.order-progress-report').text( count + ' are left to import' );
-		// 			if( ! jQuery.isEmptyObject(orders) ) {
-		// 				startImportOrders(orders);
-		// 			} else {
-		// 				// All orders imported!
-		// 				Swal.fire({
-		// 					title   : 'All of the Data are Migrated successfully!',
-		// 				});
-		// 			}
-		// 		}
-		// 	}, function(error) {
-		// 		console.error(error);
-		// 	});
-
-		// }
+					if( ! jQuery.isEmptyObject(subscriptions) ) {
+						startSubImport(subscriptions);
+					} else{
+						// All subscriptions are imported!
+						Swal.fire({
+								title   : 'All of the Data are Migrated successfully!',
+						});
+						
+					}
+			}, function(error) {
+				console.error(error);
+			});
+		}
 
 	});
 

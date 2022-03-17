@@ -107,7 +107,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$billing_details = $parent_order->get_address( 'billing' );
 						$shipping_details = $parent_order->get_address( 'shipping' );
 						$parent_order_currency = $parent_order->get_currency();
-						$new_status = 'wps_renewal';
+						$new_status = 'wc-wps_renewal';
 						$user_id = $subscription->wps_customer_id;
 						$product_id = $subscription->product_id;
 						$product_qty = $subscription->product_qty;
