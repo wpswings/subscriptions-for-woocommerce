@@ -320,16 +320,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		}
 
 		$wps_subscriptions = get_posts( $args );
-
 		$total_count = count( $wps_subscriptions );
 
 		$wps_subscriptions_data = array();
 
 		if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 			foreach ( $wps_subscriptions as $key => $value ) {
-
 				$parent_order_id   = get_post_meta( $value->ID, 'wps_parent_order', true );
-
 				if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 					$total_count = --$total_count;
 					continue;

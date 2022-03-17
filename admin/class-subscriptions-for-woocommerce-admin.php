@@ -1032,6 +1032,14 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_sfw_parent_order_id',
 					'mwb_order_currency',
 					'mwb_wsp_first_payment_date',
+					'mwb_sfw_paypal_transaction_id',
+					'mwb_sfw_paypal_subscriber_id',
+					'mwb_subscriber_payment_type',
+					'mwb_subscriber_address',
+					'mwb_subscriber_last_name',
+					'mwb_subscriber_first_name',
+					'mwb_subscriber_id',
+					'mwb_parent_order',
 				);
 				$post_meta_keys = apply_filters( 'wps_sfw_pro_renewal_order_keys', $post_meta_keys );
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
@@ -1113,6 +1121,13 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_customer_id',
 					'mwb_order_currency',
 					'mwb_wsp_first_payment_date',
+					'mwb_sfw_paypal_transaction_id',
+					'mwb_sfw_paypal_subscriber_id',
+					'mwb_subscriber_payment_type',
+					'mwb_subscriber_address',
+					'mwb_subscriber_last_name',
+					'mwb_subscriber_first_name',
+					'mwb_subscriber_id',
 				);
 				$post_meta_keys = apply_filters( 'wps_sfw_pro_subscription_keys', $post_meta_keys );
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
@@ -1202,6 +1217,14 @@ class Subscriptions_For_Woocommerce_Admin {
 						OR `meta_key` LIKE 'mwb_customer_id'
 						OR `meta_key` LIKE 'mwb_order_currency'
 						OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
+
+						OR `meta_key` LIKE 'mwb_sfw_paypal_transaction_id'
+						OR `meta_key` LIKE 'mwb_sfw_paypal_subscriber_id'
+						OR `meta_key` LIKE 'mwb_subscriber_payment_type'
+						OR `meta_key` LIKE 'mwb_subscriber_address'
+						OR `meta_key` LIKE 'mwb_subscriber_last_name'
+						OR `meta_key` LIKE 'mwb_subscriber_first_name'
+						OR `meta_key` LIKE 'mwb_subscriber_id'
 						";
 					$sql = apply_filters( 'wps_sfw_renewal_order_migration_sql', $sql );
 					break;
@@ -1217,6 +1240,15 @@ class Subscriptions_For_Woocommerce_Admin {
 					OR `meta_key` LIKE 'mwb_sfw_parent_order_id'
 					OR `meta_key` LIKE 'mwb_order_currency'
 					OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
+
+					OR `meta_key` LIKE 'mwb_sfw_paypal_transaction_id'
+					OR `meta_key` LIKE 'mwb_sfw_paypal_subscriber_id'
+					OR `meta_key` LIKE 'mwb_subscriber_payment_type'
+					OR `meta_key` LIKE 'mwb_subscriber_address'
+					OR `meta_key` LIKE 'mwb_subscriber_last_name'
+					OR `meta_key` LIKE 'mwb_subscriber_first_name'
+					OR `meta_key` LIKE 'mwb_subscriber_id'
+					OR `meta_key` LIKE 'mwb_parent_order'
 					";
 					$sql = apply_filters( 'wps_sfw_subscription_migration_sql', $sql );
 					break;
