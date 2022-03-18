@@ -199,34 +199,28 @@ class Subscriptions_For_Woocommerce_Admin {
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		}
-		//migration
-		$screen        = get_current_screen();
-		$valid_screens = wps_sfw_get_page_screen();
-		if ( isset( $screen->id ) ) {
-			$pagescreen = $screen->id;
-			if ( in_array( $pagescreen, $valid_screens, true ) ) {
+		if ( 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
 
-				wp_register_script( $this->plugin_name . 'admin-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-admin.js', array( 'jquery' ), $this->version, false );
+			wp_register_script( $this->plugin_name . 'admin-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-admin.js', array( 'jquery' ), $this->version, false );
 
-				wp_localize_script(
-					$this->plugin_name . 'admin-js',
-					'sfw_admin_param',
-					array(
-						'ajaxurl' 		   => admin_url( 'admin-ajax.php' ),
-						'wps_sfw_react_nonce'            => wp_create_nonce( 'ajax-nonce' ),
-						'wps_sfw_callback'               => 'wps_sfw_ajax_callbacks',
-						'wps_sfw_pending_product'        => $this->wps_sfw_get_count( 'pending', 'result', 'products' ),
-						'wps_sfw_pending_product_count'  => $this->wps_sfw_get_count( 'pending', 'count', 'products' ),
-						'wps_sfw_pending_orders'         => $this->wps_sfw_get_count( 'pending', 'result', 'mwb_renewal_orders' ),
-						'wps_sfw_pending_orders_count'   => $this->wps_sfw_get_count( 'pending', 'count', 'mwb_renewal_orders' ),
-						'wps_sfw_pending_subs'           => $this->wps_sfw_get_count( 'pending', 'result', 'post_type_subscription' ),
-						'wps_sfw_pending_subs_count'     => $this->wps_sfw_get_count( 'pending', 'count', 'post_type_subscription' ),
+			wp_localize_script(
+				$this->plugin_name . 'admin-js',
+				'sfw_admin_param',
+				array(
+					'ajaxurl' 		   => admin_url( 'admin-ajax.php' ),
+					'wps_sfw_react_nonce'            => wp_create_nonce( 'ajax-nonce' ),
+					'wps_sfw_callback'               => 'wps_sfw_ajax_callbacks',
+					'wps_sfw_pending_product'        => $this->wps_sfw_get_count( 'pending', 'result', 'products' ),
+					'wps_sfw_pending_product_count'  => $this->wps_sfw_get_count( 'pending', 'count', 'products' ),
+					'wps_sfw_pending_orders'         => $this->wps_sfw_get_count( 'pending', 'result', 'mwb_renewal_orders' ),
+					'wps_sfw_pending_orders_count'   => $this->wps_sfw_get_count( 'pending', 'count', 'mwb_renewal_orders' ),
+					'wps_sfw_pending_subs'           => $this->wps_sfw_get_count( 'pending', 'result', 'post_type_subscription' ),
+					'wps_sfw_pending_subs_count'     => $this->wps_sfw_get_count( 'pending', 'count', 'post_type_subscription' ),
 
-					)
-				);
-				wp_enqueue_script( $this->plugin_name . 'admin-js' );
-				wp_enqueue_script( $this->plugin_name . 'sfw-swal.js' , SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swal.js', array( 'jquery' ), $this->version, false );
-			}
+				)
+			);
+			wp_enqueue_script( $this->plugin_name . 'admin-js' );
+			wp_enqueue_script( $this->plugin_name . 'sfw-swal.js' , SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swal.js', array( 'jquery' ), $this->version, false );
 		}
 	}
 	/**
@@ -989,15 +983,11 @@ class Subscriptions_For_Woocommerce_Admin {
 					$value   = get_post_meta( $product_id, $meta_keys, true );
 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-					// if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
-					// 	continue;
-					// }
-					if ( empty( $value ) ) {
-						delete_post_meta( $product_id, $meta_keys );
-					} else {
-						update_post_meta( $product_id, $new_key, $value );
-						delete_post_meta( $product_id, $meta_keys );
+					if ( ! empty( get_post_meta( $product_id, $new_key, true ) ) ) {
+						continue;
 					}
+					update_post_meta( $product_id, $new_key, $value );
+					delete_post_meta( $product_id, $meta_keys );
 				}
 				// do_action( 'wps_sfw_product_migration', $product_id );
 				update_post_meta( $product_id, 'wps_sfw_migrated', true );
@@ -1044,21 +1034,19 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_subscriber_first_name',
 					'mwb_subscriber_id',
 					'mwb_parent_order',
+					'mwb_sfw_order_has_subscription',
+					'mwb_subscription_id',
 				);
 				$post_meta_keys = apply_filters( 'wps_sfw_pro_renewal_order_keys', $post_meta_keys );
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
 					$value   = get_post_meta( $order_id, $meta_keys, true );
 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-					// if ( ! empty( get_post_meta( $order_id, $new_key, true ) ) ) {
-					// 	continue;
-					// }
-					if ( empty( $value ) ) {
-						delete_post_meta( $order_id, $meta_keys );
-					} else {
-						update_post_meta( $order_id, $new_key, $value );
-						delete_post_meta( $order_id, $meta_keys );
+					if ( ! empty( get_post_meta( $order_id, $new_key, true ) ) ) {
+						continue;
 					}
+					update_post_meta( $order_id, $new_key, $value );
+					delete_post_meta( $order_id, $meta_keys );
 				}
 
 				$wps_get_post = get_post( $order_id );
@@ -1142,15 +1130,11 @@ class Subscriptions_For_Woocommerce_Admin {
 					$value   = get_post_meta( $subscription_id, $meta_keys, true );
 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
 
-					// if ( ! empty( get_post_meta( $subscription_id, $new_key, true ) ) ) {
-					// 	continue;
-					// }
-					if ( empty( $value ) ) {
-						delete_post_meta( $subscription_id, $meta_keys );
-					} else {
-						update_post_meta( $subscription_id, $new_key, $value );
-						delete_post_meta( $subscription_id, $meta_keys );
+					if ( ! empty( get_post_meta( $subscription_id, $new_key, true ) ) ) {
+						continue;
 					}
+					update_post_meta( $subscription_id, $new_key, $value );
+					delete_post_meta( $subscription_id, $meta_keys );
 				}
 
 				$wps_get_post = get_post( $subscription_id );
@@ -1261,6 +1245,8 @@ class Subscriptions_For_Woocommerce_Admin {
 					OR `meta_key` LIKE 'mwb_subscriber_first_name'
 					OR `meta_key` LIKE 'mwb_subscriber_id'
 					OR `meta_key` LIKE 'mwb_parent_order'
+					OR `meta_key` LIKE 'mwb_sfw_order_has_subscription'
+					OR `meta_key` LIKE 'mwb_subscription_id',
 					";
 					$sql = apply_filters( 'wps_sfw_subscription_migration_sql', $sql );
 					break;
