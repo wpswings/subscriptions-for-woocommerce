@@ -14,10 +14,10 @@
  * @wordpress-plugin
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
- * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue.
+ * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-plugin&utm_medium=subs-org-backend&utm_campaign=woo-plugins">Elevate your e-commerce store by exploring more on WP Swings</a>
  * Version:           1.3.2
  * Author:            WP Swings
- * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-home&utm_medium=subs-org-backend&utm_campaign=home
+ * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-page&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
