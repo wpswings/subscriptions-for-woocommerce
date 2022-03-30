@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       With Subscriptions for WooCommerce, allow the WooCommerce merchants to sell their subscriptions and avail recurring revenue. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-plugin&utm_medium=subs-org-backend&utm_campaign=woo-plugins">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.3.2
+ * Version:           1.4.0
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-page&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -35,11 +35,127 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
-if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+$old_pro_exists = false;
+$plug           = get_plugins();
+if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
+	if ( version_compare( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'], '2.1.0', '<' ) ) {
+		$old_pro_exists = true;
+	}
+}
+add_action( 'after_plugin_row_woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', 'wps_sfw_old_upgrade_notice', 0, 3 );
+/**
+ * Migration to ofl pro plugin.
+ *
+ * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param array  $plugin_data An array of plugin data.
+ * @param string $status Status filter currently applied to the plugin list.
+ */
+function wps_sfw_old_upgrade_notice( $plugin_file, $plugin_data, $status ) {
 
-	deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
-	$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
-	header( 'Location: ' . $general_settings_url );
+	global $old_pro_exists;
+	if ( $old_pro_exists ) {
+		?>
+	<tr class="plugin-update-tr active notice-warning notice-alt">
+		<td colspan="4" class="plugin-update colspanchange">
+			<div class="notice notice-error inline update-message notice-alt">
+				<p class='wps-notice-title wps-notice-section'>
+					<strong><?php esc_html_e( 'This plugin will not work anymore correctly.', 'subscriptions-for-woocommerce' ); ?></strong><br>
+					<?php esc_html_e( 'We highly recommend to update to latest pro version and once installed please migrate the existing settings.', 'subscriptions-for-woocommerce' ); ?><br>
+					<?php esc_html_e( 'If you are not getting automatic update now button here, then don\'t worry you will get in within 24 hours. If you still not get it please visit to your account dashboard and install it manually or connect to our support.', 'subscriptions-for-woocommerce' ); ?>
+				</p>
+			</div>
+		</td>
+	</tr>
+	<style>
+		.wps-notice-section > p:before {
+			content: none;
+		}
+	</style>
+		<?php
+	}
+}
+$old_sfw_pro_present   = false;
+$installed_plugins = get_plugins();
+
+if ( array_key_exists( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', $installed_plugins ) ) {
+	$pro_plugin = $installed_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'];
+	if ( version_compare( $pro_plugin['Version'], '2.1.0', '<' ) ) {
+		$old_sfw_pro_present = true;
+	}
+}
+
+if ( true === $old_sfw_pro_present ) {
+
+	add_action( 'admin_notices', 'wps_sfw_lite_add_updatenow_notice' );
+
+	/**
+	 * Displays notice to upgrade to Subscription.
+	 */
+	function wps_sfw_lite_add_updatenow_notice() {
+		$screen = get_current_screen();
+		if ( isset( $screen->id ) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
+		?>
+		<tr class="plugin-update-tr active notice-warning notice-alt">
+			<td colspan="4" class="plugin-update colspanchange">
+				<div class="notice notice-error inline update-message notice-alt">
+					<div class='wps-notice-title wps-notice-section'>
+						<p><strong>IMPORTANT NOTICE:</strong></p>
+					</div>
+					<div class='wps-notice-content wps-notice-section'>
+						<p><strong>Your Woocommerce Subscriptions Pro plugin update is here! Please Update it now via plugins page.</strong></p>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<style>
+			.wps-notice-section > p:before {
+				content: none;
+			}
+		</style>
+
+				<?php
+		}
+
+	}//end wps_sfw_lite_add_updatenow_notice()
+	add_action( 'admin_notices', 'wps_sfw_check_and_inform_update' );
+
+	/**
+	 * Check update if pro is old.
+	 */
+	function wps_sfw_check_and_inform_update() {
+		$update_file = plugin_dir_path( dirname( __FILE__ ) ) . 'woocommerce-subscriptions-pro/class-woocommerce-subscriptions-pro-update.php';
+
+		// If present but not active.
+		if ( ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+			if ( file_exists( $update_file ) ) {
+				$wps_mfw_pro_license_key = get_option( 'mwb_wsp_license_key', '' );
+				! defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_LICENSE_KEY' ) && define( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_LICENSE_KEY', $wps_mfw_pro_license_key );
+				! defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE' ) && define( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE', 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
+			}
+			require_once $update_file;
+		}
+
+		if ( defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE' ) ) {
+			do_action( 'mwb_wsp_plugin_check_event' );
+			// $is_update_fetched = get_option( 'mwb_mfw_plugin_update', 'false' );
+			$plugin_transient  = get_site_transient( 'update_plugins' );
+			$update_obj        = ! empty( $plugin_transient->response[ WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE ] ) ? $plugin_transient->response[ WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE ] : false;
+
+			if ( ! empty( $update_obj ) ) :
+				?>
+				<div class="notice notice-error is-dismissible">
+					<p><?php esc_html_e( 'Your WooCommerce Subscription Pro plugin update is here! Please Update it now.', 'subscriptions-for-woocommerce' ); ?></p>
+				</div>
+				<?php
+			endif;
+			if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+				$sfw_plugins= get_plugins();
+				if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0') {
+					deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
+				}
+			}
+		}
+	}
 }
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
@@ -50,7 +166,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.3.2' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.0' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -104,7 +220,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					<p>
 						<?php esc_html_e( 'Heads up, The latest update includes some substantial changes across different areas of the plugin.', 'subscriptions-for-woocommerce' ); ?>
 					</p>
-					<p><b><?php esc_html_e( 'Please Click', 'subscriptions-for-woocommerce' ) ?><a href="<?php echo esc_attr( admin_url( 'admin.php' ) . '?page=subscriptions_for_woocommerce_menu' ); ?>"> here </a><?php esc_html_e( 'To Goto the Migration Page and Run the Migration Functionality.', 'subscriptions-for-woocommerce' ); ?></b></p>
+					<p><b><?php esc_html_e( 'Please Click', 'subscriptions-for-woocommerce' ); ?><a href="<?php echo esc_attr( admin_url( 'admin.php' ) . '?page=subscriptions_for_woocommerce_menu' ); ?>"> here </a><?php esc_html_e( 'To Goto the Migration Page and Run the Migration Functionality.', 'subscriptions-for-woocommerce' ); ?></b></p>
 				</div>
 			</td>
 		</tr>
@@ -139,7 +255,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					<p>
 						<?php esc_html_e( 'Heads up, The latest update includes some substantial changes across different areas of the plugin.', 'subscriptions-for-woocommerce' ); ?>
 						</p>
-						<p><b><?php esc_html_e( 'Please Click on the Start Migration button to start migration.', 'subscriptions-for-woocommerce' ) ?></b>
+						<p><b><?php esc_html_e( 'Please Click on the Start Migration button to start migration.', 'subscriptions-for-woocommerce' ); ?></b>
 					</p>
 					<p><button class="cls-migration-button mdc-button mdc-button--raised mdc-ripple-upgraded" id="wps_sfw_migration-button">Start Migration</button></p>
 				</div>
@@ -258,7 +374,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		$my_link = array(
 			'<a href="' . admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ) . '">' . __( 'Settings', 'subscriptions-for-woocommerce' ) . '</a>',
 		);
-		if ( ! is_plugin_active( 'subscriptions-for-woocommerce-pro/subscriptions-for-woocommerce-pro.php' ) ) {
+		if ( ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 
 			$my_link['goPro'] = '<a class="wps-sfw-go-pro" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro">' . esc_html__( 'GO PRO', 'subscriptions-for-woocommerce' ) . '</a>';
 		}
@@ -433,10 +549,10 @@ function wps_subscripition_plugin_updation_notice() {
 	if ( function_exists( 'get_current_screen' ) ) {
 		$screen = get_current_screen();
 		if ( ! empty( $screen->id ) && 'plugins' === $screen->id ) {
-			if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.0.2' && ! isset( $sfw_plugins['subscriptions-for-woocommerce-pro/subscriptions-for-woocommerce-pro.php'] ) ) {
+			if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0' ) {
 				?>
 				<div class="notice notice-error is-dismissible">
-					<p><strong><?php esc_html_e( 'Version 2.0.2 of Woocommerce Subcription Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>
+					<p><strong><?php esc_html_e( 'Version 2.1.0 of Subscriptions For WooCommerce Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>
 				</div>
 				<?php
 			}

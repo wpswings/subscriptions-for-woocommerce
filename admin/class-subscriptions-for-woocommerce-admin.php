@@ -207,7 +207,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				$this->plugin_name . 'admin-js',
 				'sfw_admin_param',
 				array(
-					'ajaxurl' 		   => admin_url( 'admin-ajax.php' ),
+					'ajaxurl'          => admin_url( 'admin-ajax.php' ),
 					'wps_sfw_react_nonce'            => wp_create_nonce( 'ajax-nonce' ),
 					'wps_sfw_callback'               => 'wps_sfw_ajax_callbacks',
 					'wps_sfw_pending_product'        => $this->wps_sfw_get_count( 'pending', 'result', 'products' ),
@@ -220,7 +220,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				)
 			);
 			wp_enqueue_script( $this->plugin_name . 'admin-js' );
-			wp_enqueue_script( $this->plugin_name . 'sfw-swal.js' , SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swal.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( $this->plugin_name . 'sfw-swal.js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swal.js', array( 'jquery' ), $this->version, false );
 		}
 	}
 	/**
@@ -989,7 +989,6 @@ class Subscriptions_For_Woocommerce_Admin {
 					update_post_meta( $product_id, $new_key, $value );
 					delete_post_meta( $product_id, $meta_keys );
 				}
-				// do_action( 'wps_sfw_product_migration', $product_id );
 				update_post_meta( $product_id, 'wps_sfw_migrated', true );
 			} catch ( \Throwable $th ) {
 				wp_die( esc_html( $th->getMessage() ) );
@@ -1052,7 +1051,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				$wps_get_post = get_post( $order_id );
 				$args         = array();
 				if ( ! empty( $wps_get_post ) ) {
-					foreach( $wps_get_post as $key => $value ) {
+					foreach ( $wps_get_post as $key => $value ) {
 						if ( 'post_status' === $key || 'post_type' === $key || 'post_name' === $key ) {
 							$value        = str_replace( 'MWB', 'WPS', $value );
 							$value        = str_replace( 'mwb', 'wps', $value );
@@ -1063,7 +1062,6 @@ class Subscriptions_For_Woocommerce_Admin {
 					}
 					wp_update_post( $args );
 				}
-				// do_action( 'wps_sfw_renewal_order_migration', $order_id );
 				update_post_meta( $order_id, 'wps_sfw_migrated', true );
 			} catch ( \Throwable $th ) {
 				wp_die( esc_html( $th->getMessage() ) );
@@ -1151,7 +1149,6 @@ class Subscriptions_For_Woocommerce_Admin {
 					}
 					wp_update_post( $args );
 				}
-				// do_action( 'wps_sfw_subscription_migration', $subscription_id );
 				update_post_meta( $subscription_id, 'wps_sfw_migrated', true );
 			} catch ( \Throwable $th ) {
 				wp_die( esc_html( $th->getMessage() ) );

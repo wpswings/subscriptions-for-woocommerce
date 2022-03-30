@@ -51,7 +51,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 		public function wps_sfw_renewal_order_on_scheduler() {
 
 			$wps_sfw_pro_plugin_activated = false;
-			if ( in_array( 'subscriptions-for-woocommerce-pro/subscriptions-for-woocommerce-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+			if ( in_array( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 				$wps_sfw_pro_plugin_activated = true;
 			}
 			$current_time = current_time( 'timestamp' );

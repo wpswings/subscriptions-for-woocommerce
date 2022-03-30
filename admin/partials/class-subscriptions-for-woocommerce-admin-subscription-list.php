@@ -292,7 +292,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 */
 	public function wps_sfw_get_subscription_list() {
 		$wps_sfw_pro_plugin_activated = false;
-		if ( in_array( 'subscriptions-for-woocommerce-pro/subscriptions-for-woocommerce-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+		if ( in_array( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 			$wps_sfw_pro_plugin_activated = true;
 		}
 
@@ -410,7 +410,7 @@ if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_
 	if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
 		global $wps_subscription_id;
 		$wps_subscription_id = $subscription_id;
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_PRO_DIR_PATH . 'admin/partials/class-subscriptions-for-woocommerce-pro-view-renewal-list.php';
+		require_once WOOCOMMERCE_SUBSCRIPTIONS_PRO_DIR_PATH . 'admin/partials/class-woocommerce-subscriptions-pro-view-renewal-list.php';
 	}
 } else {
 	?>
