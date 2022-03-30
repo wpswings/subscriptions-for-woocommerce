@@ -220,12 +220,6 @@ if ( ! function_exists( 'wps_sfw_send_email_for_renewal_susbcription' ) ) {
 			if ( isset( $mailer['WC_Email_New_Order'] ) ) {
 				 $mailer['WC_Email_New_Order']->trigger( $order_id );
 			}
-			if ( $order->get_status() == 'processing' ) {
-				if ( isset( $mailer['WC_Email_Customer_Processing_Order'] ) ) {
-					 $mailer['WC_Email_Customer_Processing_Order']->trigger( $order_id );
-
-				}
-			}
 			do_action( 'wps_sfw_renewal_email_notification', $order, $mailer );
 		}
 	}
