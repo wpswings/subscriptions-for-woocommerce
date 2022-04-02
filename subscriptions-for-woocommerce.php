@@ -136,8 +136,8 @@ if ( true === $old_sfw_pro_present ) {
 		}
 
 		if ( defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE' ) ) {
-			do_action( 'mwb_wsp_plugin_check_event' );
-			// $is_update_fetched = get_option( 'mwb_mfw_plugin_update', 'false' );
+			$wps_sfw_version_old_pro = new Woocommerce_Subscriptions_Pro_Update();
+			$wps_sfw_version_old_pro->mwb_wsp_check_update();
 			$plugin_transient  = get_site_transient( 'update_plugins' );
 			$update_obj        = ! empty( $plugin_transient->response[ WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE ] ) ? $plugin_transient->response[ WOOCOMMERCE_SUBSCRIPTIONS_PRO_BASE_FILE ] : false;
 
@@ -148,12 +148,6 @@ if ( true === $old_sfw_pro_present ) {
 				</div>
 				<?php
 			endif;
-			if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
-				$sfw_plugins= get_plugins();
-				if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0') {
-					deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
-				}
-			}
 		}
 	}
 }
@@ -498,6 +492,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				wp_safe_redirect( esc_url( $general_settings_url ) );
 				exit();
 			}
+		}
+	}
+	if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+		$sfw_plugins= get_plugins();
+		if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0') {
+			sleep(60);
+			deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
 		}
 	}
 } else {
