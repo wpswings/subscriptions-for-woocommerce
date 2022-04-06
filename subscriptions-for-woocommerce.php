@@ -550,7 +550,14 @@ function wps_subscripition_plugin_updation_notice() {
 	if ( function_exists( 'get_current_screen' ) ) {
 		$screen = get_current_screen();
 		if ( ! empty( $screen->id ) && 'plugins' === $screen->id ) {
-			if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0' ) {
+			$old_pro_plugin = false;
+			$plug           = get_plugins();
+			if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
+				if ( version_compare( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'], '2.1.0', '<' ) ) {
+					$old_pro_plugin = true;
+				}
+			}
+			if ( true === $old_pro_plugin ) {
 				?>
 				<div class="notice notice-error is-dismissible">
 					<p><strong><?php esc_html_e( 'Version 2.1.0 of Subscriptions For WooCommerce Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>

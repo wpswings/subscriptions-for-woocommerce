@@ -221,6 +221,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			);
 			wp_enqueue_script( $this->plugin_name . 'admin-js' );
 			wp_enqueue_script( $this->plugin_name . 'sfw-swal.js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swal.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( $this->plugin_name . 'sfw-swall.js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/sfw-swall.js', array( 'jquery' ), $this->version, false );
 		}
 	}
 	/**
@@ -1154,6 +1155,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				wp_die( esc_html( $th->getMessage() ) );
 			}
 		}
+		update_option( 'wps_subscription_migrated_successfully' , 'yes' );
 		return compact( 'subscriptions' );
 	}
 	/**

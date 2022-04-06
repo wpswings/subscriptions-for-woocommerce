@@ -217,3 +217,13 @@
 	});
 
 	})( jQuery );
+	var wps_subscripiton_migration_success = function() {
+	
+		if ( sfw_admin_param.pending_product_count != 0 && sfw_admin_param.pending_orders_count != 0 && sfw_admin_param.pending_subscription_count != 0 ) {
+			jQuery( "#wps_sfw_migration-button" ).click();
+			jQuery( "#wps_sfw_migration-button" ).show();
+		}else{
+			jQuery( "#wps_sfw_migration-button" ).hide();
+			
+		}
+	}
