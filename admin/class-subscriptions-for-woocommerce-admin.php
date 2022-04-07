@@ -978,8 +978,13 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_sfw_subscription_free_trial_number',
 					'mwb_sfw_subscription_free_trial_interval',
 					'mwb_sfw_variable_product',
+					'mwb_wsp_enbale_certain_month',
+					'mwb_wsp_week_sync',
+					'mwb_wsp_month_sync',
+					'mwb_wsp_year_sync',
+					'mwb_wsp_year_number',
+					'mwb_sfw_subscription_start_date',
 				);
-				$post_meta_keys = apply_filters( 'wps_sfw_pro_product_keys', $post_meta_keys );
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
 					$value   = get_post_meta( $product_id, $meta_keys, true );
 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
@@ -1036,8 +1041,13 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_parent_order',
 					'mwb_sfw_order_has_subscription',
 					'mwb_subscription_id',
+					'_mwb_is_renewal_success',
+					'mwb_wsp_manual_renewal_order',
+					'mwb_upgrade_downgrade_order_succes',
+					'mwb_wps_gc_coupon_updated',
+					'mwb_wsp_no_of_retry_attempt',
+					'mwb_upgrade_downgrade_order',
 				);
-				$post_meta_keys = apply_filters( 'wps_sfw_pro_renewal_order_keys', $post_meta_keys );
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
 					$value   = get_post_meta( $order_id, $meta_keys, true );
 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
@@ -1123,8 +1133,22 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_subscriber_last_name',
 					'mwb_subscriber_first_name',
 					'mwb_subscriber_id',
+					'mwb_wsp_failed_attemp_for_subscription',
+					'mwb_wsp_failed_order_for_subscription',
+					'mwb_wsf_manage_prorate_negativ_amount_date',
+					'mwb_wsf_manage_prorate_negativ_amount_wallet',
+					'mwb_wsp_switch_order_data',
+					'mwb_wsp_last_switch_order_id',
+					'mwb_wsp_first_payment_date',
+					'mwb_wgm_giftcard_coupon',
+					'mwb_sfw_multisafepay_recurring_reminder_sent',
+					'mwb_wsp_plan_expire_notice_send',
+					'mwb_subscription_reactive_time',
+					'mwb_subscription_pause_time',
+					'mwb_wsp_manual_renewal_order',
+					'mwb_upgrade_downgrade_order',
+					'mwb_upgrade_downgrade_order_succes',
 				);
-				$post_meta_keys = apply_filters( 'wps_sfw_pro_subscription_keys', $post_meta_keys );
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
 					$value   = get_post_meta( $subscription_id, $meta_keys, true );
 					$new_key = str_replace( 'mwb_', 'wps_', $meta_keys );
@@ -1167,11 +1191,13 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @return $result .
 	 */
 	public function wps_sfw_get_count( $status = 'all', $action = 'count', $type = false ) {
+
 		global $wpdb;
+		$table = $wpdb->prefix . 'postmeta';
 		if ( 'products' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE `meta_key` LIKE 'mwb_recurring_total'
+					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_recurring_total'
 						OR `meta_key` LIKE '_mwb_sfw_product' 
 					 	OR `meta_key` LIKE 'mwb_sfw_subscription_number' 
 						OR `meta_key` LIKE 'mwb_sfw_subscription_interval'
@@ -1180,8 +1206,15 @@ class Subscriptions_For_Woocommerce_Admin {
 						OR `meta_key` LIKE 'mwb_sfw_subscription_initial_signup_price' 
 						OR `meta_key` LIKE 'mwb_sfw_subscription_free_trial_number'
 						OR `meta_key` LIKE 'mwb_sfw_subscription_free_trial_interval'
-						OR `meta_key` LIKE 'mwb_sfw_variable_product'";
-					$sql = apply_filters( 'wps_sfw_product_migration_sql', $sql );
+						OR `meta_key` LIKE 'mwb_sfw_variable_product'
+						
+						OR `meta_key` LIKE 'mwb_wsp_enbale_certain_month' 
+						OR `meta_key` LIKE 'mwb_wsp_week_sync' 
+						OR `meta_key` LIKE 'mwb_wsp_month_sync'
+						OR `meta_key` LIKE 'mwb_wsp_year_sync'
+						OR `meta_key` LIKE 'mwb_wsp_year_number'
+						OR `meta_key` LIKE 'mwb_sfw_subscription_start_date'";
+
 					break;
 				default:
 					$sql = false;
@@ -1190,7 +1223,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		} elseif ( 'post_type_subscription' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE `meta_key` LIKE 'mwb_sfw_subscription' 
+					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_subscription' 
 						OR `meta_key` LIKE 'mwb_upgrade_downgrade_data' 
 						OR `meta_key` LIKE 'mwb_renewal_subscription_order'
 						OR `meta_key` LIKE 'mwb_wsp_no_of_renewal_order'
@@ -1213,6 +1246,22 @@ class Subscriptions_For_Woocommerce_Admin {
 						OR `meta_key` LIKE 'mwb_order_currency'
 						OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
 
+						OR `meta_key` LIKE 'mwb_wsp_failed_attemp_for_subscription'
+						OR `meta_key` LIKE 'mwb_wsp_failed_order_for_subscription' 
+						OR `meta_key` LIKE 'mwb_wsf_manage_prorate_negativ_amount_date' 
+						OR `meta_key` LIKE 'mwb_wsf_manage_prorate_negativ_amount_wallet'
+						OR `meta_key` LIKE 'mwb_wsp_switch_order_data'
+						OR `meta_key` LIKE 'mwb_wsp_last_switch_order_id'
+						OR `meta_key` LIKE 'mwb_wsp_first_payment_date' 
+						OR `meta_key` LIKE 'mwb_wgm_giftcard_coupon'
+						OR `meta_key` LIKE 'mwb_sfw_multisafepay_recurring_reminder_sent'
+						OR `meta_key` LIKE 'mwb_wsp_plan_expire_notice_send'
+						OR `meta_key` LIKE 'mwb_subscription_reactive_time'
+						OR `meta_key` LIKE 'mwb_subscription_pause_time'
+						OR `meta_key` LIKE 'mwb_wsp_manual_renewal_order'
+						OR `meta_key` LIKE 'mwb_upgrade_downgrade_order'
+						OR `meta_key` LIKE 'mwb_upgrade_downgrade_order_succes'
+
 						OR `meta_key` LIKE 'mwb_sfw_paypal_transaction_id'
 						OR `meta_key` LIKE 'mwb_sfw_paypal_subscriber_id'
 						OR `meta_key` LIKE 'mwb_subscriber_payment_type'
@@ -1221,7 +1270,6 @@ class Subscriptions_For_Woocommerce_Admin {
 						OR `meta_key` LIKE 'mwb_subscriber_first_name'
 						OR `meta_key` LIKE 'mwb_subscriber_id'
 						";
-					$sql = apply_filters( 'wps_sfw_renewal_order_migration_sql', $sql );
 					break;
 				default:
 					$sql = false;
@@ -1230,11 +1278,20 @@ class Subscriptions_For_Woocommerce_Admin {
 		} elseif ( 'mwb_renewal_orders' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM `wp_postmeta` WHERE `meta_key` LIKE 'mwb_sfw_renewal_order'
+					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_renewal_order'
 					OR `meta_key` LIKE 'mwb_sfw_subscription'
 					OR `meta_key` LIKE 'mwb_sfw_parent_order_id'
 					OR `meta_key` LIKE 'mwb_order_currency'
 					OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
+
+					OR `meta_key` LIKE '_mwb_is_renewal_success'
+					OR `meta_key` LIKE 'mwb_wsp_manual_renewal_order'
+					OR `meta_key` LIKE 'mwb_upgrade_downgrade_order_succes'
+					OR `meta_key` LIKE 'mwb_wps_gc_coupon_updated'
+					OR `meta_key` LIKE 'mwb_wsp_no_of_retry_attempt'
+					OR `meta_key` LIKE 'mwb_upgrade_downgrade_order'
+					OR `meta_key` LIKE 'mwb_subscription_reactive_time'
+					OR `meta_key` LIKE 'mwb_subscription_pause_time'
 
 					OR `meta_key` LIKE 'mwb_sfw_paypal_transaction_id'
 					OR `meta_key` LIKE 'mwb_sfw_paypal_subscriber_id'
@@ -1245,9 +1302,8 @@ class Subscriptions_For_Woocommerce_Admin {
 					OR `meta_key` LIKE 'mwb_subscriber_id'
 					OR `meta_key` LIKE 'mwb_parent_order'
 					OR `meta_key` LIKE 'mwb_sfw_order_has_subscription'
-					OR `meta_key` LIKE 'mwb_subscription_id',
+					OR `meta_key` LIKE 'mwb_subscription_id'
 					";
-					$sql = apply_filters( 'wps_sfw_subscription_migration_sql', $sql );
 					break;
 				default:
 					$sql = false;

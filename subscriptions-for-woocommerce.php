@@ -194,20 +194,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function sfw_upgrade_notice() {
 
 		?>
-
-	<tr class="plugin-update-tr active notice-warning notice-alt">
-	<td colspan="4" class="plugin-update colspanchange">
-		<div class="notice notice-success inline update-message notice-alt">
-			<div class='wps-notice-title wps-notice-section'>
-				<p><strong>IMPORTANT NOTICE:</strong></p>
-			</div>
-			<div class='wps-notice-content wps-notice-section'>
-				<p>From this update <strong>Version 1.3.1</strong> onwards, the plugin and its support will be handled by <strong>WP Swings</strong>.</p><p><strong>WP Swings</strong> is just our improvised and rebranded version with all quality solutions and help being the same, so no worries at your end.
-				Please connect with us for all setup, support, and update related queries without hesitation.</p>
-			</div>
-		</div>
-	</td>
-	</tr>
 	<tr class="plugin-update-tr active notice-warning notice-alt">
 			<td  colspan="4" class="plugin-update colspanchange">
 				<div class="notice notice-warning inline update-message notice-alt">
@@ -497,7 +483,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 		$sfw_plugins= get_plugins();
 		if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0') {
-			sleep(60);
+			sleep(30);
 			deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
 		}
 	}
@@ -582,11 +568,41 @@ function migration_work_for_db_key() {
 		flush_rewrite_rules();
 
 		subscriptions_for_woocommerce_upgrade_wp_options();
+		subscriptions_for_woocommerce_pro_upgrade_wp_options();
 
 		update_option( 'wps_upgrade_sfw_wp_migration_option_check', 'done' );
 	}
 }
+/**
+ * Short Description. (use period)
+ *
+ * Long Description.
+ *
+ * @since    1.0.0
+ */
+function subscriptions_for_woocommerce_pro_upgrade_wp_options() {
 
+	$wp_options = array(
+		'mwb_wsp_plugin_update',
+		'mwb_all_plugins_active',
+		'mwb_wsp_license_key',
+		'mwb_wsp_license_key_status',
+		'mwb_wsp_lcns_thirty_days',
+		'mwb_wsp_upgrade_downgrade_btn_text',
+		'mwb_wsp_manage_prorate_amount',
+	);
+
+	foreach ( $wp_options as $index => $key ) {
+		$new_key = str_replace( 'mwb', 'wps', $key );
+
+		if ( ! empty( get_option( $new_key ) ) ) {
+			continue;
+		}
+
+		$new_value = get_option( $key );
+		update_option( $new_key, $new_value );
+	}
+}
 /**
  * Short Description. (use period)
  *
