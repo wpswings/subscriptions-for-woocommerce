@@ -73,6 +73,7 @@ if ( ! wps_sfw_check_multistep() ) {
 	<section class="wps-section">
 		<div>
 			<?php
+				require_once plugin_dir_path( __FILE__ ) . '/subscription-for-woocommerce-incompatible.php';
 				do_action( 'wps_sfw_before_general_settings_form' );
 						// if submenu is directly clicked on woocommerce.
 			if ( empty( $sfw_active_tab ) ) {
@@ -87,7 +88,6 @@ if ( ! wps_sfw_check_multistep() ) {
 				$file_path = $sfw_default_tabs[ $sfw_active_tab ]['file_path'];
 			}
 				$sfw_tab_content_path = $file_path . 'admin/partials/' . $sfw_active_tab . '.php';
-
 				$sfw_wps_sfw_obj->wps_sfw_plug_load_template( $sfw_tab_content_path );
 
 				do_action( 'wps_sfw_after_general_settings_form' );
