@@ -1179,7 +1179,6 @@ class Subscriptions_For_Woocommerce_Admin {
 				wp_die( esc_html( $th->getMessage() ) );
 			}
 		}
-		update_option( 'wps_subscription_migrated_successfully' , 'yes' );
 		return compact( 'subscriptions' );
 	}
 	/**
