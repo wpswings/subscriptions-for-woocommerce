@@ -311,7 +311,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		function wps_sfw_check_multistep() {
 			$bool = false;
 			$wps_sfw_check = get_option( 'wps_sfw_multistep_done', false );
-			if ( ! empty( $wps_sfw_check ) ) {
+			$wps_sfw_enable_plugin = get_option('wps_sfw_enable_plugin',false);
+			if ( ! empty( $wps_sfw_check ) || $wps_sfw_enable_plugin == 'on' ) {
 				$bool = true;
 			}
 
