@@ -161,7 +161,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 						$order->payment_complete();
 						return;
 					}
-					$soap_client = new CybsSoapiCC( $payment_method_obj->merchantId, $payment_method_obj->transactionKey, $payment_method_obj->wsdl_version, $payment_method_obj->testmode );
+					$merchant_id = 'merchantId';
+					$transaction_key = 'transactionKey';
+					$soap_client = new CybsSoapiCC( $payment_method_obj->$merchant_id, $payment_method_obj->$transaction_key, $payment_method_obj->wsdl_version, $payment_method_obj->testmode );
 					$request = $soap_client->createRequest( $order_id );
 					$soap_client->setAuthInRequest( $request );
 
@@ -169,16 +171,17 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 					if ( 'yes' == $payment_method_obj->capture ) {
 						$soap_client->setCaptureInRequest( $request );
 					}
-
-					$payment_method_obj->setBillToInRequest( $request, $order, $payment_method_obj->deviceFingerPrint );
+					$device_finger_print = 'deviceFingerPrint';
+					$payment_method_obj->setBillToInRequest( $request, $order, $payment_method_obj->$device_finger_print );
 					$payment_method_obj->setShipToInRequest( $request, $order );
 					$soap_client->setPurchaseTotals( $request, $order->get_currency(), $order->get_total() );
-					$payment_method_obj->setDeviceFingerInRequest( $request, $payment_method_obj->deviceFingerPrint );
+					$payment_method_obj->setDeviceFingerInRequest( $request, $payment_method_obj->$device_finger_print );
 
 					$soap_client->setTokenInRequest( $request, $payment_token->get_token() );
 					$reply = $soap_client->runTransaction( $request );
 					$decision = $reply->decision;
-					$reason_code = $reply->reasonCode;
+					$reason_codes = 'reasonCode';
+					$reason_code = $reply->$reason_codes;
 
 					if ( strcmp( $decision, 'ACCEPT' ) == 0 && strcmp( $reason_code, '100' ) == 0 ) {
 

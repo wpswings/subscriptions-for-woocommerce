@@ -94,7 +94,7 @@ if ( true === $old_sfw_pro_present ) {
 	function wps_sfw_lite_add_updatenow_notice() {
 		$screen = get_current_screen();
 		if ( isset( $screen->id ) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
-		?>
+			?>
 		<tr class="plugin-update-tr active notice-warning notice-alt">
 			<td colspan="4" class="plugin-update colspanchange">
 				<div class="notice notice-error inline update-message notice-alt">
@@ -311,8 +311,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		function wps_sfw_check_multistep() {
 			$bool = false;
 			$wps_sfw_check = get_option( 'wps_sfw_multistep_done', false );
-			$wps_sfw_enable_plugin = get_option('wps_sfw_enable_plugin',false);
-			if ( ! empty( $wps_sfw_check ) || $wps_sfw_enable_plugin == 'on' ) {
+			$wps_sfw_enable_plugin = get_option( 'wps_sfw_enable_plugin', false );
+			if ( ! empty( $wps_sfw_check ) || 'on' == $wps_sfw_enable_plugin ) {
 				$bool = true;
 			}
 
@@ -482,9 +482,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		}
 	}
 	if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
-		$sfw_plugins= get_plugins();
-		if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0') {
-			sleep(30);
+		$sfw_plugins = get_plugins();
+		if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0' ) {
+			sleep( 30 );
 			deactivate_plugins( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' );
 		}
 	}
