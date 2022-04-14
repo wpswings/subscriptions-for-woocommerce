@@ -78,8 +78,8 @@ function App(props) {
         setLoading(true);
         const user = {
             ...state,
-            'action': 'mwb_sfw_save_settings_filter',
-            nonce: frontend_ajax_object.mwb_sfw_react_nonce,   // pass the nonce here
+            'action': 'wps_sfw_save_settings_filter',
+            nonce: frontend_ajax_object.wps_sfw_react_nonce,   // pass the nonce here
         };
         
         axios.post(frontend_ajax_object.ajaxurl, qs.stringify(user) )
@@ -120,18 +120,18 @@ function App(props) {
             showAvailblePayment: showAvailblePayment,
             paymentHandler : GatewaySubmitHandler
         }}>
-            <div className="mwbMsfWrapper">
+            <div className="wpsMsfWrapper">
                 <Stepper activeStep={activeStep} steps={steps}/>
-                <div className="mwbHeadingWrap">
+                <div className="wpsHeadingWrap">
                     <h2>{__( 'Welcome to Subscriptions For WooCommerce', 'subscriptions-for-woocommerce' ) }</h2>
                     <h3>{__('Complete steps to start selling subscriptions','subscriptions-for-woocommerce') }</h3>
                 </div>
                 <Container maxWidth="sm">
-                    <form className="mwbMsf">
+                    <form className="wpsMsf">
                         <Typography className={classes.instructions}>
-                            {(loading) ? <CircularProgress className="mwbCircularProgress" /> :getStepContent(activeStep)}
+                            {(loading) ? <CircularProgress className="wpsCircularProgress" /> :getStepContent(activeStep)}
                         </Typography>
-                        <div className="mwbButtonWrap">
+                        <div className="wpsButtonWrap">
                             {activeStep !== steps.length && <Button
                                 disabled={activeStep === 0}
                                 onClick={handleBack}

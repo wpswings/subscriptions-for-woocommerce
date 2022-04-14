@@ -13,7 +13,7 @@ const SecondStep = (props) => {
     const ctx = useContext(Context);
     return ( 
     <>
-        <h3 className="mwb-title">{__('Create Subscription Product','subscriptions-for-woocommerce') }</h3>
+        <h3 className="wps-title">{__('Create Subscription Product','subscriptions-for-woocommerce') }</h3>
         
         <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
             <TextField 

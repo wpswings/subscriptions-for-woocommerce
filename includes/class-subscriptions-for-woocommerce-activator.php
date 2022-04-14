@@ -30,8 +30,7 @@ class Subscriptions_For_Woocommerce_Activator {
 	 */
 	public static function subscriptions_for_woocommerce_activate() {
 
-		wp_clear_scheduled_hook( 'makewebbetter_tracker_send_event' );
-		wp_schedule_event( time() + 10, apply_filters( 'makewebbetter_tracker_event_recurrence', 'daily' ), 'makewebbetter_tracker_send_event' );
+		wp_clear_scheduled_hook( 'wpswings_tracker_send_event' );
+		wp_schedule_event( time() + 10, apply_filters( 'wpswings_tracker_event_recurrence', 'daily' ), 'wpswings_tracker_send_event' );
 	}
-
 }

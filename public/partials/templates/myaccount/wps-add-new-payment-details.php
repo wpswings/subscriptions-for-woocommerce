@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div>
-<form id="order_review" method="post" class="mwb_add_pay_form">
+<form id="order_review" method="post" class="wps_add_pay_form">
 	<table class="shop_table">
 		<thead>
 			<tr>
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</tr>
 		</thead>
 		<tfoot>
-		<?php foreach ( $mwb_subscription->get_order_item_totals() as $total ) : ?>
+		<?php foreach ( $wps_subscription->get_order_item_totals() as $total ) : ?>
 			<tr>
 				<th scope="row" colspan="2"><?php echo esc_html( $total['label'] ); ?></th>
 				<td class="product-total"><?php echo wp_kses_post( $total['value'] ); ?></td>
@@ -32,11 +32,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php endforeach; ?>
 		</tfoot>
 		<tbody>
-		<?php foreach ( $mwb_subscription->get_items() as $item ) : ?>
+		<?php foreach ( $wps_subscription->get_items() as $item ) : ?>
 			<tr>
 				<td class="product-name"><?php echo esc_html( $item['name'] ); ?></td>
 				<td class="product-quantity"><?php echo esc_html( $item['qty'] ); ?></td>
-				<td class="product-subtotal"><?php echo wp_kses_post( $mwb_subscription->get_formatted_line_subtotal( $item ) ); ?></td>
+				<td class="product-subtotal"><?php echo wp_kses_post( $wps_subscription->get_formatted_line_subtotal( $item ) ); ?></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
@@ -47,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
 		if ( $available_gateways ) {
 			?>
-			<ul class="payment_methods methods mwb_payment_method">
+			<ul class="payment_methods methods wps_payment_method">
 				<?php
 
 				if ( count( $available_gateways ) ) {
@@ -55,10 +55,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				}
 
 				foreach ( $available_gateways as $key => $gateway ) :
-					$mwb_supported_method = array( 'stripe' );
-					$mwb_payment_method = apply_filters( 'mwb_sfw_supported_add_payment_gateway', $mwb_supported_method, $key );
+					$wps_supported_method = array( 'stripe' );
+					$wps_payment_method = apply_filters( 'wps_sfw_supported_add_payment_gateway', $wps_supported_method, $key );
 
-					if ( ! in_array( $key, $mwb_payment_method ) ) {
+					if ( ! in_array( $key, $wps_payment_method ) ) {
 						continue;
 					}
 					?>
@@ -75,10 +75,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</li>
 				<?php endforeach; ?>
 			</ul>
-						<div class="form-row mwb_sfw_from_row">
-			<?php wp_nonce_field( 'mwb_sfw__change_payment_method', '_mwb_sfw_nonce', true, true ); ?>
+						<div class="form-row wps_sfw_from_row">
+			<?php wp_nonce_field( 'wps_sfw__change_payment_method', '_wps_sfw_nonce', true, true ); ?>
 			<input type="submit" class="button alt" id="place_order" value="<?php echo esc_attr( $button_text ); ?>">
-			<input type="hidden" name="mwb_change_change_payment" value="<?php echo esc_attr( $mwb_subscription->get_id() ); ?>" />
+			<input type="hidden" name="wps_change_change_payment" value="<?php echo esc_attr( $wps_subscription->get_id() ); ?>" />
 		</div>
 			<?php
 		}

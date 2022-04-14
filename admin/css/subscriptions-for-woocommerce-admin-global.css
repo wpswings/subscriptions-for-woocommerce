@@ -155,7 +155,7 @@ select {
 
 /*=====  End of GLOBAL CSS  ======*/
 
-.mwb-link {
+.wps-link {
     font-family: 'NunitoSans-Bold';
     font-style: normal;
     font-weight: bold;
@@ -181,24 +181,24 @@ select {
     border-radius: 2px;
 }
 
-.mwb-bg-white {
+.wps-bg-white {
     background-color: #ffffff;
     margin-right: 15px;
 }
 
-.mwb-r-8 {
+.wps-r-8 {
     border-radius: 8px;
 }
 
-.mwb-pl-4 {
+.wps-pl-4 {
     padding: 0 4px!important;
 }
 
-.mwb-errorr-8 {
+.wps-errorr-8 {
     width: 97%;
 }
 
-.mwb-header-container {
+.wps-header-container {
     padding: 28px 32px;
     display: flex;
     flex-wrap: wrap;
@@ -218,7 +218,7 @@ select {
     color: var( --mdc-theme-primary)!important;
 }
 
-.mwb-header-title {
+.wps-header-title {
     font-family: 'NunitoSans-ExtraBold';
     font-style: normal;
     font-weight: 800;
@@ -230,49 +230,49 @@ select {
     max-width: calc(100% - 100px);
 }
 
-.mwb-navbar {
+.wps-navbar {
     padding: 0 32px;
     border-bottom: 1px solid rgba(63, 71, 86, 0.25);
 }
 
-.mwb-navbar__items {
+.wps-navbar__items {
     display: flex;
     flex-wrap: wrap;
 }
 
-.mwb-navbar__items li {
+.wps-navbar__items li {
     margin-right: 32px;
     margin-bottom: 0;
 }
 
-.mwb-navbar__items li a {
+.wps-navbar__items li a {
     padding: 18px 0;
     color: var(--mdc-theme-primary);
 }
 
-.mwb-section {
+.wps-section {
     padding: 28px 32px;
 }
 
-.mwb-form-group {
+.wps-form-group {
     display: flex;
     flex-wrap: wrap;
     margin: 0 -15px 35px;
 }
 
-.mwb-form-group__label {
+.wps-form-group__label {
     flex: 0 0 100%;
     max-width: 200px;
     padding: 0 15px;
 }
 
-.mwb-form-group__control {
+.wps-form-group__control {
     flex: 0 0 100%;
     max-width: calc(100% - 200px);
     padding: 0 15px;
 }
 
-.mwb-form-label {
+.wps-form-label {
     font-family: 'NunitoSans-SemiBold';
     font-style: normal;
     font-weight: 600;
@@ -281,12 +281,12 @@ select {
     letter-spacing: 0.3px;
 }
 
-.mwb-form-select:hover select {
+.wps-form-select:hover select {
     border-color: rgba(0, 0, 0, .87)!important;
     color: rgba(0, 0, 0, .87);
 }
 
-.mwb-form-select:focus select {
+.wps-form-select:focus select {
     border-color: #2196f3!important;
 }
 
@@ -296,11 +296,11 @@ select {
     height: 100%;
 }
 
-#mwb-sfw-table-inner-container {
+#wps-sfw-table-inner-container {
     width: 100%;
 }
 
-#mwb-sfw-table-inner-container table thead th {
+#wps-sfw-table-inner-container table thead th {
     font-weight: bold;
     font-size: medium;
     font-family: 'NunitoSans-ExtraBold';
@@ -315,29 +315,29 @@ select {
     padding: 16px;
 }
 
-.mwb-col-wrap {
+.wps-col-wrap {
     margin-bottom: 35px;
 }
 
-.mwb-shadow-panel {
+.wps-shadow-panel {
     background: #FFFFFF;
     box-shadow: 0px 2px 5px rgba(63, 71, 86, 0.1);
     border-radius: 8px;
     padding: 16px;
 }
 
-.mwb-password-hidden {
+.wps-password-hidden {
     outline: none;
     opacity: 0.7;
     transition: opacity 0.2s linear;
     user-select: none;
 }
 
-.mwb-password-hidden:hover {
+.wps-password-hidden:hover {
     opacity: 1;
 }
 
-.mwb-options {
+.wps-options {
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)!important;
 }
 
@@ -360,29 +360,29 @@ select {
     text-align: right;
 }
 
-.mwb-cta-btn {
+.wps-cta-btn {
     flex: 0 0 100%;
     max-width: 100px;
     text-align: right;
     margin: 20px 15px;
 }
 
-.mwb-cta-btn a {
+.wps-cta-btn a {
     color: #ffffff;
 }
 
-.mwb-form-group__control .mdc-switch__native-control {
+.wps-form-group__control .mdc-switch__native-control {
     width: 68px;
     height: 48px;
 }
 
-.mwb-btn-primary {
+.wps-btn-primary {
     color: #ffffff;
     background-color: #6200ee;
     border-color: #004EB6;
 }
 
-.mwb-btn {
+.wps-btn {
     display: inline-block;
     font-family: 'NunitoSans-Bold';
     font-weight: bold;
@@ -403,11 +403,11 @@ select {
     text-transform: capitalize;
 }
 
-.mwb-btn-primary:hover {
+.wps-btn-primary:hover {
     color: #fff;
 }
 
-.mwb-shadow-panel h3 {
+.wps-shadow-panel h3 {
     display: block;
     font-size: 1.17em;
     font-weight: bold;

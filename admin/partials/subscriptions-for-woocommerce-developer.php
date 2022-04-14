@@ -14,7 +14,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-global $sfw_mwb_sfw_obj;
+global $sfw_wps_sfw_obj;
 $sfw_developer_admin_hooks =
 // desc - filter for trial.
 apply_filters( 'sfw_developer_admin_hooks_array', array() );
@@ -26,10 +26,10 @@ $count_public = filtered_array( $sfw_developer_public_hooks );
 ?>
 <!--  template file for admin settings. -->
 <div class="sfw-section-wrap">
-	<div class="mwb-col-wrap">
+	<div class="wps-col-wrap">
 
 		<div id="admin-hooks-listing" class="table-responsive mdc-data-table">
-			<table class="mwb-sfw-table mdc-data-table__table mwb-table"  id="mwb-sfw-wp">
+			<table class="wps-sfw-table mdc-data-table__table wps-table"  id="wps-sfw-wp">
 				<thead>
 				<tr><th class="mdc-data-table__header-cell"><?php esc_html_e( 'Admin Hooks', 'subscriptions-for-woocommerce' ); ?></th></tr>
 				<tr>
@@ -62,9 +62,9 @@ $count_public = filtered_array( $sfw_developer_public_hooks );
 			</table>
 		</div>
 	</div>
-	<div class="mwb-col-wrap">
+	<div class="wps-col-wrap">
 		<div id="public-hooks-listing" class="table-responsive mdc-data-table">
-			<table class="mwb-sfw-table mdc-data-table__table mwb-table" id="mwb-sfw-sys">
+			<table class="wps-sfw-table mdc-data-table__table wps-table" id="wps-sfw-sys">
 				<thead>
 				<tr><th class="mdc-data-table__header-cell"><?php esc_html_e( 'Public Hooks', 'subscriptions-for-woocommerce' ); ?></th></tr>
 				<tr>

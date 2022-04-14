@@ -31,13 +31,13 @@ class Subscriptions_For_Woocommerce_Stripe {
 	/**
 	 * Generate the request for the payment.
 	 *
-	 * @name mwb_sfw_process_renewal_payment.
+	 * @name wps_sfw_process_renewal_payment.
 	 * @since  1.0.0.
 	 * @param  int $order_id order_id.
 	 * @param  int $parent_order_id parent_order_id.
 	 * @return array()
 	 */
-	public function mwb_sfw_process_renewal_payment( $order_id, $parent_order_id ) {
+	public function wps_sfw_process_renewal_payment( $order_id, $parent_order_id ) {
 
 		$order = wc_get_order( $order_id );
 		$parent_order = wc_get_order( $parent_order_id );
@@ -51,7 +51,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 				return;
 			}
 
-			$gateway = $this->mwb_sfw_get_wc_gateway();
+			$gateway = $this->wps_sfw_get_wc_gateway();
 
 			if ( ! $gateway ) {
 				$order_note = __( 'Stripe payment gateway not activated.', 'subscriptions-for-woocommerce' );
@@ -60,33 +60,29 @@ class Subscriptions_For_Woocommerce_Stripe {
 			}
 			$source = $gateway->prepare_order_source( $parent_order );
 
+			$response = WC_Stripe_API::request( $this->wps_sfw_generate_payment_request( $order, $source ) );
 			// show the data in log file.
-			WC_Stripe_Logger::log( 'MWB source: ' . wc_print_r( $source, true ) );
-			$response = WC_Stripe_API::request( $this->mwb_sfw_generate_payment_request( $order, $source ) );
-
-			// show the data in log file.
-			WC_Stripe_Logger::log( 'MWB response: ' . wc_print_r( $response, true ) );
+			WC_Stripe_Logger::log( 'WPS response: ' . wc_print_r( $response, true ) );
 			// Log here complete response.
 			if ( is_wp_error( $response ) ) {
 				// show the data in log file.
-				WC_Stripe_Logger::log( 'MWB response error: ' . wc_print_r( $response, true ) );
+				WC_Stripe_Logger::log( 'WPS response error: ' . wc_print_r( $response, true ) );
 				// @todo handle the error part here/failure of order.
 
 				$error_message = sprintf( __( 'Something Went Wrong. Please see the log file for more info.', 'subscriptions-for-woocommerce' ) );
 
 			} else {
 				if ( ! empty( $response->error ) ) {
-					// show the data in log file.
-					WC_Stripe_Logger::log( 'MWB response error: ' . wc_print_r( $response, true ) );
+					WC_Stripe_Logger::log( 'WPS response error: ' . wc_print_r( $response, true ) );
 					$is_successful = false;
 					$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 					$order->update_status( 'failed', $order_note );
 
 				} else {
 					// show the data in log file.
-					WC_Stripe_Logger::log( 'MWB response succes: ' . wc_print_r( $response, true ) );
+					WC_Stripe_Logger::log( 'WPS response succes: ' . wc_print_r( $response, true ) );
 
-					update_post_meta( $order_id, '_mwb_sfw_payment_transaction_id', $response->id );
+					update_post_meta( $order_id, '_wps_sfw_payment_transaction_id', $response->id );
 					/* translators: %s: transaction id */
 					$order_note = sprintf( __( 'Stripe Renewal Transaction Successful (%s)', 'subscriptions-for-woocommerce' ), $response->id );
 					$order->add_order_note( $order_note );
@@ -100,7 +96,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 			return $is_successful;
 
 		} catch ( Exception $e ) {
-			WC_Stripe_Logger::log( 'MWB response Failed: ' );
+			WC_Stripe_Logger::log( 'WPS response Failed: ' );
 			// @todo transaction failure to handle here.
 			$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 			$order->update_status( 'failed', $order_note );
@@ -111,20 +107,20 @@ class Subscriptions_For_Woocommerce_Stripe {
 	/**
 	 * Generate the request for the payment.
 	 *
-	 * @name mwb_sfw_generate_payment_request.
+	 * @name wps_sfw_generate_payment_request.
 	 * @since  1.0.00
 	 * @param  object $order order.
 	 * @param  object $source source.
 	 *
 	 * @return array()
 	 */
-	public function mwb_sfw_generate_payment_request( $order, $source ) {
+	public function wps_sfw_generate_payment_request( $order, $source ) {
 		$order_id = $order->get_id();
 		$charge_amount = $order->get_total();
 
-		$gateway                  = $this->mwb_sfw_get_wc_gateway();
+		$gateway                  = $this->wps_sfw_get_wc_gateway();
 		$post_data                = array();
-		$post_data['currency']    = strtolower( $this->mwb_sfw_get_order_currency( $order ) );
+		$post_data['currency']    = strtolower( $this->wps_sfw_get_order_currency( $order ) );
 		$post_data['amount']      = WC_Stripe_Helper::get_stripe_amount( $charge_amount, $post_data['currency'] );
 		/* translators: 1$: site name,2$: order number */
 		$post_data['description'] = sprintf( __( '%1$s - Order %2$s - Renewal Order.', 'subscriptions-for-woocommerce' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
@@ -160,7 +156,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 	 * @since  1.0.0
 	 * @return WC_Payment_Gateway.
 	 */
-	public function mwb_sfw_get_wc_gateway() {
+	public function wps_sfw_get_wc_gateway() {
 		global $woocommerce;
 		$gateways = $woocommerce->payment_gateways->payment_gateways();
 		if ( isset( $gateways['stripe'] ) && ! empty( $gateways['stripe'] ) ) {
@@ -172,13 +168,13 @@ class Subscriptions_For_Woocommerce_Stripe {
 	/**
 	 * Get order currency.
 	 *
-	 * @name mwb_sfw_get_order_currency.
+	 * @name wps_sfw_get_order_currency.
 	 * @since  1.0.0
 	 * @param  object $order order.
 	 *
 	 * @return mixed|string
 	 */
-	public function mwb_sfw_get_order_currency( $order ) {
+	public function wps_sfw_get_order_currency( $order ) {
 
 		if ( version_compare( WC_VERSION, '3.0.0', '>=' ) ) {
 			return $order ? $order->get_currency() : get_woocommerce_currency();

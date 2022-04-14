@@ -77,11 +77,10 @@ class Subscriptions_For_Woocommerce {
 	public function __construct() {
 
 		if ( defined( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION' ) ) {
-
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.3.1';
+			$this->version = '1.4.0';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -95,7 +94,7 @@ class Subscriptions_For_Woocommerce {
 
 		$this->subscriptions_for_woocommerce_api_hooks();
 		$this->init();
-		$this->mwb_sfw_init_payment_integration();
+		$this->wps_sfw_init_payment_integration();
 
 	}
 
@@ -168,17 +167,17 @@ class Subscriptions_For_Woocommerce {
 	 * The function is used to include email class.
 	 */
 	public function init() {
-		add_filter( 'woocommerce_email_classes', array( $this, 'mwb_sfw_woocommerce_email_classes' ) );
+		add_filter( 'woocommerce_email_classes', array( $this, 'wps_sfw_woocommerce_email_classes' ) );
 	}
 
 	/**
 	 * The function is used to include payment gateway integration.
 	 */
-	public function mwb_sfw_init_payment_integration() {
+	public function wps_sfw_init_payment_integration() {
 
-		$mwb_sfw_dir = plugin_dir_path( dirname( __FILE__ ) ) . '/package/gateways';
-		mwb_sfw_include_process_directory( $mwb_sfw_dir );
-		do_action( 'mwb_sfw_payment_integration' );
+		$wps_sfw_dir = plugin_dir_path( dirname( __FILE__ ) ) . '/package/gateways';
+		wps_sfw_include_process_directory( $wps_sfw_dir );
+		do_action( 'wps_sfw_payment_integration' );
 	}
 
 	/**
@@ -209,49 +208,47 @@ class Subscriptions_For_Woocommerce {
 
 		$sfw_plugin_admin = new Subscriptions_For_Woocommerce_Admin( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'mwb_sfw_admin_enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'mwb_sfw_admin_enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'wps_sfw_admin_enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'wps_sfw_admin_enqueue_scripts' );
 
 		// Add settings menu for Subscriptions For Woocommerce.
-		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'mwb_sfw_options_page' );
-		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'mwb_sfw_remove_default_submenu', 50 );
+		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_options_page' );
+		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_remove_default_submenu', 50 );
 
 		// All admin actions and filters after License Validation goes here.
-		$this->loader->add_filter( 'mwb_add_plugins_menus_array', $sfw_plugin_admin, 'mwb_sfw_admin_submenu_page', 15 );
+		$this->loader->add_filter( 'wps_add_plugins_menus_array', $sfw_plugin_admin, 'wps_sfw_admin_submenu_page', 15 );
 
-		$this->loader->add_filter( 'mwb_sfw_general_settings_array', $sfw_plugin_admin, 'mwb_sfw_admin_general_settings_page', 10 );
+		$this->loader->add_filter( 'wps_sfw_general_settings_array', $sfw_plugin_admin, 'wps_sfw_admin_general_settings_page', 10 );
 
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
 		// Multistep.
-		$this->loader->add_action( 'wp_ajax_mwb_sfw_save_settings_filter', $sfw_plugin_admin, 'mwb_sfw_save_settings_filter' );
-		$this->loader->add_action( 'wp_ajax_nopriv_mwb_sfw_save_settings_filter', $sfw_plugin_admin, 'mwb_sfw_save_settings_filter' );
+		$this->loader->add_action( 'wp_ajax_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
+		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
 
-		$this->loader->add_action( 'wp_ajax_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration' );
-		$this->loader->add_action( 'wp_ajax_nopriv_mwb_sfw_install_plugin_configuration', $sfw_plugin_admin, 'mwb_sfw_install_plugin_configuration' );
-
-		$this->loader->add_action( 'mwb_sfw_multistep_done', $sfw_plugin_admin, 'mwb_sfw_check_plugin_already_enable' );
-
+		$this->loader->add_action( 'wp_ajax_wps_sfw_install_plugin_configuration', $sfw_plugin_admin, 'wps_sfw_install_plugin_configuration' );
+		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_install_plugin_configuration', $sfw_plugin_admin, 'wps_sfw_install_plugin_configuration' );
+		$this->loader->add_action( 'wp_ajax_wps_sfw_ajax_callbacks', $sfw_plugin_admin, 'wps_sfw_ajax_callbacks' );
 		// Developer's Hook Listing.
-		$this->loader->add_action( 'sfw_developer_admin_hooks_array', $sfw_plugin_admin, 'mwb_developer_admin_hooks_listing' );
-		$this->loader->add_action( 'sfw_developer_public_hooks_array', $sfw_plugin_admin, 'mwb_developer_public_hooks_listing' );
+		$this->loader->add_action( 'sfw_developer_admin_hooks_array', $sfw_plugin_admin, 'wps_developer_admin_hooks_listing' );
+		$this->loader->add_action( 'sfw_developer_public_hooks_array', $sfw_plugin_admin, 'wps_developer_public_hooks_listing' );
 
-		if ( mwb_sfw_check_plugin_enable() ) {
-			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'mwb_sfw_create_subscription_product_type' );
+		if ( wps_sfw_check_plugin_enable() ) {
+			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'wps_sfw_create_subscription_product_type' );
 
-			$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'mwb_sfw_custom_product_tab_for_subscription' );
+			$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'wps_sfw_custom_product_tab_for_subscription' );
 
-			$this->loader->add_action( 'woocommerce_product_data_panels', $sfw_plugin_admin, 'mwb_sfw_custom_product_fields_for_subscription' );
+			$this->loader->add_action( 'woocommerce_product_data_panels', $sfw_plugin_admin, 'wps_sfw_custom_product_fields_for_subscription' );
 
-			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'mwb_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
+			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
 
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'mwb_sfw_admin_cancel_susbcription' );
+			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription' );
 
-			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'mwb_sfw_register_new_order_statuses' );
+			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'wps_sfw_register_new_order_statuses' );
 
-			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'mwb_sfw_new_wc_order_statuses' );
+			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'wps_sfw_new_wc_order_statuses' );
 			// WPLM Translation.
-			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'mwb_sfw_add_lock_custom_fields_ids' );
+			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'wps_sfw_add_lock_custom_fields_ids' );
 		}
 
 	}
@@ -267,56 +264,56 @@ class Subscriptions_For_Woocommerce {
 
 		$sfw_plugin_public = new Subscriptions_For_Woocommerce_Public( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
-		if ( mwb_sfw_check_plugin_enable() ) {
-			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'mwb_sfw_public_enqueue_styles' );
-			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'mwb_sfw_public_enqueue_scripts' );
+		if ( wps_sfw_check_plugin_enable() ) {
+			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'wps_sfw_public_enqueue_styles' );
+			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'wps_sfw_public_enqueue_scripts' );
 
-			$this->loader->add_filter( 'woocommerce_get_price_html', $sfw_plugin_public, 'mwb_sfw_price_html_subscription_product', 10, 2 );
-			$this->loader->add_filter( 'woocommerce_product_single_add_to_cart_text', $sfw_plugin_public, 'mwb_sfw_product_add_to_cart_text', 10, 2 );
-			$this->loader->add_filter( 'woocommerce_product_add_to_cart_text', $sfw_plugin_public, 'mwb_sfw_product_add_to_cart_text', 10, 2 );
-			$this->loader->add_filter( 'woocommerce_order_button_text', $sfw_plugin_public, 'mwb_sfw_woocommerce_order_button_text' );
+			$this->loader->add_filter( 'woocommerce_get_price_html', $sfw_plugin_public, 'wps_sfw_price_html_subscription_product', 10, 2 );
+			$this->loader->add_filter( 'woocommerce_product_single_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
+			$this->loader->add_filter( 'woocommerce_product_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
+			$this->loader->add_filter( 'woocommerce_order_button_text', $sfw_plugin_public, 'wps_sfw_woocommerce_order_button_text' );
 
-			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'mwb_sfw_show_subscription_price_on_cart', 10, 3 );
+			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'wps_sfw_show_subscription_price_on_cart', 10, 3 );
 
-			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'mwb_sfw_add_subscription_price_and_sigup_fee' );
+			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee' );
 
-			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'mwb_sfw_process_checkout', 99, 2 );
+			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 99, 2 );
 
-			$this->loader->add_action( 'woocommerce_available_payment_gateways', $sfw_plugin_public, 'mwb_sfw_unset_offline_payment_gateway_for_subscription' );
+			$this->loader->add_action( 'woocommerce_available_payment_gateways', $sfw_plugin_public, 'wps_sfw_unset_offline_payment_gateway_for_subscription' );
 
-			$this->loader->add_action( 'init', $sfw_plugin_public, 'mwb_sfw_add_subscription_tab_on_myaccount_page' );
+			$this->loader->add_action( 'init', $sfw_plugin_public, 'wps_sfw_add_subscription_tab_on_myaccount_page' );
 
-			$this->loader->add_filter( 'query_vars', $sfw_plugin_public, 'mwb_sfw_custom_endpoint_query_vars' );
-			$this->loader->add_filter( 'woocommerce_account_menu_items', $sfw_plugin_public, 'mwb_sfw_add_subscription_dashboard_on_myaccount_page' );
+			$this->loader->add_filter( 'query_vars', $sfw_plugin_public, 'wps_sfw_custom_endpoint_query_vars' );
+			$this->loader->add_filter( 'woocommerce_account_menu_items', $sfw_plugin_public, 'wps_sfw_add_subscription_dashboard_on_myaccount_page' );
 
-			$this->loader->add_action( 'woocommerce_account_mwb_subscriptions_endpoint', $sfw_plugin_public, 'mwb_sfw_subscription_dashboard_content' );
+			$this->loader->add_action( 'woocommerce_account_wps_subscriptions_endpoint', $sfw_plugin_public, 'wps_sfw_subscription_dashboard_content' );
 
-			$this->loader->add_action( 'woocommerce_before_checkout_form', $sfw_plugin_public, 'mwb_sfw_subscription_before_checkout_form' );
+			$this->loader->add_action( 'woocommerce_before_checkout_form', $sfw_plugin_public, 'wps_sfw_subscription_before_checkout_form' );
 
-			$this->loader->add_action( 'mwb_sfw_display_susbcription_recerring_total_account_page', $sfw_plugin_public, 'mwb_sfw_display_susbcription_recerring_total_account_page_callback' );
+			$this->loader->add_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $sfw_plugin_public, 'wps_sfw_display_susbcription_recerring_total_account_page_callback' );
 
-			$this->loader->add_action( 'woocommerce_account_show-subscription_endpoint', $sfw_plugin_public, 'mwb_sfw_shwo_subscription_details' );
+			$this->loader->add_action( 'woocommerce_account_show-subscription_endpoint', $sfw_plugin_public, 'wps_sfw_shwo_subscription_details' );
 
-			$this->loader->add_action( 'init', $sfw_plugin_public, 'mwb_sfw_cancel_susbcription' );
+			$this->loader->add_action( 'init', $sfw_plugin_public, 'wps_sfw_cancel_susbcription' );
 
-			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'mwb_sfw_woocommerce_order_status_changed', 99, 3 );
+			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'wps_sfw_woocommerce_order_status_changed', 99, 3 );
 
-			$this->loader->add_action( 'after_woocommerce_pay', $sfw_plugin_public, 'mwb_sfw_after_woocommerce_pay', 100 );
+			$this->loader->add_action( 'after_woocommerce_pay', $sfw_plugin_public, 'wps_sfw_after_woocommerce_pay', 100 );
 
-			$this->loader->add_action( 'wp_loaded', $sfw_plugin_public, 'mwb_sfw_change_payment_method_form', 20 );
+			$this->loader->add_action( 'wp_loaded', $sfw_plugin_public, 'wps_sfw_change_payment_method_form', 20 );
 
-			$this->loader->add_filter( 'woocommerce_order_get_total', $sfw_plugin_public, 'mwb_sfw_set_susbcription_total', 11, 2 );
-			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'mwb_sfw_hide_quantity_fields_for_subscription', 10, 2 );
+			$this->loader->add_filter( 'woocommerce_order_get_total', $sfw_plugin_public, 'wps_sfw_set_susbcription_total', 11, 2 );
+			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'wps_sfw_hide_quantity_fields_for_subscription', 10, 2 );
 
-			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'mwb_sfw_woocommerce_add_to_cart_validation', 10, 3 );
+			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'wps_sfw_woocommerce_add_to_cart_validation', 10, 3 );
 
-			$this->loader->add_filter( 'woocommerce_cart_needs_payment', $sfw_plugin_public, 'mwb_sfw_woocommerce_cart_needs_payment', 99, 2 );
+			$this->loader->add_filter( 'woocommerce_cart_needs_payment', $sfw_plugin_public, 'wps_sfw_woocommerce_cart_needs_payment', 99, 2 );
 
-			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'mwb_sfw__cancel_subs_woocommerce_order_status_changed', 150, 3 );
+			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'wps_sfw__cancel_subs_woocommerce_order_status_changed', 150, 3 );
 
-			$this->loader->add_filter( 'woocommerce_checkout_registration_required', $sfw_plugin_public, 'mwb_sfw_registration_required', 900 );
+			$this->loader->add_filter( 'woocommerce_checkout_registration_required', $sfw_plugin_public, 'wps_sfw_registration_required', 900 );
 
-			$this->loader->add_filter( 'woocommerce_gateway_description', $sfw_plugin_public, 'mwb_sfw_change_payment_gateway_description', 10, 2 );
+			$this->loader->add_filter( 'woocommerce_gateway_description', $sfw_plugin_public, 'wps_sfw_change_payment_gateway_description', 10, 2 );
 
 		}
 	}
@@ -324,15 +321,15 @@ class Subscriptions_For_Woocommerce {
 	/**
 	 * The function include email class.
 	 *
-	 * @name mwb_sfw_woocommerce_email_classes.
+	 * @name wps_sfw_woocommerce_email_classes.
 	 * @since 1.0.0
 	 * @param Array $emails emails.
 	 */
-	public function mwb_sfw_woocommerce_email_classes( $emails ) {
-		$emails['mwb_sfw_cancel_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
-		$emails['mwb_sfw_expired_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
+	public function wps_sfw_woocommerce_email_classes( $emails ) {
+		$emails['wps_sfw_cancel_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
+		$emails['wps_sfw_expired_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
 
-		return apply_filters( 'mwb_sfw_email_classes', $emails );
+		return apply_filters( 'wps_sfw_email_classes', $emails );
 	}
 	/**
 	 * Register all of the hooks related to the api functionality
@@ -345,7 +342,7 @@ class Subscriptions_For_Woocommerce {
 
 		$sfw_plugin_api = new Subscriptions_For_Woocommerce_Rest_Api( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
-		$this->loader->add_action( 'rest_api_init', $sfw_plugin_api, 'mwb_sfw_add_endpoint' );
+		$this->loader->add_action( 'rest_api_init', $sfw_plugin_api, 'wps_sfw_add_endpoint' );
 
 	}
 
@@ -402,11 +399,11 @@ class Subscriptions_For_Woocommerce {
 	}
 
 	/**
-	 * Predefined default mwb_sfw_plug tabs.
+	 * Predefined default wps_sfw_plug tabs.
 	 *
 	 * @return  Array       An key=>value pair of Subscriptions For Woocommerce tabs.
 	 */
-	public function mwb_sfw_plug_default_tabs() {
+	public function wps_sfw_plug_default_tabs() {
 
 		$sfw_default_tabs = array();
 
@@ -420,14 +417,14 @@ class Subscriptions_For_Woocommerce {
 			'name'        => 'subscriptions-for-woocommerce-general',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
-		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs', $sfw_default_tabs );
+		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs', $sfw_default_tabs );
 
 		$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-table'] = array(
 			'title'       => esc_html__( 'Subscription Table', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-subscriptions-table',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
-		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
+		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-system-status',
@@ -438,7 +435,7 @@ class Subscriptions_For_Woocommerce {
 			'name'        => 'subscriptions-for-woocommerce-developer',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
-		$sfw_default_tabs = apply_filters( 'mwb_sfw_plugin_standard_admin_settings_tabs_end', $sfw_default_tabs );
+		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_end', $sfw_default_tabs );
 
 		return $sfw_default_tabs;
 	}
@@ -449,7 +446,7 @@ class Subscriptions_For_Woocommerce {
 	 * @since   1.0.0
 	 * @param string $content_path content_path file for inclusion.
 	 */
-	public function mwb_sfw_plug_load_template( $content_path ) {
+	public function wps_sfw_plug_load_template( $content_path ) {
 
 		if ( file_exists( $content_path ) ) {
 
@@ -458,7 +455,7 @@ class Subscriptions_For_Woocommerce {
 
 			/* translators: %s: file path */
 			$sfw_notice = sprintf( esc_html__( 'Unable to locate file at location "%s". Some features may not work properly in this plugin. Please contact us!', 'subscriptions-for-woocommerce' ), $content_path );
-			$this->mwb_sfw_plug_admin_notice( $sfw_notice, 'error' );
+			$this->wps_sfw_plug_admin_notice( $sfw_notice, 'error' );
 		}
 	}
 
@@ -469,7 +466,7 @@ class Subscriptions_For_Woocommerce {
 	 * @param  string $type       notice type, accepted values - error/update/update-nag.
 	 * @since  1.0.0
 	 */
-	public static function mwb_sfw_plug_admin_notice( $sfw_message, $type = 'error' ) {
+	public static function wps_sfw_plug_admin_notice( $sfw_message, $type = 'error' ) {
 
 		$sfw_classes = 'notice ';
 
@@ -491,7 +488,7 @@ class Subscriptions_For_Woocommerce {
 				$sfw_classes .= 'notice-error is-dismissible';
 		}
 
-		$sfw_notice  = '<div class="' . esc_attr( $sfw_classes ) . ' mwb-errorr-8">';
+		$sfw_notice  = '<div class="' . esc_attr( $sfw_classes ) . ' wps-errorr-8">';
 		$sfw_notice .= '<p>' . esc_html( $sfw_message ) . '</p>';
 		$sfw_notice .= '</div>';
 
@@ -505,7 +502,7 @@ class Subscriptions_For_Woocommerce {
 	 * @return  Array $sfw_system_data       returns array of all wordpress and server related information.
 	 * @since  1.0.0
 	 */
-	public function mwb_sfw_plug_system_status() {
+	public function wps_sfw_plug_system_status() {
 		global $wpdb;
 		$sfw_system_status = array();
 		$sfw_wordpress_status = array();
@@ -597,7 +594,7 @@ class Subscriptions_For_Woocommerce {
 		$sfw_system_status['php_max_execution_time'] = function_exists( 'ini_get' ) ? ini_get( 'max_execution_time' ) : __( 'N/A (ini_get function does not exist)', 'subscriptions-for-woocommerce' );
 
 		// Get outgoing IP address.
-		$sfw_system_status['outgoing_ip'] = function_exists( 'mwb_sfw_get_file_content' ) ? mwb_sfw_get_file_content( 'http://ipecho.net/plain' ) : __( 'N/A (mwb_sfw_get_file_content function does not exist)', 'subscriptions-for-woocommerce' );
+		$sfw_system_status['outgoing_ip'] = function_exists( 'wps_sfw_get_file_content' ) ? wps_sfw_get_file_content( 'http://ipecho.net/plain' ) : __( 'N/A (wps_sfw_get_file_content function does not exist)', 'subscriptions-for-woocommerce' );
 
 		$sfw_system_data['php'] = $sfw_system_status;
 		$sfw_system_data['wp'] = $sfw_wordpress_status;
@@ -611,10 +608,10 @@ class Subscriptions_For_Woocommerce {
 	 * @param  string $sfw_components    html to display.
 	 * @since  1.0.0
 	 */
-	public function mwb_sfw_plug_generate_html( $sfw_components = array() ) {
+	public function wps_sfw_plug_generate_html( $sfw_components = array() ) {
 		if ( is_array( $sfw_components ) && ! empty( $sfw_components ) ) {
 			foreach ( $sfw_components as $sfw_component ) {
-				$mwb_sfw_name = array_key_exists( 'name', $sfw_component ) ? $sfw_component['name'] : $sfw_component['id'];
+				$wps_sfw_name = array_key_exists( 'name', $sfw_component ) ? $sfw_component['name'] : $sfw_component['id'];
 				switch ( $sfw_component['type'] ) {
 
 					case 'hidden':
@@ -622,11 +619,11 @@ class Subscriptions_For_Woocommerce {
 					case 'email':
 					case 'text':
 						?>
-					<div class="mwb-form-group mwb-sfw-<?php echo esc_attr( $sfw_component['type'] ); ?>">
-						<div class="mwb-form-group__label">
-							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mwb-form-label"><?php echo esc_html( $sfw_component['title'] ); // WPCS: XSS ok. ?></label>
+					<div class="wps-form-group wps-sfw-<?php echo esc_attr( $sfw_component['type'] ); ?>">
+						<div class="wps-form-group__label">
+							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="wps-form-label"><?php echo esc_html( $sfw_component['title'] ); // WPCS: XSS ok. ?></label>
 						</div>
-						<div class="mwb-form-group__control">
+						<div class="wps-form-group__control">
 							<label class="mdc-text-field mdc-text-field--outlined">
 								<span class="mdc-notched-outline">
 									<span class="mdc-notched-outline__leading"></span>
@@ -639,7 +636,7 @@ class Subscriptions_For_Woocommerce {
 								</span>
 								<input 
 								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" 
-								name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
+								name="<?php echo esc_attr( $wps_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 								type="<?php echo esc_attr( $sfw_component['type'] ); ?>"
 								value="<?php echo esc_attr( $sfw_component['value'] ); ?>"
@@ -647,7 +644,7 @@ class Subscriptions_For_Woocommerce {
 								>
 							</label>
 							<div class="mdc-text-field-helper-line">
-								<div class="mdc-text-field-helper-text--persistent mwb-helper-text" id="" aria-hidden="true"><?php echo esc_attr( $sfw_component['description'] ); ?></div>
+								<div class="mdc-text-field-helper-text--persistent wps-helper-text" id="" aria-hidden="true"><?php echo esc_attr( $sfw_component['description'] ); ?></div>
 							</div>
 						</div>
 					</div>
@@ -656,11 +653,11 @@ class Subscriptions_For_Woocommerce {
 
 					case 'password':
 						?>
-					<div class="mwb-form-group">
-						<div class="mwb-form-group__label">
-							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mwb-form-label"><?php echo esc_html( $sfw_component['title'] ); // WPCS: XSS ok. ?></label>
+					<div class="wps-form-group">
+						<div class="wps-form-group__label">
+							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="wps-form-label"><?php echo esc_html( $sfw_component['title'] ); // WPCS: XSS ok. ?></label>
 						</div>
-						<div class="mwb-form-group__control">
+						<div class="wps-form-group__control">
 							<label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
 								<span class="mdc-notched-outline">
 									<span class="mdc-notched-outline__leading"></span>
@@ -669,17 +666,17 @@ class Subscriptions_For_Woocommerce {
 									<span class="mdc-notched-outline__trailing"></span>
 								</span>
 								<input 
-								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?> mwb-form__password" 
-								name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
+								class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?> wps-form__password" 
+								name="<?php echo esc_attr( $wps_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 								type="<?php echo esc_attr( $sfw_component['type'] ); ?>"
 								value="<?php echo esc_attr( $sfw_component['value'] ); ?>"
 								placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"
 								>
-								<i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing mwb-password-hidden" tabindex="0" role="button">visibility</i>
+								<i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing wps-password-hidden" tabindex="0" role="button">visibility</i>
 							</label>
 							<div class="mdc-text-field-helper-line">
-								<div class="mdc-text-field-helper-text--persistent mwb-helper-text" id="" aria-hidden="true"><?php echo esc_attr( $sfw_component['description'] ); ?></div>
+								<div class="mdc-text-field-helper-text--persistent wps-helper-text" id="" aria-hidden="true"><?php echo esc_attr( $sfw_component['description'] ); ?></div>
 							</div>
 						</div>
 					</div>
@@ -688,11 +685,11 @@ class Subscriptions_For_Woocommerce {
 
 					case 'textarea':
 						?>
-					<div class="mwb-form-group">
-						<div class="mwb-form-group__label">
-							<label class="mwb-form-label" for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo esc_attr( $sfw_component['title'] ); ?></label>
+					<div class="wps-form-group">
+						<div class="wps-form-group__label">
+							<label class="wps-form-label" for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo esc_attr( $sfw_component['title'] ); ?></label>
 						</div>
-						<div class="mwb-form-group__control">
+						<div class="wps-form-group__control">
 							<label class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea"  	for="text-field-hero-input">
 								<span class="mdc-notched-outline">
 									<span class="mdc-notched-outline__leading"></span>
@@ -702,7 +699,7 @@ class Subscriptions_For_Woocommerce {
 									<span class="mdc-notched-outline__trailing"></span>
 								</span>
 								<span class="mdc-text-field__resizer">
-									<textarea class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" rows="2" cols="25" aria-label="Label" name="<?php echo esc_attr( $mwb_sfw_name ); ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"><?php echo esc_textarea( $sfw_component['value'] ); // WPCS: XSS ok. ?></textarea>
+									<textarea class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" rows="2" cols="25" aria-label="Label" name="<?php echo esc_attr( $wps_sfw_name ); ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"><?php echo esc_textarea( $sfw_component['value'] ); // WPCS: XSS ok. ?></textarea>
 								</span>
 							</label>
 
@@ -715,13 +712,13 @@ class Subscriptions_For_Woocommerce {
 					case 'select':
 					case 'multiselect':
 						?>
-					<div class="mwb-form-group">
-						<div class="mwb-form-group__label">
-							<label class="mwb-form-label" for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo esc_html( $sfw_component['title'] ); ?></label>
+					<div class="wps-form-group">
+						<div class="wps-form-group__label">
+							<label class="wps-form-label" for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo esc_html( $sfw_component['title'] ); ?></label>
 						</div>
-						<div class="mwb-form-group__control">
-							<div class="mwb-form-select">
-								<select name="<?php echo esc_attr( $mwb_sfw_name ); ?><?php echo ( 'multiselect' === $sfw_component['type'] ) ? '[]' : ''; ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mdl-textfield__input <?php echo esc_attr( $sfw_component['class'] ); ?>" <?php echo 'multiselect' === $sfw_component['type'] ? 'multiple="multiple"' : ''; ?> >
+						<div class="wps-form-group__control">
+							<div class="wps-form-select">
+								<select name="<?php echo esc_attr( $wps_sfw_name ); ?><?php echo ( 'multiselect' === $sfw_component['type'] ) ? '[]' : ''; ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mdl-textfield__input <?php echo esc_attr( $sfw_component['class'] ); ?>" <?php echo 'multiselect' === $sfw_component['type'] ? 'multiple="multiple"' : ''; ?> >
 									<?php
 									foreach ( $sfw_component['options'] as $sfw_key => $sfw_val ) {
 										?>
@@ -750,15 +747,15 @@ class Subscriptions_For_Woocommerce {
 
 					case 'checkbox':
 						?>
-					<div class="mwb-form-group">
-						<div class="mwb-form-group__label">
-							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mwb-form-label"><?php echo esc_html( $sfw_component['title'] ); ?></label>
+					<div class="wps-form-group">
+						<div class="wps-form-group__label">
+							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="wps-form-label"><?php echo esc_html( $sfw_component['title'] ); ?></label>
 						</div>
-						<div class="mwb-form-group__control mwb-pl-4">
+						<div class="wps-form-group__control wps-pl-4">
 							<div class="mdc-form-field">
 								<div class="mdc-checkbox">
 									<input 
-									name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
+									name="<?php echo esc_attr( $wps_sfw_name ); ?>"
 									id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 									type="checkbox"
 									class="mdc-checkbox__native-control <?php echo esc_attr( isset( $sfw_component['class'] ) ? $sfw_component['class'] : '' ); ?>"
@@ -786,19 +783,19 @@ class Subscriptions_For_Woocommerce {
 
 					case 'radio':
 						?>
-					<div class="mwb-form-group">
-						<div class="mwb-form-group__label">
-							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="mwb-form-label"><?php echo esc_html( $sfw_component['title'] ); ?></label>
+					<div class="wps-form-group">
+						<div class="wps-form-group__label">
+							<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="wps-form-label"><?php echo esc_html( $sfw_component['title'] ); ?></label>
 						</div>
-						<div class="mwb-form-group__control mwb-pl-4">
-							<div class="mwb-flex-col">
+						<div class="wps-form-group__control wps-pl-4">
+							<div class="wps-flex-col">
 								<?php
 								foreach ( $sfw_component['options'] as $sfw_radio_key => $sfw_radio_val ) {
 									?>
 									<div class="mdc-form-field">
 										<div class="mdc-radio">
 											<input
-											name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
+											name="<?php echo esc_attr( $wps_sfw_name ); ?>"
 											value="<?php echo esc_attr( $sfw_radio_key ); ?>"
 											type="radio"
 											class="mdc-radio__native-control <?php echo esc_attr( $sfw_component['class'] ); ?>"
@@ -824,17 +821,17 @@ class Subscriptions_For_Woocommerce {
 					case 'radio-switch':
 						?>
 
-					<div class="mwb-form-group">
-						<div class="mwb-form-group__label">
-							<label for="" class="mwb-form-label"><?php echo esc_html( $sfw_component['title'] ); ?></label>
+					<div class="wps-form-group">
+						<div class="wps-form-group__label">
+							<label for="" class="wps-form-label"><?php echo esc_html( $sfw_component['title'] ); ?></label>
 						</div>
-						<div class="mwb-form-group__control">
+						<div class="wps-form-group__control">
 							<div>
 								<div class="mdc-switch">
 									<div class="mdc-switch__track"></div>
 									<div class="mdc-switch__thumb-underlay">
 										<div class="mdc-switch__thumb"></div>
-										<input name="<?php echo esc_attr( $mwb_sfw_name ); ?>" type="checkbox" id="basic-switch" value="on" class="mdc-switch__native-control" role="switch" aria-checked="
+										<input name="<?php echo esc_attr( $wps_sfw_name ); ?>" type="checkbox" id="basic-switch" value="on" class="mdc-switch__native-control" role="switch" aria-checked="
 																<?php
 																if ( 'on' == $sfw_component['value'] ) {
 																	echo 'true';
@@ -855,10 +852,10 @@ class Subscriptions_For_Woocommerce {
 
 					case 'button':
 						?>
-					<div class="mwb-form-group">
-						<div class="mwb-form-group__label"></div>
-						<div class="mwb-form-group__control">
-							<button class="mdc-button mdc-button--raised" name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
+					<div class="wps-form-group">
+						<div class="wps-form-group__label"></div>
+						<div class="wps-form-group__control">
+							<button class="mdc-button mdc-button--raised" name="<?php echo esc_attr( $wps_sfw_name ); ?>"
 								id="<?php echo esc_attr( $sfw_component['id'] ); ?>"> <span class="mdc-button__ripple"></span>
 								<span class="mdc-button__label"><?php echo esc_attr( $sfw_component['button_text'] ); ?></span>
 							</button>
@@ -873,7 +870,7 @@ class Subscriptions_For_Woocommerce {
 					<tr valign="top">
 						<td scope="row">
 							<input type="submit" class="button button-primary" 
-							name="<?php echo esc_attr( $mwb_sfw_name ); ?>"
+							name="<?php echo esc_attr( $wps_sfw_name ); ?>"
 							id="<?php echo esc_attr( $sfw_component['id'] ); ?>"
 							value="<?php echo esc_attr( $sfw_component['button_text'] ); ?>"
 							/>
