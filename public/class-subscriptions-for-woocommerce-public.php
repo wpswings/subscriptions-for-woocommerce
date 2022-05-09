@@ -979,6 +979,10 @@ class Subscriptions_For_Woocommerce_Public {
 
 		/* translators: %s: subscription interval */
 		$price .= sprintf( esc_html( ' / %s ' ), $wps_price_html );
+		$wps_subscription_status = get_post_meta( $subscription_id, 'wps_subscription_status', true );
+		if ( 'cancelled' === $wps_subscription_status ) {
+			$price = '---';
+		}
 		echo wp_kses_post( $price );
 	}
 

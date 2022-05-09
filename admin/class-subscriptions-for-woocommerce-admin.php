@@ -1038,6 +1038,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_subscriber_last_name',
 					'mwb_subscriber_first_name',
 					'mwb_subscriber_id',
+					'mwb_susbcription_end',
 					'mwb_parent_order',
 					'mwb_sfw_order_has_subscription',
 					'mwb_subscription_id',
@@ -1056,6 +1057,9 @@ class Subscriptions_For_Woocommerce_Admin {
 						continue;
 					}
 					update_post_meta( $order_id, $new_key, $value );
+					if( $new_key == 'wps_susbcription_end' && get_post_meta( $order_id, $new_key, true ) == ''){
+						update_post_meta( $order_id , 'wps_susbcription_end' , 0 );
+					}
 					delete_post_meta( $order_id, $meta_keys );
 				}
 
@@ -1116,7 +1120,6 @@ class Subscriptions_For_Woocommerce_Admin {
 					'_mwb_sfw_payment_transaction_id',
 					'_mwb_paypal_subscription_id',
 					'mwb_susbcription_trial_end',
-					'mwb_susbcription_end',
 					'mwb_sfw_order_has_subscription',
 					'mwb_subscription_id',
 					'mwb_schedule_start',
@@ -1196,7 +1199,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		if ( 'products' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_recurring_total'
+					$sql = "SELECT DISTINCT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_recurring_total'
 						OR `meta_key` LIKE '_mwb_sfw_product' 
 					 	OR `meta_key` LIKE 'mwb_sfw_subscription_number' 
 						OR `meta_key` LIKE 'mwb_sfw_subscription_interval'
@@ -1222,7 +1225,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		} elseif ( 'post_type_subscription' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_subscription' 
+					$sql = "SELECT DISTINCT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_subscription' 
 						OR `meta_key` LIKE 'mwb_upgrade_downgrade_data' 
 						OR `meta_key` LIKE 'mwb_renewal_subscription_order'
 						OR `meta_key` LIKE 'mwb_wsp_no_of_renewal_order'
@@ -1277,7 +1280,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		} elseif ( 'mwb_renewal_orders' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_renewal_order'
+					$sql = "SELECT DISTINCT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_renewal_order'
 					OR `meta_key` LIKE 'mwb_sfw_subscription'
 					OR `meta_key` LIKE 'mwb_sfw_parent_order_id'
 					OR `meta_key` LIKE 'mwb_order_currency'

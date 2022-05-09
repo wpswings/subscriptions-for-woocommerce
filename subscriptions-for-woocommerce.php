@@ -224,30 +224,30 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function wps_sfw_plugin_upgrade_notice() {
 		$screen = get_current_screen();
 		if ( isset( $screen->id ) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
-			?>
-		<tr class="plugin-update-tr active notice-warning notice-alt">
-		<td colspan="4" class="plugin-update colspanchange">
-			<div class="notice notice-success inline update-message notice-alt">
-				<div class='wps-notice-title wps-notice-section'>
-					<p><strong>IMPORTANT NOTICE:</strong></p>
-				</div>
-				<div class='wps-notice-content wps-notice-section'>
-					<p>
-						<?php esc_html_e( 'Heads up, The latest update includes some substantial changes across different areas of the plugin.', 'subscriptions-for-woocommerce' ); ?>
+				?>
+			<tr class="plugin-update-tr active notice-warning notice-alt">
+			<td colspan="4" class="plugin-update colspanchange">
+				<div class="notice notice-success inline update-message notice-alt">
+					<div class='wps-notice-title wps-notice-section'>
+						<p><strong>IMPORTANT NOTICE:</strong></p>
+					</div>
+					<div class='wps-notice-content wps-notice-section'>
+						<p>
+							<?php esc_html_e( 'Heads up, The latest update includes some substantial changes across different areas of the plugin.', 'subscriptions-for-woocommerce' ); ?>
+							</p>
+							<p><b><?php esc_html_e( 'Please Click on the Start Migration button to start migration.', 'subscriptions-for-woocommerce' ); ?></b>
 						</p>
-						<p><b><?php esc_html_e( 'Please Click on the Start Migration button to start migration.', 'subscriptions-for-woocommerce' ); ?></b>
-					</p>
-					<p><button class="cls-migration-button mdc-button mdc-button--raised mdc-ripple-upgraded" id="wps_sfw_migration-button">Start Migration</button></p>
+						<p><button class="cls-migration-button mdc-button mdc-button--raised mdc-ripple-upgraded" id="wps_sfw_migration-button">Start Migration</button></p>
+					</div>
 				</div>
-			</div>
-		</td>
-		</tr>
-	<style>
-		.wps-notice-section > p:before {
-			content: none;
-		}
-	</style>
-			<?php
+			</td>
+			</tr>
+			<style>
+			.wps-notice-section > p:before {
+				content: none;
+			}
+			</style>
+				<?php
 		}
 	}
 

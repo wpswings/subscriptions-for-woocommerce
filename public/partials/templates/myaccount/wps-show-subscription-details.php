@@ -63,6 +63,11 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 				<td>
 				<?php
 					$wps_next_payment_date = get_post_meta( $wps_subscription_id, 'wps_next_payment_date', true );
+					if ( 'cancelled' === $wps_status ) {
+						$wps_next_payment_date = '';
+						$wps_susbcription_end = '';
+						$wps_recurring_total = '---';
+					}
 					echo esc_html( wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ) );
 				?>
 				</td>

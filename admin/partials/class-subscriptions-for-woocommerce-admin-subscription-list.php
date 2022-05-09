@@ -356,6 +356,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_next_payment_date = '';
 					$wps_recurring_total = '---';
 				}
+				if ( 'cancelled' === $wps_subscription_status ) {
+					$wps_next_payment_date = '';
+					$wps_susbcription_end = '';
+					$wps_recurring_total = '---';
+				}
 				$wps_customer_id   = get_post_meta( $value->ID, 'wps_customer_id', true );
 				$user = get_user_by( 'id', $wps_customer_id );
 

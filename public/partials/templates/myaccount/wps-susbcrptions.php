@@ -48,6 +48,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date">
 								<?php
 									$wps_next_payment_date = get_post_meta( $wps_subscription->ID, 'wps_next_payment_date', true );
+									if ( 'cancelled' === $wps_status ) {
+										$wps_next_payment_date = '';
+									}
 									echo esc_html( wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ) );
 								?>
 									</td>
