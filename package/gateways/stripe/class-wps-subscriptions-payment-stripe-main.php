@@ -88,7 +88,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		public function wps_sfw_cancel_stripe_subscription( $wps_subscription_id, $status ) {
 
 			$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
-			if ( 'stripe' == $wps_payment_method ) {
+			if ( 'stripe' == $wps_payment_method || ( 'cod' == $wps_payment_method ) || ( 'bacs' == $wps_payment_method ) || ( 'cheque' == $wps_payment_method ) ) {
 				if ( 'Cancel' == $status ) {
 					wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
 					update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
