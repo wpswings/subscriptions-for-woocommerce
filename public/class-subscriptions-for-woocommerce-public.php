@@ -979,6 +979,10 @@ class Subscriptions_For_Woocommerce_Public {
 
 		/* translators: %s: subscription interval */
 		$price .= sprintf( esc_html( ' / %s ' ), $wps_price_html );
+		$wps_subscription_status = get_post_meta( $subscription_id, 'wps_subscription_status', true );
+		if ( 'cancelled' === $wps_subscription_status ) {
+			$price = '---';
+		}
 		echo wp_kses_post( $price );
 	}
 
@@ -1397,7 +1401,7 @@ class Subscriptions_For_Woocommerce_Public {
 	public function wps_sfw_change_payment_gateway_description( $description, $gateway_id ) {
 		$available_gateways   = WC()->payment_gateways->get_available_payment_gateways();
 		$experimental_feature = 'no';
-		if ( isset( $available_gateways['stripe'] ) ) {
+		if ( isset( $available_gateways['stripe'] ) && isset( $available_gateways['stripe']->settings['upe_checkout_experience_enabled'] ) ) {
 			$experimental_feature = $available_gateways['stripe']->settings['upe_checkout_experience_enabled'];
 		}
 		$wps_has_subscription = wps_sfw_is_cart_has_subscription_product();

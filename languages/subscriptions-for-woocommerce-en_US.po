@@ -1,24 +1,22 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriptions For WooCommerce 1.3.2\n"
-"POT-Creation-Date: 2022-04-12 18:34+0530\n"
-"PO-Revision-Date: 2022-04-12 18:34+0530\n"
+"Project-Id-Version: Subscriptions For WooCommerce 1.4.1\n"
+"POT-Creation-Date: 2022-05-12 18:33+0530\n"
+"PO-Revision-Date: 2022-05-12 18:43+0530\n"
 "Last-Translator: \n"
 "Language-Team: WP Swings\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
-"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_attr__;esc_attr_e;esc_attr_x;"
 "esc_html;esc_html__;esc_html_e;esc_html_x;_n_noop;_nx_noop;"
 "translate_nooped_plural\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: admin/js/sfw-swal.js\n"
-"X-Poedit-SearchPathExcluded-1: build\n"
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:180
 #: includes/subscriptions-for-woocommerce-common-function.php:446
@@ -149,7 +147,7 @@ msgid "Id of some field is missing"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:488
-#: subscriptions-for-woocommerce.php:427
+#: subscriptions-for-woocommerce.php:437
 msgid "Subscription"
 msgstr ""
 
@@ -249,7 +247,7 @@ msgid "Status"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:57
-#: public/partials/templates/myaccount/wps-show-subscription-details.php:111
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:116
 #: src/component/SecondStep.js:24
 msgid "Product Name"
 msgstr ""
@@ -272,7 +270,7 @@ msgid "Subscription Expiry Date"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:87
-#: public/partials/templates/myaccount/wps-show-subscription-details.php:147
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:152
 msgid "Cancel"
 msgstr ""
 
@@ -284,13 +282,13 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:417
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:422
 #: public/class-subscriptions-for-woocommerce-public.php:888
-#: subscriptions-for-woocommerce.php:426 subscriptions-for-woocommerce.php:439
+#: subscriptions-for-woocommerce.php:436 subscriptions-for-woocommerce.php:449
 msgid "Subscriptions"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:425
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:430
 msgid "Search Order"
 msgstr ""
 
@@ -299,12 +297,12 @@ msgid "Settings saved !"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:40
-#: subscriptions-for-woocommerce.php:381
+#: subscriptions-for-woocommerce.php:391
 msgid "Documentation"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:42
-#: subscriptions-for-woocommerce.php:383
+#: subscriptions-for-woocommerce.php:393
 msgid "Support"
 msgstr ""
 
@@ -1066,19 +1064,19 @@ msgstr ""
 msgid "Payment Method Added Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:996
+#: public/class-subscriptions-for-woocommerce-public.php:1000
 msgid "Not a valid subscription"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1041
+#: public/class-subscriptions-for-woocommerce-public.php:1045
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1180
+#: public/class-subscriptions-for-woocommerce-public.php:1184
 msgid "You can not add multiple subscription products in cart"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1406
+#: public/class-subscriptions-for-woocommerce-public.php:1410
 msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
@@ -1098,19 +1096,19 @@ msgstr ""
 msgid "Subscription Date"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-show-subscription-details.php:76
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:81
 msgid "Trial End Date"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-show-subscription-details.php:95
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:100
 msgid "Add Payment Method"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-show-subscription-details.php:107
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:112
 msgid "Subscription Order Details"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-show-subscription-details.php:114
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:119
 msgid "Total"
 msgstr ""
 
@@ -1130,19 +1128,19 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-susbcrptions.php:67
+#: public/partials/templates/myaccount/wps-susbcrptions.php:70
 msgid "Show"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-susbcrptions.php:83
+#: public/partials/templates/myaccount/wps-susbcrptions.php:86
 msgid "Previous"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-susbcrptions.php:87
+#: public/partials/templates/myaccount/wps-susbcrptions.php:90
 msgid "Next"
 msgstr ""
 
-#: public/partials/templates/myaccount/wps-susbcrptions.php:93
+#: public/partials/templates/myaccount/wps-susbcrptions.php:96
 msgid "You do not have any active subscription(s)."
 msgstr ""
 
@@ -1193,14 +1191,6 @@ msgid ""
 "in order to improve this plugin and provide better support. If you want, you "
 "can dis-allow anytime settings, We never track down your personal data. "
 "Promise!"
-msgstr ""
-
-#: src/component/FinalStep.js:20
-msgid "Yes. Definitely, you guys rock!"
-msgstr ""
-
-#: src/component/FinalStep.js:21
-msgid "No, not required."
 msgstr ""
 
 #: src/component/FirstStep.js:27
@@ -1284,102 +1274,102 @@ msgid ""
 "now."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:201 subscriptions-for-woocommerce.php:236
+#: subscriptions-for-woocommerce.php:205 subscriptions-for-woocommerce.php:245
 msgid ""
 "Heads up, The latest update includes some substantial changes across "
 "different areas of the plugin."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:203
+#: subscriptions-for-woocommerce.php:207
 msgid "Please Click"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:203
+#: subscriptions-for-woocommerce.php:207
 msgid "To Goto the Migration Page and Run the Migration Functionality."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:238
+#: subscriptions-for-woocommerce.php:247
 msgid "Please Click on the Start Migration button to start migration."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:264 subscriptions-for-woocommerce.php:270
+#: subscriptions-for-woocommerce.php:274 subscriptions-for-woocommerce.php:280
 msgid "Subscriptions For Woocommerce"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:356
+#: subscriptions-for-woocommerce.php:366
 msgid "Settings"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:360
+#: subscriptions-for-woocommerce.php:370
 msgid "GO PRO"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:379
-msgid "Free Demo"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:428
-msgid "Add Subscription"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:429
-msgid "Add New Subscription"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:430
-msgid "Edit"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:431
-msgid "Edit Subscription"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:432
-msgid "New Subscription"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:433 subscriptions-for-woocommerce.php:434
-msgid "View Subscription"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:435
-msgid "Search Subscriptions"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:436
-msgid "Not Found"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:437
-msgid "No Subscriptions found in the trash"
+#: subscriptions-for-woocommerce.php:389
+msgid "Demo"
 msgstr ""
 
 #: subscriptions-for-woocommerce.php:438
-msgid "Parent Subscriptions"
+msgid "Add Subscription"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:439
+msgid "Add New Subscription"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:440
+msgid "Edit"
 msgstr ""
 
 #: subscriptions-for-woocommerce.php:441
+msgid "Edit Subscription"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:442
+msgid "New Subscription"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:443 subscriptions-for-woocommerce.php:444
+msgid "View Subscription"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:445
+msgid "Search Subscriptions"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:446
+msgid "Not Found"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:447
+msgid "No Subscriptions found in the trash"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:448
+msgid "Parent Subscriptions"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:451
 msgid "These subscriptions are stored."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:523
+#: subscriptions-for-woocommerce.php:533
 msgid ""
 "WooCommerce is not activated, Please activate WooCommerce first to activate "
 "Subscriptions for Woocommerce."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:550
+#: subscriptions-for-woocommerce.php:560
 msgid "Version 2.1.0 of Subscriptions For WooCommerce Pro "
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:550
+#: subscriptions-for-woocommerce.php:560
 msgid " is not available on your system! Please Update "
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:550
+#: subscriptions-for-woocommerce.php:560
 msgid "WooCommerce Subscripiton Pro"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:550
+#: subscriptions-for-woocommerce.php:560
 msgid "."
 msgstr ""

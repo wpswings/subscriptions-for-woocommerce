@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 if ( class_exists( 'Subscriptions_For_Woocommerce_Admin' ) ) {
 
-	$wps_sfw_get_count = new Subscriptions_For_Woocommerce_Admin( 'subscriptions-for-woocommerce', '1.4.0' );
+	$wps_sfw_get_count = new Subscriptions_For_Woocommerce_Admin( 'subscriptions-for-woocommerce', '1.4.1' );
 	$wps_sfw_pending_product_count  = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'products' );
 	$wps_sfw_pending_orders_count   = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'mwb_renewal_orders' );
 	$wps_sfw_pending_subs_count     = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'post_type_subscription' );

@@ -984,6 +984,72 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_wsp_year_sync',
 					'mwb_wsp_year_number',
 					'mwb_sfw_subscription_start_date',
+
+					'mwb_sfw_renewal_order',
+					'mwb_sfw_subscription',
+					'mwb_sfw_parent_order_id',
+					'mwb_order_currency',
+					'mwb_wsp_first_payment_date',
+					'mwb_sfw_paypal_transaction_id',
+					'mwb_sfw_paypal_subscriber_id',
+					'mwb_subscriber_payment_type',
+					'mwb_subscriber_address',
+					'mwb_subscriber_last_name',
+					'mwb_subscriber_first_name',
+					'mwb_subscriber_id',
+					'mwb_susbcription_end',
+					'mwb_parent_order',
+					'mwb_sfw_order_has_subscription',
+					'mwb_subscription_id',
+					'_mwb_is_renewal_success',
+					'mwb_wsp_manual_renewal_order',
+					'mwb_upgrade_downgrade_order_succes',
+					'mwb_wps_gc_coupon_updated',
+					'mwb_wsp_no_of_retry_attempt',
+					'mwb_upgrade_downgrade_order',
+
+					'mwb_upgrade_downgrade_data',
+					'mwb_renewal_subscription_order',
+					'mwb_wsp_no_of_renewal_order',
+					'mwb_wsp_renewal_order_data',
+					'mwb_wsp_last_renewal_order_id',
+					'mwb_next_payment_date',
+					'mwb_subscription_status',
+					'_mwb_paypal_transaction_ids',
+					'_mwb_sfw_payment_transaction_id',
+					'_mwb_paypal_subscription_id',
+					'mwb_susbcription_trial_end',
+					'mwb_sfw_order_has_subscription',
+					'mwb_subscription_id',
+					'mwb_schedule_start',
+					'mwb_sfw_subscription_activated',
+					'mwb_parent_order',
+					'mwb_recurring_total',
+					'mwb_customer_id',
+					'mwb_order_currency',
+					'mwb_wsp_first_payment_date',
+					'mwb_sfw_paypal_transaction_id',
+					'mwb_sfw_paypal_subscriber_id',
+					'mwb_subscriber_payment_type',
+					'mwb_subscriber_address',
+					'mwb_subscriber_last_name',
+					'mwb_subscriber_first_name',
+					'mwb_subscriber_id',
+					'mwb_wsp_failed_attemp_for_subscription',
+					'mwb_wsp_failed_order_for_subscription',
+					'mwb_wsf_manage_prorate_negativ_amount_date',
+					'mwb_wsf_manage_prorate_negativ_amount_wallet',
+					'mwb_wsp_switch_order_data',
+					'mwb_wsp_last_switch_order_id',
+					'mwb_wsp_first_payment_date',
+					'mwb_wgm_giftcard_coupon',
+					'mwb_sfw_multisafepay_recurring_reminder_sent',
+					'mwb_wsp_plan_expire_notice_send',
+					'mwb_subscription_reactive_time',
+					'mwb_subscription_pause_time',
+					'mwb_wsp_manual_renewal_order',
+					'mwb_upgrade_downgrade_order',
+					'mwb_upgrade_downgrade_order_succes',
 				);
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
 					$value   = get_post_meta( $product_id, $meta_keys, true );
@@ -1026,6 +1092,22 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			try {
 				$post_meta_keys = array(
+					'_mwb_sfw_product',
+					'mwb_sfw_subscription_number',
+					'mwb_sfw_subscription_interval',
+					'mwb_sfw_subscription_expiry_number',
+					'mwb_sfw_subscription_expiry_interval',
+					'mwb_sfw_subscription_initial_signup_price',
+					'mwb_sfw_subscription_free_trial_number',
+					'mwb_sfw_subscription_free_trial_interval',
+					'mwb_sfw_variable_product',
+					'mwb_wsp_enbale_certain_month',
+					'mwb_wsp_week_sync',
+					'mwb_wsp_month_sync',
+					'mwb_wsp_year_sync',
+					'mwb_wsp_year_number',
+					'mwb_sfw_subscription_start_date',
+
 					'mwb_sfw_renewal_order',
 					'mwb_sfw_subscription',
 					'mwb_sfw_parent_order_id',
@@ -1038,6 +1120,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_subscriber_last_name',
 					'mwb_subscriber_first_name',
 					'mwb_subscriber_id',
+					'mwb_susbcription_end',
 					'mwb_parent_order',
 					'mwb_sfw_order_has_subscription',
 					'mwb_subscription_id',
@@ -1047,6 +1130,49 @@ class Subscriptions_For_Woocommerce_Admin {
 					'mwb_wps_gc_coupon_updated',
 					'mwb_wsp_no_of_retry_attempt',
 					'mwb_upgrade_downgrade_order',
+
+					'mwb_upgrade_downgrade_data',
+					'mwb_renewal_subscription_order',
+					'mwb_wsp_no_of_renewal_order',
+					'mwb_wsp_renewal_order_data',
+					'mwb_wsp_last_renewal_order_id',
+					'mwb_next_payment_date',
+					'mwb_subscription_status',
+					'_mwb_paypal_transaction_ids',
+					'_mwb_sfw_payment_transaction_id',
+					'_mwb_paypal_subscription_id',
+					'mwb_susbcription_trial_end',
+					'mwb_sfw_order_has_subscription',
+					'mwb_subscription_id',
+					'mwb_schedule_start',
+					'mwb_sfw_subscription_activated',
+					'mwb_parent_order',
+					'mwb_recurring_total',
+					'mwb_customer_id',
+					'mwb_order_currency',
+					'mwb_wsp_first_payment_date',
+					'mwb_sfw_paypal_transaction_id',
+					'mwb_sfw_paypal_subscriber_id',
+					'mwb_subscriber_payment_type',
+					'mwb_subscriber_address',
+					'mwb_subscriber_last_name',
+					'mwb_subscriber_first_name',
+					'mwb_subscriber_id',
+					'mwb_wsp_failed_attemp_for_subscription',
+					'mwb_wsp_failed_order_for_subscription',
+					'mwb_wsf_manage_prorate_negativ_amount_date',
+					'mwb_wsf_manage_prorate_negativ_amount_wallet',
+					'mwb_wsp_switch_order_data',
+					'mwb_wsp_last_switch_order_id',
+					'mwb_wsp_first_payment_date',
+					'mwb_wgm_giftcard_coupon',
+					'mwb_sfw_multisafepay_recurring_reminder_sent',
+					'mwb_wsp_plan_expire_notice_send',
+					'mwb_subscription_reactive_time',
+					'mwb_subscription_pause_time',
+					'mwb_wsp_manual_renewal_order',
+					'mwb_upgrade_downgrade_order',
+					'mwb_upgrade_downgrade_order_succes',
 				);
 				foreach ( $post_meta_keys as $key => $meta_keys ) {
 					$value   = get_post_meta( $order_id, $meta_keys, true );
@@ -1056,6 +1182,9 @@ class Subscriptions_For_Woocommerce_Admin {
 						continue;
 					}
 					update_post_meta( $order_id, $new_key, $value );
+					if ( 'wps_susbcription_end' == $new_key && get_post_meta( $order_id, $new_key, true ) == '' ) {
+						update_post_meta( $order_id, 'wps_susbcription_end', 0 );
+					}
 					delete_post_meta( $order_id, $meta_keys );
 				}
 
@@ -1105,6 +1234,45 @@ class Subscriptions_For_Woocommerce_Admin {
 			try {
 
 				$post_meta_keys = array(
+					'_mwb_sfw_product',
+					'mwb_sfw_subscription_number',
+					'mwb_sfw_subscription_interval',
+					'mwb_sfw_subscription_expiry_number',
+					'mwb_sfw_subscription_expiry_interval',
+					'mwb_sfw_subscription_initial_signup_price',
+					'mwb_sfw_subscription_free_trial_number',
+					'mwb_sfw_subscription_free_trial_interval',
+					'mwb_sfw_variable_product',
+					'mwb_wsp_enbale_certain_month',
+					'mwb_wsp_week_sync',
+					'mwb_wsp_month_sync',
+					'mwb_wsp_year_sync',
+					'mwb_wsp_year_number',
+					'mwb_sfw_subscription_start_date',
+
+					'mwb_sfw_renewal_order',
+					'mwb_sfw_subscription',
+					'mwb_sfw_parent_order_id',
+					'mwb_order_currency',
+					'mwb_wsp_first_payment_date',
+					'mwb_sfw_paypal_transaction_id',
+					'mwb_sfw_paypal_subscriber_id',
+					'mwb_subscriber_payment_type',
+					'mwb_subscriber_address',
+					'mwb_subscriber_last_name',
+					'mwb_subscriber_first_name',
+					'mwb_subscriber_id',
+					'mwb_susbcription_end',
+					'mwb_parent_order',
+					'mwb_sfw_order_has_subscription',
+					'mwb_subscription_id',
+					'_mwb_is_renewal_success',
+					'mwb_wsp_manual_renewal_order',
+					'mwb_upgrade_downgrade_order_succes',
+					'mwb_wps_gc_coupon_updated',
+					'mwb_wsp_no_of_retry_attempt',
+					'mwb_upgrade_downgrade_order',
+
 					'mwb_upgrade_downgrade_data',
 					'mwb_renewal_subscription_order',
 					'mwb_wsp_no_of_renewal_order',
@@ -1116,7 +1284,6 @@ class Subscriptions_For_Woocommerce_Admin {
 					'_mwb_sfw_payment_transaction_id',
 					'_mwb_paypal_subscription_id',
 					'mwb_susbcription_trial_end',
-					'mwb_susbcription_end',
 					'mwb_sfw_order_has_subscription',
 					'mwb_subscription_id',
 					'mwb_schedule_start',
@@ -1193,27 +1360,124 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		global $wpdb;
 		$table = $wpdb->prefix . 'postmeta';
+		$post_meta_keys = array(
+			'_mwb_sfw_product',
+			'mwb_sfw_subscription_number',
+			'mwb_sfw_subscription_interval',
+			'mwb_sfw_subscription_expiry_number',
+			'mwb_sfw_subscription_expiry_interval',
+			'mwb_sfw_subscription_initial_signup_price',
+			'mwb_sfw_subscription_free_trial_number',
+			'mwb_sfw_subscription_free_trial_interval',
+			'mwb_sfw_variable_product',
+			'mwb_wsp_enbale_certain_month',
+			'mwb_wsp_week_sync',
+			'mwb_wsp_month_sync',
+			'mwb_wsp_year_sync',
+			'mwb_wsp_year_number',
+			'mwb_sfw_subscription_start_date',
+
+			'mwb_sfw_renewal_order',
+			'mwb_sfw_subscription',
+			'mwb_sfw_parent_order_id',
+			'mwb_order_currency',
+			'mwb_wsp_first_payment_date',
+			'mwb_sfw_paypal_transaction_id',
+			'mwb_sfw_paypal_subscriber_id',
+			'mwb_subscriber_payment_type',
+			'mwb_subscriber_address',
+			'mwb_subscriber_last_name',
+			'mwb_subscriber_first_name',
+			'mwb_subscriber_id',
+			'mwb_susbcription_end',
+			'mwb_parent_order',
+			'mwb_sfw_order_has_subscription',
+			'mwb_subscription_id',
+			'_mwb_is_renewal_success',
+			'mwb_wsp_manual_renewal_order',
+			'mwb_upgrade_downgrade_order_succes',
+			'mwb_wps_gc_coupon_updated',
+			'mwb_wsp_no_of_retry_attempt',
+			'mwb_upgrade_downgrade_order',
+
+			'mwb_upgrade_downgrade_data',
+			'mwb_renewal_subscription_order',
+			'mwb_wsp_no_of_renewal_order',
+			'mwb_wsp_renewal_order_data',
+			'mwb_wsp_last_renewal_order_id',
+			'mwb_next_payment_date',
+			'mwb_subscription_status',
+			'_mwb_paypal_transaction_ids',
+			'_mwb_sfw_payment_transaction_id',
+			'_mwb_paypal_subscription_id',
+			'mwb_susbcription_trial_end',
+			'mwb_sfw_order_has_subscription',
+			'mwb_subscription_id',
+			'mwb_schedule_start',
+			'mwb_sfw_subscription_activated',
+			'mwb_parent_order',
+			'mwb_recurring_total',
+			'mwb_customer_id',
+			'mwb_order_currency',
+			'mwb_wsp_first_payment_date',
+			'mwb_sfw_paypal_transaction_id',
+			'mwb_sfw_paypal_subscriber_id',
+			'mwb_subscriber_payment_type',
+			'mwb_subscriber_address',
+			'mwb_subscriber_last_name',
+			'mwb_subscriber_first_name',
+			'mwb_subscriber_id',
+			'mwb_wsp_failed_attemp_for_subscription',
+			'mwb_wsp_failed_order_for_subscription',
+			'mwb_wsf_manage_prorate_negativ_amount_date',
+			'mwb_wsf_manage_prorate_negativ_amount_wallet',
+			'mwb_wsp_switch_order_data',
+			'mwb_wsp_last_switch_order_id',
+			'mwb_wsp_first_payment_date',
+			'mwb_wgm_giftcard_coupon',
+			'mwb_sfw_multisafepay_recurring_reminder_sent',
+			'mwb_wsp_plan_expire_notice_send',
+			'mwb_subscription_reactive_time',
+			'mwb_subscription_pause_time',
+			'mwb_wsp_manual_renewal_order',
+			'mwb_upgrade_downgrade_order',
+			'mwb_upgrade_downgrade_order_succes',
+		);
 		if ( 'products' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_recurring_total'
-						OR `meta_key` LIKE '_mwb_sfw_product' 
-					 	OR `meta_key` LIKE 'mwb_sfw_subscription_number' 
-						OR `meta_key` LIKE 'mwb_sfw_subscription_interval'
-						OR `meta_key` LIKE 'mwb_sfw_subscription_expiry_number'
-						OR `meta_key` LIKE 'mwb_sfw_subscription_expiry_interval'
-						OR `meta_key` LIKE 'mwb_sfw_subscription_initial_signup_price' 
-						OR `meta_key` LIKE 'mwb_sfw_subscription_free_trial_number'
-						OR `meta_key` LIKE 'mwb_sfw_subscription_free_trial_interval'
-						OR `meta_key` LIKE 'mwb_sfw_variable_product'
-						
-						OR `meta_key` LIKE 'mwb_wsp_enbale_certain_month' 
-						OR `meta_key` LIKE 'mwb_wsp_week_sync' 
-						OR `meta_key` LIKE 'mwb_wsp_month_sync'
-						OR `meta_key` LIKE 'mwb_wsp_year_sync'
-						OR `meta_key` LIKE 'mwb_wsp_year_number'
-						OR `meta_key` LIKE 'mwb_sfw_subscription_start_date'";
+					$result = get_posts(
+						array(
+							'post_type' => 'product',
+							'meta_key' => $post_meta_keys,
+							'post_status'    => array( 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+							'numberposts'       => -1,
+							'fields'         => 'ids',
+						)
+					);
+						$temp2 = get_posts(
+							array(
+								'post_type' => 'product_variation',
+								'post_status'    => array( 'publish', 'draft', 'trash', 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ),
+								'numberposts'       => -1,
+								'meta_key' => $post_meta_keys,
+								'fields'         => 'ids',
+							)
+						);
+					if ( empty( $result ) ) {
+						$result = array();
+					}
+					if ( empty( $temp2 ) ) {
+						$temp2 = array();
+					}
+					if ( is_array( $result ) && is_array( $temp2 ) ) {
 
+						$result = array_merge( $result, $temp2 );
+					}
+						$final_result = array();
+					foreach ( $result as $key => $value ) {
+						$final_result[]['post_id'] = $value;
+					}
 					break;
 				default:
 					$sql = false;
@@ -1222,53 +1486,19 @@ class Subscriptions_For_Woocommerce_Admin {
 		} elseif ( 'post_type_subscription' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_subscription' 
-						OR `meta_key` LIKE 'mwb_upgrade_downgrade_data' 
-						OR `meta_key` LIKE 'mwb_renewal_subscription_order'
-						OR `meta_key` LIKE 'mwb_wsp_no_of_renewal_order'
-						OR `meta_key` LIKE 'mwb_wsp_renewal_order_data'
-						OR `meta_key` LIKE 'mwb_wsp_last_renewal_order_id' 
-						OR `meta_key` LIKE 'mwb_next_payment_date'
-						OR `meta_key` LIKE 'mwb_subscription_status'
-						OR `meta_key` LIKE '_mwb_paypal_transaction_ids'
-						OR `meta_key` LIKE '_mwb_sfw_payment_transaction_id' 
-						OR `meta_key` LIKE '_mwb_paypal_subscription_id' 
-						OR `meta_key` LIKE 'mwb_susbcription_trial_end'
-						OR `meta_key` LIKE 'mwb_susbcription_end'
-						OR `meta_key` LIKE 'mwb_sfw_order_has_subscription'
-						OR `meta_key` LIKE 'mwb_subscription_id' 
-						OR `meta_key` LIKE 'mwb_schedule_start'
-						OR `meta_key` LIKE 'mwb_sfw_subscription_activated'
-						OR `meta_key` LIKE 'mwb_parent_order'
-						OR `meta_key` LIKE 'mwb_recurring_total'
-						OR `meta_key` LIKE 'mwb_customer_id'
-						OR `meta_key` LIKE 'mwb_order_currency'
-						OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
-
-						OR `meta_key` LIKE 'mwb_wsp_failed_attemp_for_subscription'
-						OR `meta_key` LIKE 'mwb_wsp_failed_order_for_subscription' 
-						OR `meta_key` LIKE 'mwb_wsf_manage_prorate_negativ_amount_date' 
-						OR `meta_key` LIKE 'mwb_wsf_manage_prorate_negativ_amount_wallet'
-						OR `meta_key` LIKE 'mwb_wsp_switch_order_data'
-						OR `meta_key` LIKE 'mwb_wsp_last_switch_order_id'
-						OR `meta_key` LIKE 'mwb_wsp_first_payment_date' 
-						OR `meta_key` LIKE 'mwb_wgm_giftcard_coupon'
-						OR `meta_key` LIKE 'mwb_sfw_multisafepay_recurring_reminder_sent'
-						OR `meta_key` LIKE 'mwb_wsp_plan_expire_notice_send'
-						OR `meta_key` LIKE 'mwb_subscription_reactive_time'
-						OR `meta_key` LIKE 'mwb_subscription_pause_time'
-						OR `meta_key` LIKE 'mwb_wsp_manual_renewal_order'
-						OR `meta_key` LIKE 'mwb_upgrade_downgrade_order'
-						OR `meta_key` LIKE 'mwb_upgrade_downgrade_order_succes'
-
-						OR `meta_key` LIKE 'mwb_sfw_paypal_transaction_id'
-						OR `meta_key` LIKE 'mwb_sfw_paypal_subscriber_id'
-						OR `meta_key` LIKE 'mwb_subscriber_payment_type'
-						OR `meta_key` LIKE 'mwb_subscriber_address'
-						OR `meta_key` LIKE 'mwb_subscriber_last_name'
-						OR `meta_key` LIKE 'mwb_subscriber_first_name'
-						OR `meta_key` LIKE 'mwb_subscriber_id'
-						";
+					$result = get_posts(
+						array(
+							'post_type' => 'mwb_subscriptions',
+							'post_status' => 'wc-mwb_renewal',
+							'meta_key' => $post_meta_keys,
+							'numberposts'       => -1,
+							'fields'         => 'ids',
+						)
+					);
+						$final_result = array();
+					foreach ( $result as $key => $value ) {
+						$final_result[]['post_id'] = $value;
+					}
 					break;
 				default:
 					$sql = false;
@@ -1277,32 +1507,18 @@ class Subscriptions_For_Woocommerce_Admin {
 		} elseif ( 'mwb_renewal_orders' === $type ) {
 			switch ( $status ) {
 				case 'pending':
-					$sql = "SELECT (`post_id`) FROM $table WHERE `meta_key` LIKE 'mwb_sfw_renewal_order'
-					OR `meta_key` LIKE 'mwb_sfw_subscription'
-					OR `meta_key` LIKE 'mwb_sfw_parent_order_id'
-					OR `meta_key` LIKE 'mwb_order_currency'
-					OR `meta_key` LIKE 'mwb_wsp_first_payment_date'
-
-					OR `meta_key` LIKE '_mwb_is_renewal_success'
-					OR `meta_key` LIKE 'mwb_wsp_manual_renewal_order'
-					OR `meta_key` LIKE 'mwb_upgrade_downgrade_order_succes'
-					OR `meta_key` LIKE 'mwb_wps_gc_coupon_updated'
-					OR `meta_key` LIKE 'mwb_wsp_no_of_retry_attempt'
-					OR `meta_key` LIKE 'mwb_upgrade_downgrade_order'
-					OR `meta_key` LIKE 'mwb_subscription_reactive_time'
-					OR `meta_key` LIKE 'mwb_subscription_pause_time'
-
-					OR `meta_key` LIKE 'mwb_sfw_paypal_transaction_id'
-					OR `meta_key` LIKE 'mwb_sfw_paypal_subscriber_id'
-					OR `meta_key` LIKE 'mwb_subscriber_payment_type'
-					OR `meta_key` LIKE 'mwb_subscriber_address'
-					OR `meta_key` LIKE 'mwb_subscriber_last_name'
-					OR `meta_key` LIKE 'mwb_subscriber_first_name'
-					OR `meta_key` LIKE 'mwb_subscriber_id'
-					OR `meta_key` LIKE 'mwb_parent_order'
-					OR `meta_key` LIKE 'mwb_sfw_order_has_subscription'
-					OR `meta_key` LIKE 'mwb_subscription_id'
-					";
+					$result = wc_get_orders(
+						array(
+							'type'     => 'shop_order',
+							'numberposts'       => -1,
+							'meta_key' => $post_meta_keys, // phpcs:ignore
+							'return'   => 'ids',
+						)
+					);
+					$final_result = array();
+					foreach ( $result as $key => $value ) {
+						$final_result[]['post_id'] = $value;
+					}
 					break;
 				default:
 					$sql = false;
@@ -1310,16 +1526,11 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 		}
 
-		if ( empty( $sql ) ) {
-			return 0;
-		}
-		$result = $wpdb->get_results( $sql, ARRAY_A ); // @codingStandardsIgnoreLine.
-
 		if ( 'count' === $action ) {
-			$result = ! empty( $result ) ? count( $result ) : 0;
+			$final_result = ! empty( $final_result ) ? count( $final_result ) : 0;
 		}
 
-		return $result;
+		return $final_result;
 	}
 }
 

@@ -14,17 +14,17 @@
  * @wordpress-plugin
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
- * Description:       <strong> Subscriptions for WooCommerce </strong> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.4.0
+ * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
+ * Version:           1.4.1
  * Author:            WP Swings
- * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-page&utm_campaign=official
+ * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
- * Requires at least:        4.6
- * Tested up to:             5.9.3
- * WC requires at least:     4.0
- * WC tested up to:          6.4.0
+ * Requires at least:        5.0
+ * Tested up to:             6.0.0
+ * WC requires at least:     5.0
+ * WC tested up to:          6.5.0
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -160,7 +160,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.0' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.1' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -192,8 +192,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * @return void
 	 */
 	function sfw_upgrade_notice() {
-
-		?>
+		$wps_sfw_get_count = new Subscriptions_For_Woocommerce_Admin( 'subscriptions-for-woocommerce', '1.4.1' );
+		$wps_sfw_pending_product_count  = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'products' );
+		$wps_sfw_pending_orders_count   = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'mwb_renewal_orders' );
+		$wps_sfw_pending_subs_count     = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'post_type_subscription' );
+		if ( '0' != $wps_sfw_pending_product_count || '0' != $wps_sfw_pending_orders_count || '0' != $wps_sfw_pending_subs_count ) {
+			?>
 	<tr class="plugin-update-tr active notice-warning notice-alt">
 			<td  colspan="4" class="plugin-update colspanchange">
 				<div class="notice notice-warning inline update-message notice-alt">
@@ -210,8 +214,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	}
 	</style>
 
-		<?php
-
+			<?php
+		}
 	}
 
 	add_action( 'admin_notices', 'wps_sfw_plugin_upgrade_notice', 20 );
@@ -224,30 +228,36 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function wps_sfw_plugin_upgrade_notice() {
 		$screen = get_current_screen();
 		if ( isset( $screen->id ) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
-			?>
-		<tr class="plugin-update-tr active notice-warning notice-alt">
-		<td colspan="4" class="plugin-update colspanchange">
-			<div class="notice notice-success inline update-message notice-alt">
-				<div class='wps-notice-title wps-notice-section'>
-					<p><strong>IMPORTANT NOTICE:</strong></p>
-				</div>
-				<div class='wps-notice-content wps-notice-section'>
-					<p>
-						<?php esc_html_e( 'Heads up, The latest update includes some substantial changes across different areas of the plugin.', 'subscriptions-for-woocommerce' ); ?>
+			$wps_sfw_get_count = new Subscriptions_For_Woocommerce_Admin( 'subscriptions-for-woocommerce', '1.4.1' );
+			$wps_sfw_pending_product_count  = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'products' );
+			$wps_sfw_pending_orders_count   = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'mwb_renewal_orders' );
+			$wps_sfw_pending_subs_count     = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'post_type_subscription' );
+			if ( '0' != $wps_sfw_pending_product_count || '0' != $wps_sfw_pending_orders_count || '0' != $wps_sfw_pending_subs_count ) {
+				?>
+			<tr class="plugin-update-tr active notice-warning notice-alt">
+			<td colspan="4" class="plugin-update colspanchange">
+				<div class="notice notice-success inline update-message notice-alt">
+					<div class='wps-notice-title wps-notice-section'>
+						<p><strong>IMPORTANT NOTICE:</strong></p>
+					</div>
+					<div class='wps-notice-content wps-notice-section'>
+						<p>
+							<?php esc_html_e( 'Heads up, The latest update includes some substantial changes across different areas of the plugin.', 'subscriptions-for-woocommerce' ); ?>
+							</p>
+							<p><b><?php esc_html_e( 'Please Click on the Start Migration button to start migration.', 'subscriptions-for-woocommerce' ); ?></b>
 						</p>
-						<p><b><?php esc_html_e( 'Please Click on the Start Migration button to start migration.', 'subscriptions-for-woocommerce' ); ?></b>
-					</p>
-					<p><button class="cls-migration-button mdc-button mdc-button--raised mdc-ripple-upgraded" id="wps_sfw_migration-button">Start Migration</button></p>
+						<p><button class="cls-migration-button mdc-button mdc-button--raised mdc-ripple-upgraded" id="wps_sfw_migration-button">Start Migration</button></p>
+					</div>
 				</div>
-			</div>
-		</td>
-		</tr>
-	<style>
-		.wps-notice-section > p:before {
-			content: none;
-		}
-	</style>
-			<?php
+			</td>
+			</tr>
+			<style>
+			.wps-notice-section > p:before {
+				content: none;
+			}
+			</style>
+				<?php
+			}
 		}
 	}
 
@@ -376,7 +386,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		if ( strpos( $file, 'subscriptions-for-woocommerce.php' ) !== false ) {
 
 			$row_meta = array(
-				'demo' => '<a target="_blank" href="https://demo.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-demo&utm_medium=subs-org-backend&utm_campaign=demo"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="wps-info-img" alt="Demo image">' . esc_html__( 'Free Demo', 'subscriptions-for-woocommerce' ) . '</a>',
+				'demo' => '<a target="_blank" href="https://demo.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-demo&utm_medium=subs-org-backend&utm_campaign=demo"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Demo.svg" class="wps-info-img" alt="Demo image">' . esc_html__( 'Demo', 'subscriptions-for-woocommerce' ) . '</a>',
 
 				'docs'    => '<a target="_blank" href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="wps-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 
