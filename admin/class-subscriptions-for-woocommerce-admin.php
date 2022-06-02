@@ -145,6 +145,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						'redirect_url' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ),
 						'disable_track_url' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-developer' ),
 						'supported_gateway' => wps_sfw_get_subscription_supported_payment_method(),
+						'wps_build_in_paypal_setup_url' => admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wps_paypal' ),
 					)
 				);
 				return;
@@ -384,8 +385,8 @@ class Subscriptions_For_Woocommerce_Admin {
 				'type'  => 'checkbox',
 				'description'  => __( 'Enable this option to allow the customer to cancel the subscription.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_cancel_subscription_for_customer',
-				'value' => 'on',
 				'checked' => ( 'on' === get_option( 'wps_sfw_cancel_subscription_for_customer', '' ) ? 'on' : 'off' ),
+				'value' => 'on',
 				'class' => 'sfw-checkbox-class',
 			),
 			array(
@@ -794,6 +795,17 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			$product->save();
 			update_option( 'wps_sfw_multistep_product_create_done', 'yes' );
+		}
+
+		if ( isset( $_POST['EnableWpsPaypal'] ) ) {
+			$wps_paypal_settings = get_option( 'woocommerce_wps_paypal_settings', array() );
+			$wps_paypal_settings['enabled']  = ! empty( $_POST['EnableWpsPaypal'] ) ? 'yes' : 'no';
+			$wps_paypal_settings['testmode'] = ! empty( $_POST['EnableWpsPaypalTestmode'] ) ? 'yes' : 'no';
+
+			$wps_paypal_settings['client_id']     = ! empty( $_POST['WpsPaypalClientId'] ) ? sanitize_text_field( wp_unslash( $_POST['WpsPaypalClientId'] ) ) : '';
+			$wps_paypal_settings['client_secret'] = ! empty( $_POST['WpsPaypalClientSecret'] ) ? sanitize_text_field( wp_unslash( $_POST['WpsPaypalClientId'] ) ) : '';
+
+			update_option( 'woocommerce_wps_paypal_settings', $wps_paypal_settings );
 		}
 		update_option( 'wps_sfw_multistep_done', 'yes' );
 

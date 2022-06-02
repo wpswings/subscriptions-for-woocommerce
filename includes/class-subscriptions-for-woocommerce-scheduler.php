@@ -33,6 +33,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 			if ( wps_sfw_check_plugin_enable() ) {
 				add_action( 'init', array( $this, 'wps_sfw_admin_create_order_scheduler' ) );
 				add_action( 'wps_sfw_create_renewal_order_schedule', array( $this, 'wps_sfw_renewal_order_on_scheduler' ) );
+				// add_action( 'init', array( $this, 'wps_sfw_renewal_order_on_scheduler' ) );
+
 				add_action( 'wps_sfw_expired_renewal_subscription', array( $this, 'wps_sfw_expired_renewal_subscription_callback' ) );
 
 				if ( wps_sfw_is_enable_usage_tracking() ) {
@@ -84,18 +86,22 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 			Subscriptions_For_Woocommerce_Log::log( 'WPS Renewal Subscriptions: ' . wc_print_r( $wps_subscriptions, true ) );
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
+
 				foreach ( $wps_subscriptions as $key => $value ) {
 					$subscription_id = $value->ID;
 
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
+
 						$subscription = get_post( $subscription_id );
-						$parent_order_id  = $subscription->wps_parent_order;
+						$parent_order_id  = $subscription->wps_parent_order;	
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
 						}
+
 						if ( apply_filters( 'wps_sfw_stop_creating_renewal_multisafepay', false, $subscription_id ) ) {
 							continue;
 						}
+
 						if ( ! $wps_sfw_pro_plugin_activated ) {
 							$subp_id = get_post_meta( $value->ID, 'product_id', true );
 							$check_variable = get_post_meta( $subp_id, 'wps_sfw_variable_product', true );
@@ -103,6 +109,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								continue;
 							}
 						}
+					
 						$parent_order = wc_get_order( $parent_order_id );
 						$billing_details = $parent_order->get_address( 'billing' );
 						$shipping_details = $parent_order->get_address( 'shipping' );
