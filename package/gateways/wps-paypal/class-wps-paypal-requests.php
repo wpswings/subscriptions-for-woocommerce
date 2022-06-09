@@ -87,6 +87,7 @@ class WPS_Paypal_Requests {
 					),
 				)
 			);
+
 			if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
 				$response = json_decode( wp_remote_retrieve_body( $response ) );
 				return array(
@@ -115,6 +116,7 @@ class WPS_Paypal_Requests {
 	 */
 	public function paypal_create_order( $order ) {
 		$access_response = self::get_access_token();
+
 		if ( 'success' !== $access_response['result'] ) {
 			return array(
 				'result'   => 'error',

@@ -518,9 +518,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * @return void
 	 */
 	function wps_paypal_integration_for_woocommerce_gateway() {
-
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/wps-build-in-paypal/class-wps-paypal-integration-for-woocommerce-gateway.php';
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/wps-build-in-paypal/subscription-module-compatibility/class-wps-paypal-integration-with-subscriptions.php';
+		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-gateway.php';
 	}
 
 	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );

@@ -6,7 +6,7 @@
  * @since      1.6.4
  *
  * @package    Subscriptions_For_Woocommerce
- * @subpackage Subscriptions_For_Woocommerce/package/wps-build-in-paypal/subscription-module-compatibility
+ * @subpackage Subscriptions_For_Woocommerce/package/gateways/wps-paypal/subscription-module-compatibility
  */
 
 /**
@@ -19,12 +19,12 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-if ( ! class_exists( 'Wps_Paypal_Integration_With_Subscriptions' ) ) {
+if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 
 	/**
 	 * Define class and module for cron.
 	 */
-	class Wps_Paypal_Integration_With_Subscriptions {
+	class Wps_Subscriptions_Payment_Wps_Paypal_Main {
 		/**
 		 * Constructor
 		 */
@@ -111,7 +111,7 @@ if ( ! class_exists( 'Wps_Paypal_Integration_With_Subscriptions' ) ) {
 						}
 					}
 
-					require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/wps-build-in-paypal/class-wps-paypal-requests.php';
+					require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/wps-paypal/class-wps-paypal-requests.php';
 					wps_Paypal_Requests::$client_id     = $client_id;
 					wps_Paypal_Requests::$client_secret = $client_secret;
 					wps_Paypal_Requests::$testmode      = $testmode;
@@ -179,4 +179,4 @@ if ( ! class_exists( 'Wps_Paypal_Integration_With_Subscriptions' ) ) {
 		}
 	}
 }
-return new Wps_Paypal_Integration_With_Subscriptions();
+return new Wps_Subscriptions_Payment_Wps_Paypal_Main();

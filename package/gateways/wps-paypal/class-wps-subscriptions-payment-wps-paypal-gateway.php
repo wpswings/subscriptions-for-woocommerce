@@ -166,7 +166,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/wps-build-in-paypal/wps-paypal-gateway-fields.php';
+		$this->form_fields = include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/wps-paypal/wps-paypal-gateway-fields.php';
 	}
 
 	/**
@@ -176,7 +176,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function init_api() {
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/wps-build-in-paypal/class-wps-paypal-requests.php';
+		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/wps-paypal/class-wps-paypal-requests.php';
 		WPS_Paypal_Requests::$client_id     = $this->client_id;
 		WPS_Paypal_Requests::$client_secret = $this->client_secret;
 		WPS_Paypal_Requests::$testmode      = $this->testmode;
