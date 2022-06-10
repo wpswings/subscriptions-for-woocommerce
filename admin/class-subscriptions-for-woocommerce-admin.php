@@ -244,9 +244,9 @@ class Subscriptions_For_Woocommerce_Admin {
 				foreach ( $sfw_menus as $sfw_key => $sfw_value ) {
 					add_submenu_page( 'wps-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_options', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
 				}
+				$is_home = false;
 			}
 		} else {
-			$is_home = false;
 			if ( ! empty( $submenu['wps-plugins'] ) ) {
 				foreach ( $submenu['wps-plugins'] as $key => $value ) {
 					if ( 'Home' === $value[0] ) {

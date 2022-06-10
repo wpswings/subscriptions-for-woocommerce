@@ -506,7 +506,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * @return array
 	 */
 	function wps_paypal_integration_for_woocommerce_extended( $methods ) {
-		$methods[] = 'WC_Gateway_Wps_Paypal_Integration';
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$methods[] = 'WC_Gateway_Wps_Paypal_Integration';
+					return $methods;
+				}
+			}
+		}
 		return $methods;
 	}
 

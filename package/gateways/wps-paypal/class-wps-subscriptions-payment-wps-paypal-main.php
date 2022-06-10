@@ -130,7 +130,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 					if ( $token_flag ) {
 						$wps_request->create_renewal_payment( $saved_token, $order );
 					} else {
-						$order->update_status( 'failed', $token_response );
+						$order->update_status( 'failed', 'Token Verification failed !' );
 					}
 				}
 			}
