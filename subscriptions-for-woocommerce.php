@@ -525,7 +525,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * @return void
 	 */
 	function wps_paypal_integration_for_woocommerce_gateway() {
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-gateway.php';
+		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscriptions-payment-wps-paypal-gateway.php';
 	}
 
 	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
