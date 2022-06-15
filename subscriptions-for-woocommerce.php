@@ -518,63 +518,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * @return void
 	 */
 	function wps_paypal_integration_for_woocommerce_gateway() {
-		// $order_id = 234;
-		// $is_activated = get_post_meta( $order_id, 'wps_sfw_subscription_activated', true );
-		
-		// $wps_has_susbcription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
-		// if ( 'yes' == $wps_has_susbcription ) {
-		// 	$args = array(
-		// 		'numberposts' => -1,
-		// 		'post_type'   => 'wps_subscriptions',
-		// 		'post_status'   => 'wc-wps_renewal',
-		// 		'meta_query' => array(
-		// 			'relation' => 'AND',
-		// 			array(
-		// 				'key'   => 'wps_parent_order',
-		// 				'value' => 234,
-		// 			),
-		// 			array(
-		// 				'key'   => 'wps_subscription_status',
-		// 				'value' => 'pending',
-		// 			),
-
-		// 		),
-		// 	);
-		// 	$wps_subscriptions = get_posts( $args );
-
-		// 	if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
-		// 		foreach ( $wps_subscriptions as $key => $subscription ) {
-
-		// 			$status = 'active';
-		// 			$status = apply_filters( 'wps_sfw_set_subscription_status', $status, $subscription->ID );
-		// 			$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );
-
-		// 			update_post_meta( $subscription->ID, 'wps_subscription_status', $status );
-		// 			update_post_meta( $subscription->ID, 'wps_schedule_start', $current_time );
-
-		// 			$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $subscription->ID, $current_time );
-		// 			update_post_meta( $subscription->ID, 'wps_susbcription_trial_end', $wps_susbcription_trial_end );
-
-		// 			$wps_next_payment_date = wps_sfw_next_payment_date( $subscription->ID, $current_time, $wps_susbcription_trial_end );
-
-		// 			$wps_next_payment_date = apply_filters( 'wps_sfw_next_payment_date', $wps_next_payment_date, $subscription->ID );
-
-		// 			update_post_meta( $subscription->ID, 'wps_next_payment_date', $wps_next_payment_date );
-
-		// 			$wps_susbcription_end = wps_sfw_susbcription_expiry_date( $subscription->ID, $current_time, $wps_susbcription_trial_end );
-		// 			$wps_susbcription_end = apply_filters( 'wps_sfw_susbcription_end_date', $wps_susbcription_end, $subscription->ID );
-		// 			update_post_meta( $subscription->ID, 'wps_susbcription_end', $wps_susbcription_end );
-
-		// 			// Set billing id.
-		// 			$billing_agreement_id = get_post_meta( $order_id, '_ppec_billing_agreement_id', true );
-		// 			if ( isset( $billing_agreement_id ) && ! empty( $billing_agreement_id ) ) {
-		// 				update_post_meta( $subscription->ID, '_wps_paypal_subscription_id', $billing_agreement_id );
-		// 			}
-		// 			do_action( 'wps_sfw_order_status_changed', $order_id, $subscription->ID );
-		// 		}
-		// 		update_post_meta( $order_id, 'wps_sfw_subscription_activated', 'yes' );
-		// 	}
-		// }
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscriptions-payment-wps-paypal-gateway.php';
 	}
 
