@@ -198,7 +198,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		// phpcs:disable WordPress.Security.NonceVerification
 
 		if ( isset( $_GET['token'] ) && isset( $_GET['PayerID'] ) ) {
-
 			if ( 'captured' !== $order->get_meta( '_wps_paypal_payment_status' ) ) {
 				$paypal_order_token = sanitize_text_field( wp_unslash( $_GET['token'] ) );
 				$paypal_payer_id    = sanitize_text_field( wp_unslash( $_GET['PayerID'] ) );
@@ -207,6 +206,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				$order->update_meta_data( '_wps_paypal_payment_status', 'captured' );
 				$this->init_api();
 				$response = WPS_Paypal_Requests::do_capture( $order, $paypal_order_token );
+
 				$order->add_order_note(
 					sprintf(
 						/* translators: paypal order id. */

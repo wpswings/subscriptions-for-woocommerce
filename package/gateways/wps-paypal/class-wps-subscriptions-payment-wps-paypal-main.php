@@ -93,6 +93,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 				$wps_sfw_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
 
 				if ( 'wps_paypal' === $payment_method && 'yes' === $wps_sfw_renewal_order ) {
+
 					$wps_parent_order_id = get_post_meta( $subscription_id, 'wps_parent_order', true );
 
 					$saved_setting = get_option( 'woocommerce_wps_paypal_settings', array() );

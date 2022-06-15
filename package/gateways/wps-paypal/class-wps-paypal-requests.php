@@ -559,15 +559,15 @@ class WPS_Paypal_Requests {
 
 		$response = wp_remote_post( $url, $args );
 
-		if ( is_wp_error( $response ) ) {
-			$order_notes = __( 'renewal payment failed', 'wps-paypal-integration-for-woocommerce' );
-			$order->update_status( 'failed', $order_notes );
-		}
-
 		$json = json_decode( $response['body'] );
 
 		if ( class_exists( 'Subscriptions_For_Woocommerce_Log' ) ) {
 			Subscriptions_For_Woocommerce_Log::log( 'WPS Paypal Renewal Response: ' . wc_print_r( $json, true ) );
+		}
+
+		if ( is_wp_error( $response ) ) {
+			$order_notes = __( 'renewal payment failed', 'wps-paypal-integration-for-woocommerce' );
+			$order->update_status( 'failed', $order_notes );
 		}
 
 		$status_code = (int) wp_remote_retrieve_response_code( $response );
