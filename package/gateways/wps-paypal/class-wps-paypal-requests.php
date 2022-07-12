@@ -581,6 +581,14 @@ class WPS_Paypal_Requests {
 					$txn_id
 				)
 			);
+			if ( isset( $json->purchase_units ) ) {
+				$links = array_shift( array_shift( $json->purchase_units )->payments->captures )->links;
+				foreach ( $links as $link ) {
+					if ( 'refund' === $link->rel ) {
+						$order->update_meta_data( '_wps_paypal_refund_link', esc_url( $link->href ) );
+					}
+				}
+			}
 			$order->payment_complete( $txn_id );
 			$order->update_meta_data( '_wps_paypal_payment_status', 'completed' );
 			$order->update_meta_data( '_wps_paypal_order_id', $json->id );
