@@ -322,7 +322,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			$bool = false;
 			$wps_sfw_check = get_option( 'wps_sfw_multistep_done', false );
 			$wps_sfw_enable_plugin = get_option( 'wps_sfw_enable_plugin', false );
-			if ( ! empty( $wps_sfw_check ) || 'on' == $wps_sfw_enable_plugin ) {
+			if ( ! empty( $wps_sfw_check ) && 'on' == $wps_sfw_enable_plugin ) {
 				$bool = true;
 			}
 

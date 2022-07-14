@@ -347,7 +347,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 			);
 
 			$params = apply_filters( 'wpswings_tracker_params', $params );
-			$api_url = 'https://tracking.wpswings.com/wp-json/sfw-route/v1/sfw-testing-data/';
+			$api_url = 'https://tracking.wpswings.com/wp-json/mps-route/v1/mps-testing-data/';
 			$sucess = wp_safe_remote_post(
 				$api_url,
 				array(
