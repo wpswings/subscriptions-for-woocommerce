@@ -116,8 +116,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 					wps_Paypal_Requests::$client_id     = $client_id;
 					wps_Paypal_Requests::$client_secret = $client_secret;
 					wps_Paypal_Requests::$testmode      = $testmode;
-					$wps_request 						= new wps_Paypal_Requests( array() );
-					$saved_token 						= get_post_meta( $wps_parent_order_id, 'wps_order_payment_token', true );
+					$wps_request                        = new wps_Paypal_Requests( array() );
+					$saved_token                        = get_post_meta( $wps_parent_order_id, 'wps_order_payment_token', true );
 					if ( empty( $saved_token ) ) {
 						$order_notes = __( 'payment token not found', 'wps-paypal-integration-for-woocommerce' );
 						$order->update_status( 'failed', $order_notes );

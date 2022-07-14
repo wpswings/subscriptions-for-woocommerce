@@ -91,7 +91,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
 
 						$subscription = get_post( $subscription_id );
-						$parent_order_id  = $subscription->wps_parent_order;	
+						$parent_order_id  = $subscription->wps_parent_order;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
 						}
@@ -107,7 +107,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								continue;
 							}
 						}
-					
+
 						$parent_order = wc_get_order( $parent_order_id );
 						$billing_details = $parent_order->get_address( 'billing' );
 						$shipping_details = $parent_order->get_address( 'shipping' );
@@ -219,7 +219,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
 								$result = $wps_stripe->wps_sfw_process_renewal_payment( $order_id, $parent_order_id );
-								update_post_meta( $order_id, '_stripe_charge_captured','yes' );
+								update_post_meta( $order_id, '_stripe_charge_captured', 'yes' );
 								do_action( 'wps_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
 								wps_sfw_send_email_for_renewal_susbcription( $order_id );
 							}

@@ -62,7 +62,7 @@ class WPS_Paypal_Requests {
 	 * Get access token for paypal REST APIs.
 	 *
 	 * @since  1.0.0
-	 * @throws Exception
+	 * @throws Exception As handling Exception.
 	 * @return array
 	 */
 	public static function get_access_token() {
@@ -111,7 +111,7 @@ class WPS_Paypal_Requests {
 	 *
 	 * @param WC_Order $order current order object.
 	 * @since 1.6.4
-	 * @throws Exception
+	 * @throws Exception As handling expception.
 	 * @return array
 	 */
 	public function paypal_create_order( $order ) {
@@ -187,7 +187,7 @@ class WPS_Paypal_Requests {
 								),
 							),
 						),
-					),
+					)
 				),
 			);
 
@@ -299,7 +299,7 @@ class WPS_Paypal_Requests {
 	public function get_shipping_details( $order ) {
 		return array(
 			'name'    => array(
-				'full_name' => ! empty( $order->get_formatted_billing_full_name() ) ? $order->get_formatted_billing_full_name() : ( ! empty( $order->get_formatted_billing_full_name() ) ? $order->get_formatted_billing_full_name() : '*******' )
+				'full_name' => ! empty( $order->get_formatted_billing_full_name() ) ? $order->get_formatted_billing_full_name() : ( ! empty( $order->get_formatted_billing_full_name() ) ? $order->get_formatted_billing_full_name() : '*******' ),
 			),
 			'type'    => ( 'local_pickup' === $order->get_shipping_method() ) ? 'PICKUP_IN_PERSON' : 'SHIPPING',
 			'address' => array(
@@ -341,6 +341,7 @@ class WPS_Paypal_Requests {
 	 * @param object  $order current order object.
 	 * @param integer $paypal_order_id paypal order id.
 	 * @since 1.6.4
+	 * @throws Exception As handling expception.
 	 * @return array
 	 */
 	public static function do_capture( $order, $paypal_order_id ) {
@@ -396,6 +397,7 @@ class WPS_Paypal_Requests {
 	 * @param float  $amount amount to refund.
 	 * @param string $reason reason for refund.
 	 * @since 1.6.4
+	 * @throws Exception As handling expception.
 	 * @return array
 	 */
 	public static function refund_order( $order, $amount, $reason ) {
@@ -429,7 +431,7 @@ class WPS_Paypal_Requests {
 									'value'         => $amount,
 									'currency_code' => $order->get_currency(),
 								),
-								'note_to_payer' => strlen( $reason ) > 3 ? $reason : '***' ,
+								'note_to_payer' => strlen( $reason ) > 3 ? $reason : '***',
 							)
 						),
 					)
@@ -438,7 +440,7 @@ class WPS_Paypal_Requests {
 				if ( ! is_wp_error( $response ) && in_array( (int) wp_remote_retrieve_response_code( $response ), array( 201, 200 ), true ) ) {
 					return array(
 						'result'   => 'success',
-						'response' => json_decode( wp_remote_retrieve_body( $response ) )
+						'response' => json_decode( wp_remote_retrieve_body( $response ) ),
 					);
 				}
 
@@ -605,7 +607,7 @@ class WPS_Paypal_Requests {
 	/**
 	 * Get saved customer token from Paypal server via API
 	 *
-	 * @param [type] $user_id .
+	 * @param array $token_id as token id.
 	 * @return $tokens
 	 */
 	public function wps_validate_saved_customer_token( $token_id ) {

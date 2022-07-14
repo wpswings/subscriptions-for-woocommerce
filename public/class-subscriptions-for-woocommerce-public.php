@@ -1171,6 +1171,8 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param bool $validate validate.
 	 * @param int  $product_id product_id.
 	 * @param int  $quantity quantity.
+	 * @param int  $variation_id as variation_id.
+	 * @param bool $variations as variations.
 	 * @since 1.0.0
 	 */
 	public function wps_sfw_woocommerce_add_to_cart_validation( $validate, $product_id, $quantity, $variation_id = 0, $variations = null ) {
@@ -1195,8 +1197,8 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to set payment options.
 	 *
 	 * @name wps_sfw_woocommerce_cart_needs_payment
-	 * @param bool $wps_needs_payment wps_needs_payment.
-	 * @param object  $cart cart.
+	 * @param bool   $wps_needs_payment wps_needs_payment.
+	 * @param object $cart cart.
 	 * @since 1.0.0
 	 */
 	public function wps_sfw_woocommerce_cart_needs_payment( $wps_needs_payment, $cart ) {
