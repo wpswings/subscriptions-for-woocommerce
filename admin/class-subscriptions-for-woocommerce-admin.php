@@ -64,8 +64,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
 
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) ) {
-
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id ) {
 			// Multistep form css.
 			if ( ! wps_sfw_check_multistep() ) {
 				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
@@ -91,7 +90,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
 		}
 
-		if ( isset( $screen->id ) && 'product' == $screen->id ) {
+		if ( isset( $screen->id ) && 'product' == $screen->id && 'wp-swings_page_home' == $screen->id ) {
 			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
 		}
@@ -108,8 +107,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
-
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) ) {
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id ) {
 
 			if ( ! wps_sfw_check_multistep() ) {
 
