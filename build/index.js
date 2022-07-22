@@ -1,4 +1,4 @@
-(window["webpackJsonp_WPS_Boilerplate"] = window["webpackJsonp_WPS_Boilerplate"] || []).push([["style-index"],{
+(window["webpackJsonp_MWB_Boilerplate"] = window["webpackJsonp_MWB_Boilerplate"] || []).push([["style-index"],{
 
 /***/ "./src/style.css":
 /*!***********************!*\
@@ -157,7 +157,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
-/******/ 	var jsonpArray = window["webpackJsonp_WPS_Boilerplate"] = window["webpackJsonp_WPS_Boilerplate"] || [];
+/******/ 	var jsonpArray = window["webpackJsonp_MWB_Boilerplate"] = window["webpackJsonp_MWB_Boilerplate"] || [];
 /******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
@@ -290,6 +290,9 @@ function _defineProperties(target, props) {
 function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
   return Constructor;
 }
 
@@ -388,12 +391,15 @@ function _inherits(subClass, superClass) {
     throw new TypeError("Super expression must either be null or a function");
   }
 
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
+  Object.defineProperty(subClass, "prototype", {
+    value: Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        writable: true,
+        configurable: true
+      }
+    }),
+    writable: false
   });
   if (superClass) Object(_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(subClass, superClass);
 }
@@ -703,17 +709,11 @@ __webpack_require__.r(__webpack_exports__);
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
 }
 
 /***/ }),
@@ -761,14 +761,11 @@ function _extends() {
     }
 
     return target;
-  };
-
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports;
   return _extends.apply(this, arguments);
 }
 
-module.exports = _extends;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
+module.exports = _extends, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -785,8 +782,7 @@ function _interopRequireDefault(obj) {
   };
 }
 
-module.exports = _interopRequireDefault;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
+module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -849,8 +845,7 @@ function _interopRequireWildcard(obj, nodeInterop) {
   return newObj;
 }
 
-module.exports = _interopRequireWildcard;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
+module.exports = _interopRequireWildcard, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -864,25 +859,14 @@ module.exports["default"] = module.exports, module.exports.__esModule = true;
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
-  }
-
-  return _typeof(obj);
+  return (module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports), _typeof(obj);
 }
 
-module.exports = _typeof;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
+module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -19731,7 +19715,7 @@ function handleContainer(containerInfo, props) {
 
   if (!props.disableScrollLock) {
     if (isOverflowing(container)) {
-      // Compute the size before applying overflow hidden to avoid any scroll jusfw.
+      // Compute the size before applying overflow hidden to avoid any scroll jumps.
       var scrollbarSize = Object(_utils_getScrollbarSize__WEBPACK_IMPORTED_MODULE_3__["default"])();
       restoreStyle.push({
         value: container.style.paddingRight,
@@ -44600,10 +44584,10 @@ module.exports = {
 /*!*****************************************!*\
   !*** ./node_modules/axios/package.json ***!
   \*****************************************/
-/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, browser, bugs, bundleDependencies, bundlesize, dependencies, deprecated, description, devDependencies, homepage, jsdelivr, keywords, license, main, name, repository, scripts, typings, unpkg, version, default */
+/*! exports provided: _args, _development, _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _spec, _where, author, browser, bugs, bundlesize, dependencies, description, devDependencies, homepage, jsdelivr, keywords, license, main, name, repository, scripts, typings, unpkg, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"_from\":\"axios@^0.21.1\",\"_id\":\"axios@0.21.4\",\"_inBundle\":false,\"_integrity\":\"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==\",\"_location\":\"/axios\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"range\",\"registry\":true,\"raw\":\"axios@^0.21.1\",\"name\":\"axios\",\"escapedName\":\"axios\",\"rawSpec\":\"^0.21.1\",\"saveSpec\":null,\"fetchSpec\":\"^0.21.1\"},\"_requiredBy\":[\"#DEV:/\",\"/localtunnel\"],\"_resolved\":\"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz\",\"_shasum\":\"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575\",\"_spec\":\"axios@^0.21.1\",\"_where\":\"/home/cedcoss/Local Sites/org-and-pro-update/app/public/wp-content/plugins/subscriptions-for-woocommerce\",\"author\":{\"name\":\"Matt Zabriskie\"},\"browser\":{\"./lib/adapters/http.js\":\"./lib/adapters/xhr.js\"},\"bugs\":{\"url\":\"https://github.com/axios/axios/issues\"},\"bundleDependencies\":false,\"bundlesize\":[{\"path\":\"./dist/axios.min.js\",\"threshold\":\"5kB\"}],\"dependencies\":{\"follow-redirects\":\"^1.14.0\"},\"deprecated\":false,\"description\":\"Promise based HTTP client for the browser and node.js\",\"devDependencies\":{\"coveralls\":\"^3.0.0\",\"es6-promise\":\"^4.2.4\",\"grunt\":\"^1.3.0\",\"grunt-banner\":\"^0.6.0\",\"grunt-cli\":\"^1.2.0\",\"grunt-contrib-clean\":\"^1.1.0\",\"grunt-contrib-watch\":\"^1.0.0\",\"grunt-eslint\":\"^23.0.0\",\"grunt-karma\":\"^4.0.0\",\"grunt-mocha-test\":\"^0.13.3\",\"grunt-ts\":\"^6.0.0-beta.19\",\"grunt-webpack\":\"^4.0.2\",\"istanbul-instrumenter-loader\":\"^1.0.0\",\"jasmine-core\":\"^2.4.1\",\"karma\":\"^6.3.2\",\"karma-chrome-launcher\":\"^3.1.0\",\"karma-firefox-launcher\":\"^2.1.0\",\"karma-jasmine\":\"^1.1.1\",\"karma-jasmine-ajax\":\"^0.1.13\",\"karma-safari-launcher\":\"^1.0.0\",\"karma-sauce-launcher\":\"^4.3.6\",\"karma-sinon\":\"^1.0.5\",\"karma-sourcemap-loader\":\"^0.3.8\",\"karma-webpack\":\"^4.0.2\",\"load-grunt-tasks\":\"^3.5.2\",\"minimist\":\"^1.2.0\",\"mocha\":\"^8.2.1\",\"sinon\":\"^4.5.0\",\"terser-webpack-plugin\":\"^4.2.3\",\"typescript\":\"^4.0.5\",\"url-search-params\":\"^0.10.0\",\"webpack\":\"^4.44.2\",\"webpack-dev-server\":\"^3.11.0\"},\"homepage\":\"https://axios-http.com\",\"jsdelivr\":\"dist/axios.min.js\",\"keywords\":[\"xhr\",\"http\",\"ajax\",\"promise\",\"node\"],\"license\":\"MIT\",\"main\":\"index.js\",\"name\":\"axios\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/axios/axios.git\"},\"scripts\":{\"build\":\"NODE_ENV=production grunt build\",\"coveralls\":\"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js\",\"examples\":\"node ./examples/server.js\",\"fix\":\"eslint --fix lib/**/*.js\",\"postversion\":\"git push && git push --tags\",\"preversion\":\"npm test\",\"start\":\"node ./sandbox/server.js\",\"test\":\"grunt test\",\"version\":\"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json\"},\"typings\":\"./index.d.ts\",\"unpkg\":\"dist/axios.min.js\",\"version\":\"0.21.4\"}");
+module.exports = JSON.parse("{\"_args\":[[\"axios@0.21.4\",\"/home/cedcoss/Local Sites/subscription-paypal-integration/app/public/wp-content/plugins/subscriptions-for-woocommerce\"]],\"_development\":true,\"_from\":\"axios@0.21.4\",\"_id\":\"axios@0.21.4\",\"_inBundle\":false,\"_integrity\":\"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==\",\"_location\":\"/axios\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"version\",\"registry\":true,\"raw\":\"axios@0.21.4\",\"name\":\"axios\",\"escapedName\":\"axios\",\"rawSpec\":\"0.21.4\",\"saveSpec\":null,\"fetchSpec\":\"0.21.4\"},\"_requiredBy\":[\"#DEV:/\",\"/localtunnel\"],\"_resolved\":\"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz\",\"_spec\":\"0.21.4\",\"_where\":\"/home/cedcoss/Local Sites/subscription-paypal-integration/app/public/wp-content/plugins/subscriptions-for-woocommerce\",\"author\":{\"name\":\"Matt Zabriskie\"},\"browser\":{\"./lib/adapters/http.js\":\"./lib/adapters/xhr.js\"},\"bugs\":{\"url\":\"https://github.com/axios/axios/issues\"},\"bundlesize\":[{\"path\":\"./dist/axios.min.js\",\"threshold\":\"5kB\"}],\"dependencies\":{\"follow-redirects\":\"^1.14.0\"},\"description\":\"Promise based HTTP client for the browser and node.js\",\"devDependencies\":{\"coveralls\":\"^3.0.0\",\"es6-promise\":\"^4.2.4\",\"grunt\":\"^1.3.0\",\"grunt-banner\":\"^0.6.0\",\"grunt-cli\":\"^1.2.0\",\"grunt-contrib-clean\":\"^1.1.0\",\"grunt-contrib-watch\":\"^1.0.0\",\"grunt-eslint\":\"^23.0.0\",\"grunt-karma\":\"^4.0.0\",\"grunt-mocha-test\":\"^0.13.3\",\"grunt-ts\":\"^6.0.0-beta.19\",\"grunt-webpack\":\"^4.0.2\",\"istanbul-instrumenter-loader\":\"^1.0.0\",\"jasmine-core\":\"^2.4.1\",\"karma\":\"^6.3.2\",\"karma-chrome-launcher\":\"^3.1.0\",\"karma-firefox-launcher\":\"^2.1.0\",\"karma-jasmine\":\"^1.1.1\",\"karma-jasmine-ajax\":\"^0.1.13\",\"karma-safari-launcher\":\"^1.0.0\",\"karma-sauce-launcher\":\"^4.3.6\",\"karma-sinon\":\"^1.0.5\",\"karma-sourcemap-loader\":\"^0.3.8\",\"karma-webpack\":\"^4.0.2\",\"load-grunt-tasks\":\"^3.5.2\",\"minimist\":\"^1.2.0\",\"mocha\":\"^8.2.1\",\"sinon\":\"^4.5.0\",\"terser-webpack-plugin\":\"^4.2.3\",\"typescript\":\"^4.0.5\",\"url-search-params\":\"^0.10.0\",\"webpack\":\"^4.44.2\",\"webpack-dev-server\":\"^3.11.0\"},\"homepage\":\"https://axios-http.com\",\"jsdelivr\":\"dist/axios.min.js\",\"keywords\":[\"xhr\",\"http\",\"ajax\",\"promise\",\"node\"],\"license\":\"MIT\",\"main\":\"index.js\",\"name\":\"axios\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/axios/axios.git\"},\"scripts\":{\"build\":\"NODE_ENV=production grunt build\",\"coveralls\":\"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js\",\"examples\":\"node ./examples/server.js\",\"fix\":\"eslint --fix lib/**/*.js\",\"postversion\":\"git push && git push --tags\",\"preversion\":\"npm test\",\"start\":\"node ./sandbox/server.js\",\"test\":\"grunt test\",\"version\":\"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json\"},\"typings\":\"./index.d.ts\",\"unpkg\":\"dist/axios.min.js\",\"version\":\"0.21.4\"}");
 
 /***/ }),
 
@@ -46104,6 +46088,16 @@ function () {
     return rule;
   }
   /**
+   * Replace rule, run plugins.
+   */
+  ;
+
+  _proto.replaceRule = function replaceRule(name, style, options) {
+    var newRule = this.rules.replace(name, style, options);
+    if (newRule) this.options.jss.plugins.onProcessRule(newRule);
+    return newRule;
+  }
+  /**
    * Get index of a rule.
    */
   ;
@@ -46116,8 +46110,8 @@ function () {
    */
   ;
 
-  _proto.toString = function toString() {
-    return this.rules.toString();
+  _proto.toString = function toString(options) {
+    return this.rules.toString(options);
   };
 
   return GlobalContainerRule;
@@ -46214,7 +46208,7 @@ function jssGlobal() {
       }
     }
 
-    if (options.scoped === false) {
+    if (!options.selector && options.scoped === false) {
       options.selector = name;
     }
 
@@ -46331,9 +46325,18 @@ function jssNested() {
         if (!replaceRef) replaceRef = getReplaceRef(container, sheet); // Replace all $refs.
 
         selector = selector.replace(refRegExp, replaceRef);
-        container.addRule(selector, style[prop], Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, options, {
-          selector: selector
-        }));
+        var name = styleRule.key + "-" + prop;
+
+        if ('replaceRule' in container) {
+          // for backward compatibility
+          container.replaceRule(name, style[prop], Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, options, {
+            selector: selector
+          }));
+        } else {
+          container.addRule(name, style[prop], Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, options, {
+            selector: selector
+          }));
+        }
       } else if (isNestedConditional) {
         // Place conditional right after the parent rule to ensure right ordering.
         container.addRule(prop, {}, options).addRule(styleRule.key, style[prop], {
@@ -47003,6 +47006,16 @@ function () {
     return rule;
   }
   /**
+   * Replace rule, run plugins.
+   */
+  ;
+
+  _proto.replaceRule = function replaceRule(name, style, options) {
+    var newRule = this.rules.replace(name, style, options);
+    if (newRule) this.options.jss.plugins.onProcessRule(newRule);
+    return newRule;
+  }
+  /**
    * Generates a CSS string.
    */
   ;
@@ -47413,12 +47426,33 @@ function () {
     return rule;
   }
   /**
-   * Get a rule.
+   * Replace rule.
+   * Create a new rule and remove old one instead of overwriting
+   * because we want to invoke onCreateRule hook to make plugins work.
    */
   ;
 
-  _proto.get = function get(name) {
-    return this.map[name];
+  _proto.replace = function replace(name, decl, ruleOptions) {
+    var oldRule = this.get(name);
+    var oldIndex = this.index.indexOf(oldRule);
+
+    if (oldRule) {
+      this.remove(oldRule);
+    }
+
+    var options = ruleOptions;
+    if (oldIndex !== -1) options = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, ruleOptions, {
+      index: oldIndex
+    });
+    return this.add(name, decl, options);
+  }
+  /**
+   * Get a rule by name or selector.
+   */
+  ;
+
+  _proto.get = function get(nameOrSelector) {
+    return this.map[nameOrSelector];
   }
   /**
    * Delete a rule.
@@ -47500,7 +47534,7 @@ function () {
     }
 
     if (name) {
-      this.updateOne(this.map[name], data, options);
+      this.updateOne(this.get(name), data, options);
     } else {
       for (var index = 0; index < this.index.length; index++) {
         this.updateOne(this.index[index], data, options);
@@ -47673,6 +47707,40 @@ function () {
     return rule;
   }
   /**
+   * Replace a rule in the current stylesheet.
+   */
+  ;
+
+  _proto.replaceRule = function replaceRule(nameOrSelector, decl, options) {
+    var oldRule = this.rules.get(nameOrSelector);
+    if (!oldRule) return this.addRule(nameOrSelector, decl, options);
+    var newRule = this.rules.replace(nameOrSelector, decl, options);
+
+    if (newRule) {
+      this.options.jss.plugins.onProcessRule(newRule);
+    }
+
+    if (this.attached) {
+      if (!this.deployed) return newRule; // Don't replace / delete rule directly if there is no stringified version yet.
+      // It will be inserted all together when .attach is called.
+
+      if (this.renderer) {
+        if (!newRule) {
+          this.renderer.deleteRule(oldRule);
+        } else if (oldRule.renderable) {
+          this.renderer.replaceRule(oldRule.renderable, newRule);
+        }
+      }
+
+      return newRule;
+    } // We can't replace rules to a detached style node.
+    // We will redeploy the sheet once user will attach it.
+
+
+    this.deployed = false;
+    return newRule;
+  }
+  /**
    * Insert rule into the StyleSheet
    */
   ;
@@ -47699,12 +47767,12 @@ function () {
     return added;
   }
   /**
-   * Get a rule by name.
+   * Get a rule by name or selector.
    */
   ;
 
-  _proto.getRule = function getRule(name) {
-    return this.rules.get(name);
+  _proto.getRule = function getRule(nameOrSelector) {
+    return this.rules.get(nameOrSelector);
   }
   /**
    * Delete a rule by name.
@@ -48485,7 +48553,7 @@ function () {
     // like rules inside media queries or keyframes
 
     if (rule.options.parent instanceof StyleSheet) {
-      this.cssRules[index] = cssRule;
+      this.cssRules.splice(index, 0, cssRule);
     }
   }
   /**
@@ -48511,8 +48579,6 @@ function () {
   }
   /**
    * Generate a new CSS rule and replace the existing one.
-   *
-   * Only used for some old browsers because they can't set a selector.
    */
   ;
 
@@ -48542,7 +48608,7 @@ var Jss =
 function () {
   function Jss(options) {
     this.id = instanceCounter++;
-    this.version = "10.8.2";
+    this.version = "10.9.0";
     this.plugins = new PluginsRegistry();
     this.options = {
       id: {
@@ -51762,7 +51828,7 @@ var printWarning = function() {};
 if (true) {
   var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
   var loggedTypeFailures = {};
-  var has = Function.call.bind(Object.prototype.hasOwnProperty);
+  var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
 
   printWarning = function(text) {
     var message = 'Warning: ' + text;
@@ -51774,7 +51840,7 @@ if (true) {
       // This error was thrown as a convenience so that you can use this stack
       // to find the callsite that caused this warning to fire.
       throw new Error(message);
-    } catch (x) {}
+    } catch (x) { /**/ }
   };
 }
 
@@ -51803,7 +51869,8 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
           if (typeof typeSpecs[typeSpecName] !== 'function') {
             var err = Error(
               (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
-              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.'
+              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' +
+              'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.'
             );
             err.name = 'Invariant Violation';
             throw err;
@@ -51875,9 +51942,9 @@ var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/prop-types/nod
 var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
 
 var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
 var checkPropTypes = __webpack_require__(/*! ./checkPropTypes */ "./node_modules/prop-types/checkPropTypes.js");
 
-var has = Function.call.bind(Object.prototype.hasOwnProperty);
 var printWarning = function() {};
 
 if (true) {
@@ -51978,6 +52045,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
   // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
   var ReactPropTypes = {
     array: createPrimitiveTypeChecker('array'),
+    bigint: createPrimitiveTypeChecker('bigint'),
     bool: createPrimitiveTypeChecker('boolean'),
     func: createPrimitiveTypeChecker('function'),
     number: createPrimitiveTypeChecker('number'),
@@ -52023,8 +52091,9 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
    * is prohibitively expensive if they are created too often, such as what
    * happens in oneOfType() for any type before the one that matched.
    */
-  function PropTypeError(message) {
+  function PropTypeError(message, data) {
     this.message = message;
+    this.data = data && typeof data === 'object' ? data: {};
     this.stack = '';
   }
   // Make `instanceof Error` still work for returned errors.
@@ -52059,7 +52128,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
           ) {
             printWarning(
               'You are manually calling a React.PropTypes validation ' +
-              'function for the `' + propFullName + '` prop on `' + componentName  + '`. This is deprecated ' +
+              'function for the `' + propFullName + '` prop on `' + componentName + '`. This is deprecated ' +
               'and will throw in the standalone `prop-types` package. ' +
               'You may be seeing this warning due to a third-party PropTypes ' +
               'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.'
@@ -52098,7 +52167,10 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
         // 'of type `object`'.
         var preciseType = getPreciseType(propValue);
 
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'));
+        return new PropTypeError(
+          'Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'),
+          {expectedType: expectedType}
+        );
       }
       return null;
     }
@@ -52242,14 +52314,19 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     }
 
     function validate(props, propName, componentName, location, propFullName) {
+      var expectedTypes = [];
       for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
         var checker = arrayOfTypeCheckers[i];
-        if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret) == null) {
+        var checkerResult = checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+        if (checkerResult == null) {
           return null;
         }
+        if (checkerResult.data.hasOwnProperty('expectedType')) {
+          expectedTypes.push(checkerResult.data.expectedType);
+        }
       }
-
-      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`.'));
+      var expectedTypesMessage = (expectedTypes.length > 0) ? ', expected one of type [' + expectedTypes.join(', ') + ']': '';
+      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`' + expectedTypesMessage + '.'));
     }
     return createChainableTypeChecker(validate);
   }
@@ -52264,6 +52341,13 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     return createChainableTypeChecker(validate);
   }
 
+  function invalidValidatorError(componentName, location, propFullName, key, type) {
+    return new PropTypeError(
+      (componentName || 'React class') + ': ' + location + ' type `' + propFullName + '.' + key + '` is invalid; ' +
+      'it must be a function, usually from the `prop-types` package, but received `' + type + '`.'
+    );
+  }
+
   function createShapeTypeChecker(shapeTypes) {
     function validate(props, propName, componentName, location, propFullName) {
       var propValue = props[propName];
@@ -52273,8 +52357,8 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       }
       for (var key in shapeTypes) {
         var checker = shapeTypes[key];
-        if (!checker) {
-          continue;
+        if (typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
         }
         var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
         if (error) {
@@ -52293,16 +52377,18 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       if (propType !== 'object') {
         return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
       }
-      // We need to check all keys in case some are required but missing from
-      // props.
+      // We need to check all keys in case some are required but missing from props.
       var allKeys = assign({}, props[propName], shapeTypes);
       for (var key in allKeys) {
         var checker = shapeTypes[key];
+        if (has(shapeTypes, key) && typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+        }
         if (!checker) {
           return new PropTypeError(
             'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
             '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
-            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
+            '\nValid keys: ' + JSON.stringify(Object.keys(shapeTypes), null, '  ')
           );
         }
         var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
@@ -52503,6 +52589,18 @@ if (true) {
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/lib/has.js":
+/*!********************************************!*\
+  !*** ./node_modules/prop-types/lib/has.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
 
 
 /***/ }),
@@ -52717,36 +52815,6 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "./node_modules/qs/lib/formats.js":
-/*!****************************************!*\
-  !*** ./node_modules/qs/lib/formats.js ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var replace = String.prototype.replace;
-var percentTwenties = /%20/g;
-
-module.exports = {
-    'default': 'RFC3986',
-    formatters: {
-        RFC1738: function (value) {
-            return replace.call(value, percentTwenties, '+');
-        },
-        RFC3986: function (value) {
-            return value;
-        }
-    },
-    RFC1738: 'RFC1738',
-    RFC3986: 'RFC3986'
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/qs/lib/index.js":
 /*!**************************************!*\
   !*** ./node_modules/qs/lib/index.js ***!
@@ -52757,14 +52825,12 @@ module.exports = {
 "use strict";
 
 
-var stringify = __webpack_require__(/*! ./stringify */ "./node_modules/qs/lib/stringify.js");
-var parse = __webpack_require__(/*! ./parse */ "./node_modules/qs/lib/parse.js");
-var formats = __webpack_require__(/*! ./formats */ "./node_modules/qs/lib/formats.js");
+var Stringify = __webpack_require__(/*! ./stringify */ "./node_modules/qs/lib/stringify.js");
+var Parse = __webpack_require__(/*! ./parse */ "./node_modules/qs/lib/parse.js");
 
 module.exports = {
-    formats: formats,
-    parse: parse,
-    stringify: stringify
+    stringify: Stringify,
+    parse: Parse
 };
 
 
@@ -52780,41 +52846,37 @@ module.exports = {
 "use strict";
 
 
-var utils = __webpack_require__(/*! ./utils */ "./node_modules/qs/lib/utils.js");
+var Utils = __webpack_require__(/*! ./utils */ "./node_modules/qs/lib/utils.js");
 
 var has = Object.prototype.hasOwnProperty;
 
 var defaults = {
-    allowDots: false,
-    allowPrototypes: false,
-    arrayLimit: 20,
-    decoder: utils.decode,
     delimiter: '&',
     depth: 5,
+    arrayLimit: 20,
     parameterLimit: 1000,
+    strictNullHandling: false,
     plainObjects: false,
-    strictNullHandling: false
+    allowPrototypes: false,
+    allowDots: false,
+    decoder: Utils.decode
 };
 
-var parseValues = function parseQueryStringValues(str, options) {
+var parseValues = function parseValues(str, options) {
     var obj = {};
-    var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str;
-    var limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit;
-    var parts = cleanStr.split(options.delimiter, limit);
+    var parts = str.split(options.delimiter, options.parameterLimit === Infinity ? undefined : options.parameterLimit);
 
     for (var i = 0; i < parts.length; ++i) {
         var part = parts[i];
-
-        var bracketEqualsPos = part.indexOf(']=');
-        var pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos + 1;
+        var pos = part.indexOf(']=') === -1 ? part.indexOf('=') : part.indexOf(']=') + 1;
 
         var key, val;
         if (pos === -1) {
-            key = options.decoder(part, defaults.decoder);
+            key = options.decoder(part);
             val = options.strictNullHandling ? null : '';
         } else {
-            key = options.decoder(part.slice(0, pos), defaults.decoder);
-            val = options.decoder(part.slice(pos + 1), defaults.decoder);
+            key = options.decoder(part.slice(0, pos));
+            val = options.decoder(part.slice(pos + 1));
         }
         if (has.call(obj, key)) {
             obj[key] = [].concat(obj[key]).concat(val);
@@ -52826,41 +52888,39 @@ var parseValues = function parseQueryStringValues(str, options) {
     return obj;
 };
 
-var parseObject = function (chain, val, options) {
-    var leaf = val;
-
-    for (var i = chain.length - 1; i >= 0; --i) {
-        var obj;
-        var root = chain[i];
-
-        if (root === '[]') {
-            obj = [];
-            obj = obj.concat(leaf);
-        } else {
-            obj = options.plainObjects ? Object.create(null) : {};
-            var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
-            var index = parseInt(cleanRoot, 10);
-            if (
-                !isNaN(index)
-                && root !== cleanRoot
-                && String(index) === cleanRoot
-                && index >= 0
-                && (options.parseArrays && index <= options.arrayLimit)
-            ) {
-                obj = [];
-                obj[index] = leaf;
-            } else {
-                obj[cleanRoot] = leaf;
-            }
-        }
-
-        leaf = obj;
+var parseObject = function parseObject(chain, val, options) {
+    if (!chain.length) {
+        return val;
     }
 
-    return leaf;
+    var root = chain.shift();
+
+    var obj;
+    if (root === '[]') {
+        obj = [];
+        obj = obj.concat(parseObject(chain, val, options));
+    } else {
+        obj = options.plainObjects ? Object.create(null) : {};
+        var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
+        var index = parseInt(cleanRoot, 10);
+        if (
+            !isNaN(index) &&
+            root !== cleanRoot &&
+            String(index) === cleanRoot &&
+            index >= 0 &&
+            (options.parseArrays && index <= options.arrayLimit)
+        ) {
+            obj = [];
+            obj[index] = parseObject(chain, val, options);
+        } else {
+            obj[cleanRoot] = parseObject(chain, val, options);
+        }
+    }
+
+    return obj;
 };
 
-var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
+var parseKeys = function parseKeys(givenKey, val, options) {
     if (!givenKey) {
         return;
     }
@@ -52916,14 +52976,13 @@ var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
 };
 
 module.exports = function (str, opts) {
-    var options = opts ? utils.assign({}, opts) : {};
+    var options = opts || {};
 
     if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
         throw new TypeError('Decoder has to be a function.');
     }
 
-    options.ignoreQueryPrefix = options.ignoreQueryPrefix === true;
-    options.delimiter = typeof options.delimiter === 'string' || utils.isRegExp(options.delimiter) ? options.delimiter : defaults.delimiter;
+    options.delimiter = typeof options.delimiter === 'string' || Utils.isRegExp(options.delimiter) ? options.delimiter : defaults.delimiter;
     options.depth = typeof options.depth === 'number' ? options.depth : defaults.depth;
     options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults.arrayLimit;
     options.parseArrays = options.parseArrays !== false;
@@ -52947,10 +53006,10 @@ module.exports = function (str, opts) {
     for (var i = 0; i < keys.length; ++i) {
         var key = keys[i];
         var newObj = parseKeys(key, tempObj[key], options);
-        obj = utils.merge(obj, newObj, options);
+        obj = Utils.merge(obj, newObj, options);
     }
 
-    return utils.compact(obj);
+    return Utils.compact(obj);
 };
 
 
@@ -52966,68 +53025,47 @@ module.exports = function (str, opts) {
 "use strict";
 
 
-var utils = __webpack_require__(/*! ./utils */ "./node_modules/qs/lib/utils.js");
-var formats = __webpack_require__(/*! ./formats */ "./node_modules/qs/lib/formats.js");
+var Utils = __webpack_require__(/*! ./utils */ "./node_modules/qs/lib/utils.js");
 
 var arrayPrefixGenerators = {
-    brackets: function brackets(prefix) { // eslint-disable-line func-name-matching
+    brackets: function brackets(prefix) {
         return prefix + '[]';
     },
-    indices: function indices(prefix, key) { // eslint-disable-line func-name-matching
+    indices: function indices(prefix, key) {
         return prefix + '[' + key + ']';
     },
-    repeat: function repeat(prefix) { // eslint-disable-line func-name-matching
+    repeat: function repeat(prefix) {
         return prefix;
     }
 };
 
-var toISO = Date.prototype.toISOString;
-
 var defaults = {
     delimiter: '&',
-    encode: true,
-    encoder: utils.encode,
-    encodeValuesOnly: false,
-    serializeDate: function serializeDate(date) { // eslint-disable-line func-name-matching
-        return toISO.call(date);
-    },
+    strictNullHandling: false,
     skipNulls: false,
-    strictNullHandling: false
+    encode: true,
+    encoder: Utils.encode
 };
 
-var stringify = function stringify( // eslint-disable-line func-name-matching
-    object,
-    prefix,
-    generateArrayPrefix,
-    strictNullHandling,
-    skipNulls,
-    encoder,
-    filter,
-    sort,
-    allowDots,
-    serializeDate,
-    formatter,
-    encodeValuesOnly
-) {
+var stringify = function stringify(object, prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots) {
     var obj = object;
     if (typeof filter === 'function') {
         obj = filter(prefix, obj);
     } else if (obj instanceof Date) {
-        obj = serializeDate(obj);
+        obj = obj.toISOString();
     } else if (obj === null) {
         if (strictNullHandling) {
-            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder) : prefix;
+            return encoder ? encoder(prefix) : prefix;
         }
 
         obj = '';
     }
 
-    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || utils.isBuffer(obj)) {
+    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || Utils.isBuffer(obj)) {
         if (encoder) {
-            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder);
-            return [formatter(keyValue) + '=' + formatter(encoder(obj, defaults.encoder))];
+            return [encoder(prefix) + '=' + encoder(obj)];
         }
-        return [formatter(prefix) + '=' + formatter(String(obj))];
+        return [prefix + '=' + String(obj)];
     }
 
     var values = [];
@@ -53052,35 +53090,9 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
         }
 
         if (Array.isArray(obj)) {
-            values = values.concat(stringify(
-                obj[key],
-                generateArrayPrefix(prefix, key),
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly
-            ));
+            values = values.concat(stringify(obj[key], generateArrayPrefix(prefix, key), generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
         } else {
-            values = values.concat(stringify(
-                obj[key],
-                prefix + (allowDots ? '.' + key : '[' + key + ']'),
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly
-            ));
+            values = values.concat(stringify(obj[key], prefix + (allowDots ? '.' + key : '[' + key + ']'), generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
         }
     }
 
@@ -53089,36 +53101,26 @@ var stringify = function stringify( // eslint-disable-line func-name-matching
 
 module.exports = function (object, opts) {
     var obj = object;
-    var options = opts ? utils.assign({}, opts) : {};
+    var options = opts || {};
+    var delimiter = typeof options.delimiter === 'undefined' ? defaults.delimiter : options.delimiter;
+    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
+    var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults.skipNulls;
+    var encode = typeof options.encode === 'boolean' ? options.encode : defaults.encode;
+    var encoder = encode ? (typeof options.encoder === 'function' ? options.encoder : defaults.encoder) : null;
+    var sort = typeof options.sort === 'function' ? options.sort : null;
+    var allowDots = typeof options.allowDots === 'undefined' ? false : options.allowDots;
+    var objKeys;
+    var filter;
 
     if (options.encoder !== null && options.encoder !== undefined && typeof options.encoder !== 'function') {
         throw new TypeError('Encoder has to be a function.');
     }
 
-    var delimiter = typeof options.delimiter === 'undefined' ? defaults.delimiter : options.delimiter;
-    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
-    var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults.skipNulls;
-    var encode = typeof options.encode === 'boolean' ? options.encode : defaults.encode;
-    var encoder = typeof options.encoder === 'function' ? options.encoder : defaults.encoder;
-    var sort = typeof options.sort === 'function' ? options.sort : null;
-    var allowDots = typeof options.allowDots === 'undefined' ? false : options.allowDots;
-    var serializeDate = typeof options.serializeDate === 'function' ? options.serializeDate : defaults.serializeDate;
-    var encodeValuesOnly = typeof options.encodeValuesOnly === 'boolean' ? options.encodeValuesOnly : defaults.encodeValuesOnly;
-    if (typeof options.format === 'undefined') {
-        options.format = formats['default'];
-    } else if (!Object.prototype.hasOwnProperty.call(formats.formatters, options.format)) {
-        throw new TypeError('Unknown format option provided.');
-    }
-    var formatter = formats.formatters[options.format];
-    var objKeys;
-    var filter;
-
     if (typeof options.filter === 'function') {
         filter = options.filter;
         obj = filter('', obj);
     } else if (Array.isArray(options.filter)) {
-        filter = options.filter;
-        objKeys = filter;
+        objKeys = filter = options.filter;
     }
 
     var keys = [];
@@ -53153,26 +53155,10 @@ module.exports = function (object, opts) {
             continue;
         }
 
-        keys = keys.concat(stringify(
-            obj[key],
-            key,
-            generateArrayPrefix,
-            strictNullHandling,
-            skipNulls,
-            encode ? encoder : null,
-            filter,
-            sort,
-            allowDots,
-            serializeDate,
-            formatter,
-            encodeValuesOnly
-        ));
+        keys = keys.concat(stringify(obj[key], key, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots));
     }
 
-    var joined = keys.join(delimiter);
-    var prefix = options.addQueryPrefix === true ? '?' : '';
-
-    return joined.length > 0 ? prefix + joined : '';
+    return keys.join(delimiter);
 };
 
 
@@ -53188,42 +53174,19 @@ module.exports = function (object, opts) {
 "use strict";
 
 
-var has = Object.prototype.hasOwnProperty;
-
 var hexTable = (function () {
-    var array = [];
+    var array = new Array(256);
     for (var i = 0; i < 256; ++i) {
-        array.push('%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase());
+        array[i] = '%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase();
     }
 
     return array;
 }());
 
-var compactQueue = function compactQueue(queue) {
-    var obj;
+var has = Object.prototype.hasOwnProperty;
 
-    while (queue.length) {
-        var item = queue.pop();
-        obj = item.obj[item.prop];
-
-        if (Array.isArray(obj)) {
-            var compacted = [];
-
-            for (var j = 0; j < obj.length; ++j) {
-                if (typeof obj[j] !== 'undefined') {
-                    compacted.push(obj[j]);
-                }
-            }
-
-            item.obj[item.prop] = compacted;
-        }
-    }
-
-    return obj;
-};
-
-var arrayToObject = function arrayToObject(source, options) {
-    var obj = options && options.plainObjects ? Object.create(null) : {};
+exports.arrayToObject = function (source, options) {
+    var obj = options.plainObjects ? Object.create(null) : {};
     for (var i = 0; i < source.length; ++i) {
         if (typeof source[i] !== 'undefined') {
             obj[i] = source[i];
@@ -53233,7 +53196,7 @@ var arrayToObject = function arrayToObject(source, options) {
     return obj;
 };
 
-var merge = function merge(target, source, options) {
+exports.merge = function (target, source, options) {
     if (!source) {
         return target;
     }
@@ -53258,29 +53221,14 @@ var merge = function merge(target, source, options) {
 
     var mergeTarget = target;
     if (Array.isArray(target) && !Array.isArray(source)) {
-        mergeTarget = arrayToObject(target, options);
-    }
-
-    if (Array.isArray(target) && Array.isArray(source)) {
-        source.forEach(function (item, i) {
-            if (has.call(target, i)) {
-                if (target[i] && typeof target[i] === 'object') {
-                    target[i] = merge(target[i], item, options);
-                } else {
-                    target.push(item);
-                }
-            } else {
-                target[i] = item;
-            }
-        });
-        return target;
+        mergeTarget = exports.arrayToObject(target, options);
     }
 
     return Object.keys(source).reduce(function (acc, key) {
         var value = source[key];
 
         if (has.call(acc, key)) {
-            acc[key] = merge(acc[key], value, options);
+            acc[key] = exports.merge(acc[key], value, options);
         } else {
             acc[key] = value;
         }
@@ -53288,14 +53236,7 @@ var merge = function merge(target, source, options) {
     }, mergeTarget);
 };
 
-var assign = function assignSingleSource(target, source) {
-    return Object.keys(source).reduce(function (acc, key) {
-        acc[key] = source[key];
-        return acc;
-    }, target);
-};
-
-var decode = function (str) {
+exports.decode = function (str) {
     try {
         return decodeURIComponent(str.replace(/\+/g, ' '));
     } catch (e) {
@@ -53303,7 +53244,7 @@ var decode = function (str) {
     }
 };
 
-var encode = function encode(str) {
+exports.encode = function (str) {
     // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
     // It has been adapted here for stricter adherence to RFC 3986
     if (str.length === 0) {
@@ -53317,13 +53258,13 @@ var encode = function encode(str) {
         var c = string.charCodeAt(i);
 
         if (
-            c === 0x2D // -
-            || c === 0x2E // .
-            || c === 0x5F // _
-            || c === 0x7E // ~
-            || (c >= 0x30 && c <= 0x39) // 0-9
-            || (c >= 0x41 && c <= 0x5A) // a-z
-            || (c >= 0x61 && c <= 0x7A) // A-Z
+            c === 0x2D || // -
+            c === 0x2E || // .
+            c === 0x5F || // _
+            c === 0x7E || // ~
+            (c >= 0x30 && c <= 0x39) || // 0-9
+            (c >= 0x41 && c <= 0x5A) || // a-z
+            (c >= 0x61 && c <= 0x7A) // A-Z
         ) {
             out += string.charAt(i);
             continue;
@@ -53346,58 +53287,58 @@ var encode = function encode(str) {
 
         i += 1;
         c = 0x10000 + (((c & 0x3FF) << 10) | (string.charCodeAt(i) & 0x3FF));
-        out += hexTable[0xF0 | (c >> 18)]
-            + hexTable[0x80 | ((c >> 12) & 0x3F)]
-            + hexTable[0x80 | ((c >> 6) & 0x3F)]
-            + hexTable[0x80 | (c & 0x3F)];
+        out += hexTable[0xF0 | (c >> 18)] + hexTable[0x80 | ((c >> 12) & 0x3F)] + hexTable[0x80 | ((c >> 6) & 0x3F)] + hexTable[0x80 | (c & 0x3F)];
     }
 
     return out;
 };
 
-var compact = function compact(value) {
-    var queue = [{ obj: { o: value }, prop: 'o' }];
-    var refs = [];
-
-    for (var i = 0; i < queue.length; ++i) {
-        var item = queue[i];
-        var obj = item.obj[item.prop];
-
-        var keys = Object.keys(obj);
-        for (var j = 0; j < keys.length; ++j) {
-            var key = keys[j];
-            var val = obj[key];
-            if (typeof val === 'object' && val !== null && refs.indexOf(val) === -1) {
-                queue.push({ obj: obj, prop: key });
-                refs.push(val);
-            }
-        }
+exports.compact = function (obj, references) {
+    if (typeof obj !== 'object' || obj === null) {
+        return obj;
     }
 
-    return compactQueue(queue);
+    var refs = references || [];
+    var lookup = refs.indexOf(obj);
+    if (lookup !== -1) {
+        return refs[lookup];
+    }
+
+    refs.push(obj);
+
+    if (Array.isArray(obj)) {
+        var compacted = [];
+
+        for (var i = 0; i < obj.length; ++i) {
+            if (obj[i] && typeof obj[i] === 'object') {
+                compacted.push(exports.compact(obj[i], refs));
+            } else if (typeof obj[i] !== 'undefined') {
+                compacted.push(obj[i]);
+            }
+        }
+
+        return compacted;
+    }
+
+    var keys = Object.keys(obj);
+    for (var j = 0; j < keys.length; ++j) {
+        var key = keys[j];
+        obj[key] = exports.compact(obj[key], refs);
+    }
+
+    return obj;
 };
 
-var isRegExp = function isRegExp(obj) {
+exports.isRegExp = function (obj) {
     return Object.prototype.toString.call(obj) === '[object RegExp]';
 };
 
-var isBuffer = function isBuffer(obj) {
+exports.isBuffer = function (obj) {
     if (obj === null || typeof obj === 'undefined') {
         return false;
     }
 
     return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
-};
-
-module.exports = {
-    arrayToObject: arrayToObject,
-    assign: assign,
-    compact: compact,
-    decode: decode,
-    encode: encode,
-    isBuffer: isBuffer,
-    isRegExp: isRegExp,
-    merge: merge
 };
 
 
@@ -55764,7 +55705,11 @@ function App(props) {
     ProductPrice: '10',
     SubscriptionNumber: '1',
     SubscriptionInterval: 'day',
-    consetCheck: 'yes'
+    consetCheck: 'yes',
+    EnableWpsPaypal: false,
+    EnableWpsPaypalTestmode: false,
+    WpsPaypalClientId: '',
+    WpsPaypalClientSecret: ''
   });
   const supported_payment_gateway = frontend_ajax_object.supported_gateway;
   const [showAvailblePayment, setAvailblePayment] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(supported_payment_gateway);
@@ -55928,7 +55873,7 @@ function FinalStep(props) {
     component: "legend",
     className: "wpsFormLabel"
   }, __('Bingo! You are all set to take advantage of your subscription business. Lastly, we urge you to allow us collect some', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("a", {
-    href: "https://wpswing.com/plugin-usage-tracking/",
+    href: "https://wpswings.com/plugin-usage-tracking/",
     target: "_blank"
   }, __('information', 'subscriptions-for-woocommerce')), " ", __('in order to improve this plugin and provide better support. If you want, you can dis-allow anytime settings, We never track down your personal data. Promise!', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["RadioGroup"], {
     "aria-label": "gender",
@@ -56008,7 +55953,7 @@ const FirstStep = props => {
     onChange: ctx.changeHandler,
     id: "AddToCartText",
     name: "AddToCartText",
-    helperText: __('Enter text to display on "Add to cart" button for subscription products', 'subscriptions-for-woocommerce'),
+    helperText: __('Enter text to dispaly on "Add to cart" button for subscription products', 'subscriptions-for-woocommerce'),
     label: __(' "Add to cart" button label', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin
@@ -56021,7 +55966,7 @@ const FirstStep = props => {
     onChange: ctx.changeHandler,
     id: "PlaceOrderText",
     name: "PlaceOrderText",
-    helperText: __('Enter text to display on "Place order" button for subscription products', 'subscriptions-for-woocommerce'),
+    helperText: __('Enter text to dispaly on "Place order" button for subscription products', 'subscriptions-for-woocommerce'),
     label: __(' "Place order" button label', 'subscriptions-for-woocommerce'),
     variant: "outlined",
     className: classes.margin
@@ -56331,7 +56276,60 @@ const ThirdStep = props => {
     key: item.id,
     item: item,
     name: item.name
-  }, item)))));
+  }, item))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("h1", null, __('Setup Build-in Paypal Gateway', 'subscriptions-for-woocommerce')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("h5", null, __('To get your API credentials please create a', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("a", {
+    href: "https://developer.paypal.com",
+    target: "_blank"
+  }, __('PayPal developer account', 'subscriptions-for-woocommerce')), ". ", __('Visit', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("a", {
+    href: "https://developer.paypal.com/developer/applications",
+    target: "_blank"
+  }, __('My Apps & Credentials', 'subscriptions-for-woocommerce')), " ", __('select the tab ( Sandbox or Live ), Create app and get the below credentails', 'subscriptions-for-woocommerce'), "."), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("h6", null, __('You can setup the Build-in Paypal From Woocommerce Payments Settings', 'subscriptions-for-woocommerce'), " ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("a", {
+    href: frontend_ajax_object.wps_build_in_paypal_setup_url,
+    target: "_blank"
+  }, __('here', 'subscriptions-for-woocommerce'))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControlLabel"], {
+    control: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Checkbox"], {
+      checked: ctx.formFields['EnableWpsPaypalTestmode'],
+      onChange: ctx.changeHandler,
+      name: "EnableWpsPaypalTestmode",
+      color: "primary"
+    }),
+    label: __('Check this box to enable the Build-in Paypal Gateway', 'subscriptions-for-woocommerce'),
+    className: "wpsFormLabel"
+  }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControlLabel"], {
+    control: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Checkbox"], {
+      checked: ctx.formFields['EnableWpsPaypal'],
+      onChange: ctx.changeHandler,
+      name: "EnableWpsPaypal",
+      color: "primary"
+    }),
+    label: __('Check this box to enable Testmode', 'subscriptions-for-woocommerce'),
+    className: "wpsFormLabel"
+  }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+    component: "fieldset",
+    fullWidth: true,
+    className: "fieldsetWrapper"
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["TextField"], {
+    value: ctx.formFields['WpsPaypalClientId'],
+    onChange: ctx.changeHandler,
+    id: "WpsPaypalClientId",
+    name: "WpsPaypalClientId",
+    helperText: __('Please enter client ID here.', 'subscriptions-for-woocommerce'),
+    label: __('Add Paypal Client ID', 'subscriptions-for-woocommerce'),
+    variant: "outlined",
+    className: classes.margin
+  })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["FormControl"], {
+    component: "fieldset",
+    fullWidth: true,
+    className: "fieldsetWrapper"
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["TextField"], {
+    value: ctx.formFields['WpsPaypalClientSecret'],
+    onChange: ctx.changeHandler,
+    id: "WpsPaypalClientSecret",
+    name: "WpsPaypalClientSecret",
+    helperText: __('Please enter client secret here.', 'subscriptions-for-woocommerce'),
+    label: __('Add Paypal Client Secret', 'subscriptions-for-woocommerce'),
+    variant: "outlined",
+    className: classes.margin
+  }))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (ThirdStep);

@@ -175,7 +175,7 @@ class Subscriptions_For_Woocommerce {
 	 */
 	public function wps_sfw_init_payment_integration() {
 
-		$wps_sfw_dir = plugin_dir_path( dirname( __FILE__ ) ) . '/package/gateways';
+		$wps_sfw_dir = plugin_dir_path( dirname( __FILE__ ) ) . 'package/gateways';
 		wps_sfw_include_process_directory( $wps_sfw_dir );
 		do_action( 'wps_sfw_payment_integration' );
 	}
@@ -305,7 +305,7 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_order_get_total', $sfw_plugin_public, 'wps_sfw_set_susbcription_total', 11, 2 );
 			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'wps_sfw_hide_quantity_fields_for_subscription', 10, 2 );
 
-			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'wps_sfw_woocommerce_add_to_cart_validation', 10, 3 );
+			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'wps_sfw_woocommerce_add_to_cart_validation', 10, 5 );
 
 			$this->loader->add_filter( 'woocommerce_cart_needs_payment', $sfw_plugin_public, 'wps_sfw_woocommerce_cart_needs_payment', 99, 2 );
 

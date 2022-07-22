@@ -637,6 +637,7 @@ if ( ! function_exists( 'wps_sfw_include_process_directory' ) ) {
 
 		if ( is_dir( $wps_sfw_dir ) ) {
 			$wps_dh = opendir( $wps_sfw_dir );
+
 			if ( $wps_dh ) {
 
 				while ( ( $wps_file = readdir( $wps_dh ) ) !== false ) {

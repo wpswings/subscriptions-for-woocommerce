@@ -31,8 +31,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php
 					foreach ( $wps_subscriptions as $key => $wps_subscription ) {
 						$parent_order_id   = get_post_meta( $wps_subscription->ID, 'wps_parent_order', true );
+						$wps_wsfw_is_order = false;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
-							continue;
+							$wps_wsfw_is_order = apply_filters( 'wps_wsfw_check_parent_order', $wps_wsfw_is_order, $parent_order_id );
+							if ( false == $wps_wsfw_is_order ) {
+								continue;
+							}
 						}
 						?>
 								<tr class="wps_sfw_account_row woocommerce-orders-table__row woocommerce-orders-table__row--status-processing order">

@@ -84,18 +84,22 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 			Subscriptions_For_Woocommerce_Log::log( 'WPS Renewal Subscriptions: ' . wc_print_r( $wps_subscriptions, true ) );
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
+
 				foreach ( $wps_subscriptions as $key => $value ) {
 					$subscription_id = $value->ID;
 
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
+
 						$subscription = get_post( $subscription_id );
 						$parent_order_id  = $subscription->wps_parent_order;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
 						}
+
 						if ( apply_filters( 'wps_sfw_stop_creating_renewal_multisafepay', false, $subscription_id ) ) {
 							continue;
 						}
+
 						if ( ! $wps_sfw_pro_plugin_activated ) {
 							$subp_id = get_post_meta( $value->ID, 'product_id', true );
 							$check_variable = get_post_meta( $subp_id, 'wps_sfw_variable_product', true );
@@ -103,6 +107,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								continue;
 							}
 						}
+
 						$parent_order = wc_get_order( $parent_order_id );
 						$billing_details = $parent_order->get_address( 'billing' );
 						$shipping_details = $parent_order->get_address( 'shipping' );
@@ -214,6 +219,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
 								$result = $wps_stripe->wps_sfw_process_renewal_payment( $order_id, $parent_order_id );
+								update_post_meta( $order_id, '_stripe_charge_captured', 'yes' );
 								do_action( 'wps_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
 								wps_sfw_send_email_for_renewal_susbcription( $order_id );
 							}
@@ -341,7 +347,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 			);
 
 			$params = apply_filters( 'wpswings_tracker_params', $params );
-			$api_url = 'https://tracking.wpswings.com/wp-json/sfw-route/v1/sfw-testing-data/';
+			$api_url = 'https://tracking.wpswings.com/wp-json/mps-route/v1/mps-testing-data/';
 			$sucess = wp_safe_remote_post(
 				$api_url,
 				array(

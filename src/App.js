@@ -29,6 +29,10 @@ function App(props) {
         SubscriptionNumber:'1',
         SubscriptionInterval:'day',
         consetCheck:'yes',
+        EnableWpsPaypal:false,
+        EnableWpsPaypalTestmode:false,
+        WpsPaypalClientId:'',
+        WpsPaypalClientSecret:'',
     });
     
     const supported_payment_gateway = frontend_ajax_object.supported_gateway;

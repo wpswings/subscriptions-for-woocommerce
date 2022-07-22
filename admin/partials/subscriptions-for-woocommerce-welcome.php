@@ -94,7 +94,7 @@ $sfw_tab_key = '';
 						<div class="container">
 							<h4><b><?php echo esc_html( $value['Name'] ); ?></b></h4> 
 							<p><?php echo esc_html( $value['Version'] ); ?></p> 
-							<p><?php echo esc_html( $value['Description'] ); ?></p>
+							<p><?php echo wp_kses_post( $value['Description'] ); ?></p>
 						</div>
 					</article>
 				<?php endif; ?>

@@ -1171,11 +1171,17 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param bool $validate validate.
 	 * @param int  $product_id product_id.
 	 * @param int  $quantity quantity.
+	 * @param int  $variation_id as variation_id.
+	 * @param bool $variations as variations.
 	 * @since 1.0.0
 	 */
-	public function wps_sfw_woocommerce_add_to_cart_validation( $validate, $product_id, $quantity ) {
+	public function wps_sfw_woocommerce_add_to_cart_validation( $validate, $product_id, $quantity, $variation_id = 0, $variations = null ) {
 
 		$product = wc_get_product( $product_id );
+		if ( is_object( $product ) && 'variable' === $product->get_type() ) {
+			$product    = wc_get_product( $variation_id );
+			$product_id = $variation_id;
+		}
 		if ( $this->wps_sfw_check_cart_has_subscription_product() && wps_sfw_check_product_is_subscription( $product ) ) {
 
 			$validate = apply_filters( 'wps_sfw_add_to_cart_validation', false, $product_id, $quantity );
@@ -1191,8 +1197,8 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to set payment options.
 	 *
 	 * @name wps_sfw_woocommerce_cart_needs_payment
-	 * @param bool $wps_needs_payment wps_needs_payment.
-	 * @param int  $cart cart.
+	 * @param bool   $wps_needs_payment wps_needs_payment.
+	 * @param object $cart cart.
 	 * @since 1.0.0
 	 */
 	public function wps_sfw_woocommerce_cart_needs_payment( $wps_needs_payment, $cart ) {
@@ -1301,10 +1307,10 @@ class Subscriptions_For_Woocommerce_Public {
 					),
 				),
 			);
-
 			$wps_subscriptions = get_posts( $args );
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 				foreach ( $wps_subscriptions as $key => $subscription ) {
+
 					update_post_meta( $subscription->ID, 'wps_subscription_status', 'on-hold' );
 					do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription->ID );
 				}

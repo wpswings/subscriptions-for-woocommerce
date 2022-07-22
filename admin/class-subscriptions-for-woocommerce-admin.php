@@ -64,8 +64,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
 
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) ) {
-
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id ) {
 			// Multistep form css.
 			if ( ! wps_sfw_check_multistep() ) {
 				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
@@ -91,7 +90,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
 		}
 
-		if ( isset( $screen->id ) && 'product' == $screen->id ) {
+		if ( isset( $screen->id ) && 'product' == $screen->id && 'wp-swings_page_home' == $screen->id ) {
 			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
 		}
@@ -108,8 +107,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
-
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) ) {
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id ) {
 
 			if ( ! wps_sfw_check_multistep() ) {
 
@@ -145,6 +143,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						'redirect_url' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ),
 						'disable_track_url' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-developer' ),
 						'supported_gateway' => wps_sfw_get_subscription_supported_payment_method(),
+						'wps_build_in_paypal_setup_url' => admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wps_paypal' ),
 					)
 				);
 				return;
@@ -243,9 +242,9 @@ class Subscriptions_For_Woocommerce_Admin {
 				foreach ( $sfw_menus as $sfw_key => $sfw_value ) {
 					add_submenu_page( 'wps-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_options', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
 				}
+				$is_home = false;
 			}
 		} else {
-			$is_home = false;
 			if ( ! empty( $submenu['wps-plugins'] ) ) {
 				foreach ( $submenu['wps-plugins'] as $key => $value ) {
 					if ( 'Home' === $value[0] ) {
@@ -384,8 +383,8 @@ class Subscriptions_For_Woocommerce_Admin {
 				'type'  => 'checkbox',
 				'description'  => __( 'Enable this option to allow the customer to cancel the subscription.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_cancel_subscription_for_customer',
-				'value' => 'on',
 				'checked' => ( 'on' === get_option( 'wps_sfw_cancel_subscription_for_customer', '' ) ? 'on' : 'off' ),
+				'value' => 'on',
 				'class' => 'sfw-checkbox-class',
 			),
 			array(
@@ -794,6 +793,17 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			$product->save();
 			update_option( 'wps_sfw_multistep_product_create_done', 'yes' );
+		}
+
+		if ( isset( $_POST['EnableWpsPaypal'] ) ) {
+			$wps_paypal_settings = get_option( 'woocommerce_wps_paypal_settings', array() );
+			$wps_paypal_settings['enabled']  = ! empty( $_POST['EnableWpsPaypal'] ) ? 'yes' : 'no';
+			$wps_paypal_settings['testmode'] = ! empty( $_POST['EnableWpsPaypalTestmode'] ) ? 'yes' : 'no';
+
+			$wps_paypal_settings['client_id']     = ! empty( $_POST['WpsPaypalClientId'] ) ? sanitize_text_field( wp_unslash( $_POST['WpsPaypalClientId'] ) ) : '';
+			$wps_paypal_settings['client_secret'] = ! empty( $_POST['WpsPaypalClientSecret'] ) ? sanitize_text_field( wp_unslash( $_POST['WpsPaypalClientSecret'] ) ) : '';
+
+			update_option( 'woocommerce_wps_paypal_settings', $wps_paypal_settings );
 		}
 		update_option( 'wps_sfw_multistep_done', 'yes' );
 

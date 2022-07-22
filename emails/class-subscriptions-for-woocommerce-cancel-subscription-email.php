@@ -79,8 +79,11 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 				$this->object = $wps_subscription;
 				$wps_parent_order_id = get_post_meta( $wps_subscription, 'wps_parent_order', true );
 				$wps_parent_order = wc_get_order( $wps_parent_order_id );
-				$user_email = $wps_parent_order->get_billing_email();
-				$this->recipient = $user_email;
+				if ( ! empty( $wps_parent_order ) ) {
+					$user_email = $wps_parent_order->get_billing_email();
+					$this->recipient = $user_email;
+
+				}
 			}
 
 			if ( ! $this->is_enabled() || ! $this->get_recipient() ) {

@@ -1,14 +1,16 @@
 <?php
 /**
- * Silence is golden.
+ * The build file of the plugin.
  *
- * @link       https://wpswing.com/
- * @since      1.0.0
+ * Defines the plugin name, version, and two examples hooks for how to
+ * enqueue the public-facing stylesheet and JavaScript.
+ * namespace event_tickets_manager_for_woocommerce_pro_public.
  *
- * @package    Subscriptions_For_Woocommerce
+ * @package    subscriptions-for-woocommerce
+ * @subpackage subscriptions-for-woocommerce/build
  */
 
 return array(
 	'dependencies' => array( 'wp-element', 'wp-polyfill' ),
-	'version' => 'b95adb316dfea9d9044a518aaa748969',
+	'version' => '9cf2090afceb0b0ae53068328e849133',
 );
