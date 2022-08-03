@@ -135,7 +135,6 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
 
 				/* translators: %s: susbcription interval */
-
 				$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price_html ) . '</span>';
 
 				$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
@@ -272,8 +271,22 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
-					$wps_has_subscription = true;
-					break;
+					$wps_sfw_one_time_subscription = apply_filters( 'wps_sfw_check_one_time_subscription', $cart_item );
+					// if ( empty( $wps_has_subscription) && $wps_has_subscription == false ){
+					// 	$wps_has_subscription = true;
+					// }
+					// break;
+					if ( $wps_sfw_one_time_subscription == 'on'){
+
+						$wps_has_subscription = false;
+						break;
+
+					}else{
+						
+						$wps_has_subscription = true;
+						break;
+
+					}
 				}
 			}
 		}

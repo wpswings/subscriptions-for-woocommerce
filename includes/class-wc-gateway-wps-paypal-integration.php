@@ -50,7 +50,10 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$this->testmode      = $this->get_option( 'testmode' );
 		$this->client_id     = $this->get_option( 'client_id' );
 		$this->client_secret = $this->get_option( 'client_secret' );
-
+		
+		if ( $this->testmode == 'no' ){
+			$this->testmode = false;
+		}
 		if ( ! $this->is_valid_for_use() ) {
 			$this->enabled = 'no';
 		}
