@@ -113,7 +113,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_sfw_subscription_expiry_number = get_post_meta( $product_id, 'wps_sfw_subscription_expiry_number', true );
 			$wps_sfw_subscription_interval = get_post_meta( $product_id, 'wps_sfw_subscription_interval', true );
 			$wps_sfw_one_time_purchase = get_post_meta( $product_id, 'wps_sfw_one_time_purchase', true );
-			$wps_sfw_variation_one_time_purchase = get_post_meta( $product_id ,'wps_sfw_variation_one_time_purchase', true );
+			$wps_sfw_variation_one_time_purchase = get_post_meta( $product_id, 'wps_sfw_variation_one_time_purchase', true );
 			$check = false;
 			$check = apply_filters( 'wps_sfw_check_pro_plugin', $check );
 			if ( isset( $wps_sfw_subscription_expiry_number ) && ! empty( $wps_sfw_subscription_expiry_number ) ) {
@@ -123,29 +123,29 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_price_html = wps_sfw_get_time_interval( $wps_sfw_subscription_expiry_number, $wps_sfw_subscription_expiry_interval );
 				// Show interval html.
 
-				if( ( $wps_sfw_one_time_purchase == "on" || $wps_sfw_variation_one_time_purchase == 'on' ) && $check == true ) {
-					if (  is_product() ) {
-					$wps_price_html = apply_filters( 'wps_sfw_show_time_interval', $wps_price_html, $product_id, $cart_item );
-					$wps_price = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
-
-					/* translators: %s: susbcription interval */
-					$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price ) . '</span>';
-
-					$price .= '<div class="wps_sfw_subscription_wrapper">';
-					$price .= '<input type="checkbox" class="wps_sfw_check_simple_cart_subscription_purchase" id ="wps_sfw_check_simple_cart_subscription_purchase" data-id="'. $product_id.'"><label class="wps_sfw_subscription_label">Enable for subscription</label><p class="wps_sfw_inner_description">25% Off Every Order, Guaranteed Delivery, Make Changes Any Time, Prompt VIP Support</p>';
-					$price .= '<div class ="wps_sfw_subscription_inner_wrapper">';
-					$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
-
-					/* translators: %s: susbcription interval */
-					$price .= '<span class="wps_sfw_expiry_interval">' . sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $wps_price_html ) . '</span>';
-					$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
-					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
-
-					$price .= '</div></div>';
-					$price .= apply_filters( 'wps_sfw_show_one_time_subscription', $product_id );
-					} else{
+				if ( ( 'on' == $wps_sfw_one_time_purchase || 'on' == $wps_sfw_variation_one_time_purchase ) && true == $check ) {
+					if ( is_product() ) {
 						$wps_price_html = apply_filters( 'wps_sfw_show_time_interval', $wps_price_html, $product_id, $cart_item );
-						
+						$wps_price = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
+
+						/* translators: %s: susbcription interval */
+						$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price ) . '</span>';
+
+						$price .= '<div class="wps_sfw_subscription_wrapper">';
+						$price .= '<input type="checkbox" class="wps_sfw_check_simple_cart_subscription_purchase" id ="wps_sfw_check_simple_cart_subscription_purchase" data-id="' . $product_id . '"><label class="wps_sfw_subscription_label">Enable for subscription</label><p class="wps_sfw_inner_description">25% Off Every Order, Guaranteed Delivery, Make Changes Any Time, Prompt VIP Support</p>';
+						$price .= '<div class ="wps_sfw_subscription_inner_wrapper">';
+						$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
+
+						/* translators: %s: susbcription interval */
+						$price .= '<span class="wps_sfw_expiry_interval">' . sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $wps_price_html ) . '</span>';
+						$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
+						$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
+
+						$price .= '</div></div>';
+						$price .= apply_filters( 'wps_sfw_show_one_time_subscription', $product_id );
+					} else {
+						$wps_price_html = apply_filters( 'wps_sfw_show_time_interval', $wps_price_html, $product_id, $cart_item );
+
 						$wps_price = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
 
 						/* translators: %s: susbcription interval */
@@ -175,53 +175,50 @@ class Subscriptions_For_Woocommerce_Public {
 					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
 
 				}
-
 			} elseif ( isset( $wps_sfw_subscription_number ) && ! empty( $wps_sfw_subscription_number ) ) {
-				if ( ( $wps_sfw_one_time_purchase == "on" || $wps_sfw_variation_one_time_purchase == 'on' ) && $check == true ) {
-					if (  is_product() ) {
+				if ( ( 'on' == $wps_sfw_one_time_purchase || 'on' == $wps_sfw_variation_one_time_purchase ) && true == $check ) {
+					if ( is_product() ) {
 
 						$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
-		
+
 						/* translators: %s: susbcription interval */
 						$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price_html ) . '</span>';
-		
+
 						$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
-						
+
 						$price .= '<div class="wps_sfw_subscription_wrapper">';
 						$price .= '<input type="checkbox"><label class="wps_sfw_subscription_label">Enable for subscription</label><p class="wps_sfw_inner_description">25% Off Every Order, Guaranteed Delivery, Make Changes Any Time, Prompt VIP Support</p>';
-		
+
 						$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
 						$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
-						$price .= "</div>";
+						$price .= '</div>';
 						$price .= apply_filters( 'wps_sfw_show_one_time_subscription', $product_id );
-					}else {
+					} else {
 
 						$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
-		
+
 						/* translators: %s: susbcription interval */
 						$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price_html ) . '</span>';
-		
+
 						$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
-		
+
 						$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
 						$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
 					}
-
 				} else {
 
 					$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
-	
+
 					/* translators: %s: susbcription interval */
 					$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price_html ) . '</span>';
-	
+
 					$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
-	
+
 					$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
 					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
-	
+
 					$price .= apply_filters( 'wps_sfw_show_one_time_subscription', $product_id );
 				}
-
 			}
 		}
 		return apply_filters( 'wps_sfw_price_html', $price, $wps_price_html, $product_id );
@@ -352,17 +349,13 @@ class Subscriptions_For_Woocommerce_Public {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$wps_sfw_one_time_subscription = apply_filters( 'wps_sfw_check_one_time_subscription', $cart_item );
-					// if ( empty( $wps_has_subscription) && $wps_has_subscription == false ){
-					// 	$wps_has_subscription = true;
-					// }
-					// break;
-					if ( $wps_sfw_one_time_subscription == 'on'){
+					if ( 'on' == $wps_sfw_one_time_subscription ) {
 
 						$wps_has_subscription = false;
 						break;
 
-					}else{
-						
+					} else {
+
 						$wps_has_subscription = true;
 						break;
 
@@ -481,7 +474,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @throws \Exception Return error.
 	 */
 	public function wps_sfw_process_checkout( $order_id, $posted_data ) {
-		
+
 		if ( ! $this->wps_sfw_check_cart_has_subscription_product() ) {
 			return;
 		}
@@ -491,7 +484,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
-				
+
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 
 					if ( $cart_item['data']->is_on_sale() ) {
@@ -719,9 +712,9 @@ class Subscriptions_For_Woocommerce_Public {
 					),
 				);
 			}
-			
+
 			$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_pro_args );
-			
+
 			$item_id = $new_order->add_product(
 				$_product,
 				$wps_args['product_qty'],

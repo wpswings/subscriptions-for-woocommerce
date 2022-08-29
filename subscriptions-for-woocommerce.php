@@ -392,6 +392,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 				'support' => '<a target="_blank" href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Support.svg" class="wps-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
 
+				'services' => '<a target="_blank" href="https://wpswings.com/woocommerce-services/?utm_source=wpswings-subs-services&utm_medium=subs-pro-backend&utm_campaign=woocommerce-services"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Services.svg" class="wps-info-img" alt="services image">' . esc_html__( 'Services', 'subscriptions-for-woocommerce' ) . '</a>',
+
 			);
 
 			return array_merge( $links, $row_meta );
