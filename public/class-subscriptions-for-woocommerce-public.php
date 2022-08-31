@@ -620,8 +620,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$wps_args = apply_filters( 'wps_sfw_new_subscriptions_data', $wps_args );
 			// translators: post title date parsed by strftime.
-			$post_title_date = strftime( _x( '%1$b %2$d, %Y @ %I:%M %p', 'subscription post title. "Subscriptions order - <this>"', 'subscriptions-for-woocommerce' ) );
-
+			$post_title_date = gmdate( _x( '%1$b %2$d, %Y @ %I:%M %p', 'subscription post title. "Subscriptions order - <this>"', 'subscriptions-for-woocommerce' ) );
 			$wps_subscription_data = array();
 			$wps_subscription_data['post_type']     = 'wps_subscriptions';
 
