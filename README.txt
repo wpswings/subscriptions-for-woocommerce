@@ -3,10 +3,10 @@ Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: woocommerce subscriptions variation, recurring billing, renew subscriptions automatically, subscription management, subscriptions, paypal subscriptions, memberships
 Requires at least: 5.0
-Tested up to: 6.0.1
+Tested up to: 6.0.2
 WC requires at least: 5.0.0
-WC tested up to: 6.7.0
-Stable tag: 1.4.2
+WC tested up to: 6.8.2
+Stable tag: 1.4.3
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -89,7 +89,7 @@ Visit [**Subscriptions For WooCommerce Documentation**](https://docs.wpswings.co
 Offer subscription of membership plans on your store with the Membership for WooCommerce WordPress plugin. Create multiple membership plans and allow limited access to those plans to users. Set membership subscription expiry period from days, weeks, months and years. 
 
 * [**Wallet System for WooCommerce Free**](https://wordpress.org/plugins/wallet-system-for-woocommerce/) and [**Wallet System for WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-org-page&utm_campaign=wallet-pro/)
-The wallet system enables a digital wallet on your eCommerce store for users. Its compatibility allows users to pay for their subscriptions via a digital wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on the wallet amount.
+The Wallet system enables a digital wallet on your eCommerce store for users. Its compatibility allows users to pay for their subscriptions via a digital wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on the wallet amount.
 
 * **WPML Compatibility**
 Subscriptions for WooCommerce WPML compatibility enable the admin to create text in different languages. It allows simple language translation in your store.  
@@ -102,6 +102,7 @@ Subscriptions for WooCommerce are compatible with the [**WooCommerce Stripe Paym
 ==  WHAT PREMIUM FEATURES OF SUBSCRIPTIONS FOR WOOCOMMERCE OFFERS ==
 
 * Create WooCommerce Variable Subscription Product Type and Configure More WooCommerce Subscription Services
+* One Time Subscription:- With Subscription for WooCommerce plugin, admin can enable subscription price for one time purchase for products.
 * Variations On Subscription-Based Product Plans and WooCommerce Upgrade Subscriptions or Downgrade Plans
 * Designation of WooCommerce Subscriptions Start Date and Expiration Date By User or Admin.
 * Automatic Retrying For Failed Payments and Automated WooCommerce Subscriptions Cancellation          
@@ -113,7 +114,7 @@ Subscriptions for WooCommerce are compatible with the [**WooCommerce Stripe Paym
 * API of Course For Details On Mobile App
 * Active WooCommerce Subscription Export Function
 * Supports all the above-mentioned compatibility along with [**Ultimate Gift Cards for WooCommerce**](https://wordpress.org/plugins/woo-gift-cards-lite/), [**Wallet System for WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-org-page&utm_campaign=wallet-pro/).
-* Compatible with payment gateways- [**WooCommerce Eway Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-eway/) and [**WooCommerce Authorize.Net Payment Gateway**](https://wordpress.org/plugins/woo-authorize-net-gateway-aim/)
+* Compatible with payment gateways- [**WooCommerce Eway Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-eway/), [**WooCommerce Authorize.Net Payment Gateway**](https://wordpress.org/plugins/woo-authorize-net-gateway-aim/) and [**WooCommerce Payments**](https://woocommerce.com/products/woocommerce-payments/)
 
 
 == TAKE ADVANTAGE OF EXCLUSIVE FEATURES OF WOOCOMMERCE SUBSCRIPTIONS PLUGIN == 
@@ -134,17 +135,13 @@ If you need support or have any questions then kindly use our online chat window
 > Create and Revamp your eCommerce store with [**WooCommerce Services**](https://wpswings.com/woocommerce-services/?utm_source=wpswings-subs-services&utm_medium=subs-org-page&utm_campaign=woocommerce-services)
 
 
-== CONTRIBUTE AND TRANSLATE ==
-
-Subscriptions for WooCommerce is translated into multiple languages Dutch, Albanian, Spanish and many more. Help localize Subscriptions for WooCommerce even further by adding your locale Language. [**Click Here**](https://translate.wordpress.org/projects/wp-plugins/subscriptions-for-woocommerce/)
-
 == Installation ==
 
 = Automatic installation =
 
-Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't need to leave your web browser. To do an automatic install of Subscriptions  For WooCommerce, log in to your WordPress dashboard, navigate to the Plugins menu, and click Add New.
+Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't need to leave your web browser. To do an automatic install of Subscriptions  for WooCommerce, log in to your WordPress dashboard, navigate to the Plugins menu, and click Add New.
 
-In the search field type "Subscriptions For WooCommerce" and click Search Plugins. Once you've found our plugin you can view details about it such as the point release, rating, and description. Most importantly, of course, you can install it by simply clicking "Install Now".
+In the search field type "Subscriptions for WooCommerce" and click Search Plugins. Once you've found our plugin you can view details about it such as the point release, rating, and description. Most importantly, of course, you can install it by simply clicking "Install Now".
 
 = Manual installation =
 
@@ -183,7 +180,7 @@ Yes, Admin can provide a feature to give the free trial to customers, for which 
 
 = Can Admin charge an initial fee like sign up(other than the subscription fee for the product)? =
 
-Yes, WooCommerce subscription plugin has a feature that Admin can charge a fee.
+Yes, WooCommerce Subscription plugin has a feature that Admin can charge a fee.
 
 = Is there any mail functionality available for different subscription Plans? =
 
@@ -193,9 +190,6 @@ Yes, WooCommerce subscription plugin has a feature that Admin can charge a fee.
 = My Question is not listed? =
 
 Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wpswings.com/wordpress-plugins-knowledge-base/category/subscriptions-for-woocommerce/?utm_source=wpswings-subs-kb&utm_medium=subs-org-page&utm_campaign=subs-kb)
- 
- 
- 
 == Screenshots ==
 
 1. General Setting of Subscriptions for WooCommerce
@@ -206,8 +200,17 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 6. Buy Subscription
 7. My Account 
 8. Subscriptions Order Details
+9. Payment method
+10. PayPal Payment Gateway
+
+
 
 == Changelog ==
+
+= 1.4.3 - Released on 02 September  2022 =
+
+* New: Major Bug Fixes
+* New: Compatible with latest WP and WC
 
 = 1.4.2 - Released on 21 July 2022 =
 
@@ -283,8 +286,8 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.4.2 - Released on 21 July 2022 =
+= 1.4.3 - Released on 02 September  2022 =
 
-* New: Bug Fix Refund of Subscription Renewal order Through its Payment Method 
-* New: WooCommerce Paypal Payment Support
+* New: Major Bug Fixes
 * New: Compatible with latest WP and WC
+
