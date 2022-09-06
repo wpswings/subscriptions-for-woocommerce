@@ -73,9 +73,8 @@ if ( ! wps_sfw_check_multistep() ) {
 	<section class="wps-section">
 		<div>
 			<?php
-				require_once plugin_dir_path( __FILE__ ) . '/subscription-for-woocommerce-incompatible.php';
-				do_action( 'wps_sfw_before_general_settings_form' );
-						// if submenu is directly clicked on woocommerce.
+			do_action( 'wps_sfw_before_general_settings_form' );
+			// if submenu is directly clicked on woocommerce.
 			if ( empty( $sfw_active_tab ) ) {
 				$sfw_active_tab = 'subscriptions-for-woocommerce-general';
 			}
