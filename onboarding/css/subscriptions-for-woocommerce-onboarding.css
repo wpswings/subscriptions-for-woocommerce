@@ -356,7 +356,12 @@ input#s2id_autogen1 {
 .wps-sfw-customer-data-form-single-field .select2-search.select2-search--inline {
     width: 100% !important;
 }
-
+img.wps-info-img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
 .wps-sfw-hidden {
     display: none !important;
 }

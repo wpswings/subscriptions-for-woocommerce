@@ -15,16 +15,16 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.4.2
+ * Version:           1.4.3
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
  * Requires at least:        5.0
- * Tested up to:             6.0.1
+ * Tested up to:             6.0.2
  * WC requires at least:     5.0
- * WC tested up to:          6.7.0
+ * WC tested up to:          6.8.2
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -160,7 +160,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.2' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.3' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -391,6 +391,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				'docs'    => '<a target="_blank" href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="wps-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 
 				'support' => '<a target="_blank" href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Support.svg" class="wps-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
+
+				'services' => '<a target="_blank" href="https://wpswings.com/woocommerce-services/?utm_source=wpswings-subs-services&utm_medium=subs-pro-backend&utm_campaign=woocommerce-services"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Services.svg" class="wps-info-img" alt="services image">' . esc_html__( 'Services', 'subscriptions-for-woocommerce' ) . '</a>',
 
 			);
 

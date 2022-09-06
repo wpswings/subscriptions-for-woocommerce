@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-07-20 16:06+0530\n"
-"PO-Revision-Date: 2022-07-20 16:08+0530\n"
+"POT-Creation-Date: 2022-09-01 18:49+0530\n"
+"PO-Revision-Date: 2022-09-01 18:51+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -142,7 +142,7 @@ msgid "Id of some field is missing"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:487
-#: subscriptions-for-woocommerce.php:437
+#: subscriptions-for-woocommerce.php:439
 msgid "Subscription"
 msgstr ""
 
@@ -279,8 +279,8 @@ msgid "Delete"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:422
-#: public/class-subscriptions-for-woocommerce-public.php:888
-#: subscriptions-for-woocommerce.php:436 subscriptions-for-woocommerce.php:449
+#: public/class-subscriptions-for-woocommerce-public.php:974
+#: subscriptions-for-woocommerce.php:438 subscriptions-for-woocommerce.php:451
 msgid "Subscriptions"
 msgstr ""
 
@@ -1041,52 +1041,52 @@ msgstr ""
 msgid "Accept Payments from PayPal"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:88
+#: includes/class-wc-gateway-wps-paypal-integration.php:91
 msgid "Gateway disabled"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:88
+#: includes/class-wc-gateway-wps-paypal-integration.php:91
 msgid "PayPal Standard does not support your store currency."
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:118
+#: includes/class-wc-gateway-wps-paypal-integration.php:121
 msgid "Unable to proceed the refund process"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:122
+#: includes/class-wc-gateway-wps-paypal-integration.php:125
 msgid "Please enter the amount to refund"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:133
+#: includes/class-wc-gateway-wps-paypal-integration.php:136
 #, php-format
 msgid "Refunded : %1$s from PayPal- Refund ID : %2$s"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:142
+#: includes/class-wc-gateway-wps-paypal-integration.php:145
 msgid "Unable to refund the amount from PayPal."
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:213
+#: includes/class-wc-gateway-wps-paypal-integration.php:216
 #, php-format
 msgid "order captured from PayPal for PayPal order ID : %s"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:232
+#: includes/class-wc-gateway-wps-paypal-integration.php:235
 #: package/gateways/wps-paypal/class-wps-paypal-requests.php:582
 #, php-format
 msgid "payment completed txn ID : %s"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:242
+#: includes/class-wc-gateway-wps-paypal-integration.php:245
 msgid "IPN received from the PayPal"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:245
+#: includes/class-wc-gateway-wps-paypal-integration.php:248
 #, php-format
 msgid "Order ID : %1$s , PayPal Txn ID : %2$s"
 msgstr ""
 
-#: includes/class-wc-gateway-wps-paypal-integration.php:273
+#: includes/class-wc-gateway-wps-paypal-integration.php:276
 msgid "Payment error : Please choose another payment method."
 msgstr ""
 
@@ -1127,9 +1127,13 @@ msgid "%s Year"
 msgstr ""
 
 #: includes/subscriptions-for-woocommerce-common-function.php:716
-#: public/class-subscriptions-for-woocommerce-public.php:125
-#: public/class-subscriptions-for-woocommerce-public.php:139
-#: public/class-subscriptions-for-woocommerce-public.php:981
+#: public/class-subscriptions-for-woocommerce-public.php:132
+#: public/class-subscriptions-for-woocommerce-public.php:152
+#: public/class-subscriptions-for-woocommerce-public.php:168
+#: public/class-subscriptions-for-woocommerce-public.php:185
+#: public/class-subscriptions-for-woocommerce-public.php:201
+#: public/class-subscriptions-for-woocommerce-public.php:213
+#: public/class-subscriptions-for-woocommerce-public.php:1067
 #, php-format
 msgid " / %s "
 msgstr ""
@@ -1403,51 +1407,53 @@ msgid ""
 "Please enter client secret here after following the above mentioned process."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:130
+#: public/class-subscriptions-for-woocommerce-public.php:140
+#: public/class-subscriptions-for-woocommerce-public.php:157
+#: public/class-subscriptions-for-woocommerce-public.php:173
 #, php-format
 msgid " For %s "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:176
+#: public/class-subscriptions-for-woocommerce-public.php:252
 #, php-format
 msgid " and %s  Sign up fee"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:197
+#: public/class-subscriptions-for-woocommerce-public.php:273
 #, php-format
 msgid " and %s  free trial"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:537
+#: public/class-subscriptions-for-woocommerce-public.php:623
 msgid "%1$b %2$d, %Y @ %I:%M %p"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:546
+#: public/class-subscriptions-for-woocommerce-public.php:631
 #, php-format
 msgid "WPS Subscription &ndash; %s"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:758
+#: public/class-subscriptions-for-woocommerce-public.php:844
 msgid "Please enable payment method"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:784
+#: public/class-subscriptions-for-woocommerce-public.php:870
 msgid "Payment Method Added Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1000
+#: public/class-subscriptions-for-woocommerce-public.php:1086
 msgid "Not a valid subscription"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1045
+#: public/class-subscriptions-for-woocommerce-public.php:1131
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1190
+#: public/class-subscriptions-for-woocommerce-public.php:1276
 msgid "You can not add multiple subscription products in cart"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1416
+#: public/class-subscriptions-for-woocommerce-public.php:1502
 msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
@@ -1572,68 +1578,72 @@ msgstr ""
 msgid "Demo"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:438
-msgid "Add Subscription"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:439
-msgid "Add New Subscription"
+#: subscriptions-for-woocommerce.php:395
+msgid "Services"
 msgstr ""
 
 #: subscriptions-for-woocommerce.php:440
-msgid "Edit"
+msgid "Add Subscription"
 msgstr ""
 
 #: subscriptions-for-woocommerce.php:441
-msgid "Edit Subscription"
+msgid "Add New Subscription"
 msgstr ""
 
 #: subscriptions-for-woocommerce.php:442
+msgid "Edit"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:443
+msgid "Edit Subscription"
+msgstr ""
+
+#: subscriptions-for-woocommerce.php:444
 msgid "New Subscription"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:443 subscriptions-for-woocommerce.php:444
+#: subscriptions-for-woocommerce.php:445 subscriptions-for-woocommerce.php:446
 msgid "View Subscription"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:445
+#: subscriptions-for-woocommerce.php:447
 msgid "Search Subscriptions"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:446
+#: subscriptions-for-woocommerce.php:448
 msgid "Not Found"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:447
+#: subscriptions-for-woocommerce.php:449
 msgid "No Subscriptions found in the trash"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:448
+#: subscriptions-for-woocommerce.php:450
 msgid "Parent Subscriptions"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:451
+#: subscriptions-for-woocommerce.php:453
 msgid "These subscriptions are stored."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:557
+#: subscriptions-for-woocommerce.php:559
 msgid ""
 "WooCommerce is not activated, Please activate WooCommerce first to activate "
 "Subscriptions for Woocommerce."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:584
+#: subscriptions-for-woocommerce.php:586
 msgid "Version 2.1.0 of Subscriptions For WooCommerce Pro "
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:584
+#: subscriptions-for-woocommerce.php:586
 msgid " is not available on your system! Please Update "
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:584
+#: subscriptions-for-woocommerce.php:586
 msgid "WooCommerce Subscripiton Pro"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:584
+#: subscriptions-for-woocommerce.php:586
 msgid "."
 msgstr ""
