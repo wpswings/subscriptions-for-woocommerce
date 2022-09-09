@@ -6,7 +6,7 @@ Requires at least: 5.0
 Tested up to: 6.0.2
 WC requires at least: 5.0.0
 WC tested up to: 6.8.2
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -207,6 +207,11 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.4.4 - Released on 09 September  2022 =
+
+* New: Minor Bug Fixes
+* New: Compatible with latest WP and WC
+
 = 1.4.3 - Released on 02 September  2022 =
 
 * New: Major Bug Fixes
@@ -286,8 +291,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.4.3 - Released on 02 September  2022 =
+= 1.4.4 - Released on 09 September  2022 =
 
-* New: Major Bug Fixes
+* New: Minor Bug Fixes
 * New: Compatible with latest WP and WC
-
