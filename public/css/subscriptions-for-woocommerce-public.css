@@ -12,3 +12,46 @@
 .wps_sfw_experimental_feature_notice {
     color: red;
 }
+
+/* Designing issue fixes */
+div#oceanwp-cart-sidebar-wrap .oceanwp-cart-sidebar {
+    width: 100%;
+    max-width: 400px;
+}
+
+div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
+    padding: 10px;
+}
+
+.oceanwp-theme .wps_sfw_subscription_inner_wrapper .amount {
+    color: #fff !important;
+}
+
+.theme-betheme .wps_sfw_subscription_wrapper label,
+.theme-betheme .wps_sfw_subscription_wrapper p,
+.oceanwp-theme .wps_sfw_subscription_wrapper label,
+.oceanwp-theme .wps_sfw_subscription_wrapper p {
+    line-height: 28px;
+}
+
+.theme-betheme .wps_sfw_subscription_wrapper,
+.oceanwp-theme .wps_sfw_subscription_wrapper {
+    text-align: left;
+    padding: 10px;
+}
+
+.mfp-wrap .mfp-container .mfp-content {
+    width: 100%;
+    max-width: 500px;
+}
+
+.wps_sfw_subscription_wrapper label,
+.wps_sfw_subscription_wrapper p {
+    display: inline-block;
+    white-space: break-spaces;
+}
+
+.wps_sfw_subscription_wrapper input[type=radio] {
+    vertical-align: middle;
+    margin: 0 5px 5px 0;
+}
