@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.4.3
+ * Version:           1.4.4
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -60,8 +60,7 @@ function wps_sfw_old_upgrade_notice( $plugin_file, $plugin_data, $status ) {
 			<div class="notice notice-error inline update-message notice-alt">
 				<p class='wps-notice-title wps-notice-section'>
 					<strong><?php esc_html_e( 'This plugin will not work anymore correctly.', 'subscriptions-for-woocommerce' ); ?></strong><br>
-					<?php esc_html_e( 'We highly recommend to update to latest pro version and once installed please migrate the existing settings.', 'subscriptions-for-woocommerce' ); ?><br>
-					<?php esc_html_e( 'If you are not getting automatic update now button here, then don\'t worry you will get in within 24 hours. If you still not get it please visit to your account dashboard and install it manually or connect to our support.', 'subscriptions-for-woocommerce' ); ?>
+					<?php esc_html_e( 'We highly recommend to update to latest pro version.', 'subscriptions-for-woocommerce' ); ?>
 				</p>
 			</div>
 		</td>
@@ -84,7 +83,7 @@ if ( array_key_exists( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-
 	}
 }
 
-if ( true === $old_sfw_pro_present ) {
+if ( $old_sfw_pro_present ) {
 
 	add_action( 'admin_notices', 'wps_sfw_lite_add_updatenow_notice' );
 
@@ -102,7 +101,7 @@ if ( true === $old_sfw_pro_present ) {
 						<p><strong>IMPORTANT NOTICE:</strong></p>
 					</div>
 					<div class='wps-notice-content wps-notice-section'>
-						<p><strong>Your Woocommerce Subscriptions Pro plugin update is here! Please Update it now via plugins page.</strong></p>
+						<p><strong><?php esc_html_e( 'Your Woocommerce Subscriptions Pro plugin update is here! Please Update it now via plugins page', 'subscriptions-for-woocommerce' ); ?></strong></p>
 					</div>
 				</div>
 			</td>
@@ -112,8 +111,7 @@ if ( true === $old_sfw_pro_present ) {
 				content: none;
 			}
 		</style>
-
-				<?php
+			<?php
 		}
 
 	}//end wps_sfw_lite_add_updatenow_notice()
@@ -160,7 +158,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.3' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.4' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -215,49 +213,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	</style>
 
 			<?php
-		}
-	}
-
-	add_action( 'admin_notices', 'wps_sfw_plugin_upgrade_notice', 20 );
-
-	/**
-	 * Upgrade Notice for Subscription Plugin.
-	 *
-	 * @return void
-	 */
-	function wps_sfw_plugin_upgrade_notice() {
-		$screen = get_current_screen();
-		if ( isset( $screen->id ) && 'wp-swings_page_subscriptions_for_woocommerce_menu' === $screen->id ) {
-			$wps_sfw_get_count = new Subscriptions_For_Woocommerce_Admin( 'subscriptions-for-woocommerce', '1.4.2' );
-			$wps_sfw_pending_product_count  = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'products' );
-			$wps_sfw_pending_orders_count   = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'mwb_renewal_orders' );
-			$wps_sfw_pending_subs_count     = $wps_sfw_get_count->wps_sfw_get_count( 'pending', 'count', 'post_type_subscription' );
-			if ( '0' != $wps_sfw_pending_product_count || '0' != $wps_sfw_pending_orders_count || '0' != $wps_sfw_pending_subs_count ) {
-				?>
-			<tr class="plugin-update-tr active notice-warning notice-alt">
-			<td colspan="4" class="plugin-update colspanchange">
-				<div class="notice notice-success inline update-message notice-alt">
-					<div class='wps-notice-title wps-notice-section'>
-						<p><strong>IMPORTANT NOTICE:</strong></p>
-					</div>
-					<div class='wps-notice-content wps-notice-section'>
-						<p>
-							<?php esc_html_e( 'Heads up, The latest update includes some substantial changes across different areas of the plugin.', 'subscriptions-for-woocommerce' ); ?>
-							</p>
-							<p><b><?php esc_html_e( 'Please Click on the Start Migration button to start migration.', 'subscriptions-for-woocommerce' ); ?></b>
-						</p>
-						<p><button class="cls-migration-button mdc-button mdc-button--raised mdc-ripple-upgraded" id="wps_sfw_migration-button">Start Migration</button></p>
-					</div>
-				</div>
-			</td>
-			</tr>
-			<style>
-			.wps-notice-section > p:before {
-				content: none;
-			}
-			</style>
-				<?php
-			}
 		}
 	}
 
