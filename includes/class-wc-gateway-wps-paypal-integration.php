@@ -466,7 +466,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 
 		try {
 			$endpoint   = self::$testmode ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-			$request_id = uniqid( 'wps_paypal-', true );
+			$request_id = uniqid( 'wps-paypal-', true );
 			$url        = $endpoint . '/v2/checkout/orders';
 			$args       = array(
 				'method'      => 'POST',
@@ -573,7 +573,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		}
 
 		$purchase_details = array(
-			'reference_id'                    => 'wps-paypal',
+			'reference_id'                    => uniqid( 'wps-paypal-', true ),
 			'custom_id'                       => self::limit_length( $order->get_order_number() ),
 			'invoice_id'                      => self::limit_length( $invoice_prefix . wp_rand( 10, 99 ) . $order->get_id() ),
 			'payee_payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
@@ -605,6 +605,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 
 		return $purchase_details;
 	}
+
 	/**
 	 * Get order shipping details to send at paypal.
 	 *
@@ -853,7 +854,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$endpoint = self::$testmode ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
 
 		$url        = $endpoint . '/v2/checkout/orders';
-		$request_id = uniqid( 'wps_paypal-', true );
+		$request_id = uniqid( 'wps-paypal-', true );
 		$args       = array(
 			'method'  => 'POST',
 			'headers' => array(
