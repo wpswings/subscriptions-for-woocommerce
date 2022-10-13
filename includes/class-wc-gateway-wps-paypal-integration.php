@@ -870,7 +870,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		update_post_meta( $order->get_id(), 'wps_paypal_request_id', $request_id );
 		$response = wp_remote_post( $url, $args );
 
-
 		$json = json_decode( $response['body'] );
 
 		if ( class_exists( 'Subscriptions_For_Woocommerce_Log' ) ) {

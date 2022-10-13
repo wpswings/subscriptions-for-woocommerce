@@ -136,8 +136,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 					} else {
 						$order->update_status( 'failed', esc_html__( 'WPS Paypal is not setup', 'subscriptions-for-woocommerce' ) );
 					}
-					
-					
 				}
 			}
 		}

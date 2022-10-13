@@ -428,6 +428,8 @@ class Subscriptions_For_Woocommerce_Public {
 					$wps_recurring_data['line_total'] = $cart_item['line_total'];
 					$wps_recurring_data['line_tax'] = $cart_item['line_tax'];
 
+					// $wps_recurring_data['cart_price'] = $price;
+
 					$wps_recurring_data = apply_filters( 'wps_sfw_cart_data_for_susbcription', $wps_recurring_data, $cart_item );
 
 					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, $posted_data, $cart_item ) ) {
@@ -580,10 +582,37 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 					$initial_signup_price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( $wps_args['wps_order_currency'], $initial_signup_price );
 				}
-				$line_subtotal = $wps_args['line_subtotal'] - $initial_signup_price;
-				$line_total = $line_subtotal;
-				$wps_args['line_subtotal'] = $line_subtotal;
-				$wps_args['line_total'] = $line_total;
+				$include_tax = get_option( 'woocommerce_prices_include_tax' );
+				if ( 'yes' == $include_tax ) {
+
+					// calulate subtotal_tax%.
+					$order_total = $wps_args['line_total'] + $wps_args['line_subtotal_tax'];
+					$line_subtotal_tax = $wps_args['line_subtotal_tax'];
+					$line_subtotal_tax = ( 100 * $line_subtotal_tax ) / $order_total;
+
+					// subtotal calculation.
+					$line_subtotal = $wps_args['line_subtotal'] + $wps_args['line_subtotal_tax'] - $initial_signup_price;
+					$line_subtotal = $line_subtotal - ( ( $line_subtotal * $line_subtotal_tax ) / 100 );
+					$line_subtotal = $line_subtotal + $wps_args['line_subtotal_tax'];
+
+					// calulate total_tax%.
+					$line_total_tax = $wps_args['line_tax'];
+					$line_total_tax = ( 100 * $line_total_tax ) / $order_total;
+
+					// total calculation.
+					$line_total = $wps_args['line_total'] + $wps_args['line_tax'] - $initial_signup_price;
+					$line_total = $line_total - ( ( $line_total * $line_total_tax ) / 100 );
+					$line_total = $line_total + $wps_args['line_tax'];
+
+					$wps_args['line_subtotal'] = $line_subtotal;
+					$wps_args['line_total'] = $line_total;
+
+				} else {
+					$line_subtotal = $wps_args['line_subtotal'] + $wps_args['line_subtotal_tax'] - $initial_signup_price;
+					$line_total = $wps_args['line_total'] + $wps_args['line_tax'] - $initial_signup_price;
+					$wps_args['line_subtotal'] = $line_subtotal - $wps_args['line_subtotal_tax'];
+					$wps_args['line_total'] = $line_total - $wps_args['line_subtotal_tax'];
+				}
 			} elseif ( isset( $wps_args['wps_sfw_subscription_free_trial_number'] ) && ! empty( $wps_args['wps_sfw_subscription_free_trial_number'] ) ) {
 				// Currency switchers.
 				if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -604,12 +633,12 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$_product = wc_get_product( $wps_args['product_id'] );
 
-			$include = get_option( 'woocommerce_prices_include_tax' );
-			if ( 'yes' == $include ) {
-
+			$include_tax = get_option( 'woocommerce_prices_include_tax' );
+			// if inculsie tax is applicable.
+			if ( 'yes' == $include_tax || ( $initial_signup_price > 0 && 'no' == $include_tax ) ) {
 				$wps_pro_args = array(
-					'variation'    => array(),
-					'totals'       => array(
+					'variation' => array(),
+					'totals'    => array(
 						'subtotal'     => $line_subtotal - $wps_args['line_subtotal_tax'],
 						'subtotal_tax' => $wps_args['line_subtotal_tax'],
 						'total'        => $line_total - $wps_args['line_subtotal_tax'],
@@ -619,6 +648,7 @@ class Subscriptions_For_Woocommerce_Public {
 				);
 
 			} else {
+				// if tax is disable or exculsive tax is applicable.
 
 				$wps_pro_args = array(
 					'variation' => array(),
@@ -631,7 +661,6 @@ class Subscriptions_For_Woocommerce_Public {
 					),
 				);
 			}
-
 			$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_pro_args );
 
 			$item_id = $new_order->add_product(
