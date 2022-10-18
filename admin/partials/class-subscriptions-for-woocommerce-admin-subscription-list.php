@@ -295,7 +295,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$wps_sfw_pro_plugin_activated = true;
 		}
 
-		$current_page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
+		$current_page = isset( $_GET['paged'] ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
 
 		$args = array(
 			'posts_per_page' => 10,
@@ -352,30 +352,30 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		$wps_subscriptions_data = array();
 
 		if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
-			foreach ( $wps_subscriptions as $ID ) {
+			foreach ( $wps_subscriptions as $id ) {
 
-				$parent_order_id   = get_post_meta( $ID, 'wps_parent_order', true );
+				$parent_order_id   = get_post_meta( $id, 'wps_parent_order', true );
 				if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 					$total_count = --$total_count;
 					continue;
 				}
-							$wps_subscription_status   = get_post_meta( $ID, 'wps_subscription_status', true );
-							$product_name   = get_post_meta( $ID, 'product_name', true );
-							$wps_recurring_total   = get_post_meta( $ID, 'wps_recurring_total', true );
+							$wps_subscription_status   = get_post_meta( $id, 'wps_subscription_status', true );
+							$product_name   = get_post_meta( $id, 'product_name', true );
+							$wps_recurring_total   = get_post_meta( $id, 'wps_recurring_total', true );
 							$wps_curr_args = array();
-							$susbcription = wc_get_order( $ID );
+							$susbcription = wc_get_order( $id );
 				if ( isset( $susbcription ) && ! empty( $susbcription ) ) {
 					$wps_recurring_total = $susbcription->get_total();
 					$wps_curr_args = array(
 						'currency' => $susbcription->get_currency(),
 					);
 				}
-							$wps_recurring_total = wps_sfw_recerring_total_price_list_table_callback( wc_price( $wps_recurring_total, $wps_curr_args ), $ID );
+							$wps_recurring_total = wps_sfw_recerring_total_price_list_table_callback( wc_price( $wps_recurring_total, $wps_curr_args ), $id );
 
-							$wps_recurring_total = apply_filters( 'wps_sfw_recerring_total_price_list_table', $wps_recurring_total, $ID );
+							$wps_recurring_total = apply_filters( 'wps_sfw_recerring_total_price_list_table', $wps_recurring_total, $id );
 
-							$wps_next_payment_date   = get_post_meta( $ID, 'wps_next_payment_date', true );
-							$wps_susbcription_end   = get_post_meta( $ID, 'wps_susbcription_end', true );
+							$wps_next_payment_date   = get_post_meta( $id, 'wps_next_payment_date', true );
+							$wps_susbcription_end   = get_post_meta( $id, 'wps_susbcription_end', true );
 				if ( $wps_next_payment_date === $wps_susbcription_end ) {
 					$wps_next_payment_date = '';
 				}
@@ -389,11 +389,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_susbcription_end = '';
 					$wps_recurring_total = '---';
 				}
-							$wps_customer_id   = get_post_meta( $ID, 'wps_customer_id', true );
+							$wps_customer_id   = get_post_meta( $id, 'wps_customer_id', true );
 							$user = get_user_by( 'id', $wps_customer_id );
 
 				if ( ! $wps_sfw_pro_plugin_activated ) {
-					$subp_id = get_post_meta( $ID, 'product_id', true );
+					$subp_id = get_post_meta( $id, 'product_id', true );
 					$check_variable = get_post_meta( $subp_id, 'wps_sfw_variable_product', true );
 					if ( 'yes' === $check_variable ) {
 						continue;
@@ -404,7 +404,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 							$wps_subscriptions_data[] = apply_filters(
 								'wps_sfw_subs_table_data',
 								array(
-									'subscription_id'           => $ID,
+									'subscription_id'           => $id,
 									'parent_order_id'           => $parent_order_id,
 									'status'                    => $wps_subscription_status,
 									'product_name'              => $product_name,

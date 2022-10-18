@@ -55,3 +55,24 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     vertical-align: middle;
     margin: 0 5px 5px 0;
 }
+.wps_sfw_account_wrap table {
+    width: 100%;
+}
+
+.wps_sfw_account_wrap table th {
+    min-width: 100px;
+    text-align: left;
+}
+
+.wps_sfw_account_wrap table th:first-of-type {
+    min-width: 50px;
+}
+
+.wps_sfw_account_wrap table th:nth-of-type(3) {
+    min-width: 150px;
+}
+
+.wps_sfw_account_wrap table th:last-of-type,.wps_sfw_account_wrap table td:last-of-type {
+    min-width: 80px;
+    text-align: center;
+}
