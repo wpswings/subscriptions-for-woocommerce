@@ -2,11 +2,11 @@
 Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: woocommerce subscriptions variation, recurring billing, renew subscriptions automatically, subscription management, subscriptions, paypal subscriptions, memberships
-Requires at least: 5.0
-Tested up to: 6.0.2
-WC requires at least: 5.0.0
-WC tested up to: 6.8.2
-Stable tag: 1.4.4
+Requires at least: 5.1.0
+Tested up to: 6.0.3
+WC requires at least: 5.1.0
+WC tested up to: 7.0.0
+Stable tag: 1.4.5
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -207,10 +207,18 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.4.5 - Released on 20 October  2022 =
+
+* Bug Fix: WPS-Paypal concern for live mode resolved
+* Bug Fix: Wrong Recurring total for tax concern resolved
+* New: Compatible with latest WP and WC
+
 = 1.4.4 - Released on 09 September  2022 =
 
 * New: Minor Bug Fixes
 * New: Compatible with latest WP and WC
+
+
 
 = 1.4.3 - Released on 02 September  2022 =
 
@@ -291,7 +299,8 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.4.4 - Released on 09 September  2022 =
+= 1.4.5 - Released on 20 October  2022 =
 
-* New: Minor Bug Fixes
+* Bug Fix: WPS-Paypal concern for live mode resolved
+* Bug Fix: Wrong Recurring total for tax concern resolved
 * New: Compatible with latest WP and WC
