@@ -42,9 +42,9 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 		<tbody>
 			<tr>
 				<td><?php esc_html_e( 'Status', 'subscriptions-for-woocommerce' ); ?></td>
-				<td>
+				<?php $wps_status = get_post_meta( $wps_subscription_id, 'wps_subscription_status', true ); ?>
+				<td class="<?php echo esc_html( 'wps_sfw_' . $wps_status ); ?>">
 				<?php
-					$wps_status = get_post_meta( $wps_subscription_id, 'wps_subscription_status', true );
 					echo esc_html( $wps_status );
 				?>
 				</td>

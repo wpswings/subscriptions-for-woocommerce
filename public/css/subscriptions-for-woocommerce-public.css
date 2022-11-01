@@ -76,3 +76,28 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     min-width: 80px;
     text-align: center;
 }
+
+.wps_sfw_expired {
+    color: #e74c3c;
+    text-transform: capitalize;
+}
+
+.wps_sfw_cancelled {
+    text-transform: capitalize;
+    color: #e67e22;
+}
+
+.wps_sfw_active {
+    text-transform: capitalize;
+    color: #27ae60;
+}
+
+.wps_sfw_on-hold {
+    text-transform: capitalize;
+    color: #f1c40f;
+}
+
+.wps_sfw_paused {
+    text-transform: capitalize;
+    color: #3498db;
+}
