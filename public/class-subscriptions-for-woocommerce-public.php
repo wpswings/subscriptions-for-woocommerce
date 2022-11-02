@@ -1453,4 +1453,44 @@ class Subscriptions_For_Woocommerce_Public {
 		return $description;
 
 	}
+
+	/**
+	 * Display the recurring
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_show_recurring_information(){
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] )){
+					$product_id = $cart_item['data']->get_id();
+					$curr_time = current_time( 'timestamp' );
+					$wps_sfw_subscription_number = get_post_meta( $product_id , 'wps_sfw_subscription_number' , true);
+					$wps_sfw_subscription_interval = get_post_meta( $product_id, 'wps_sfw_subscription_interval', true);
+					$renewal_amount = get_post_meta($product_id,'_price',true);
+					if( 'day' == $wps_sfw_subscription_interval ){
+						$renewal_date =  $curr_time + ( 24 * 60 * 60 ) * $wps_sfw_subscription_number;
+						$renewal_date = date('m/d/Y', $renewal_date);
+					}
+
+					if ( $cart_item['data']->is_on_sale() ) {
+						$price = $cart_item['data']->get_sale_price();
+					} else {
+						$price = $cart_item['data']->get_regular_price();
+					}
+					if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+						$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
+					}
+					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
+					$renewal_amount = $this->wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item['key'] );
+					?>
+					<tr class="order-total wps_wsp_recurring_total">
+					<td data-title="<?php esc_attr_e( 'wps-sfw-recurring', 'subscriptions-for-woocommerce' ); ?>"><?php esc_attr_e( 'Recurring', 'subscriptions-for-woocommerce' ); ?></td>
+					<td><?php echo esc_attr__( 'Recurring Amount will be ' ) . $renewal_amount . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . $cart_item['data']->get_name(); ?></td>
+					<tr>
+					<?php
+				}
+			}
+		}
+	}
 }
