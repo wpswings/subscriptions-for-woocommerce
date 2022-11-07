@@ -1486,7 +1486,7 @@ class Subscriptions_For_Woocommerce_Public {
 					?>
 					<tr class="order-total wps_wsp_recurring_total">
 					<td data-title="<?php esc_attr_e( 'wps-sfw-recurring', 'subscriptions-for-woocommerce' ); ?>"><?php esc_attr_e( 'Recurring', 'subscriptions-for-woocommerce' ); ?></td>
-					<td><?php echo esc_attr__( 'Recurring Amount will be ' ) . $renewal_amount . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . $cart_item['data']->get_name(); ?></td>
+					<td><?php echo esc_attr__( 'Recurring Amount will be' ) . ' ' . $renewal_amount . ' ' . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . $cart_item['data']->get_name(); ?></td>
 					<tr>
 					<?php
 				}

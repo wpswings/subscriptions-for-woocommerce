@@ -314,7 +314,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_gateway_description', $sfw_plugin_public, 'wps_sfw_change_payment_gateway_description', 10, 2 );
 
-			$this->loader->add_action( 'woocommerce_review_order_after_order_total', $sfw_plugin_public, 'wps_sfw_show_recurring_information',10,1);
+			$this->loader->add_action( 'woocommerce_review_order_after_order_total', $sfw_plugin_public, 'wps_sfw_show_recurring_information', 10, 1 );
 
 		}
 	}
