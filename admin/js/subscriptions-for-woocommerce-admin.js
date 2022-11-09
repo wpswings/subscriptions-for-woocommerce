@@ -67,14 +67,13 @@
             const html_val = jQuery(this).text();
             jQuery(this).empty();
             const html_tag = jQuery(this).append('<span>' + html_val + '</span>');
-            console.log(html_val)
             jQuery('.wp-swings_page_subscriptions_for_woocommerce_menu td.status span').css({ 'padding': '2px 10px', 'border-radius': '2px', 'text-transform': 'capitalize' });
 
             if (html_val == 'expired') {
                 jQuery(this).children().css({ 'color': '#943126', 'background': '#F5B7B1' });
-            } else if (html_val == 'cancelled') {
+            } else if (html_val == 'cancelled' || html_val == 'failed' ) {
                 jQuery(this).children().css({ 'color': '#873600', 'background': '#edbb99' });
-            } else if (html_val == 'active') {
+            } else if (html_val == 'active' || html_val == 'completed' ) {
                 jQuery(this).children().css({ 'color': '#196f3d', 'background': '#a9dfbf' });
             } else if (html_val == 'on-hold') {
                 jQuery(this).children().css({ 'color': '#9a7d0a', 'background': '#f9e79f' });

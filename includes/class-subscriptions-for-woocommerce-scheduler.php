@@ -277,6 +277,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						array(
 							'relation' => 'AND',
 							array(
+								
 								'key'   => 'wps_susbcription_end',
 								'value' => $current_time,
 								'compare' => '<',
