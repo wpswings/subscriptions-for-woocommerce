@@ -1459,7 +1459,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 *
 	 * @return void
 	 */
-	public function wps_sfw_show_recurring_information(){
+	public function wps_sfw_show_recurring_information() {
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
@@ -1468,12 +1468,12 @@ class Subscriptions_For_Woocommerce_Public {
 						return;
 					}
 					$curr_time = current_time( 'timestamp' );
-					$wps_sfw_subscription_number   = get_post_meta( $product_id , 'wps_sfw_subscription_number' , true);
-					$wps_sfw_subscription_interval = get_post_meta( $product_id, 'wps_sfw_subscription_interval', true);
+					$wps_sfw_subscription_number   = get_post_meta( $product_id, 'wps_sfw_subscription_number', true );
+					$wps_sfw_subscription_interval = get_post_meta( $product_id, 'wps_sfw_subscription_interval', true );
 					$renewal_amount                = get_post_meta( $product_id, '_price', true );
-					if( 'day' == $wps_sfw_subscription_interval ){
-						$renewal_date =  $curr_time + ( 24 * 60 * 60 ) * $wps_sfw_subscription_number;
-						$renewal_date = gmdate('m/d/Y', $renewal_date);
+					if ( 'day' == $wps_sfw_subscription_interval ) {
+						$renewal_date = $curr_time + ( 24 * 60 * 60 ) * $wps_sfw_subscription_number;
+						$renewal_date = gmdate( 'm/d/Y', $renewal_date );
 					}
 
 					if ( $cart_item['data']->is_on_sale() ) {

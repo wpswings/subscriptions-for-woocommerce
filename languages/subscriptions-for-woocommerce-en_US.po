@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-10-19 18:01+0530\n"
-"PO-Revision-Date: 2022-10-19 18:06+0530\n"
+"POT-Creation-Date: 2022-11-10 15:22+0530\n"
+"PO-Revision-Date: 2022-11-10 15:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.1\n"
 "X-Poedit-Basepath: .\n"
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:179
@@ -758,95 +758,95 @@ msgstr ""
 msgid "Unexpected Error Occured"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:410
+#: includes/class-subscriptions-for-woocommerce.php:412
 msgid "Overview"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:415
+#: includes/class-subscriptions-for-woocommerce.php:417
 msgid "General Setting"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:422
+#: includes/class-subscriptions-for-woocommerce.php:424
 msgid "Subscription Table"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:428
+#: includes/class-subscriptions-for-woocommerce.php:430
 msgid "System Status"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:433
+#: includes/class-subscriptions-for-woocommerce.php:435
 msgid "Developer"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:456
+#: includes/class-subscriptions-for-woocommerce.php:458
 #, php-format
 msgid ""
 "Unable to locate file at location \"%s\". Some features may not work "
 "properly in this plugin. Please contact us!"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:514
+#: includes/class-subscriptions-for-woocommerce.php:516
 msgid "N/A (phpversion function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:523
+#: includes/class-subscriptions-for-woocommerce.php:525
 msgid "N/A (make sure exec function is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:526
+#: includes/class-subscriptions-for-woocommerce.php:528
 msgid "N/A (ABSPATH constant not defined)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:529
+#: includes/class-subscriptions-for-woocommerce.php:531
 msgid "N/A (php_uname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:532
+#: includes/class-subscriptions-for-woocommerce.php:534
 msgid "N/A (get_bloginfo function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:535
+#: includes/class-subscriptions-for-woocommerce.php:537
 msgid "N/A (get_option function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:538
-#: includes/class-subscriptions-for-woocommerce.php:541
-#: includes/class-subscriptions-for-woocommerce.php:544
+#: includes/class-subscriptions-for-woocommerce.php:540
+#: includes/class-subscriptions-for-woocommerce.php:543
+#: includes/class-subscriptions-for-woocommerce.php:546
 msgid "Yes"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:538
-#: includes/class-subscriptions-for-woocommerce.php:541
-#: includes/class-subscriptions-for-woocommerce.php:544
+#: includes/class-subscriptions-for-woocommerce.php:540
+#: includes/class-subscriptions-for-woocommerce.php:543
+#: includes/class-subscriptions-for-woocommerce.php:546
 msgid "No"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:547
+#: includes/class-subscriptions-for-woocommerce.php:549
 msgid "N/A (count_users function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:553
-#: includes/class-subscriptions-for-woocommerce.php:559
-#: includes/class-subscriptions-for-woocommerce.php:562
-#: includes/class-subscriptions-for-woocommerce.php:590
-#: includes/class-subscriptions-for-woocommerce.php:593
+#: includes/class-subscriptions-for-woocommerce.php:555
+#: includes/class-subscriptions-for-woocommerce.php:561
+#: includes/class-subscriptions-for-woocommerce.php:564
+#: includes/class-subscriptions-for-woocommerce.php:592
+#: includes/class-subscriptions-for-woocommerce.php:595
 msgid "N/A (ini_get function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:556
+#: includes/class-subscriptions-for-woocommerce.php:558
 msgid "N/A"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:574
+#: includes/class-subscriptions-for-woocommerce.php:576
 msgid "N/A (gethostname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:577
-#: includes/class-subscriptions-for-woocommerce.php:586
+#: includes/class-subscriptions-for-woocommerce.php:579
+#: includes/class-subscriptions-for-woocommerce.php:588
 msgid "N/A (make sure exec is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:596
+#: includes/class-subscriptions-for-woocommerce.php:598
 msgid "N/A (wps_sfw_get_file_content function does not exist)"
 msgstr ""
 
@@ -1220,16 +1220,16 @@ msgid ""
 "%2$s"
 msgstr ""
 
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:117
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:113
 msgid "payment token not found"
 msgstr ""
 
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:131
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:127
 msgid "Token Verification failed !"
 msgstr ""
 
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:134
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:137
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:130
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:133
 msgid "WPS Paypal is not setup"
 msgstr ""
 
@@ -1281,6 +1281,22 @@ msgstr ""
 msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
+#: public/class-subscriptions-for-woocommerce-public.php:1491
+msgid "wps-sfw-recurring"
+msgstr ""
+
+#: public/class-subscriptions-for-woocommerce-public.php:1491
+msgid "Recurring"
+msgstr ""
+
+#: public/class-subscriptions-for-woocommerce-public.php:1492
+msgid "Recurring Amount will be"
+msgstr ""
+
+#: public/class-subscriptions-for-woocommerce-public.php:1492
+msgid "For"
+msgstr ""
+
 #: public/partials/templates/myaccount/wps-add-new-payment-details.php:23
 msgid "Totals"
 msgstr ""
@@ -1291,6 +1307,10 @@ msgstr ""
 
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:41
 msgid "Subscription Details"
+msgstr ""
+
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:46
+msgid "wps_sfw_"
 msgstr ""
 
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:53
