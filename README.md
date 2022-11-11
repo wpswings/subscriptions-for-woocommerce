@@ -9,7 +9,7 @@
 # Description
 **GET SUBSCRIPTIONS FOR WOOCOMMERCE AND INCREASE RECURRING REVENUE. MANAGE WOOCOMMERCE SUBSCRIPTION ON YOUR ONLINE & OFFLINE STORE WITH RECURRING BILLINGS ON CHECKOUT PAGES**
 
-Subscriptions for WooCommerce Plugin allows the WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store. 
+[**Subscriptions for WooCommerce Plugin**](https://wordpress.org/plugins/subscriptions-for-woocommerce/) allows the WooCommerce merchants to provide their products or services regularly through subscription programs. Thus, helping in collecting the recurring revenue of your store. 
 The [**Subscriptions for WooCommerce**](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-github-page&utm_campaign=subscription-pro) plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, online courses to eCommerce stores, revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business. 
 
 [**How to Set up Subscriptions on WooCommerce and Boost Recurring Revenue for Free?**](https://www.youtube.com/watch?v=QZO0Q_DT0ik)
