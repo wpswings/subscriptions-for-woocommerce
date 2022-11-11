@@ -99,7 +99,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 					$saved_setting = get_option( 'woocommerce_wps_paypal_settings', array() );
 					$client_id     = null;
 					$client_secret = null;
-					$testmode      = false;
 					if ( ! empty( $saved_setting ) && is_array( $saved_setting ) ) {
 						if ( isset( $saved_setting['client_id'] ) ) {
 							$client_id = $saved_setting['client_id'];
@@ -107,31 +106,31 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 						if ( isset( $saved_setting['client_secret'] ) ) {
 							$client_secret = $saved_setting['client_secret'];
 						}
-						if ( isset( $saved_setting['testmode'] ) && 'yes' === $saved_setting['testmode'] ) {
-							$testmode = true;
+					}
+					if ( $client_secret && $client_id ) {
+						$saved_token = get_post_meta( $wps_parent_order_id, 'wps_order_payment_token', true );
+						if ( empty( $saved_token ) ) {
+							$order_notes = __( 'payment token not found', 'subscriptions-for-woocommerce' );
+							$order->update_status( 'failed', $order_notes );
+							return;
 						}
-					}
-
-					require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/wps-paypal/class-wps-paypal-requests.php';
-					wps_Paypal_Requests::$client_id     = $client_id;
-					wps_Paypal_Requests::$client_secret = $client_secret;
-					wps_Paypal_Requests::$testmode      = $testmode;
-					$wps_request                        = new wps_Paypal_Requests( array() );
-					$saved_token                        = get_post_meta( $wps_parent_order_id, 'wps_order_payment_token', true );
-					if ( empty( $saved_token ) ) {
-						$order_notes = __( 'payment token not found', 'wps-paypal-integration-for-woocommerce' );
-						$order->update_status( 'failed', $order_notes );
-						return;
-					}
-					$token_response = $wps_request->wps_validate_saved_customer_token( $saved_token );
-					$token_flag     = false;
-					if ( is_object( $token_response ) && isset( $token_response->status ) && 'CREATED' === $token_response->status && isset( $token_response->id ) && $saved_token === $token_response->id ) {
-						$token_flag = true;
-					}
-					if ( $token_flag ) {
-						$wps_request->create_renewal_payment( $saved_token, $order );
+						if ( class_exists( 'WC_Gateway_Wps_Paypal_Integration' ) ) {
+							$wps_paypal_object = new WC_Gateway_Wps_Paypal_Integration();
+							$token_response    = $wps_paypal_object->wps_validate_saved_customer_token( $saved_token );
+							$token_flag        = false;
+							if ( is_object( $token_response ) && isset( $token_response->status ) && 'CREATED' === $token_response->status && isset( $token_response->id ) && $saved_token === $token_response->id ) {
+								$token_flag = true;
+							}
+							if ( $token_flag ) {
+								$wps_paypal_object->create_renewal_payment( $saved_token, $order );
+							} else {
+								$order->update_status( 'failed', esc_html__( 'Token Verification failed !', 'subscriptions-for-woocommerce' ) );
+							}
+						} else {
+							$order->update_status( 'failed', esc_html__( 'WPS Paypal is not setup', 'subscriptions-for-woocommerce' ) );
+						}
 					} else {
-						$order->update_status( 'failed', 'Token Verification failed !' );
+						$order->update_status( 'failed', esc_html__( 'WPS Paypal is not setup', 'subscriptions-for-woocommerce' ) );
 					}
 				}
 			}

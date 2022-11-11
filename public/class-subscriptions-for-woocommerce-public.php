@@ -428,6 +428,8 @@ class Subscriptions_For_Woocommerce_Public {
 					$wps_recurring_data['line_total'] = $cart_item['line_total'];
 					$wps_recurring_data['line_tax'] = $cart_item['line_tax'];
 
+					// $wps_recurring_data['cart_price'] = $price;
+
 					$wps_recurring_data = apply_filters( 'wps_sfw_cart_data_for_susbcription', $wps_recurring_data, $cart_item );
 
 					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, $posted_data, $cart_item ) ) {
@@ -580,10 +582,37 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 					$initial_signup_price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( $wps_args['wps_order_currency'], $initial_signup_price );
 				}
-				$line_subtotal = $wps_args['line_subtotal'] - $initial_signup_price;
-				$line_total = $line_subtotal;
-				$wps_args['line_subtotal'] = $line_subtotal;
-				$wps_args['line_total'] = $line_total;
+				$include_tax = get_option( 'woocommerce_prices_include_tax' );
+				if ( 'yes' == $include_tax ) {
+
+					// calulate subtotal_tax%.
+					$order_total = $wps_args['line_total'] + $wps_args['line_subtotal_tax'];
+					$line_subtotal_tax = $wps_args['line_subtotal_tax'];
+					$line_subtotal_tax = ( 100 * $line_subtotal_tax ) / $order_total;
+
+					// subtotal calculation.
+					$line_subtotal = $wps_args['line_subtotal'] + $wps_args['line_subtotal_tax'] - $initial_signup_price;
+					$line_subtotal = $line_subtotal - ( ( $line_subtotal * $line_subtotal_tax ) / 100 );
+					$line_subtotal = $line_subtotal + $wps_args['line_subtotal_tax'];
+
+					// calulate total_tax%.
+					$line_total_tax = $wps_args['line_tax'];
+					$line_total_tax = ( 100 * $line_total_tax ) / $order_total;
+
+					// total calculation.
+					$line_total = $wps_args['line_total'] + $wps_args['line_tax'] - $initial_signup_price;
+					$line_total = $line_total - ( ( $line_total * $line_total_tax ) / 100 );
+					$line_total = $line_total + $wps_args['line_tax'];
+
+					$wps_args['line_subtotal'] = $line_subtotal;
+					$wps_args['line_total'] = $line_total;
+
+				} else {
+					$line_subtotal = $wps_args['line_subtotal'] + $wps_args['line_subtotal_tax'] - $initial_signup_price;
+					$line_total = $wps_args['line_total'] + $wps_args['line_tax'] - $initial_signup_price;
+					$wps_args['line_subtotal'] = $line_subtotal - $wps_args['line_subtotal_tax'];
+					$wps_args['line_total'] = $line_total - $wps_args['line_subtotal_tax'];
+				}
 			} elseif ( isset( $wps_args['wps_sfw_subscription_free_trial_number'] ) && ! empty( $wps_args['wps_sfw_subscription_free_trial_number'] ) ) {
 				// Currency switchers.
 				if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -604,12 +633,12 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$_product = wc_get_product( $wps_args['product_id'] );
 
-			$include = get_option( 'woocommerce_prices_include_tax' );
-			if ( 'yes' == $include ) {
-
+			$include_tax = get_option( 'woocommerce_prices_include_tax' );
+			// if inculsie tax is applicable.
+			if ( 'yes' == $include_tax || ( $initial_signup_price > 0 && 'no' == $include_tax ) ) {
 				$wps_pro_args = array(
-					'variation'    => array(),
-					'totals'       => array(
+					'variation' => array(),
+					'totals'    => array(
 						'subtotal'     => $line_subtotal - $wps_args['line_subtotal_tax'],
 						'subtotal_tax' => $wps_args['line_subtotal_tax'],
 						'total'        => $line_total - $wps_args['line_subtotal_tax'],
@@ -619,6 +648,7 @@ class Subscriptions_For_Woocommerce_Public {
 				);
 
 			} else {
+				// if tax is disable or exculsive tax is applicable.
 
 				$wps_pro_args = array(
 					'variation' => array(),
@@ -631,7 +661,6 @@ class Subscriptions_For_Woocommerce_Public {
 					),
 				);
 			}
-
 			$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_pro_args );
 
 			$item_id = $new_order->add_product(
@@ -1423,5 +1452,48 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		return $description;
 
+	}
+
+	/**
+	 * Display the recurring
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_show_recurring_information() {
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+					$product_id = $cart_item['data']->get_id();
+					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
+						return;
+					}
+					$curr_time = current_time( 'timestamp' );
+					$wps_sfw_subscription_number   = get_post_meta( $product_id, 'wps_sfw_subscription_number', true );
+					$wps_sfw_subscription_interval = get_post_meta( $product_id, 'wps_sfw_subscription_interval', true );
+					$renewal_amount                = get_post_meta( $product_id, '_price', true );
+					if ( 'day' == $wps_sfw_subscription_interval ) {
+						$renewal_date = $curr_time + ( 24 * 60 * 60 ) * $wps_sfw_subscription_number;
+						$renewal_date = gmdate( 'm/d/Y', $renewal_date );
+					}
+
+					if ( $cart_item['data']->is_on_sale() ) {
+						$price = $cart_item['data']->get_sale_price();
+					} else {
+						$price = $cart_item['data']->get_regular_price();
+					}
+					if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
+						$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
+					}
+					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
+					$renewal_amount = $this->wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item['key'] );
+					?>
+					<tr class="order-total wps_wsp_recurring_total">
+					<td data-title="<?php esc_attr_e( 'wps-sfw-recurring', 'subscriptions-for-woocommerce' ); ?>"><?php esc_attr_e( 'Recurring', 'subscriptions-for-woocommerce' ); ?></td>
+					<td><?php echo esc_attr__( 'Recurring Amount will be' ) . ' ' . wp_kses_post( $renewal_amount ) . ' ' . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . esc_html( $cart_item['data']->get_name() ); ?></td>
+					<tr>
+					<?php
+				}
+			}
+		}
 	}
 }
