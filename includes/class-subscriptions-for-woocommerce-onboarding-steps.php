@@ -113,9 +113,6 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		self::$wps_sfw_plugin_name = 'Subscriptions For WooCommerce';
 		self::$wps_sfw_plugin_name_label = 'Subscriptions For WooCommerce';
 
-		if ( function_exists( 'wps_sfw_check_multistep' ) && ! wps_sfw_check_multistep() ) {
-			return;
-		}
 		add_action( 'admin_enqueue_scripts', array( $this, 'wps_sfw_onboarding_enqueue_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'wps_sfw_onboarding_enqueue_scripts' ) );
 		add_action( 'admin_footer', array( $this, 'wps_sfw_add_onboarding_popup_screen' ) );
@@ -170,7 +167,6 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		if ( ! $is_valid && 'plugins.php' == $pagenow ) {
 			$is_valid = true;
 		}
-
 		if ( $this->wps_sfw_valid_page_screen_check() || $is_valid ) {
 			// comment the line of code Only when your plugin doesn't uses the Select2.
 			wp_enqueue_style( 'wps-sfw-onboarding-select2-style', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), time(), 'all' );

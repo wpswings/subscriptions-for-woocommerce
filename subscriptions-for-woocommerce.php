@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.4.6
+ * Version:           1.4.7
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -149,7 +149,25 @@ if ( $old_sfw_pro_present ) {
 		}
 	}
 }
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+$activated      = true;
+$active_plugins = get_option( 'active_plugins', array() );
+if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+	$active_network_wide = get_site_option( 'active_sitewide_plugins', array() );
+	if ( ! empty( $active_network_wide ) ) {
+		foreach ( $active_network_wide as $key => $value ) {
+			$active_plugins[] = $key;
+		}
+	}
+	$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+	if ( ! in_array( 'woocommerce/woocommerce.php', $active_plugins, true ) ) {
+		$activated = false;
+	}
+} else {
+	if ( ! in_array( 'woocommerce/woocommerce.php', $active_plugins, true ) ) {
+		$activated = false;
+	}
+}
+if ( $activated ) {
 
 	/**
 	 * Define plugin constants.
@@ -158,7 +176,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.6' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.7' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -220,9 +238,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * The code that runs during plugin activation.
 	 * This action is documented in includes/class-subscriptions-for-woocommerce-activator.php
 	 */
-	function activate_subscriptions_for_woocommerce() {
+	function activate_subscriptions_for_woocommerce( $network_wide ) {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce-activator.php';
-		Subscriptions_For_Woocommerce_Activator::subscriptions_for_woocommerce_activate();
+		Subscriptions_For_Woocommerce_Activator::subscriptions_for_woocommerce_activate( $network_wide );
 		$wps_sfw_active_plugin = get_option( 'wps_all_plugins_active', false );
 		if ( is_array( $wps_sfw_active_plugin ) && ! empty( $wps_sfw_active_plugin ) ) {
 			$wps_sfw_active_plugin['subscriptions-for-woocommerce'] = array(
@@ -243,9 +261,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 * The code that runs during plugin deactivation.
 	 * This action is documented in includes/class-subscriptions-for-woocommerce-deactivator.php
 	 */
-	function deactivate_subscriptions_for_woocommerce() {
+	function deactivate_subscriptions_for_woocommerce( $network_wide ) {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce-deactivator.php';
-		Subscriptions_For_Woocommerce_Deactivator::subscriptions_for_woocommerce_deactivate();
+		Subscriptions_For_Woocommerce_Deactivator::subscriptions_for_woocommerce_deactivate( $network_wide );
 		$wps_sfw_deactive_plugin = get_option( 'wps_all_plugins_active', false );
 		if ( is_array( $wps_sfw_deactive_plugin ) && ! empty( $wps_sfw_deactive_plugin ) ) {
 			foreach ( $wps_sfw_deactive_plugin as $wps_sfw_deactive_key => $wps_sfw_deactive ) {
@@ -477,8 +495,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function wps_paypal_integration_for_woocommerce_gateway() {
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
 	}
-
-	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );
@@ -496,6 +512,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 	// Add admin error notice.
 	add_action( 'admin_notices', 'wps_sfw_activation_failure_admin_notice' );
+	add_action( 'network_admin_notices', 'wps_sfw_activation_failure_admin_notice' );
 
 	/**
 	 * This function is used to display admin error notice when WooCommerce is not active.
