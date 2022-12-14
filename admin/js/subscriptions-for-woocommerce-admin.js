@@ -84,6 +84,32 @@
             }
 
         });
+
+		jQuery(document).on( 'click', '.wps_sfw_paypal_validate', function(e){
+			e.preventDefault();
+			var clientID = jQuery( 'input[name="woocommerce_wps_paypal_client_id"]' ).val();
+			var clientSecret = jQuery( 'input[name="woocommerce_wps_paypal_client_secret"]' ).val();
+			var testMode = jQuery( 'input[name="woocommerce_wps_paypal_testmode"]' ).is(':checked');
+			var data = {
+				clientID : clientID,
+				clientSecret : clientSecret,
+				testMode : testMode,
+				nonce: sfw_admin_param.sfw_auth_nonce,
+				action: 'wps_sfw_paypal_keys_validation',
+			}
+			if ( ! clientID && ! clientSecret ) {
+				alert( sfw_admin_param.empty_fields );
+			}
+			jQuery.ajax({
+				type: 'post',
+				dataType: 'json',
+				url: sfw_admin_param.ajaxurl,
+				data: data,
+				success: function(data) {
+					alert( data.msg );
+				}
+			});
+		})
     });
 
 	})( jQuery );

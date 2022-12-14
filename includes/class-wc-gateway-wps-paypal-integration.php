@@ -213,14 +213,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				'description' => __( 'This controls the description which the user sees during checkout.', 'subscriptions-for-woocommerce' ),
 				'default'     => __( "Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.", 'subscriptions-for-woocommerce' ),
 			),
-			'testmode'              => array(
-				'title'       => __( 'PayPal sandbox', 'subscriptions-for-woocommerce' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Enable PayPal sandbox', 'subscriptions-for-woocommerce' ),
-				'default'     => 'no',
-				/* translators: %s: URL */
-				'description' => sprintf( __( 'PayPal sandbox can be used to test payments. Sign up for a <a href="%s">developer account</a>.', 'subscriptions-for-woocommerce' ), 'https://developer.paypal.com/' ),
-			),
 			'ipn_notification'      => array(
 				'title'       => __( 'IPN email notifications', 'subscriptions-for-woocommerce' ),
 				'type'        => 'checkbox',
@@ -257,6 +249,14 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					'https://developer.paypal.com/developer/applications'
 				),
 			),
+			'testmode'              => array(
+				'title'       => __( 'PayPal sandbox', 'subscriptions-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Enable PayPal sandbox', 'subscriptions-for-woocommerce' ),
+				'default'     => 'no',
+				/* translators: %s: URL */
+				'description' => sprintf( __( 'PayPal sandbox can be used to test payments. Make Sure you have filled the Test Credentials below If you are using the test mode. Sign up for a <a href="%s">developer account</a>.', 'subscriptions-for-woocommerce' ), 'https://developer.paypal.com/' ),
+			),
 			'client_id'          => array(
 				'title'             => __( 'Client ID', 'subscriptions-for-woocommerce' ),
 				'type'              => 'text',
@@ -272,6 +272,13 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				'default'           => '',
 				'desc_tip'          => true,
 				'custom_attributes' => array( 'autocomplete' => 'new-password' ),
+			),
+			'wps_validate_button'  => array(
+				'title'       =>  '',
+				'type'        => 'button',
+				'label'       => __( 'Enable PayPal sandbox', 'subscriptions-for-woocommerce' ),
+				'class'       => 'button wps_sfw_paypal_validate',
+				'default'     => __( 'Validate', 'subscriptions-for-woocommerce' ),
 			),
 		);
 	}

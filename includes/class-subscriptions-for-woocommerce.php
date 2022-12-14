@@ -248,6 +248,9 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'wps_sfw_new_wc_order_statuses' );
 			// WPLM Translation.
 			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'wps_sfw_add_lock_custom_fields_ids' );
+
+			// paypal Keys Validation
+			$this->loader->add_filter( 'wp_ajax_wps_sfw_paypal_keys_validation', $sfw_plugin_admin, 'wps_sfw_paypal_keys_validation_callack' );
 		}
 
 	}
@@ -315,7 +318,6 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_gateway_description', $sfw_plugin_public, 'wps_sfw_change_payment_gateway_description', 10, 2 );
 
 			$this->loader->add_action( 'woocommerce_review_order_after_order_total', $sfw_plugin_public, 'wps_sfw_show_recurring_information', 10, 1 );
-
 		}
 	}
 

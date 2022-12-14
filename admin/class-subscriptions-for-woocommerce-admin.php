@@ -107,7 +107,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id ) {
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id ) {
 
 			if ( ! wps_sfw_check_multistep() ) {
 
@@ -163,6 +163,8 @@ class Subscriptions_For_Woocommerce_Admin {
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					'reloadurl' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ),
 					'sfw_gen_tab_enable' => get_option( 'sfw_radio_switch_demo' ),
+					'sfw_auth_nonce'    => wp_create_nonce( 'wps_sfw_admin_nonce' ),
+					'empty_fields'    => esc_html__( 'Make Sure, You have filled the Client ID and Client secret keys' ),
 				)
 			);
 
@@ -926,6 +928,54 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_get_count( $status = 'all', $action = 'count', $type = false ) {
 		return 0;
+	}
+
+	public function wps_sfw_paypal_keys_validation_callack() {
+		check_ajax_referer( 'wps_sfw_admin_nonce', 'nonce' );
+
+		$test_mode = $_POST['testMode'];
+		$client_id = $_POST['clientID'];
+		$client_secret = $_POST['clientSecret'];
+		
+		$endpoint = ( 'true' === $test_mode ) ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+		
+		$response = wp_remote_post(
+			$endpoint . '/v1/oauth2/token',
+			array(
+				'method'      => 'POST',
+				'timeout'     => 45,
+				'redirection' => 5,
+				'httpversion' => '1.0',
+				'blocking'    => true,
+				'headers'     => array(
+					'Accept' => 'application/json',
+					'Accept-Language' => 'en_US',
+					'Authorization'   => 'Basic ' . base64_encode( $client_id . ':' . $client_secret ),
+				),
+				'body' => array(
+					'grant_type' => 'client_credentials',
+				),
+			)
+		);
+
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		if ( 200 == $response_code ) {
+			$response = array(
+				'msg' => esc_html__( 'Verification Successful', 'subscriptions-for-woocommerce' ),
+				'status' => 'success',
+				'code' => 200,
+			);
+		} else {
+			$response = array(
+				'msg' => $response_data->error_description,
+				'status' => 'error',
+				'code' => $response_code,
+			);
+		}
+		echo json_encode( $response );
+		wp_die();
 	}
 }
 

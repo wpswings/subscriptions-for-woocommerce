@@ -35,7 +35,7 @@ if ( ! wps_sfw_check_multistep() ) {
 ?>
 <header>
 	<div class="wps-header-container wps-bg-white wps-r-8">
-		<h1 class="wps-header-title"><?php echo esc_attr( strtoupper( str_replace( '-', ' ', $sfw_wps_sfw_obj->sfw_get_plugin_name() ) ) ); ?></h1>
+		<h1 class="wps-header-title"><?php echo apply_filters( 'wps_sfw_dashboard_plugin_title', esc_attr( strtoupper( str_replace( '-', ' ', $sfw_wps_sfw_obj->sfw_get_plugin_name() ) ) ) ); ?></h1>
 		<div class="wps-header-container__links">
 			<a href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation" class="wps-link" target="_blank"><?php esc_html_e( 'Documentation', 'subscriptions-for-woocommerce' ); ?></a>
 			<span class="wps-header-container__links-divider">|</span>

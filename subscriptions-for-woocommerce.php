@@ -495,6 +495,7 @@ if ( $activated ) {
 	function wps_paypal_integration_for_woocommerce_gateway() {
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
 	}
+	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );
