@@ -742,10 +742,9 @@ class Subscriptions_For_Woocommerce_Admin {
 			update_option( 'wps_sfw_add_to_cart_text ', $add_to_cart_text );
 			update_option( 'wps_sfw_place_order_button_text ', $place_order_text );
 		}
-
 		$allready_created = get_option( 'wps_sfw_multistep_product_create_done', 'no' );
 		// Create products.
-		if ( $enable_plugin && 'no' == $allready_created ) {
+		if ( $enable_plugin && 'yes' !== $allready_created ) {
 			$post_id = wp_insert_post(
 				array(
 					'post_title' => $product_name,
