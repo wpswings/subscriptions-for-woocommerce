@@ -99,6 +99,7 @@
 			}
 			if ( ! clientID && ! clientSecret ) {
 				alert( sfw_admin_param.empty_fields );
+				return;
 			}
 			jQuery.ajax({
 				type: 'post',

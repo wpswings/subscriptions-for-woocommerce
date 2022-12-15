@@ -295,9 +295,9 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$order = new WC_Order( $order_id );
 
 		$response = self::paypal_create_order( $order );
-
+		print_r($response);
 		if ( 'success' !== $response['result'] ) {
-			wc_add_notice( __( 'Payment error : Please choose another payment method.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( $response['response'], 'error' );
 			return;
 		}
 		return $response;
@@ -435,6 +435,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					),
 				)
 			);
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 			if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
 				$response = json_decode( wp_remote_retrieve_body( $response ) );
@@ -444,12 +445,12 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					'app_id'       => isset( $response->app_id ) ? $response->app_id : '',
 				);
 			}
-			throw new Exception( __( 'Unable to generate access token', 'subscriptions-for-woocommerce' ) );
+			throw new Exception( $response_data->error_description );
 
 		} catch ( Exception $e ) {
 			return array(
 				'result' => 'error',
-				'msg'    => $e->getMessage(),
+				'response' => $e->getMessage(),
 			);
 		}
 	}
@@ -468,6 +469,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			return array(
 				'result'   => 'error',
 				'redirect' => '',
+				'response' => $access_response['response']
 			);
 		}
 
@@ -539,8 +541,11 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			);
 
 			$response = wp_remote_post( $url, $args );
+			
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+			$response_code = wp_remote_retrieve_response_code( $response );
 
-			if ( ! is_wp_error( $response ) && in_array( (int) wp_remote_retrieve_response_code( $response ), array( 200, 201, 202, 204 ), true ) ) {
+			if ( ! is_wp_error( $response ) && in_array( (int) $response_code, array( 200, 201, 202, 204 ), true ) ) {
 				$response = json_decode( wp_remote_retrieve_body( $response ) );
 				if ( isset( $response->links ) ) {
 					foreach ( $response->links as $link ) {
@@ -553,13 +558,19 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 						}
 					}
 				}
+			} elseif ( 401 == $response_code ) {
+				return array(
+					'result'   => 'error',
+					'response' => $response_data->message,
+					'redirect' => '',
+				);
 			}
-
 			throw new Exception( __( 'Unable to create order', 'subscriptions-for-woocommerce' ) . wp_remote_retrieve_body( $response ) );
 		} catch ( Exception $e ) {
 			return array(
 				'result'    => 'error',
-				'error_msg' => $e->getMessage(),
+				'response' => $e->getMessage(),
+				'redirect' => '',
 			);
 		}
 	}
