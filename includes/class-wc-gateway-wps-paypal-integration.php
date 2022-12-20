@@ -194,9 +194,13 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 	public function init_form_fields() {
 
 		$data = get_option('woocommerce_wps_paypal_settings');
-		if ( $data['wps_validate_button'] == '' ) {
-			$data['wps_validate_button'] = 'Validate';
-			update_option('woocommerce_wps_paypal_settings',$data );
+		if ( !empty( $data ) ){
+			
+			if ( $data['wps_validate_button'] == '' ) {
+				$data['wps_validate_button'] = 'Validate';
+				update_option('woocommerce_wps_paypal_settings',$data );
+			}
+			
 		}
 
 		$this->form_fields = array(
