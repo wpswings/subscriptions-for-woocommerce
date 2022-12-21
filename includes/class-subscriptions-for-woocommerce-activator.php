@@ -22,11 +22,10 @@
 class Subscriptions_For_Woocommerce_Activator {
 
 	/**
-	 * Short Description. (use period)
+	 * Activator function
 	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
+	 * @param String $network_wide as network wide.
+	 * @return void
 	 */
 	public static function subscriptions_for_woocommerce_activate( $network_wide ) {
 		global $wpdb;

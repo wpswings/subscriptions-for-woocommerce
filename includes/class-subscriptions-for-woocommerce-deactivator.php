@@ -22,11 +22,10 @@
 class Subscriptions_For_Woocommerce_Deactivator {
 
 	/**
-	 * Short Description. (use period)
+	 * Desactivator function
 	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
+	 * @param string $network_wide as network wide.
+	 * @return void
 	 */
 	public static function subscriptions_for_woocommerce_deactivate( $network_wide ) {
 

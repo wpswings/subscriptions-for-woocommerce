@@ -193,14 +193,13 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 	 */
 	public function init_form_fields() {
 
-		$data = get_option('woocommerce_wps_paypal_settings');
-		if ( !empty( $data ) ){
-			
-			if ( $data['wps_validate_button'] == '' ) {
+		$data = get_option( 'woocommerce_wps_paypal_settings' );
+		if ( ! empty( $data ) ) {
+
+			if ( '' == $data['wps_validate_button'] ) {
 				$data['wps_validate_button'] = 'Validate';
-				update_option('woocommerce_wps_paypal_settings',$data );
+				update_option( 'woocommerce_wps_paypal_settings', $data );
 			}
-			
 		}
 
 		$this->form_fields = array(
@@ -285,7 +284,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				'custom_attributes' => array( 'autocomplete' => 'new-password' ),
 			),
 			'wps_validate_button'  => array(
-				'title'       =>  '',
+				'title'       => '',
 				'type'        => 'button',
 				'label'       => __( 'Enable PayPal sandbox', 'subscriptions-for-woocommerce' ),
 				'class'       => 'button wps_sfw_paypal_validate',
@@ -306,7 +305,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$order = new WC_Order( $order_id );
 
 		$response = self::paypal_create_order( $order );
-		print_r($response);
+		print_r( $response );
 		if ( 'success' !== $response['result'] ) {
 			wc_add_notice( $response['response'], 'error' );
 			return;
@@ -480,7 +479,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			return array(
 				'result'   => 'error',
 				'redirect' => '',
-				'response' => $access_response['response']
+				'response' => $access_response['response'],
 			);
 		}
 
@@ -552,7 +551,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			);
 
 			$response = wp_remote_post( $url, $args );
-			
+
 			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
 			$response_code = wp_remote_retrieve_response_code( $response );
 

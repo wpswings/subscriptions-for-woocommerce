@@ -101,3 +101,9 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     text-transform: capitalize;
     color: #3498db;
 }
+.wps_wsp_recurring_total_td{
+    font-weight: 600;
+}
+.wps_wsp_recurring_total th{
+    vertical-align: top;
+}

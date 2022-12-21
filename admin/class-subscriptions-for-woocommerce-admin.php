@@ -929,15 +929,20 @@ class Subscriptions_For_Woocommerce_Admin {
 		return 0;
 	}
 
+	/**
+	 * Wps_sfw_paypal_keys_validation_callack function
+	 *
+	 * @return void
+	 */
 	public function wps_sfw_paypal_keys_validation_callack() {
 		check_ajax_referer( 'wps_sfw_admin_nonce', 'nonce' );
 
-		$test_mode = $_POST['testMode'];
-		$client_id = $_POST['clientID'];
-		$client_secret = $_POST['clientSecret'];
-		
+		$test_mode = isset( $_POST['testMode'] ) ? sanitize_text_field( wp_unslash( $_POST['testMode'] ) ) : '';
+		$client_id = isset( $_POST['clientID'] ) ? sanitize_text_field( wp_unslash( $_POST['clientID'] ) ) : '';
+		$client_secret = isset( $_POST['clientSecret'] ) ? sanitize_text_field( wp_unslash( $_POST['clientSecret'] ) ) : '';
+
 		$endpoint = ( 'true' === $test_mode ) ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-		
+
 		$response = wp_remote_post(
 			$endpoint . '/v1/oauth2/token',
 			array(

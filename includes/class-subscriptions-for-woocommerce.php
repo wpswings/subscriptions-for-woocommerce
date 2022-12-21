@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.4.5';
+			$this->version = '1.4.7';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -249,7 +249,7 @@ class Subscriptions_For_Woocommerce {
 			// WPLM Translation.
 			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'wps_sfw_add_lock_custom_fields_ids' );
 
-			// paypal Keys Validation
+			// paypal Keys Validation.
 			$this->loader->add_filter( 'wp_ajax_wps_sfw_paypal_keys_validation', $sfw_plugin_admin, 'wps_sfw_paypal_keys_validation_callack' );
 		}
 

@@ -22,9 +22,9 @@
  * Domain Path:       /languages
  *
  * Requires at least:        5.1.0
- * Tested up to:             6.1.0
+ * Tested up to:             6.1.1
  * WC requires at least:     5.1.0
- * WC tested up to:          7.1.0
+ * WC tested up to:          7.2.1
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -237,6 +237,8 @@ if ( $activated ) {
 	/**
 	 * The code that runs during plugin activation.
 	 * This action is documented in includes/class-subscriptions-for-woocommerce-activator.php
+	 *
+	 * @param   String $network_wide   network_wide for network.
 	 */
 	function activate_subscriptions_for_woocommerce( $network_wide ) {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce-activator.php';
@@ -260,6 +262,8 @@ if ( $activated ) {
 	/**
 	 * The code that runs during plugin deactivation.
 	 * This action is documented in includes/class-subscriptions-for-woocommerce-deactivator.php
+	 *
+	 * @param   String $network_wide   network_wide for network.
 	 */
 	function deactivate_subscriptions_for_woocommerce( $network_wide ) {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-subscriptions-for-woocommerce-deactivator.php';
