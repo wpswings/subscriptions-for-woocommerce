@@ -192,6 +192,16 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function init_form_fields() {
+
+		$data = get_option( 'woocommerce_wps_paypal_settings' );
+		if ( ! empty( $data ) ) {
+
+			if ( '' == $data['wps_validate_button'] ) {
+				$data['wps_validate_button'] = 'Validate';
+				update_option( 'woocommerce_wps_paypal_settings', $data );
+			}
+		}
+
 		$this->form_fields = array(
 			'enabled'               => array(
 				'title'   => __( 'Enable/Disable', 'subscriptions-for-woocommerce' ),
@@ -212,14 +222,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 				'description' => __( 'This controls the description which the user sees during checkout.', 'subscriptions-for-woocommerce' ),
 				'default'     => __( "Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.", 'subscriptions-for-woocommerce' ),
-			),
-			'testmode'              => array(
-				'title'       => __( 'PayPal sandbox', 'subscriptions-for-woocommerce' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Enable PayPal sandbox', 'subscriptions-for-woocommerce' ),
-				'default'     => 'no',
-				/* translators: %s: URL */
-				'description' => sprintf( __( 'PayPal sandbox can be used to test payments. Sign up for a <a href="%s">developer account</a>.', 'subscriptions-for-woocommerce' ), 'https://developer.paypal.com/' ),
 			),
 			'ipn_notification'      => array(
 				'title'       => __( 'IPN email notifications', 'subscriptions-for-woocommerce' ),
@@ -257,6 +259,14 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					'https://developer.paypal.com/developer/applications'
 				),
 			),
+			'testmode'              => array(
+				'title'       => __( 'PayPal sandbox', 'subscriptions-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Enable PayPal sandbox', 'subscriptions-for-woocommerce' ),
+				'default'     => 'no',
+				/* translators: %s: URL */
+				'description' => sprintf( __( 'PayPal sandbox can be used to test payments. Make Sure you have filled the Test Credentials below If you are using the test mode. Sign up for a <a href="%s">developer account</a>.', 'subscriptions-for-woocommerce' ), 'https://developer.paypal.com/' ),
+			),
 			'client_id'          => array(
 				'title'             => __( 'Client ID', 'subscriptions-for-woocommerce' ),
 				'type'              => 'text',
@@ -273,6 +283,13 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				'desc_tip'          => true,
 				'custom_attributes' => array( 'autocomplete' => 'new-password' ),
 			),
+			'wps_validate_button'  => array(
+				'title'       => '',
+				'type'        => 'button',
+				'label'       => __( 'Enable PayPal sandbox', 'subscriptions-for-woocommerce' ),
+				'class'       => 'button wps_sfw_paypal_validate',
+				'default'     => __( 'Validate', 'subscriptions-for-woocommerce' ),
+			),
 		);
 	}
 
@@ -288,9 +305,9 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$order = new WC_Order( $order_id );
 
 		$response = self::paypal_create_order( $order );
-
+		print_r( $response );
 		if ( 'success' !== $response['result'] ) {
-			wc_add_notice( __( 'Payment error : Please choose another payment method.', 'subscriptions-for-woocommerce' ), 'error' );
+			wc_add_notice( $response['response'], 'error' );
 			return;
 		}
 		return $response;
@@ -428,6 +445,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					),
 				)
 			);
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 			if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
 				$response = json_decode( wp_remote_retrieve_body( $response ) );
@@ -437,12 +455,12 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					'app_id'       => isset( $response->app_id ) ? $response->app_id : '',
 				);
 			}
-			throw new Exception( __( 'Unable to generate access token', 'subscriptions-for-woocommerce' ) );
+			throw new Exception( $response_data->error_description );
 
 		} catch ( Exception $e ) {
 			return array(
 				'result' => 'error',
-				'msg'    => $e->getMessage(),
+				'response' => $e->getMessage(),
 			);
 		}
 	}
@@ -461,6 +479,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			return array(
 				'result'   => 'error',
 				'redirect' => '',
+				'response' => $access_response['response'],
 			);
 		}
 
@@ -533,7 +552,10 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 
 			$response = wp_remote_post( $url, $args );
 
-			if ( ! is_wp_error( $response ) && in_array( (int) wp_remote_retrieve_response_code( $response ), array( 200, 201, 202, 204 ), true ) ) {
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+			$response_code = wp_remote_retrieve_response_code( $response );
+
+			if ( ! is_wp_error( $response ) && in_array( (int) $response_code, array( 200, 201, 202, 204 ), true ) ) {
 				$response = json_decode( wp_remote_retrieve_body( $response ) );
 				if ( isset( $response->links ) ) {
 					foreach ( $response->links as $link ) {
@@ -546,13 +568,19 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 						}
 					}
 				}
+			} elseif ( 401 == $response_code ) {
+				return array(
+					'result'   => 'error',
+					'response' => $response_data->message,
+					'redirect' => '',
+				);
 			}
-
 			throw new Exception( __( 'Unable to create order', 'subscriptions-for-woocommerce' ) . wp_remote_retrieve_body( $response ) );
 		} catch ( Exception $e ) {
 			return array(
 				'result'    => 'error',
-				'error_msg' => $e->getMessage(),
+				'response' => $e->getMessage(),
+				'redirect' => '',
 			);
 		}
 	}
