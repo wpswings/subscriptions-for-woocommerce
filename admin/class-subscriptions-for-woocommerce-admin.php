@@ -208,6 +208,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_options_page() {
 		global $submenu;
+		$is_home = false;
 		if ( empty( $GLOBALS['admin_page_hooks']['wps-plugins'] ) ) {
 
 			add_menu_page( 'WP Swings', 'WP Swings', 'manage_options', 'wps-plugins', array( $this, 'wps_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/wpswings_logo.png', 15 );

@@ -185,6 +185,10 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						update_post_meta( $order_id, 'wps_sfw_parent_order_id', $parent_order_id );
 						update_post_meta( $subscription_id, 'wps_renewal_subscription_order', $order_id );
 
+						//billing phone number added.
+						$billing_address = get_post_meta($parent_order_id ,'_billing_address_index',true );
+                        update_post_meta( $order_id,'_billing_address_index', $billing_address );
+
 						// Renewal info.
 						$wps_no_of_order = get_post_meta( $subscription_id, 'wps_wsp_no_of_renewal_order', true );
 						if ( empty( $wps_no_of_order ) ) {
@@ -225,6 +229,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							}
 						}
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+
+						//hook for par plugin compatible.
+						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );
 					}
 				}
 			}
