@@ -1308,6 +1308,10 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 			} elseif ( 'failed' === $new_status ) {
+				$mailer = WC()->mailer()->get_emails();
+				if ( isset( $mailer['WC_Email_Failed_Order'] ) ) {
+					$mailer['WC_Email_Failed_Order']->trigger( $order_id );
+				}
 				$this->wps_sfw_hold_subscription( $order_id );
 			} elseif ( 'completed' == $new_status || 'processing' == $new_status ) {
 				$this->wps_sfw_active_after_on_hold( $order_id );
@@ -1495,5 +1499,19 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Change the failed order subject for recurring order
+	 *
+	 * @param string $subject
+	 * @param object $order
+	 * @return $subject
+	 */
+	public function wps_sfw_customizing_failed_email_subject( $subject, $order ){
+		if ( 'yes' === get_post_meta( $order->get_id(), 'wps_sfw_renewal_order', true ) ) {
+			$subject = __( str_replace( 'Order', 'Recurring Order', $subject ), 'subscriptions-for-woocommerce' ); 
+		}
+		return $subject;
 	}
 }

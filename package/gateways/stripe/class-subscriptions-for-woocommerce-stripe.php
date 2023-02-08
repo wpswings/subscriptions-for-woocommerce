@@ -77,6 +77,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 					$is_successful = false;
 					$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 					$order->update_status( 'failed', $order_note );
+					do_action( 'wps_sfw_recurring_payment_failed', $order_id );
 
 				} else {
 					// show the data in log file.
@@ -87,6 +88,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 					$order_note = sprintf( __( 'Stripe Renewal Transaction Successful (%s)', 'subscriptions-for-woocommerce' ), $response->id );
 					$order->add_order_note( $order_note );
 					$order->payment_complete( $response->id );
+					do_action( 'wps_sfw_recurring_payment_success', $order_id );
 
 					$is_successful = true;
 				}

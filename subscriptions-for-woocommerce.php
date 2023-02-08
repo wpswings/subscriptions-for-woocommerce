@@ -648,3 +648,4 @@ function subscriptions_for_woocommerce_upgrade_wp_options() {
 			update_option( $new_key, $new_value );
 		}
 }
+

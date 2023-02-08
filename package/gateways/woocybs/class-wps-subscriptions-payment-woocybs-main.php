@@ -152,6 +152,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 					if ( empty( $payment_token ) ) {
 						/* translators: %s: method title */
 						$order->update_status( 'failed', sprintf( __( 'Payment token not found %s', 'subscriptions-for-woocommerce' ), $order->get_payment_method_title() ) );
+						do_action( 'wps_sfw_recurring_payment_failed', $order_id );
 						return;
 					}
 
@@ -204,6 +205,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 						$order->payment_complete();
 						/* translators: %s: card name */
 						$order->add_order_note( sprintf( __( 'Renewal Order is successfully paid!. Cardholder: %1$s Last 4 card digits: : %2$s', 'subscriptions-for-woocommerce' ), $card_name, $numero_cuenta ) );
+						do_action( 'wps_sfw_recurring_payment_success', $order_id );
 					}
 				}
 			}
