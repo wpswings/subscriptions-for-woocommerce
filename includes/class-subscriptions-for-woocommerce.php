@@ -439,7 +439,7 @@ class Subscriptions_For_Woocommerce {
 		$sfw_default_tabs['subscriptions-for-woocommerce-developer'] = array(
 			'title'       => esc_html__( 'Developer', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-developer',
-			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+			'file_path'   => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_end', $sfw_default_tabs );
 
