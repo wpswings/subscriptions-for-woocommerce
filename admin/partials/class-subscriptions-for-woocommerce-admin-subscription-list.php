@@ -352,9 +352,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		// search with subscription id code.
 		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-			if( empty( $wps_subscriptions )){
-				
-				$wps_subs_id = get_post_meta( $data ,'wps_parent_order', true );
+			if ( empty( $wps_subscriptions ) ) {
+				$wps_subs_id = get_post_meta( $data, 'wps_parent_order', true );
 				$args2['meta_query'] = array(
 					array(
 						'key'   => 'wps_parent_order',
@@ -363,7 +362,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					),
 				);
 				$wps_subscriptions = get_posts( $args2 );
-			}	
+			}
 		}
 		// search with subscription id code.
 

@@ -1497,13 +1497,13 @@ class Subscriptions_For_Woocommerce_Public {
 	/**
 	 * Change the failed order subject for recurring order
 	 *
-	 * @param string $subject
-	 * @param object $order
-	 * @return $subject
+	 * @param string $subject .
+	 * @param object $order .
+	 * @return $subject .
 	 */
-	public function wps_sfw_customizing_failed_email_subject( $subject, $order ){
+	public function wps_sfw_customizing_failed_email_subject( $subject, $order ) {
 		if ( 'yes' === get_post_meta( $order->get_id(), 'wps_sfw_renewal_order', true ) ) {
-			$subject = __( str_replace( 'Order', 'Recurring Order', $subject ), 'subscriptions-for-woocommerce' ); 
+			$subject = str_replace( 'Order', 'Recurring Order', $subject );
 		}
 		return $subject;
 	}
