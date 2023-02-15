@@ -165,13 +165,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$product_qty,
 							$wps_pro_args
 						);
-						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
-							$wps_new_order->update_taxes();
-							$wps_new_order->calculate_totals();
-						} else {
-							$wps_new_order->calculate_totals( false );
-						}
-						$wps_new_order->save();
 
 						$order_id = $wps_new_order->get_id();
 						Subscriptions_For_Woocommerce_Log::log( 'WPS Renewal Order ID: ' . wc_print_r( $order_id, true ) );
@@ -209,6 +202,14 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						update_post_meta( $subscription_id, 'wps_wsp_last_renewal_order_id', $order_id );
 
 						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
+
+						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
+							$wps_new_order->update_taxes();
+							$wps_new_order->calculate_totals();
+						} else {
+							$wps_new_order->calculate_totals( false );
+						}
+						$wps_new_order->save();
 
 						/*if trial period enable*/
 						if ( '' == $wps_old_payment_method ) {
