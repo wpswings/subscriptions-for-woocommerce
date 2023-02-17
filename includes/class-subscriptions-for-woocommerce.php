@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.4.7';
+			$this->version = '1.4.8';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -318,6 +318,9 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_gateway_description', $sfw_plugin_public, 'wps_sfw_change_payment_gateway_description', 10, 2 );
 
 			$this->loader->add_action( 'woocommerce_review_order_after_order_total', $sfw_plugin_public, 'wps_sfw_show_recurring_information', 10, 1 );
+
+			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_customizing_failed_email_subject', 10, 2 );
+
 		}
 	}
 
@@ -436,7 +439,7 @@ class Subscriptions_For_Woocommerce {
 		$sfw_default_tabs['subscriptions-for-woocommerce-developer'] = array(
 			'title'       => esc_html__( 'Developer', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-developer',
-			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+			'file_path'   => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_end', $sfw_default_tabs );
 

@@ -165,13 +165,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$product_qty,
 							$wps_pro_args
 						);
-						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
-							$wps_new_order->update_taxes();
-							$wps_new_order->calculate_totals();
-						} else {
-							$wps_new_order->calculate_totals( false );
-						}
-						$wps_new_order->save();
 
 						$order_id = $wps_new_order->get_id();
 						Subscriptions_For_Woocommerce_Log::log( 'WPS Renewal Order ID: ' . wc_print_r( $order_id, true ) );
@@ -184,6 +177,10 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						update_post_meta( $order_id, 'wps_sfw_subscription', $subscription_id );
 						update_post_meta( $order_id, 'wps_sfw_parent_order_id', $parent_order_id );
 						update_post_meta( $subscription_id, 'wps_renewal_subscription_order', $order_id );
+
+						// Billing phone number added.
+						$billing_address = get_post_meta( $parent_order_id, '_billing_address_index', true );
+						update_post_meta( $order_id, '_billing_address_index', $billing_address );
 
 						// Renewal info.
 						$wps_no_of_order = get_post_meta( $subscription_id, 'wps_wsp_no_of_renewal_order', true );
@@ -206,6 +203,14 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
 
+						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
+							$wps_new_order->update_taxes();
+							$wps_new_order->calculate_totals();
+						} else {
+							$wps_new_order->calculate_totals( false );
+						}
+						$wps_new_order->save();
+
 						/*if trial period enable*/
 						if ( '' == $wps_old_payment_method ) {
 							$parent_order_id = $subscription_id;
@@ -225,6 +230,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							}
 						}
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+
+						// hook for par plugin compatible .
+						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );
 					}
 				}
 			}

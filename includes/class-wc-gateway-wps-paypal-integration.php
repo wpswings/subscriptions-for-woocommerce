@@ -195,10 +195,12 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 
 		$data = get_option( 'woocommerce_wps_paypal_settings' );
 		if ( ! empty( $data ) ) {
+			if ( key_exists( 'wps_validate_button', $data ) ) {
 
-			if ( '' == $data['wps_validate_button'] ) {
-				$data['wps_validate_button'] = 'Validate';
-				update_option( 'woocommerce_wps_paypal_settings', $data );
+				if ( '' == $data['wps_validate_button'] ) {
+					$data['wps_validate_button'] = 'Validate';
+					update_option( 'woocommerce_wps_paypal_settings', $data );
+				}
 			}
 		}
 
@@ -933,9 +935,11 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			$order->update_meta_data( '_wps_paypal_order_id', $json->id );
 			$order->update_meta_data( '_wps_paypal_payment_status', 'captured' );
 			$order->save();
+			do_action( 'wps_sfw_recurring_payment_success', $order->get_id() );
 		} else {
 			$order_notes = __( 'renewal payment failed', 'subscriptions-for-woocommerce' );
 			$order->update_status( 'failed', $order_notes );
+			do_action( 'wps_sfw_recurring_payment_failed', $order->get_id() );
 		}
 
 		return $json;

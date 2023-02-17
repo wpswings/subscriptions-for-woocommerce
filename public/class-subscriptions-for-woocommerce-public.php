@@ -307,6 +307,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
 			}
+			$price         = $price * $cart_item['quantity'];
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
 			// Use for role base pricing.
 			$product_price = apply_filters( 'wps_rbpfw_cart_price', $product_price, $cart_item );
@@ -583,36 +584,19 @@ class Subscriptions_For_Woocommerce_Public {
 					$initial_signup_price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( $wps_args['wps_order_currency'], $initial_signup_price );
 				}
 				$include_tax = get_option( 'woocommerce_prices_include_tax' );
-				if ( 'yes' == $include_tax ) {
 
-					// calulate subtotal_tax%.
-					$order_total = $wps_args['line_total'] + $wps_args['line_subtotal_tax'];
-					$line_subtotal_tax = $wps_args['line_subtotal_tax'];
-					$line_subtotal_tax = ( 100 * $line_subtotal_tax ) / $order_total;
-
-					// subtotal calculation.
-					$line_subtotal = $wps_args['line_subtotal'] + $wps_args['line_subtotal_tax'] - $initial_signup_price;
-					$line_subtotal = $line_subtotal - ( ( $line_subtotal * $line_subtotal_tax ) / 100 );
-					$line_subtotal = $line_subtotal + $wps_args['line_subtotal_tax'];
-
-					// calulate total_tax%.
-					$line_total_tax = $wps_args['line_tax'];
-					$line_total_tax = ( 100 * $line_total_tax ) / $order_total;
-
-					// total calculation.
-					$line_total = $wps_args['line_total'] + $wps_args['line_tax'] - $initial_signup_price;
-					$line_total = $line_total - ( ( $line_total * $line_total_tax ) / 100 );
-					$line_total = $line_total + $wps_args['line_tax'];
-
-					$wps_args['line_subtotal'] = $line_subtotal;
-					$wps_args['line_total'] = $line_total;
-
+				if ( 'yes' === $include_tax ) {
+					$line_subtotal = $wps_args['line_subtotal'] + $wps_args['line_subtotal_tax'];
+					$line_total = $wps_args['line_total'] + $wps_args['line_tax'];
 				} else {
-					$line_subtotal = $wps_args['line_subtotal'] + $wps_args['line_subtotal_tax'] - $initial_signup_price;
-					$line_total = $wps_args['line_total'] + $wps_args['line_tax'] - $initial_signup_price;
-					$wps_args['line_subtotal'] = $line_subtotal - $wps_args['line_subtotal_tax'];
-					$wps_args['line_total'] = $line_total - $wps_args['line_subtotal_tax'];
+					$line_subtotal = $wps_args['line_subtotal'];
+					$line_total    = $wps_args['line_total'];
 				}
+				$line_subtotal = $line_subtotal - $initial_signup_price * $wps_args['product_qty'];
+				$line_total    = $line_total - $initial_signup_price * $wps_args['product_qty'];
+
+				$wps_args['line_subtotal'] = $line_subtotal;
+				$wps_args['line_total']    = $line_total;
 			} elseif ( isset( $wps_args['wps_sfw_subscription_free_trial_number'] ) && ! empty( $wps_args['wps_sfw_subscription_free_trial_number'] ) ) {
 				// Currency switchers.
 				if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -635,29 +619,39 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$include_tax = get_option( 'woocommerce_prices_include_tax' );
 			// if inculsie tax is applicable.
-			if ( 'yes' == $include_tax || ( $initial_signup_price > 0 && 'no' == $include_tax ) ) {
+			if ( 'yes' == $include_tax ) {
+				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, WC_Tax::get_rates() ) );
+				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, WC_Tax::get_rates() ) );
 				$wps_pro_args = array(
 					'variation' => array(),
 					'totals'    => array(
-						'subtotal'     => $line_subtotal - $wps_args['line_subtotal_tax'],
-						'subtotal_tax' => $wps_args['line_subtotal_tax'],
-						'total'        => $line_total - $wps_args['line_subtotal_tax'],
-						'tax'          => $wps_args['line_tax'],
-						'tax_data'     => $wps_args['line_tax_data'],
+						'subtotal'     => $line_subtotal - $substotal_taxes,
+						'subtotal_tax' => $substotal_taxes,
+						'total'        => $line_total - $total_taxes,
+						'tax'          => $total_taxes,
+						'tax_data'     => array(
+							'subtotal' => array( $substotal_taxes ),
+							'total'    => array( $total_taxes ),
+						),
 					),
 				);
 
 			} else {
 				// if tax is disable or exculsive tax is applicable.
+				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, WC_Tax::get_rates() ) );
+				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, WC_Tax::get_rates() ) );
 
 				$wps_pro_args = array(
 					'variation' => array(),
 					'totals'    => array(
 						'subtotal'     => $line_subtotal,
-						'subtotal_tax' => $wps_args['line_subtotal_tax'],
+						'subtotal_tax' => $substotal_taxes,
 						'total'        => $line_total,
-						'tax'          => $wps_args['line_tax'],
-						'tax_data'     => $wps_args['line_tax_data'],
+						'tax'          => $total_taxes,
+						'tax_data'     => array(
+							'subtotal' => array( $substotal_taxes ),
+							'total'    => array( $total_taxes ),
+						),
 					),
 				);
 			}
@@ -1308,6 +1302,10 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 			} elseif ( 'failed' === $new_status ) {
+				$mailer = WC()->mailer()->get_emails();
+				if ( isset( $mailer['WC_Email_Failed_Order'] ) ) {
+					$mailer['WC_Email_Failed_Order']->trigger( $order_id );
+				}
 				$this->wps_sfw_hold_subscription( $order_id );
 			} elseif ( 'completed' == $new_status || 'processing' == $new_status ) {
 				$this->wps_sfw_active_after_on_hold( $order_id );
@@ -1495,5 +1493,19 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Change the failed order subject for recurring order
+	 *
+	 * @param string $subject .
+	 * @param object $order .
+	 * @return $subject .
+	 */
+	public function wps_sfw_customizing_failed_email_subject( $subject, $order ) {
+		if ( 'yes' === get_post_meta( $order->get_id(), 'wps_sfw_renewal_order', true ) ) {
+			$subject = str_replace( 'Order', 'Recurring Order', $subject );
+		}
+		return $subject;
 	}
 }
