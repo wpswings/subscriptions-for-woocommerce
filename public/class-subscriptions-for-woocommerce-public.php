@@ -307,6 +307,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
 			}
+			$price         = $price * $cart_item['quantity'];
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
 			// Use for role base pricing.
 			$product_price = apply_filters( 'wps_rbpfw_cart_price', $product_price, $cart_item );

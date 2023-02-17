@@ -1,9 +1,10 @@
 # Copyright (C) 2023 subscriptions-for-woocommerce
 # This file is distributed under the same license as the subscriptions-for-woocommerce package.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: subscriptions-for-woocommerce v1.4.8\n"
-"POT-Creation-Date: 2023-02-10 17:44+0530\n"
+"POT-Creation-Date: 2023-02-17 10:59+0530\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: WP Swings\n"
@@ -283,13 +284,13 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:467
-#: public/class-subscriptions-for-woocommerce-public.php:916
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:466
+#: public/class-subscriptions-for-woocommerce-public.php:917
 #: subscriptions-for-woocommerce.php:415 subscriptions-for-woocommerce.php:428
 msgid "Subscriptions"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:475
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:474
 msgid "Search Order"
 msgstr ""
 
@@ -1258,54 +1259,54 @@ msgstr ""
 msgid " and %s  free trial"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:545
+#: public/class-subscriptions-for-woocommerce-public.php:546
 msgctxt "subscription post title. \"Subscriptions order - <this>\""
 msgid "%1$b %2$d, %Y @ %I:%M %p"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:553
+#: public/class-subscriptions-for-woocommerce-public.php:554
 #, php-format
 msgctxt "Subscription post title"
 msgid "WPS Subscription &ndash; %s"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:786
+#: public/class-subscriptions-for-woocommerce-public.php:787
 msgid "Please enable payment method"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:812
+#: public/class-subscriptions-for-woocommerce-public.php:813
 msgid "Payment Method Added Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1028
+#: public/class-subscriptions-for-woocommerce-public.php:1029
 msgid "Not a valid subscription"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1073
+#: public/class-subscriptions-for-woocommerce-public.php:1074
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1218
+#: public/class-subscriptions-for-woocommerce-public.php:1219
 msgid "You can not add multiple subscription products in cart"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1448
+#: public/class-subscriptions-for-woocommerce-public.php:1449
 msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1488
+#: public/class-subscriptions-for-woocommerce-public.php:1489
 msgid "wps-sfw-recurring"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1488
+#: public/class-subscriptions-for-woocommerce-public.php:1489
 msgid "Recurring"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1489
+#: public/class-subscriptions-for-woocommerce-public.php:1490
 msgid "Recurring Amount will be"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1489
+#: public/class-subscriptions-for-woocommerce-public.php:1490
 msgid "For"
 msgstr ""
 
