@@ -595,6 +595,20 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_subtotal = $line_subtotal - $initial_signup_price * $wps_args['product_qty'];
 				$line_total    = $line_total - $initial_signup_price * $wps_args['product_qty'];
 
+				$fix_product = wc_get_product( $wps_args['product_id'] );
+				$product_re_price = $fix_product->get_regular_price();
+				foreach( $order->get_used_coupons() as $coupon_code ) {
+					// Get the WC_Coupon object
+					$coupon = new WC_Coupon($coupon_code);
+				
+					$discount_type = $coupon->get_discount_type(); // Get coupon discount type
+				}
+				if( $initial_signup_price > $product_re_price && ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) ){
+					$line_total    = $line_subtotal;
+				} else {
+					$line_total    = $line_total - $initial_signup_price * $wps_args['product_qty'];
+				}
+
 				$wps_args['line_subtotal'] = $line_subtotal;
 				$wps_args['line_total']    = $line_total;
 			} elseif ( isset( $wps_args['wps_sfw_subscription_free_trial_number'] ) && ! empty( $wps_args['wps_sfw_subscription_free_trial_number'] ) ) {
