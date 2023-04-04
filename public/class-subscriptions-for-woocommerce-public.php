@@ -931,7 +931,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $wps_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
-					$wps_supported_method = array( 'stripe' );
+					$wps_supported_method = array( 'stripe', 'stripe_sepa' );
 					// Supported paymnet gateway.
 					$wps_payment_method = apply_filters( 'wps_sfw_supported_payment_gateway_for_woocommerce', $wps_supported_method, $key );
 
