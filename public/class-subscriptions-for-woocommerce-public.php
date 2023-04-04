@@ -603,10 +603,14 @@ class Subscriptions_For_Woocommerce_Public {
 				
 					$discount_type = $coupon->get_discount_type(); // Get coupon discount type
 				}
-				if( $initial_signup_price > $product_re_price && ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) ){
-					$line_total    = $line_subtotal;
-				} else {
-					$line_total    = $line_total - $initial_signup_price * $wps_args['product_qty'];
+				if ( !empty( $discount_type )) {
+
+					if( $initial_signup_price > $product_re_price && ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) ){
+						$line_total    = $line_subtotal;
+					} 
+					// else {
+					// 	$line_total    = $line_total - $initial_signup_price * $wps_args['product_qty'];
+					// }
 				}
 
 				$wps_args['line_subtotal'] = $line_subtotal;
