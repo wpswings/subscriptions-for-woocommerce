@@ -90,7 +90,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
 			$allmethod = array( 'stripe', 'stripe_sepa' );
-			if ( in_array( $wps_payment_method, $allmethod )  || ( 'cod' == $wps_payment_method ) || ( 'bacs' == $wps_payment_method ) || ( 'cheque' == $wps_payment_method ) ) {
+			if ( in_array( $wps_payment_method, $allmethod ) || ( 'cod' == $wps_payment_method ) || ( 'bacs' == $wps_payment_method ) || ( 'cheque' == $wps_payment_method ) ) {
 				if ( 'Cancel' == $status ) {
 					wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
 					update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );

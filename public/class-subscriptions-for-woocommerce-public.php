@@ -514,6 +514,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param object $order order.
 	 * @param array  $posted_data posted_data.
 	 * @param array  $wps_recurring_data wps_recurring_data.
+	 * @param array  $cart_item cart items.
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data, $cart_item ) {
@@ -595,23 +596,27 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_subtotal = $line_subtotal - $initial_signup_price * $wps_args['product_qty'];
 				$line_total    = $line_total - $initial_signup_price * $wps_args['product_qty'];
 
-				//additional tax class issue.
+				// additional tax class issue.
 				$_product = wc_get_product( $wps_args['product_id'] );
 
 				$include_tax = get_option( 'woocommerce_prices_include_tax' );
 
-				// additional code
+				// additional code.
 				$wc_tax = new WC_Tax();
 
-				// Get User billing country
+				// Get User billing country.
 				$billing_country = WC()->customer->get_billing_country();
-				
-				// Get the item tax class (your code)
-				$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
-				
-				// Get the related Data for Germany and "default" tax class
-				$tax_data = $wc_tax->find_rates( array('country' => $billing_country, 'tax_class' => $tax_class ) );
 
+				// Get the item tax class (your code).
+				$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
+
+				// Get the related Data for Germany and "default" tax class.
+				$tax_data = $wc_tax->find_rates(
+					array(
+						'country' => $billing_country,
+						'tax_class' => $tax_class,
+					)
+				);
 
 				if ( 'yes' == $include_tax ) {
 
@@ -623,31 +628,31 @@ class Subscriptions_For_Woocommerce_Public {
 					$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
 
 				}
-				//additional tax class issue.
+				// additional tax class issue.
 
-				//coupon issue fixed.
+				// coupon issue fixed.
 				$fix_product = wc_get_product( $wps_args['product_id'] );
 				$product_re_price = $fix_product->get_regular_price();
-				foreach( $order->get_used_coupons() as $coupon_code ) {
-					// Get the WC_Coupon object
-					$coupon = new WC_Coupon($coupon_code);
-				
-					$discount_type = $coupon->get_discount_type(); // Get coupon discount type
-				}
-				if ( !empty( $discount_type )) {
+				foreach ( $order->get_used_coupons() as $coupon_code ) {
+					// Get the WC_Coupon object.
+					$coupon = new WC_Coupon( $coupon_code );
 
-					if( $initial_signup_price > $product_re_price && ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) ){
+					$discount_type = $coupon->get_discount_type(); // Get coupon discount type.
+				}
+				if ( ! empty( $discount_type ) ) {
+
+					if ( $initial_signup_price > $product_re_price && ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) ) {
 						$line_total    = $line_subtotal;
-					} 
+					}
 				}
-				//coupon issue fixed.
+				// coupon issue fixed.
 
-				//additional tax class issue.
+				// additional tax class issue.
 				$wps_args['line_subtotal'] = $line_subtotal;
 				$wps_args['line_total']    = $line_total;
 				$wps_args['line_subtotal_tax'] = $substotal_taxes;
 				$wps_args['line_tax']    = $total_taxes;
-				//additional tax class issue.
+				// additional tax class issue.
 			} elseif ( isset( $wps_args['wps_sfw_subscription_free_trial_number'] ) && ! empty( $wps_args['wps_sfw_subscription_free_trial_number'] ) ) {
 				// Currency switchers.
 				if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -670,18 +675,23 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$include_tax = get_option( 'woocommerce_prices_include_tax' );
 
-			// additional code
+			// additional code.
 			$wc_tax = new WC_Tax();
 
-			// Get User billing country
+			// Get User billing country.
 			$billing_country = WC()->customer->get_billing_country();
-			
-			// Get the item tax class (your code)
+
+			// Get the item tax class (your code).
 			$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
-			
-			// Get the related Data for Germany and "default" tax class
-			$tax_data = $wc_tax->find_rates( array('country' => $billing_country, 'tax_class' => $tax_class ) );
-			
+
+			// Get the related Data for Germany and "default" tax class.
+			$tax_data = $wc_tax->find_rates(
+				array(
+					'country' => $billing_country,
+					'tax_class' => $tax_class,
+				)
+			);
+
 			// if inculsie tax is applicable.
 			if ( 'yes' == $include_tax ) {
 				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
@@ -720,9 +730,6 @@ class Subscriptions_For_Woocommerce_Public {
 				);
 			}
 			$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_pro_args );
-			// echo '<pre>';
-			// print_r($wps_pro_args);
-			// die;
 
 			$item_id = $new_order->add_product(
 				$_product,
