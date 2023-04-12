@@ -641,7 +641,7 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 				if ( ! empty( $discount_type ) ) {
 
-					if ( $initial_signup_price > $product_re_price && ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) ) {
+					if ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) {
 						$line_total    = $line_subtotal;
 					}
 				}
