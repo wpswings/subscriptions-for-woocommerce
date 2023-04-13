@@ -367,7 +367,7 @@ if ( $activated ) {
 
 				'docs'    => '<a target="_blank" href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Documentation.svg" class="wps-info-img" alt="documentation image">' . esc_html__( 'Documentation', 'subscriptions-for-woocommerce' ) . '</a>',
 
-				'video'    => '<a target="_blank" href="https://www.youtube.com/watch?v=2VFyxZl3l-A"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/YouTube 32px.svg" class="wps-info-img" alt="video image">' . esc_html__( 'Video', 'subscriptions-for-woocommerce' ) . '</a>',
+				'video'    => '<a target="_blank" href="https://www.youtube.com/watch?v=2VFyxZl3l-A"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/YouTube_32px.svg" class="wps-info-img" alt="video image">' . esc_html__( 'Video', 'subscriptions-for-woocommerce' ) . '</a>',
 
 				'support' => '<a target="_blank" href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support"><img src="' . esc_url( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL ) . 'admin/images/Support.svg" class="wps-info-img" alt="support image">' . esc_html__( 'Support', 'subscriptions-for-woocommerce' ) . '</a>',
 
