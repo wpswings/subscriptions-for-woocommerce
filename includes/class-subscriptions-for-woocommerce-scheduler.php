@@ -219,8 +219,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
 						update_post_meta( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
-
-						if ( 'stripe' == $payment_method ) {
+						$allmethod = array( 'stripe', 'stripe_sepa' );
+						if ( in_array( $payment_method, $allmethod ) ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
 								$result = $wps_stripe->wps_sfw_process_renewal_payment( $order_id, $parent_order_id );

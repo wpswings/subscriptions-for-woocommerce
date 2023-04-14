@@ -40,6 +40,8 @@ $wps_sfw_pro_name = apply_filters( 'wps_sfw_dashboard_plugin_title', esc_attr( s
 		<div class="wps-header-container__links">
 			<a href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation" class="wps-link" target="_blank"><?php esc_html_e( 'Documentation', 'subscriptions-for-woocommerce' ); ?></a>
 			<span class="wps-header-container__links-divider">|</span>
+			<a href="https://www.youtube.com/watch?v=2VFyxZl3l-A" class="wps-link" target="_blank"><?php esc_html_e( 'Video', 'subscriptions-for-woocommerce' ); ?></a>
+			<span class="wps-header-container__links-divider">|</span>
 			<a href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support" class="wps-link" target="_blank"><?php esc_html_e( 'Support', 'subscriptions-for-woocommerce' ); ?></a>
 		</div>
 

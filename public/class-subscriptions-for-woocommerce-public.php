@@ -437,7 +437,7 @@ class Subscriptions_For_Woocommerce_Public {
 						return;
 					}
 
-					$subscription = $this->wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data );
+					$subscription = $this->wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data, $cart_item );
 					if ( is_wp_error( $subscription ) ) {
 						throw new Exception( $subscription->get_error_message() );
 					} else {
@@ -514,9 +514,10 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param object $order order.
 	 * @param array  $posted_data posted_data.
 	 * @param array  $wps_recurring_data wps_recurring_data.
+	 * @param array  $cart_item cart items.
 	 * @since    1.0.0
 	 */
-	public function wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data ) {
+	public function wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data, $cart_item ) {
 		if ( ! empty( $order ) ) {
 			$order_id = $order->get_id();
 			$current_date  = current_time( 'timestamp' );
@@ -595,8 +596,63 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_subtotal = $line_subtotal - $initial_signup_price * $wps_args['product_qty'];
 				$line_total    = $line_total - $initial_signup_price * $wps_args['product_qty'];
 
+				// additional tax class issue.
+				$_product = wc_get_product( $wps_args['product_id'] );
+
+				$include_tax = get_option( 'woocommerce_prices_include_tax' );
+
+				// additional code.
+				$wc_tax = new WC_Tax();
+
+				// Get User billing country.
+				$billing_country = WC()->customer->get_billing_country();
+
+				// Get the item tax class (your code).
+				$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
+
+				// Get the related Data for Germany and "default" tax class.
+				$tax_data = $wc_tax->find_rates(
+					array(
+						'country' => $billing_country,
+						'tax_class' => $tax_class,
+					)
+				);
+
+				if ( 'yes' == $include_tax ) {
+
+					$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
+					$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
+				} else {
+					// if tax is disable or exculsive tax is applicable.
+					$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
+					$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
+
+				}
+				// additional tax class issue.
+
+				// coupon issue fixed.
+				$fix_product = wc_get_product( $wps_args['product_id'] );
+				$product_re_price = $fix_product->get_regular_price();
+				foreach ( $order->get_used_coupons() as $coupon_code ) {
+					// Get the WC_Coupon object.
+					$coupon = new WC_Coupon( $coupon_code );
+
+					$discount_type = $coupon->get_discount_type(); // Get coupon discount type.
+				}
+				if ( ! empty( $discount_type ) ) {
+
+					if ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) {
+						$line_total    = $line_subtotal;
+					}
+				}
+				// coupon issue fixed.
+
+				// additional tax class issue.
 				$wps_args['line_subtotal'] = $line_subtotal;
 				$wps_args['line_total']    = $line_total;
+				$wps_args['line_subtotal_tax'] = $substotal_taxes;
+				$wps_args['line_tax']    = $total_taxes;
+				// additional tax class issue.
 			} elseif ( isset( $wps_args['wps_sfw_subscription_free_trial_number'] ) && ! empty( $wps_args['wps_sfw_subscription_free_trial_number'] ) ) {
 				// Currency switchers.
 				if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
@@ -618,10 +674,28 @@ class Subscriptions_For_Woocommerce_Public {
 			$_product = wc_get_product( $wps_args['product_id'] );
 
 			$include_tax = get_option( 'woocommerce_prices_include_tax' );
+
+			// additional code.
+			$wc_tax = new WC_Tax();
+
+			// Get User billing country.
+			$billing_country = WC()->customer->get_billing_country();
+
+			// Get the item tax class (your code).
+			$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
+
+			// Get the related Data for Germany and "default" tax class.
+			$tax_data = $wc_tax->find_rates(
+				array(
+					'country' => $billing_country,
+					'tax_class' => $tax_class,
+				)
+			);
+
 			// if inculsie tax is applicable.
 			if ( 'yes' == $include_tax ) {
-				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, WC_Tax::get_rates() ) );
-				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, WC_Tax::get_rates() ) );
+				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
+				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
 				$wps_pro_args = array(
 					'variation' => array(),
 					'totals'    => array(
@@ -638,8 +712,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 			} else {
 				// if tax is disable or exculsive tax is applicable.
-				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, WC_Tax::get_rates() ) );
-				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, WC_Tax::get_rates() ) );
+				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
+				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
 
 				$wps_pro_args = array(
 					'variation' => array(),
@@ -864,7 +938,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $wps_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
-					$wps_supported_method = array( 'stripe' );
+					$wps_supported_method = array( 'stripe', 'stripe_sepa' );
 					// Supported paymnet gateway.
 					$wps_payment_method = apply_filters( 'wps_sfw_supported_payment_gateway_for_woocommerce', $wps_supported_method, $key );
 
