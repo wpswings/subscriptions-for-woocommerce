@@ -293,6 +293,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param string $product_price Product price.
 	 * @param object $cart_item cart item.
 	 * @param int    $cart_item_key cart_item_key.
+	 * @param int    $product_id product_id.
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item_key, $product_id ) {
@@ -307,11 +308,11 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
 			}
-			$product = wc_get_product(  $product_id );
-			
+			$product = wc_get_product( $product_id );
+
 			$price_tax = wc_get_price_including_tax( $product );
 
-			if( $price_tax > 0 ){
+			if ( $price_tax > 0 ) {
 				$price         = $price_tax * $cart_item['quantity'];
 			} else {
 				$price         = $price * $cart_item['quantity'];

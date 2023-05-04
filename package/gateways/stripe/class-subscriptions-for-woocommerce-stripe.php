@@ -60,10 +60,9 @@ class Subscriptions_For_Woocommerce_Stripe {
 			}
 			$source = $gateway->prepare_order_source( $parent_order );
 
-
 			$gateways_check = $woocommerce->payment_gateways->payment_gateways();
 
-			if( 'stripe' == $gateways_check['stripe']->id ){
+			if ( 'stripe' == $gateways_check['stripe']->id ) {
 
 				$amount = $order->get_total();
 				$response = $this->wps_sfw_create_and_confirm_intent_for_off_session( $order, $source, $amount );
@@ -118,17 +117,23 @@ class Subscriptions_For_Woocommerce_Stripe {
 		}
 	}
 
-
-	public function wps_sfw_create_and_confirm_intent_for_off_session( $order, $source, $amount ){
+	/**
+	 * Create and confirm a new PaymentIntent.
+	 *
+	 * @param WC_Order $order           The order that is being paid for.
+	 * @param object   $source          The source that is used for the payment.
+	 * @param float    $amount          The amount to charge. If not specified, it will be read from the order.
+	 * @return object                   An intent or an error.
+	 */
+	public function wps_sfw_create_and_confirm_intent_for_off_session( $order, $source, $amount ) {
 
 		$full_request = $this->wps_sfw_generate_payment_request( $order, $source );
 
-		$payment_method_types = [ 'card' ];
-		
-		$payment_method_types = [ $source->source_object->type ];
-		
+		$payment_method_types = array( 'card' );
 
-		$request = [
+		$payment_method_types = array( $source->source_object->type );
+
+		$request = array(
 			'amount'               => $amount ? WC_Stripe_Helper::get_stripe_amount( $amount, $full_request['currency'] ) : $full_request['amount'],
 			'currency'             => $full_request['currency'],
 			'description'          => $full_request['description'],
@@ -137,7 +142,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 			'off_session'          => 'true',
 			'confirm'              => 'true',
 			'confirmation_method'  => 'automatic',
-		];
+		);
 
 		if ( isset( $full_request['statement_descriptor'] ) ) {
 			$request['statement_descriptor'] = $full_request['statement_descriptor'];
@@ -160,13 +165,13 @@ class Subscriptions_For_Woocommerce_Stripe {
 		 * @param object $source
 		 */
 		$request = apply_filters( 'wc_stripe_generate_create_intent_request', $request, $order, $source );
-		
+
 		if ( isset( $full_request['shipping'] ) ) {
 			$request['shipping'] = $full_request['shipping'];
 		}
 
 		$level3_data                = $this->wps_sfw_get_level3_data_from_order( $order );
-		
+
 		$intent                     = WC_Stripe_API::request_with_level3_data(
 			$request,
 			'payment_intents',
@@ -177,12 +182,12 @@ class Subscriptions_For_Woocommerce_Stripe {
 		if ( ! empty( $intent->error ) && ! $is_authentication_required ) {
 			return $intent;
 		}
-		
+
 			$intent_id      = ( ! empty( $intent->error )
 			? $intent->error->payment_intent->id
 			: $intent->id
 		);
-		
+
 		$payment_intent = ( ! empty( $intent->error )
 			? $intent->error->payment_intent
 			: $intent
@@ -249,7 +254,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 	public function wps_sfw_get_level3_data_from_order( $order ) {
 		// Get the order items. Don't need their keys, only their values.
 		// Order item IDs are used as keys in the original order items array.
-		$order_items = array_values( $order->get_items( [ 'line_item', 'fee' ] ) );
+		$order_items = array_values( $order->get_items( array( 'line_item', 'fee' ) ) );
 		$currency    = $order->get_currency();
 
 		$stripe_line_items = array_map(
@@ -269,39 +274,43 @@ class Subscriptions_For_Woocommerce_Stripe {
 				$tax_amount          = WC_Stripe_Helper::get_stripe_amount( $item->get_total_tax(), $currency );
 				$discount_amount     = WC_Stripe_Helper::get_stripe_amount( $subtotal - $item->get_total(), $currency );
 
-				return (object) [
+				return (object) array(
 					'product_code'        => (string) $product_id, // Up to 12 characters that uniquely identify the product.
 					'product_description' => $product_description, // Up to 26 characters long describing the product.
 					'unit_cost'           => $unit_cost, // Cost of the product, in cents, as a non-negative integer.
 					'quantity'            => $quantity, // The number of items of this type sold, as a non-negative integer.
 					'tax_amount'          => $tax_amount, // The amount of tax this item had added to it, in cents, as a non-negative integer.
 					'discount_amount'     => $discount_amount, // The amount an item was discounted—if there was a sale,for example, as a non-negative integer.
-				];
+				);
 			},
 			$order_items
 		);
 
-		$level3_data = [
+		$level3_data = array(
 			'merchant_reference' => $order->get_id(), // An alphanumeric string of up to  characters in length. This unique value is assigned by the merchant to identify the order. Also known as an “Order ID”.
 			'shipping_amount'    => WC_Stripe_Helper::get_stripe_amount( (float) $order->get_shipping_total() + (float) $order->get_shipping_tax(), $currency ), // The shipping cost, in cents, as a non-negative integer.
 			'line_items'         => $stripe_line_items,
-		];
+		);
 
 		// The customer’s U.S. shipping ZIP code.
 		$shipping_address_zip = $order->get_shipping_postcode();
-		
+
 		$level3_data['shipping_address_zip'] = $shipping_address_zip;
-		
 
 		// The merchant’s U.S. shipping ZIP code.
 		$store_postcode = get_option( 'woocommerce_store_postcode' );
-		
+
 		$level3_data['shipping_from_zip'] = $store_postcode;
-		
 
 		return $level3_data;
 	}
-
+	/**
+	 * Given a response from Stripe, check if it's a card error where authentication is required
+	 * to complete the payment.
+	 *
+	 * @param object $response The response from Stripe.
+	 * @return boolean Whether or not it's a 'authentication_required' error
+	 */
 	public function wps_sfw_is_authentication_required_for_payment( $response ) {
 		return ( ! empty( $response->error ) && 'authentication_required' === $response->error->code )
 			|| ( ! empty( $response->last_payment_error ) && 'authentication_required' === $response->last_payment_error->code );
