@@ -296,8 +296,8 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param int    $product_id product_id.
 	 * @since    1.0.0
 	 */
-	public function wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item_key, $product_id ) {
-
+	public function wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item_key ) {
+		
 		if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 
 			if ( $cart_item['data']->is_on_sale() ) {
@@ -308,6 +308,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
 			}
+			$product_id = $cart_item['data']->id;
 			$product = wc_get_product( $product_id );
 
 			$price_tax = wc_get_price_including_tax( $product );
@@ -1567,7 +1568,7 @@ class Subscriptions_For_Woocommerce_Public {
 						$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
 					}
 					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
-					$renewal_amount = $this->wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item['key'], $product_id );
+					$renewal_amount = $this->wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item['key'] );
 					?>
 					<tr class="order-total wps_wsp_recurring_total">
 					<th class="wps_wsp_recurring_total_td" data-title="<?php esc_attr_e( 'wps-sfw-recurring', 'subscriptions-for-woocommerce' ); ?>"><?php esc_attr_e( 'Recurring', 'subscriptions-for-woocommerce' ); ?></th>
