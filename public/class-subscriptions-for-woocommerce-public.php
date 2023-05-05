@@ -308,7 +308,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $price );
 			}
-			$product_id = $cart_item['data']->id;
+			$product_id = $cart_item['product_id'];
 			$product = wc_get_product( $product_id );
 
 			$price_tax = wc_get_price_including_tax( $product );
