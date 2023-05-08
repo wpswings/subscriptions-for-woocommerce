@@ -293,11 +293,10 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param string $product_price Product price.
 	 * @param object $cart_item cart item.
 	 * @param int    $cart_item_key cart_item_key.
-	 * @param int    $product_id product_id.
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item_key ) {
-		
+
 		if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 
 			if ( $cart_item['data']->is_on_sale() ) {
