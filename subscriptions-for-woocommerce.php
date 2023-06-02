@@ -502,6 +502,15 @@ if ( $activated ) {
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
 	}
 	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
+
+
+	function wps_sfw_enable_paypal_standard() {
+		$check_paypal_standard = get_option( 'wps_sfw_enable_paypal_standard', 'no' );
+		if ( 'on' === $check_paypal_standard ) {
+			add_filter( 'woocommerce_should_load_paypal_standard', '__return_true' );
+		}
+	}
+	add_action( 'init', 'wps_sfw_enable_paypal_standard' );
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );

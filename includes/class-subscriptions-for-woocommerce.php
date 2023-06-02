@@ -884,7 +884,16 @@ class Subscriptions_For_Woocommerce {
 					</tr>
 						<?php
 						break;
-
+					case 'sectionend':
+						?>
+						<tr valign="top">
+						<td scope="row">
+							<p>
+							<?php echo ( $sfw_component['value'] ); ?>
+							</p>
+						</td>
+					</tr>
+						<?php
 					default:
 						break;
 				}

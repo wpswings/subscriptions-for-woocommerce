@@ -376,6 +376,20 @@ class Subscriptions_For_Woocommerce_Admin {
 				'class' => 'sfw-checkbox-class',
 			),
 			array(
+				'title' => __( 'Enable Paypal Standard', 'subscriptions-for-woocommerce' ),
+				'type'  => 'checkbox',
+				'description'  => __( 'You will see the Paypal Standard Gateway in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ),
+				'id'    => 'wps_sfw_enable_paypal_standard',
+				'value' => 'on',
+				'checked' => ( 'on' === get_option( 'wps_sfw_enable_paypal_standard', '' ) ? 'on' : 'off' ),
+				'class' => 'sfw-checkbox-class',
+			),
+			array(
+				'value' => 'Please click <a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />Here</a> to know that, How to get the API Credentials for the setup',
+				'type'  => 'sectionend',
+				'id'    => 'notice'
+			),
+			array(
 				'type'  => 'button',
 				'id'    => 'wps_sfw_save_general_settings',
 				'button_text' => __( 'Save Settings', 'subscriptions-for-woocommerce' ),
@@ -721,7 +735,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		if ( ! empty( $term_accpted ) && 'yes' == $term_accpted ) {
 			update_option( 'wps_sfw_enable_tracking', 'on' );
 		}
-
 		// settings fields.
 		$enable_plugin = ! empty( $_POST['EnablePlugin'] ) ? sanitize_text_field( wp_unslash( $_POST['EnablePlugin'] ) ) : '';
 		$add_to_cart_text = ! empty( $_POST['AddToCartText'] ) ? sanitize_text_field( wp_unslash( $_POST['AddToCartText'] ) ) : '';
