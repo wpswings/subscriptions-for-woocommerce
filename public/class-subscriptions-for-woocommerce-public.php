@@ -290,6 +290,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to subscription price on in cart.
 	 *
 	 * @name wps_sfw_show_subscription_price_on_cart
+* 	 * @param string $product_price Product price.
 	 * @param object $cart_item cart item.
 	 * @param int    $cart_item_key cart_item_key.
 	 * @since    1.0.0
