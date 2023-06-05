@@ -775,10 +775,10 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			update_post_meta( $post_id, '_wps_sfw_product', 'yes' );
 			update_post_meta( $post_id, 'wps_sfw_subscription_number', $subscription_number );
-			update_post_meta( $post_id, 'wps_sfw_subscription_interval', $subscription_interval );
-
+			
 			update_post_meta( $post_id, '_regular_price', $product_price );
 			update_post_meta( $post_id, '_sale_price', '' );
+			update_post_meta( $post_id, 'wps_sfw_subscription_interval', $subscription_interval );
 			update_post_meta( $post_id, '_price', $product_price );
 			$product = wc_get_product( $post_id );
 
