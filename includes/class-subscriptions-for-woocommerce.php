@@ -780,7 +780,7 @@ class Subscriptions_For_Woocommerce {
 									</div>
 									<div class="mdc-checkbox__ripple"></div>
 								</div>
-								<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo esc_html( $sfw_component['description'] ); // WPCS: XSS ok. ?></label>
+								<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo wp_kses_post( $sfw_component['description'] ); // WPCS: XSS ok. ?></label>
 							</div>
 						</div>
 					</div>
@@ -884,16 +884,6 @@ class Subscriptions_For_Woocommerce {
 					</tr>
 						<?php
 						break;
-					case 'sectionend':
-						?>
-						<tr valign="top">
-						<td scope="row">
-							<p>
-							<?php echo ( $sfw_component['value'] ); ?>
-							</p>
-						</td>
-					</tr>
-						<?php
 					default:
 						break;
 				}

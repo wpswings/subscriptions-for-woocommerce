@@ -378,16 +378,11 @@ class Subscriptions_For_Woocommerce_Admin {
 			array(
 				'title' => __( 'Enable Paypal Standard', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
-				'description'  => __( 'You will see the Paypal Standard Gateway in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ),
+				'description'  => sprintf( __( 'You will see the %1s in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="' .  admin_url( 'admin.php?page=wc-settings&tab=checkout&section=paypal' ) . '">' . __( 'Paypal Standard Gateway', 'subscriptions-for-woocommerc' ) . '</a>' ) . '<br/>' . sprintf( __( 'Please click %1s to know that, How to get the API Credentials for the setup', '' ), '<a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />' . __( 'Here', 'subscriptions-for-woocommerce' ) . '</a>' ),
 				'id'    => 'wps_sfw_enable_paypal_standard',
 				'value' => 'on',
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_paypal_standard', '' ) ? 'on' : 'off' ),
 				'class' => 'sfw-checkbox-class',
-			),
-			array(
-				'value' => 'Please click <a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />Here</a> to know that, How to get the API Credentials for the setup',
-				'type'  => 'sectionend',
-				'id'    => 'notice'
 			),
 			array(
 				'type'  => 'button',
