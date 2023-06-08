@@ -393,7 +393,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		);
 		// Add general settings.
 		return apply_filters( 'wps_sfw_add_general_settings_fields', $sfw_settings_general );
-
 	}
 
 
