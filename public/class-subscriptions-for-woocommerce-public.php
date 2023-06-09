@@ -1645,8 +1645,6 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_subtotal = $line_subtotal - $wps_sfw_subscription_initial_signup_price;
 			$line_total    = $line_total - $wps_sfw_subscription_initial_signup_price;
 
-			echo $line_subtotal .'='. $line_total;
-
 			if ( $is_sub_coupon_exist ) {
 				$line_subtotal = $line_total;
 			}
