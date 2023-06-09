@@ -290,9 +290,9 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to subscription price on in cart.
 	 *
 	 * @name wps_sfw_show_subscription_price_on_cart
-* 	 * @param string $product_price Product price.
-	 * @param object $cart_item cart item.
-	 * @param int    $cart_item_key cart_item_key.
+* 	 * @param string $product_price Product price .
+	 * @param object $cart_item cart item .
+	 * @param int    $cart_item_key cart_item_key .
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item_key ) {
@@ -438,7 +438,6 @@ class Subscriptions_For_Woocommerce_Public {
 					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, $posted_data, $cart_item ) ) {
 						return;
 					}
-
 					$subscription = $this->wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data, $cart_item );
 					if ( is_wp_error( $subscription ) ) {
 						throw new Exception( $subscription->get_error_message() );

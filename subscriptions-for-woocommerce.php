@@ -504,6 +504,9 @@ if ( $activated ) {
 	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
 
 
+	/**
+	 * Allow to enable/diasble paypal standard
+	 */
 	function wps_sfw_enable_paypal_standard() {
 		$check_paypal_standard = get_option( 'wps_sfw_enable_paypal_standard', 'no' );
 		if ( 'on' === $check_paypal_standard ) {
