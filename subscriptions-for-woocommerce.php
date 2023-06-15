@@ -15,16 +15,16 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.4.9
+ * Version:           1.5.1
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
  * Requires at least:        5.1.0
- * Tested up to:             6.2
+ * Tested up to:             6.2.2
  * WC requires at least:     5.1.0
- * WC tested up to:          7.5.1
+ * WC tested up to:          7.7.2
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -176,7 +176,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.4.9' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.5.1' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -502,6 +502,18 @@ if ( $activated ) {
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
 	}
 	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
+
+
+	/**
+	 * Allow to enable/diasble paypal standard
+	 */
+	function wps_sfw_enable_paypal_standard() {
+		$check_paypal_standard = get_option( 'wps_sfw_enable_paypal_standard', 'no' );
+		if ( 'on' === $check_paypal_standard ) {
+			add_filter( 'woocommerce_should_load_paypal_standard', '__return_true' );
+		}
+	}
+	add_action( 'init', 'wps_sfw_enable_paypal_standard' );
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );

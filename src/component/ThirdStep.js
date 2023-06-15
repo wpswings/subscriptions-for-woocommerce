@@ -27,10 +27,10 @@ const ThirdStep = (props) => {
     >
         { show_payment_gateway.length !== 0 && show_payment_gateway.map( item => ( <PaymentGateway key={item.id}  item={item} name={item.name} {...item} /> ) ) }
         
-        <h1>{ __( 'Setup Build-in Paypal Gateway', 'subscriptions-for-woocommerce' ) }</h1>
+        <h1>{ __( 'Setup WPS Paypal Payment', 'subscriptions-for-woocommerce' ) }</h1>
 		  	<h5>{ __( 'To get your API credentials please create a', 'subscriptions-for-woocommerce' ) } <a href="https://developer.paypal.com" target="_blank">{ __( 'PayPal developer account', 'subscriptions-for-woocommerce' ) }</a>. { __( 'Visit', 'subscriptions-for-woocommerce' ) } <a href="https://developer.paypal.com/developer/applications" target="_blank">{ __( 'My Apps & Credentials', 'subscriptions-for-woocommerce' ) }</a> { __( 'select the tab ( Sandbox or Live ), Create app and get the below credentails', 'subscriptions-for-woocommerce' ) }.</h5>
-        <h6>{ __( 'You can setup the Build-in Paypal From Woocommerce Payments Settings', 'subscriptions-for-woocommerce' ) } <a href={frontend_ajax_object.wps_build_in_paypal_setup_url} target="_blank">{ __( 'here', 'subscriptions-for-woocommerce' ) }</a></h6>
-
+        <h6>{ __( 'You can setup the WPS Paypal Payment From Woocommerce Payments Settings', 'subscriptions-for-woocommerce' ) } <a href={frontend_ajax_object.wps_build_in_paypal_setup_url} target="_blank">{ __( 'here', 'subscriptions-for-woocommerce' ) }</a></h6>
+        <h5><b>{ __( 'Note : The WPS Paypal Payment Only Support US merchant paypal account for the subscription recurring', 'subscriptions-for-woocommerce' ) }</b></h5>
         <FormControlLabel
         control={
         <Checkbox

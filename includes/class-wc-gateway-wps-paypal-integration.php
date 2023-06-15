@@ -59,7 +59,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$this->has_fields         = false;
 		$this->order_button_text  = __( 'Proceed to PayPal', 'subscriptions-for-woocommerce' );
 		$this->method_title       = __( 'WPS Paypal Payment', 'subscriptions-for-woocommerce' );
-		$this->method_description = __( 'Accept Payments from PayPal', 'subscriptions-for-woocommerce' );
+		$this->method_description = __( 'Accept Payments from PayPal ( Recurring Support for US only )', 'subscriptions-for-woocommerce' );
 		$this->supports           = array(
 			'products',
 			'refunds',

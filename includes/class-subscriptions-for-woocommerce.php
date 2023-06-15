@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.4.9';
+			$this->version = '1.5.0';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -780,7 +780,7 @@ class Subscriptions_For_Woocommerce {
 									</div>
 									<div class="mdc-checkbox__ripple"></div>
 								</div>
-								<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo esc_html( $sfw_component['description'] ); // WPCS: XSS ok. ?></label>
+								<label for="<?php echo esc_attr( $sfw_component['id'] ); ?>"><?php echo wp_kses_post( $sfw_component['description'] ); // WPCS: XSS ok. ?></label>
 							</div>
 						</div>
 					</div>
@@ -884,7 +884,6 @@ class Subscriptions_For_Woocommerce {
 					</tr>
 						<?php
 						break;
-
 					default:
 						break;
 				}
