@@ -74,10 +74,12 @@ class Subscriptions_For_Woocommerce_Stripe {
 			}
 			// show the data in log file.
 			WC_Stripe_Logger::log( 'WPS response: ' . wc_print_r( $response, true ) );
+			Subscriptions_For_Woocommerce_Log::log( 'WPS response: ' . wc_print_r( $response, true ) );
 			// Log here complete response.
 			if ( is_wp_error( $response ) ) {
 				// show the data in log file.
 				WC_Stripe_Logger::log( 'WPS response error: ' . wc_print_r( $response, true ) );
+				Subscriptions_For_Woocommerce_Log::log( 'WPS response error: ' . wc_print_r( $response, true ) );
 				// @todo handle the error part here/failure of order.
 
 				$error_message = sprintf( __( 'Something Went Wrong. Please see the log file for more info.', 'subscriptions-for-woocommerce' ) );
@@ -85,9 +87,12 @@ class Subscriptions_For_Woocommerce_Stripe {
 			} else {
 				if ( ! empty( $response->error ) ) {
 					WC_Stripe_Logger::log( 'WPS response error: ' . wc_print_r( $response, true ) );
+					Subscriptions_For_Woocommerce_Log::log( 'WPS response error: ' . wc_print_r( $response->error, true ) );
 					$is_successful = false;
 					$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 					$order->update_status( 'failed', $order_note );
+					$order_note_e = sprintf( __( 'Stripe Failed Reason (%s)', 'subscriptions-for-woocommerce' ), $response->error );
+					$order->add_order_note( $order_note_e );
 					do_action( 'wps_sfw_recurring_payment_failed', $order_id );
 
 				} else {
@@ -194,6 +199,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 		);
 		$order_id       = $order->get_id();
 		WC_Stripe_Logger::log( "Stripe PaymentIntent $intent_id initiated for order $order_id" );
+		Subscriptions_For_Woocommerce_Log::log( "Stripe PaymentIntent $intent_id initiated for order $order_id" );
 
 		return $intent;
 
