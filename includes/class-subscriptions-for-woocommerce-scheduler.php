@@ -206,9 +206,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
 							$wps_new_order->update_taxes();
 							$wps_new_order->calculate_totals();
+
 						} else {
 							$wps_new_order->calculate_totals( false );
 						}
+						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
+
 						$wps_new_order->save();
 
 						/*if trial period enable*/

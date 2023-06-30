@@ -398,6 +398,7 @@ class Subscriptions_For_Woocommerce_Public {
 			return;
 		}
 		$order = wc_get_order( $order_id );
+		
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
 
@@ -737,6 +738,8 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_args['product_qty'],
 				$wps_pro_args
 			);
+
+			do_action( 'wps_sfw_subscription_bundle_addition', $subscription_id, $order_id , $_product );
 
 			$new_order->update_taxes();
 			$new_order->calculate_totals();
