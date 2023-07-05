@@ -379,7 +379,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'Enable Paypal Standard', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
 				/* translators: %1s: links */
-				'description'  => sprintf( __( 'You will see the %1s in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="' .  admin_url( 'admin.php?page=wc-settings&tab=checkout&section=paypal' ) . '">' . __( 'Paypal Standard Gateway', 'subscriptions-for-woocommerc' ) . '</a>' ) . '<br/>' . sprintf( __( 'Please click %1s to know that, How to get the API Credentials for the setup', '' ), '<a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />' . __( 'Here', 'subscriptions-for-woocommerce' ) . '</a>' ),
+				'description'  => sprintf( __( 'You will see the %1s in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=paypal' ) . '">' . __( 'Paypal Standard Gateway', 'subscriptions-for-woocommerc' ) . '</a>' ) . '<br/>' . sprintf( __( 'Please click %1s to know that, How to get the API Credentials for the setup', '' ), '<a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />' . __( 'Here', 'subscriptions-for-woocommerce' ) . '</a>' ),
 				'id'    => 'wps_sfw_enable_paypal_standard',
 				'value' => 'on',
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_paypal_standard', '' ) ? 'on' : 'off' ),
@@ -770,7 +770,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			update_post_meta( $post_id, '_wps_sfw_product', 'yes' );
 			update_post_meta( $post_id, 'wps_sfw_subscription_number', $subscription_number );
-			
+
 			update_post_meta( $post_id, '_regular_price', $product_price );
 			update_post_meta( $post_id, '_sale_price', '' );
 			update_post_meta( $post_id, 'wps_sfw_subscription_interval', $subscription_interval );

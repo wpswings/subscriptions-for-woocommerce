@@ -91,6 +91,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 					$is_successful = false;
 					$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 					$order->update_status( 'failed', $order_note );
+					/* translators: %s: transaction id */
 					$order_note_e = sprintf( __( 'Stripe Failed Reason (%s)', 'subscriptions-for-woocommerce' ), $response->error );
 					$order->add_order_note( $order_note_e );
 					do_action( 'wps_sfw_recurring_payment_failed', $order_id );
