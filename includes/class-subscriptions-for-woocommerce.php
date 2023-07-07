@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.5.0';
+			$this->version = '1.5.2';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -647,6 +647,7 @@ class Subscriptions_For_Woocommerce {
 								type="<?php echo esc_attr( $sfw_component['type'] ); ?>"
 								value="<?php echo esc_attr( $sfw_component['value'] ); ?>"
 								placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"
+								<?php echo ( isset( $sfw_component['required'] ) && 'yes' == $sfw_component['required'] ) ? 'required' : ''; ?>
 								>
 							</label>
 							<div class="mdc-text-field-helper-line">
@@ -705,7 +706,7 @@ class Subscriptions_For_Woocommerce {
 									<span class="mdc-notched-outline__trailing"></span>
 								</span>
 								<span class="mdc-text-field__resizer">
-									<textarea class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" rows="2" cols="25" aria-label="Label" name="<?php echo esc_attr( $wps_sfw_name ); ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"><?php echo esc_textarea( $sfw_component['value'] ); // WPCS: XSS ok. ?></textarea>
+									<textarea class="mdc-text-field__input <?php echo esc_attr( $sfw_component['class'] ); ?>" rows="2" cols="25" aria-label="Label" name="<?php echo esc_attr( $wps_sfw_name ); ?>" id="<?php echo esc_attr( $sfw_component['id'] ); ?>" placeholder="<?php echo esc_attr( $sfw_component['placeholder'] ); ?>"<?php echo ( isset( $sfw_component['required'] ) && 'yes' == $sfw_component['required'] ) ? 'required' : ''; ?>><?php echo esc_textarea( $sfw_component['value'] ); // WPCS: XSS ok. ?></textarea>
 								</span>
 							</label>
 
@@ -801,11 +802,13 @@ class Subscriptions_For_Woocommerce {
 									<div class="mdc-form-field">
 										<div class="mdc-radio">
 											<input
+											id = "<?php echo esc_attr( $sfw_component['id'] ); ?>"
 											name="<?php echo esc_attr( $wps_sfw_name ); ?>"
 											value="<?php echo esc_attr( $sfw_radio_key ); ?>"
 											type="radio"
 											class="mdc-radio__native-control <?php echo esc_attr( $sfw_component['class'] ); ?>"
 											<?php checked( $sfw_radio_key, $sfw_component['value'] ); ?>
+											<?php echo ( isset( $sfw_component['required'] ) && 'yes' == $sfw_component['required'] ) ? 'required' : ''; ?>
 											>
 											<div class="mdc-radio__background">
 												<div class="mdc-radio__outer-circle"></div>

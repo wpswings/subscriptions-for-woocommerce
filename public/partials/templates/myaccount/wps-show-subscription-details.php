@@ -142,6 +142,7 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 			<tr>
 				<?php
 					$wps_sfw_cancel_subscription = get_option( 'wps_sfw_cancel_subscription_for_customer', '' );
+					$wps_sfw_cancel_subscription = apply_filters( 'wps_sfw_customer_cancel_button', $wps_sfw_cancel_subscription, $wps_subscription_id );
 				if ( 'on' == $wps_sfw_cancel_subscription ) {
 
 					$wps_status = get_post_meta( $wps_subscription_id, 'wps_subscription_status', true );

@@ -289,10 +289,9 @@ class Subscriptions_For_Woocommerce_Public {
 	/**
 	 * This function is used to subscription price on in cart.
 	 *
-	 * @name wps_sfw_show_subscription_price_on_cart
-* 	 * @param string $product_price Product price .
-	 * @param object $cart_item cart item .
-	 * @param int    $cart_item_key cart_item_key .
+	 * @param string $product_price as  Product price .
+	 * @param object $cart_item cart as item .
+	 * @param int    $cart_item_key as cart_item_key .
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_show_subscription_price_on_cart( $product_price, $cart_item, $cart_item_key ) {
@@ -398,6 +397,7 @@ class Subscriptions_For_Woocommerce_Public {
 			return;
 		}
 		$order = wc_get_order( $order_id );
+
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
 
@@ -416,7 +416,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_id = $cart_item['data']->get_id();
 
 					$wps_recurring_data = $this->wps_sfw_get_subscription_recurring_data( $product_id );
-					
+
 					$show_price = $this->wps_sfw_calculate_recurring_price( $price, $cart_item );
 
 					$wps_recurring_data['wps_recurring_total'] = $price;
@@ -737,6 +737,8 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_args['product_qty'],
 				$wps_pro_args
 			);
+
+			do_action( 'wps_sfw_subscription_bundle_addition', $subscription_id, $order_id, $_product );
 
 			$new_order->update_taxes();
 			$new_order->calculate_totals();
@@ -1587,11 +1589,10 @@ class Subscriptions_For_Woocommerce_Public {
 	}
 
 	/**
-	 * calculating correct recurring price
+	 * Calculating correct recurring price
 	 *
 	 * @param integer $price .
-	 * @param array() $cart_item .  
-	 *   
+	 * @param array() $cart_item .
 	 */
 	public function wps_sfw_calculate_recurring_price( $price, $cart_item ) {
 		global $woocommerce;
@@ -1599,14 +1600,14 @@ class Subscriptions_For_Woocommerce_Public {
 		$_product  = wc_get_product( $product_id );
 		$wps_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
 		$include_tax = get_option( 'woocommerce_prices_include_tax' );
-		
+
 		$substotal_taxes = 0;
 		$total_taxes = 0;
 
 		$is_sub_coupon_exist = false;
 		$coupons = $woocommerce->cart->get_applied_coupons();
 		if ( ! empty( $coupons ) ) {
-			foreach( $coupons as $coupon_code ) {
+			foreach ( $coupons as $coupon_code ) {
 				$coupon = new WC_Coupon( $coupon_code );
 				$co_type = $coupon->get_discount_type();
 				$allow_dis_sub = array( 'recurring_product_percent_discount', 'recurring_product_discount' );
@@ -1657,7 +1658,7 @@ class Subscriptions_For_Woocommerce_Public {
 				// if tax is disable or exculsive tax is applicable.
 				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
 				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
-				
+
 				$line_total = $line_total + $total_taxes;
 				$line_subtotal = $line_subtotal + $substotal_taxes;
 			}
