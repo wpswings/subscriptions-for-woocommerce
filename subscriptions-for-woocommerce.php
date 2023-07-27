@@ -114,7 +114,8 @@ if ( $old_sfw_pro_present ) {
 			<?php
 		}
 
-	}//end wps_sfw_lite_add_updatenow_notice()
+	}
+	//end of functio wps_sfw_lite_add_updatenow_notice.
 	add_action( 'admin_notices', 'wps_sfw_check_and_inform_update' );
 
 	/**
