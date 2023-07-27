@@ -604,32 +604,11 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 
 		$purchase_details = array(
 			'reference_id'                    => uniqid( 'wps-paypal-', true ),
-			'custom_id'                       => self::limit_length( $order->get_order_number() ),
-			'invoice_id'                      => self::limit_length( $invoice_prefix . wp_rand( 10, 99 ) . $order->get_id() ),
 			'payee_payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
-			'items'                           => self::get_item_details( $order ),
 			'shipping'                        => self::get_shipping_details( $order ),
 			'amount'                          => array(
 				'value'         => $order->get_total(),
 				'currency_code' => $order->get_currency(),
-				'breakdown'     => array(
-					'item_total' => array(
-						'value'         => number_format( $order->get_subtotal(), 2 ),
-						'currency_code' => self::limit_length( $order->get_currency(), 3 ),
-					),
-					'shipping'   => array(
-						'value'         => number_format( $order->get_shipping_total(), 2 ),
-						'currency_code' => self::limit_length( $order->get_currency(), 3 ),
-					),
-					'tax_total'  => array(
-						'value'         => number_format( $order->get_total_tax(), 2 ),
-						'currency_code' => self::limit_length( $order->get_currency(), 3 ),
-					),
-					'discount'   => array(
-						'value'         => number_format( $order->get_total_discount(), 2 ),
-						'currency_code' => self::limit_length( $order->get_currency(), 3 ),
-					),
-				),
 			),
 		);
 
