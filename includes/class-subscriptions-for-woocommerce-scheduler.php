@@ -90,6 +90,10 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
 
+						if ( apply_filters( 'wps_sfw_recurring_allow_on_scheduler', false, $subscription_id ) ){
+							return ;
+						}
+
 						$subscription = get_post( $subscription_id );
 						$parent_order_id  = $subscription->wps_parent_order;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
@@ -211,6 +215,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$wps_new_order->calculate_totals( false );
 						}
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
+
+						// custom hook for addon.
+						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
 
 						$wps_new_order->save();
 
