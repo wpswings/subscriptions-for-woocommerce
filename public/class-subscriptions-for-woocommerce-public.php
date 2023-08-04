@@ -1597,9 +1597,9 @@ class Subscriptions_For_Woocommerce_Public {
 	public function wps_sfw_calculate_recurring_price( $price, $cart_item ) {
 		global $woocommerce;
 		$product_id = $cart_item['product_id'];
-		if ( isset( $cart_item['variation_id'] ) && ! empty( $cart_item['variation_id'] ) ) {
-			$product_id = $cart_item['variation_id'];
-		}
+		// if ( isset( $cart_item['variation_id'] ) && ! empty( $cart_item['variation_id'] ) ) {
+		// 	$product_id = $cart_item['variation_id'];
+		// }
 		$_product  = wc_get_product( $product_id );
 		$wps_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
 		$include_tax = get_option( 'woocommerce_prices_include_tax' );
