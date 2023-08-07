@@ -131,7 +131,9 @@ class Subscriptions_For_Woocommerce_Public {
 				/* translators: %s: susbcription interval */
 				$price .= '<span class="wps_sfw_expiry_interval">' . sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $wps_price_html ) . '</span>';
 				$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
-				$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
+				if( ! is_checkout() ){
+					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
+				}
 
 				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id );
 
@@ -145,7 +147,10 @@ class Subscriptions_For_Woocommerce_Public {
 					$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
 
 					$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
-					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
+					if( ! is_checkout() ){
+
+						$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
+					}
 
 					$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id );
 
