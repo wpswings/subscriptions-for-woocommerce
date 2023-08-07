@@ -87,12 +87,12 @@ class Subscriptions_For_Woocommerce_Stripe {
 			} else {
 				if ( ! empty( $response->error ) ) {
 					WC_Stripe_Logger::log( 'WPS response error: ' . wc_print_r( $response, true ) );
-					Subscriptions_For_Woocommerce_Log::log( 'WPS response error: ' . wc_print_r( $response->error, true ) );
+					Subscriptions_For_Woocommerce_Log::log( 'WPS response error: ' . wc_print_r( $response, true ) );
 					$is_successful = false;
 					$order_note = __( 'Stripe Transaction Failed', 'subscriptions-for-woocommerce' );
 					$order->update_status( 'failed', $order_note );
 					/* translators: %s: transaction id */
-					$order_note_e = sprintf( __( 'Stripe Failed Reason (%s)', 'subscriptions-for-woocommerce' ), $response->error );
+					$order_note_e = sprintf( __( 'Stripe Failed Reason (%s)', 'subscriptions-for-woocommerce' ), $response->error->message );
 					$order->add_order_note( $order_note_e );
 					do_action( 'wps_sfw_recurring_payment_failed', $order_id );
 
@@ -137,7 +137,10 @@ class Subscriptions_For_Woocommerce_Stripe {
 
 		$payment_method_types = array( 'card' );
 
-		$payment_method_types = array( $source->source_object->type );
+		// $payment_method_types = array( $source->source_object->type );
+		if ( isset( $source->source_object->type ) ) {
+			$payment_method_types = array( $source->source_object->type );
+		}
 
 		$request = array(
 			'amount'               => $amount ? WC_Stripe_Helper::get_stripe_amount( $amount, $full_request['currency'] ) : $full_request['amount'],
@@ -319,7 +322,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 	 * @return boolean Whether or not it's a 'authentication_required' error
 	 */
 	public function wps_sfw_is_authentication_required_for_payment( $response ) {
-		return ( ! empty( $response->error ) && 'authentication_required' === $response->error->code )
+		return ( ! empty( $response->error ) && isset( $response->error->code ) && 'authentication_required' === $response->error->code )
 			|| ( ! empty( $response->last_payment_error ) && 'authentication_required' === $response->last_payment_error->code );
 	}
 
