@@ -131,7 +131,7 @@ class Subscriptions_For_Woocommerce_Public {
 				/* translators: %s: susbcription interval */
 				$price .= '<span class="wps_sfw_expiry_interval">' . sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $wps_price_html ) . '</span>';
 				$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
-				if( ! is_checkout() ){
+				if ( ! is_checkout() ) {
 					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
 				}
 
@@ -147,10 +147,10 @@ class Subscriptions_For_Woocommerce_Public {
 					$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
 
 					$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
-					if( ! is_checkout() ){
+				if ( ! is_checkout() ) {
 
-						$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
-					}
+					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
+				}
 
 					$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id );
 
@@ -736,6 +736,8 @@ class Subscriptions_For_Woocommerce_Public {
 				);
 			}
 			$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_pro_args );
+
+			$wps_args = apply_filters( 'wps_product_args_for_renewal_order_propate_amount', $wps_args, $cart_item );
 
 			$item_id = $new_order->add_product(
 				$_product,
@@ -1600,6 +1602,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param array() $cart_item .
 	 */
 	public function wps_sfw_calculate_recurring_price( $price, $cart_item ) {
+
 		global $woocommerce;
 		$product_id = $cart_item['product_id'];
 		if ( isset( $cart_item['variation_id'] ) && ! empty( $cart_item['variation_id'] ) ) {
@@ -1670,6 +1673,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_total = $line_total + $total_taxes;
 				$line_subtotal = $line_subtotal + $substotal_taxes;
 			}
+			$line_subtotal = apply_filters( 'wps_sfw_fix_recurring_info_price', $line_subtotal, $cart_item );
 		} else {
 			$line_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
 			$line_total    = $cart_item['line_total'] + $cart_item['line_tax'];
