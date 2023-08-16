@@ -42,11 +42,12 @@ $wps_sfw_pro_name = apply_filters( 'wps_sfw_dashboard_plugin_title', esc_attr( s
 			if ( ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 				?>
 				<span class="goPro">
-					<a class="wps-sfw-go-pro" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro"><?php esc_html_e( 'GO PRO', 'subscriptions-for-woocommerce' ) ?></a>
+					<a class="wps-sfw-go-pro" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro"><?php esc_html_e( 'GO PRO', 'subscriptions-for-woocommerce' ); ?></a>
 					<span class="wps-header-container__links-divider">|</span>
 				</span>
-				<?php }
-				?>
+				<?php
+			}
+			?>
 			<a href="https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-backend&utm_campaign=documentation" class="wps-link" target="_blank"><?php esc_html_e( 'Documentation', 'subscriptions-for-woocommerce' ); ?></a>
 			<span class="wps-header-container__links-divider">|</span>
 			<a href="https://www.youtube.com/watch?v=2VFyxZl3l-A" class="wps-link" target="_blank"><?php esc_html_e( 'Video', 'subscriptions-for-woocommerce' ); ?></a>
