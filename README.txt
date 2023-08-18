@@ -1,12 +1,12 @@
 === Subscriptions for WooCommerce - Subscription Plugin for Collecting Recurring Revenue, Sell Membership Subscription Services & Products ===
 Contributors: wpswings
 Donate link:  https://wpswings.com/
-Tags: subscriptions, recurring payments, subscription billing, subscription Box, paypal subscriptions
+Tags: subscriptions, recurring payments, subscription billing, subscription Box, paypal subscriptions,subscription, woocommerce subscriptions
 Requires at least: 5.1.0
 Tested up to: 6.3.0
 WC requires at least: 5.1.0
-WC tested up to: 8.0.0
-Stable tag: 1.5.3
+WC tested up to: 8.0.2
+Stable tag: 1.5.4
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -17,7 +17,7 @@ With Subscriptions for WooCommerce, turn your physical or online store into a Wo
 
 **GET SUBSCRIPTIONS FOR WOOCOMMERCE AND INCREASE RECURRING REVENUE. MANAGE WOOCOMMERCE SUBSCRIPTION ON YOUR ONLINE & OFFLINE STORE WITH RECURRING BILLINGS ON CHECKOUT PAGES**
 
-The WP Swings Subscriptions for WooCommerce enable merchants to create subscription plans to provide recurring services or products periodically and help in collecting recurring revenue for your store.
+The WooCommerce Subscriptions plugin empowers merchants to establish subscription plans, allowing them to offer services or products on a recurring basis. This functionality aids in the seamless collection of regular revenue for your online store.
 
 The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro) plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, and online courses to eCommerce stores revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business.
 
@@ -35,7 +35,7 @@ The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscri
 * Get updated order notes with reasons for failed recurring payments (Stripe & PayPal).  
 * Subscription status will be on hold when order status fails.
 * Subscriptions will automatically be canceled when the order is canceled.
-* Show recurring frequency in the Subscription Management Table. 
+* Multistep setup for auto configurations of the Subscriptions WooCommerce plugin and its requirements.
 * Setup WooCommerce Subscription plugin flow through the multistep form
 * Automatically generate subscription error logs based on specific logging parameters.
 * Support Stripe and PayPal payment Gateway with subscriptions for WooCommerce
@@ -65,9 +65,9 @@ You have the option to charge an initial sign-up fee for subscriptions. The WooC
 You can offer free trials to subscription users and set the trial frequency. Encourage users to sign up by providing free trials for WooCommerce subscription products or services. After the trial period ends, users can continue the WooCommerce subscription plan.
 
 **6) Complete WooCommerce Subscription Reports for Admin**
-The WooCommerce subscription plan report module includes essential details such as active and inactive subscriptions, upcoming recurring payment dates, subscription names, subscription expiry dates, & individual plan due dates, along with the recurring payment frequency. 
+The WooCommerce subscriptions plan report module includes essential details such as active and inactive subscriptions, upcoming recurring payment dates, subscription names, subscription expiry dates, & individual plan due dates, along with the recurring payment frequency. 
 
-**7) Cancel WooCommerce Subscription Plan Anytime via User or Admin**
+**7) Cancel WooCommerce Subscriptions Plan Anytime via User or Admin**
 You and your users have the flexibility to end subscriptions at any time with ease and halt any future WooCommerce recurring payments. This feature allows for convenient and hassle-free cancellation of subscriptions whenever needed.
 
 **8) Generate Subscription Logs**
@@ -108,9 +108,9 @@ The Wallet system compatibility allows users to pay for their recurring services
 
 == WHAT PREMIUM FEATURES OF SUBSCRIPTIONS FOR WOOCOMMERCE OFFERS ==
 
-* Create WooCommerce variable subscription product types and configure more WooCommerce subscription services.
+* Create WooCommerce variable product types and configure more WooCommerce subscription services.
 * With the Subscription for WooCommerce plugin, the admin can enable subscription prices for one-time purchases of products.
-* Upgrade or downgrade plans of variable subscription products.
+* Upgrade or downgrade plans of variable products.
 * Designation of WooCommerce subscription start date and expiration date by user or admin.
 * Compatibility with the [**Product Bundles plugin**](https://woocommerce.com/products/product-bundles/) allows you to offer subscription bundles on your store. 
 * Automatic retrying for failed payments and automated WooCommerce subscription cancellation.          
@@ -122,7 +122,7 @@ The Wallet system compatibility allows users to pay for their recurring services
 * API support for details on the mobile app.
 * Active WooCommerce subscription export function.
 * Supports all the above-mentioned compatibility along with [**Ultimate Gift Cards for WooCommerce**](https://wordpress.org/plugins/woo-gift-cards-lite/),and [**Wallet System for WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-org-page&utm_campaign=wallet-pro/).
-* Compatible with payment gateways- [**WooCommerce Eway Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-eway/), [**WooCommerce Authorize.Net Payment Gateway**](https://wordpress.org/plugins/woo-authorize-net-gateway-aim/), [**WooCommerce Payments**](https://woocommerce.com/products/woocommerce-payments/) and [**Mollie Payment for WooCommerce**](https://wordpress.org/plugins/mollie-payments-for-woocommerce/)(Support for credit card and debit card)
+* Compatible with payment gateways-[**Braintree for WooCommerce**](https://wordpress.org/plugins/woocommerce-gateway-paypal-powered-by-braintree/) as Credit card [**WooCommerce Eway Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-eway/), [**WooCommerce Authorize.Net Payment Gateway**](https://wordpress.org/plugins/woo-authorize-net-gateway-aim/), [**WooCommerce Payments**](https://woocommerce.com/products/woocommerce-payments/) and [**Mollie Payment for WooCommerce**](https://wordpress.org/plugins/mollie-payments-for-woocommerce/)(Support for credit card and debit card)
 
 == TAKE ADVANTAGE OF EXCLUSIVE FEATURES OF THE WOOCOMMERCE SUBSCRIPTION PLUGIN ==
 
@@ -166,9 +166,9 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 == Frequently Asked Questions ==
 
-= Does the WordPress Subscription plugin support recurring payments for a subscription-type product? =
+= Does the Subscriptions for WooCommerce plugin support recurring payments for a subscription-type product? =
 
-Yes, Admin needs to configure compatible WooCommerce subscription payment gateways like Stripe, PayPal, Mollie, Authorize.net & more to support recurring payments on your site.
+Yes, Admin needs to configure compatible WooCommerce subscriptions payment gateways like Stripe, PayPal, Mollie, Authorize.net & more to support recurring payments on your site.
 
 = What type of products can we use with Subscriptions for WooCommerce? =
 
@@ -225,6 +225,11 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 11. Keys Validation
 
 == Changelog ==
+
+= 1.5.4 - Released on 18 August 2023 =
+
+* Latest WP( 6.3.0 ) and WC( 8.0.2 )
+* Enhancement of renewal info on checkout
 
 = 1.5.3 - Released on 27 July 2023 =
 
@@ -363,6 +368,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.5.3 - Released on 27 July 2023 =
+= 1.5.4 - Released on 18 August 2023 =
 
-* New: WP(6.3.0) and WC(8.0.0) latest update
+* Latest WP( 6.3.0 ) and WC( 8.0.2 )
+* Enhancement of renewal info on checkout
