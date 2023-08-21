@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriptions For WooCommerce 1.5.3\n"
-"POT-Creation-Date: 2023-07-27 18:32+0530\n"
-"PO-Revision-Date: 2023-07-27 18:32+0530\n"
+"Project-Id-Version: Subscriptions For WooCommerce 1.5.4\n"
+"POT-Creation-Date: 2023-08-18 10:48+0530\n"
+"PO-Revision-Date: 2023-08-18 10:48+0530\n"
 "Last-Translator: \n"
 "Language-Team: WP Swings\n"
 "Language: en_US\n"
@@ -315,7 +315,7 @@ msgid "Delete"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:468
-#: public/class-subscriptions-for-woocommerce-public.php:994
+#: public/class-subscriptions-for-woocommerce-public.php:1001
 #: subscriptions-for-woocommerce.php:418 subscriptions-for-woocommerce.php:431
 msgid "Subscriptions"
 msgstr ""
@@ -328,17 +328,22 @@ msgstr ""
 msgid "Settings saved !"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:41
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:45
+#: subscriptions-for-woocommerce.php:348
+msgid "GO PRO"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:51
 #: subscriptions-for-woocommerce.php:369
 msgid "Documentation"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:43
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:53
 #: subscriptions-for-woocommerce.php:371
 msgid "Video"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:45
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:55
 #: subscriptions-for-woocommerce.php:373
 msgid "Support"
 msgstr ""
@@ -1315,8 +1320,8 @@ msgstr[1] ""
 
 #: includes/subscriptions-for-woocommerce-common-function.php:716
 #: public/class-subscriptions-for-woocommerce-public.php:127
-#: public/class-subscriptions-for-woocommerce-public.php:143
-#: public/class-subscriptions-for-woocommerce-public.php:1089
+#: public/class-subscriptions-for-woocommerce-public.php:145
+#: public/class-subscriptions-for-woocommerce-public.php:1096
 #, php-format
 msgid " / %s "
 msgstr ""
@@ -1446,7 +1451,7 @@ msgstr ""
 msgid "Stripe Renewal Transaction Successful (%s)"
 msgstr ""
 
-#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:228
+#: package/gateways/stripe/class-subscriptions-for-woocommerce-stripe.php:231
 #, php-format
 msgid "%1$s - Order %2$s - Renewal Order."
 msgstr ""
@@ -1481,64 +1486,64 @@ msgstr ""
 msgid " For %s "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:182
+#: public/class-subscriptions-for-woocommerce-public.php:187
 #, php-format
 msgid " and %s  Sign up fee"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:203
+#: public/class-subscriptions-for-woocommerce-public.php:208
 #, php-format
 msgid " and %s  free trial"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:548
+#: public/class-subscriptions-for-woocommerce-public.php:553
 msgctxt "subscription post title. \"Subscriptions order - <this>\""
 msgid "%1$b %2$d, %Y @ %I:%M %p"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:556
+#: public/class-subscriptions-for-woocommerce-public.php:561
 #, php-format
 msgctxt "Subscription post title"
 msgid "WPS Subscription &ndash; %s"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:864
+#: public/class-subscriptions-for-woocommerce-public.php:871
 msgid "Please enable payment method"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:890
+#: public/class-subscriptions-for-woocommerce-public.php:897
 msgid "Payment Method Added Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1108
+#: public/class-subscriptions-for-woocommerce-public.php:1115
 msgid "Not a valid subscription"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1153
+#: public/class-subscriptions-for-woocommerce-public.php:1160
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1298
+#: public/class-subscriptions-for-woocommerce-public.php:1305
 msgid "You can not add multiple subscription products in cart"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1528
+#: public/class-subscriptions-for-woocommerce-public.php:1535
 msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1568
+#: public/class-subscriptions-for-woocommerce-public.php:1575
 msgid "wps-sfw-recurring"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1568
+#: public/class-subscriptions-for-woocommerce-public.php:1575
 msgid "Recurring"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1569
+#: public/class-subscriptions-for-woocommerce-public.php:1576
 msgid "Recurring Amount will be"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1569
+#: public/class-subscriptions-for-woocommerce-public.php:1576
 msgid "For"
 msgstr ""
 
@@ -1650,10 +1655,6 @@ msgstr ""
 
 #: subscriptions-for-woocommerce.php:344
 msgid "Settings"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:348
-msgid "GO PRO"
 msgstr ""
 
 #: subscriptions-for-woocommerce.php:367

@@ -90,8 +90,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
 
-						if ( apply_filters( 'wps_sfw_recurring_allow_on_scheduler', false, $subscription_id ) ){
-							return ;
+						if ( apply_filters( 'wps_sfw_recurring_allow_on_scheduler', false, $subscription_id ) ) {
+							return;
 						}
 
 						$subscription = get_post( $subscription_id );
