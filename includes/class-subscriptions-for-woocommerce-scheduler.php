@@ -217,6 +217,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
 						// custom hook for addon.
+						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
 						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
 
 						$wps_new_order->save();
