@@ -138,8 +138,11 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$_product = wc_get_product( $product_id );
 
 						$include = get_option( 'woocommerce_prices_include_tax' );
-						if ( 'yes' == $include ) {
-
+						// check for manual subscription.
+						$payment_type = get_post_meta( $subscription_id, 'wps_wsp_payment_type', true );
+						$payment_type = apply_filters( 'wps_sfw_check_manual_subscription_type', $payment_type, $subscription_id );
+						// check for manual subscription.
+						if ( 'yes' == $include && empty( $payment_type ) ) {
 							$wps_args = array(
 								'variation' => array(),
 								'totals'    => array(
@@ -165,13 +168,21 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
-						$item_id = $wps_new_order->add_product(
-							$_product,
-							$product_qty,
-							$wps_pro_args
-						);
+						if ( 'wps_wsp_manual_method' == $payment_type ) {
+							// hook to add product for renewal manual subscription order.
+							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
+
+						} else {
+
+							$item_id = $wps_new_order->add_product(
+								$_product,
+								$product_qty,
+								$wps_pro_args
+							);
+						}
 
 						$order_id = $wps_new_order->get_id();
+
 						Subscriptions_For_Woocommerce_Log::log( 'WPS Renewal Order ID: ' . wc_print_r( $order_id, true ) );
 						update_post_meta( $order_id, '_payment_method', $payment_method );
 						update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
@@ -232,7 +243,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						update_post_meta( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 						$allmethod = array( 'stripe', 'stripe_sepa' );
-						
+
 						if ( in_array( $payment_method, $allmethod ) ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
