@@ -56,6 +56,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			'status'                        => __( 'Status', 'subscriptions-for-woocommerce' ),
 			'product_name'                  => __( 'Product Name', 'subscriptions-for-woocommerce' ),
 			'recurring_amount'              => __( 'Recurring Amount', 'subscriptions-for-woocommerce' ),
+			'payment_type'					=> __( 'Payment Method', 'subscriptions-for-woocommerce'),
 			'user_name'                     => __( 'User Name', 'subscriptions-for-woocommerce' ),
 			'next_payment_date'             => __( 'Next Payment Date', 'subscriptions-for-woocommerce' ),
 			'subscriptions_expiry_date'     => __( 'Subscription Expiry Date', 'subscriptions-for-woocommerce' ),
@@ -121,6 +122,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				return $item[ $column_name ];
 			case 'recurring_amount':
 				return $item[ $column_name ];
+			case 'payment_type':
+				return $item[ $column_name ];	
 			case 'user_name':
 				return $item[ $column_name ];
 			case 'next_payment_date':
@@ -419,6 +422,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					}
 				}
 
+				$payment_type = get_post_meta( $id, 'wps_wsp_payment_type' , true );
+				if( empty( $payment_type ) ){
+
+					$payment_type = get_post_meta( $parent_order_id, '_payment_method_title' ,true );
+					$payment_type = 'Via ' . $payment_type;
+
+				}
+
 							$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
 							$wps_subscriptions_data[] = apply_filters(
 								'wps_sfw_subs_table_data',
@@ -428,6 +439,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 									'status'                    => $wps_subscription_status,
 									'product_name'              => $product_name,
 									'recurring_amount'          => $wps_recurring_total,
+									'payment_type'		        => $payment_type,
 									'user_name'                 => $user_nicename,
 									'next_payment_date'         => wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ),
 									'subscriptions_expiry_date' => wps_sfw_get_the_wordpress_date_format( $wps_susbcription_end ),
@@ -465,7 +477,10 @@ if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_
 	}
 } else {
 	?>
+	<div class="wps_sfw_subscription_table_inner_wrap">
 	<h3 class="wp-heading-inline" id="wps_sfw_heading"><?php esc_html_e( 'Subscriptions', 'subscriptions-for-woocommerce' ); ?></h3>
+	<?php do_action('wps_sfw_add_button_manual_subscription'); ?>
+	</div>
 		<form method="post">
 		<input type="hidden" name="page" value="susbcription_list_table">
 		<?php wp_nonce_field( 'susbcription_list_table', 'susbcription_list_table' ); ?>

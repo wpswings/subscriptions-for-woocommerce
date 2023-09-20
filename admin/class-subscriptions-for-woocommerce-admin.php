@@ -107,7 +107,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id ) {
+		// if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id ) {
 
 			if ( ! wps_sfw_check_multistep() ) {
 
@@ -169,9 +169,9 @@ class Subscriptions_For_Woocommerce_Admin {
 			);
 
 			wp_enqueue_script( $this->plugin_name . 'admin-js' );
-		}
+		// }
 
-		if ( isset( $screen->id ) && 'product' == $screen->id ) {
+		// if ( isset( $screen->id ) && 'product' == $screen->id ) {
 			wp_register_script( 'wps-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscription-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'wps-sfw-admin-single-product-js' );
 
@@ -199,7 +199,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			);
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 
-		}
+		// }
 	}
 	/**
 	 * Adding settings menu for Subscriptions For Woocommerce.
@@ -989,6 +989,10 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		echo json_encode( $response );
 		wp_die();
+	}
+
+	public function wps_sfw_remove_subscription_custom_menu(){
+		remove_menu_page('edit.php?post_type=wps_subscriptions');
 	}
 }
 

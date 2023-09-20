@@ -95,6 +95,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 
 						$subscription = get_post( $subscription_id );
+
 						$parent_order_id  = $subscription->wps_parent_order;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
@@ -231,6 +232,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						update_post_meta( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 						$allmethod = array( 'stripe', 'stripe_sepa' );
+						
 						if ( in_array( $payment_method, $allmethod ) ) {
 							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
 								$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
