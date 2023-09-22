@@ -140,7 +140,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$include = get_option( 'woocommerce_prices_include_tax' );
 						// check for manual subscription.
 						$payment_type = get_post_meta( $subscription_id, 'wps_wsp_payment_type', true );
-						$payment_type = apply_filters( 'wps_sfw_check_manual_subscription_type', $payment_type, $subscription_id );
 						// check for manual subscription.
 						if ( 'yes' == $include && empty( $payment_type ) ) {
 							$wps_args = array(

@@ -1666,12 +1666,14 @@ class Subscriptions_For_Woocommerce_Public {
 				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
 
 			} else {
-				// if tax is disable or exculsive tax is applicable.
-				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
-				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
+				if ( is_checkout() ) {
+					// if tax is disable or exculsive tax is applicable.
+					$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
+					$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
 
-				$line_total = $line_total + $total_taxes;
-				$line_subtotal = $line_subtotal + $substotal_taxes;
+					$line_total = $line_total + $total_taxes;
+					$line_subtotal = $line_subtotal + $substotal_taxes;
+				}
 			}
 			$line_subtotal = apply_filters( 'wps_sfw_fix_recurring_info_price', $line_subtotal, $cart_item );
 		} else {
