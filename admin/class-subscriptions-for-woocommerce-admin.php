@@ -654,7 +654,13 @@ class Subscriptions_For_Woocommerce_Admin {
 			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 				// Cancel subscription.
-				do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+				$wps_wsp_payment_type = get_post_meta( $wps_subscription_id, 'wps_wsp_payment_type', true );
+				if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
+					update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+				} else {
+
+					do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+				}
 				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );
 				exit;

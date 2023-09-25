@@ -1154,9 +1154,18 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_customer_id = get_post_meta( $wps_subscription_id, 'wps_customer_id', true );
 		if ( 'active' == $wps_status && $wps_customer_id == $user_id ) {
 
-			do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+			$wps_wsp_payment_type = get_post_meta( $wps_subscription_id, 'wps_wsp_payment_type', true );
+			if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
+				wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
+				update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 
-			do_action( 'wps_sfw_cancel_susbcription', $wps_subscription_id, $user_id );
+			} else {
+
+				do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+
+				do_action( 'wps_sfw_cancel_susbcription', $wps_subscription_id, $user_id );
+			}
+
 			wc_add_notice( __( 'Subscription Cancelled Successfully', 'subscriptions-for-woocommerce' ), 'success' );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $wps_subscription_id, wc_get_page_permalink( 'myaccount' ) );
 			wp_safe_redirect( $redirect_url );
