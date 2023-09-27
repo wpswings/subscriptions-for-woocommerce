@@ -367,3 +367,14 @@
 	width: 100%;
 }
 }
+.wps-offer-notice.notice.notice-warning {
+    padding: 0;
+    border: none;
+    margin-left: 2px;
+    margin-right: 20px;
+  }
+  .wps-offer-notice.notice.notice-warning a img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }

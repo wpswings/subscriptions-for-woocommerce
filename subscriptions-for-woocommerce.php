@@ -34,6 +34,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
+
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $old_pro_exists = false;
 $plug           = get_plugins();
@@ -280,8 +281,18 @@ if ( $activated ) {
 		update_option( 'wps_all_plugins_active', $wps_sfw_deactive_plugin );
 	}
 
+	/**
+	 * To Remove Cron schedule.
+	 *
+	 * @return void
+	 */
+	function wps_sfw_remove_cron_for_notification_update() {
+		wp_clear_scheduled_hook( 'wps_wgm_check_for_notification_update' );
+	}
+
 	register_activation_hook( __FILE__, 'activate_subscriptions_for_woocommerce' );
 	register_deactivation_hook( __FILE__, 'deactivate_subscriptions_for_woocommerce' );
+	register_deactivation_hook( __FILE__, 'wps_sfw_remove_cron_for_notification_update' );
 
 	/**
 	 * The core plugin class that is used to define internationalization,
@@ -662,5 +673,78 @@ function subscriptions_for_woocommerce_upgrade_wp_options() {
 			$new_value = get_option( $key, $value );
 			update_option( $new_key, $new_value );
 		}
+}
+add_action( 'admin_notices', 'wps_banner_notification_plugin_html' );
+if ( ! function_exists( 'wps_banner_notification_plugin_html' ) ) {
+	/**
+	 * Common Function To show banner image.
+	 *
+	 * @return void
+	 */
+	function wps_banner_notification_plugin_html() {
+
+		$screen = get_current_screen();
+		if ( isset( $screen->id ) ) {
+			$pagescreen = $screen->id;
+		}
+		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) || ( 'wp-swings_page_home' == $pagescreen ) ) {
+			$banner_id = get_option( 'wps_wgm_notify_new_banner_id', false );
+			if ( isset( $banner_id ) && '' !== $banner_id ) {
+				$hidden_banner_id            = get_option( 'wps_wgm_notify_hide_baneer_notification', false );
+				$banner_image = get_option( 'wps_wgm_notify_new_banner_image', '' );
+				$banner_url = get_option( 'wps_wgm_notify_new_banner_url', '' );
+				if ( isset( $hidden_banner_id ) && $hidden_banner_id < $banner_id ) {
+
+					if ( '' !== $banner_image && '' !== $banner_url ) {
+
+						?>
+							<div class="wps-offer-notice notice notice-warning is-dismissible">
+								<div class="notice-container">
+									<a href="<?php echo esc_url( $banner_url ); ?>" target="_blank"><img src="<?php echo esc_url( $banner_image ); ?>" alt="Subscription cards"/></a>
+								</div>
+								<button type="button" class="notice-dismiss dismiss_banner" id="dismiss-banner"><span class="screen-reader-text">Dismiss this notice.</span></button>
+							</div>
+							
+						<?php
+					}
+				}
+			}
+		}
+	}
+}
+add_action( 'admin_notices', 'wps_sfw_banner_notification_html' );
+/**
+ * Function to show banner image based on subscription.
+ *
+ * @return void
+ */
+function wps_sfw_banner_notification_html() {
+	$screen = get_current_screen();
+	if ( isset( $screen->id ) ) {
+		$pagescreen = $screen->id;
+	}
+	if ( ( isset( $_GET['page'] ) && 'subscriptions_for_woocommerce_menu' === $_GET['page'] ) ) {
+		$banner_id = get_option( 'wps_wgm_notify_new_banner_id', false );
+		if ( isset( $banner_id ) && '' !== $banner_id ) {
+			$hidden_banner_id            = get_option( 'wps_wgm_notify_hide_baneer_notification', false );
+			$banner_image = get_option( 'wps_wgm_notify_new_banner_image', '' );
+			$banner_url = get_option( 'wps_wgm_notify_new_banner_url', '' );
+			if ( isset( $hidden_banner_id ) && $hidden_banner_id < $banner_id ) {
+
+				if ( '' !== $banner_image && '' !== $banner_url ) {
+
+					?>
+							<div class="wps-offer-notice notice notice-warning is-dismissible">
+								<div class="notice-container">
+									<a href="<?php echo esc_url( $banner_url ); ?>"target="_blank"><img src="<?php echo esc_url( $banner_image ); ?>" alt="Subscription cards"/></a>
+								</div>
+								<button type="button" class="notice-dismiss dismiss_banner" id="dismiss-banner"><span class="screen-reader-text">Dismiss this notice.</span></button>
+							</div>
+							
+						<?php
+				}
+			}
+		}
+	}
 }
 

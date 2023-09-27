@@ -70,7 +70,21 @@ function App(props) {
         }
     }
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        
+        if( activeStep == 1 ){
+
+            if( state['SubscriptionNumber'] < 0 || state['ProductPrice'] < 0){
+            
+                alert(__('Negative Subscription Interval Or Price is not allowed','subscriptions-for-woocommerce'));
+             
+            } else {
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            }
+             
+        } else {
+
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
     };
 
     const handleBack = () => {

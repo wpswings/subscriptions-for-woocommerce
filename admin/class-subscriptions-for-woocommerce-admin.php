@@ -63,8 +63,11 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
+		if ( isset( $screen->id ) ) {
+			$pagescreen = $screen->id;
+		}
 
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id ) {
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || ( 'wp-swings_page_home' == $screen->id ) ) {
 			// Multistep form css.
 			if ( ! wps_sfw_check_multistep() ) {
 				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
@@ -90,6 +93,11 @@ class Subscriptions_For_Woocommerce_Admin {
 			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
 		}
 
+		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) ) {
+
+			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
+		}
+
 		if ( isset( $screen->id ) && 'product' == $screen->id && 'wp-swings_page_home' == $screen->id ) {
 			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
@@ -107,6 +115,15 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
+
+		$wps_sfw_branner_notice = array(
+			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+			'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
+		);
+		wp_register_script( $this->plugin_name . 'admin-notice', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/wps-sfw-subscription-card-notices.js', array( 'jquery' ), $this->version, false );
+
+		wp_localize_script( $this->plugin_name . 'admin-notice', 'wps_sfw_branner_notice', $wps_sfw_branner_notice );
+		wp_enqueue_script( $this->plugin_name . 'admin-notice' );
 
 		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id || 'wps_subscriptions' == $screen->id ) {
 
@@ -1005,6 +1022,90 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_remove_subscription_custom_menu() {
 		remove_menu_page( 'edit.php?post_type=wps_subscriptions' );
+	}
+
+	/**
+	 * Function to set Cron for branner image function.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_set_cron_for_plugin_notification() {
+		$wps_sfw_offset = get_option( 'gmt_offset' );
+		$wps_sfw_time   = time() + $wps_sfw_offset * 60 * 60;
+		if ( ! wp_next_scheduled( 'wps_wgm_check_for_notification_update' ) ) {
+			wp_schedule_event( $wps_sfw_time, 'daily', 'wps_wgm_check_for_notification_update' );
+		}
+	}
+
+	/**
+	 * Function to save response from server in terms of banner function.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_save_notice_message() {
+		$wps_notification_data = $this->wps_sfw_get_update_notification_data();
+		if ( is_array( $wps_notification_data ) && ! empty( $wps_notification_data ) ) {
+			$banner_id      = array_key_exists( 'notification_id', $wps_notification_data[0] ) ? $wps_notification_data[0]['wps_banner_id'] : '';
+			$banner_image = array_key_exists( 'notification_message', $wps_notification_data[0] ) ? $wps_notification_data[0]['wps_banner_image'] : '';
+			$banner_url = array_key_exists( 'notification_message', $wps_notification_data[0] ) ? $wps_notification_data[0]['wps_banner_url'] : '';
+			$banner_type = array_key_exists( 'notification_message', $wps_notification_data[0] ) ? $wps_notification_data[0]['wps_banner_type'] : '';
+			update_option( 'wps_wgm_notify_new_banner_id', $banner_id );
+			update_option( 'wps_wgm_notify_new_banner_image', $banner_image );
+			update_option( 'wps_wgm_notify_new_banner_url', $banner_url );
+			if ( 'regular' == $banner_type ) {
+				update_option( 'wps_wgm_notify_hide_baneer_notification', '' );
+			}
+		}
+	}
+
+	/**
+	 * This function is used to get notification data from server.
+	 *
+	 * @since    2.0.0
+	 * @author WP Swings <webmaster@wpswings.com>
+	 * @link https://www.wpswings.com/
+	 */
+	public function wps_sfw_get_update_notification_data() {
+		$wps_notification_data = array();
+		$url                   = 'https://demo.wpswings.com/client-notification/woo-gift-cards-lite/wps-client-notify.php';
+		$attr                  = array(
+			'action'         => 'wps_notification_fetch',
+			'plugin_version' => SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION,
+		);
+		$query                 = esc_url_raw( add_query_arg( $attr, $url ) );
+		$response              = wp_remote_get(
+			$query,
+			array(
+				'timeout'   => 20,
+				'sslverify' => false,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message();
+			echo '<p><strong>Something went wrong: ' . esc_html( stripslashes( $error_message ) ) . '</strong></p>';
+		} else {
+			$wps_notification_data = json_decode( wp_remote_retrieve_body( $response ), true );
+		}
+		return $wps_notification_data;
+	}
+
+	/**
+	 * Ajax callback to hide banner image.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_dismiss_notice_banner_callback() {
+		if ( isset( $_REQUEST['wps_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['wps_nonce'] ) ), 'wps-sfw-verify-notice-nonce' ) ) {
+
+			$banner_id = get_option( 'wps_wgm_notify_new_banner_id', false );
+
+			if ( isset( $banner_id ) && '' != $banner_id ) {
+				update_option( 'wps_wgm_notify_hide_baneer_notification', $banner_id );
+			}
+
+			wp_send_json_success();
+		}
 	}
 }
 
