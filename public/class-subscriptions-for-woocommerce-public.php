@@ -306,15 +306,8 @@ class Subscriptions_For_Woocommerce_Public {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $product_price );
 			}
 
-			$test = $this->wps_sfw_calculate_recurring_price( $product_price, $cart_item );
-			$inclusive_tax = get_option( 'woocommerce_prices_include_tax' );
+			$price = $this->wps_sfw_calculate_recurring_price( $product_price, $cart_item );
 
-			if ( 'no' == $inclusive_tax ) {
-
-				$price = $test['line_total'] + $test['line_tax'];
-			} else {
-				$price = $test['line_total'];
-			}
 			$price = apply_filters( 'wps_sfw_recurring_price_info', $price, $cart_item, $product_id );
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
 			// Use for role base pricing.
@@ -433,7 +426,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$show_price = $this->wps_sfw_calculate_recurring_price( $price, $cart_item );
 
 					$wps_recurring_data['wps_recurring_total'] = $price;
-					$wps_recurring_data['wps_show_recurring_total'] = $show_price['line_total'];
+					$wps_recurring_data['wps_show_recurring_total'] = $show_price;
 					$wps_recurring_data['product_id'] = $product_id;
 					$wps_recurring_data['product_name'] = $cart_item['data']->get_name();
 					$wps_recurring_data['product_qty'] = $cart_item['quantity'];
@@ -1618,7 +1611,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param integer $price .
 	 * @param array() $cart_item .
 	 */
-	public function wps_sfw_calculate_recurring_price_test( $price, $cart_item ) {
+	public function wps_sfw_calculate_recurring_price( $price, $cart_item ) {
 
 		global $woocommerce;
 		$product_id = $cart_item['product_id'];
@@ -1732,87 +1725,5 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		$price = $line_subtotal;
 		return $price;
-	}
-
-	/**
-	 * Calculating correct recurring price
-	 *
-	 * @param integer $price .
-	 * @param array() $cart_item .
-	 */
-	public function wps_sfw_calculate_recurring_price( $price, $cart_item ) {
-		global $woocommerce;
-		$product_id = $cart_item['product_id'];
-		if ( $cart_item['variation_id'] ) {
-			$product_id = $cart_item['variation_id'];
-		}
-		$_product  = wc_get_product( $product_id );
-		$wps_sfw_subscription_initial_signup_price = get_post_meta( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
-		$is_sub_coupon_exist = false;
-		$coupons = $woocommerce->cart->get_applied_coupons();
-		if ( ! empty( $coupons ) ) {
-			foreach ( $coupons as $coupon_code ) {
-				$coupon = new WC_Coupon( $coupon_code );
-				$co_type = $coupon->get_discount_type();
-				$allow_dis_sub = array( 'recurring_product_percent_discount', 'recurring_product_discount' );
-				if ( in_array( $co_type, $allow_dis_sub, true ) ) {
-					$is_sub_coupon_exist = true;
-				}
-			}
-		}
-		$inclusive_tax = get_option( 'woocommerce_prices_include_tax' );
-		if ( ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
-			if ( 'yes' === $inclusive_tax ) {
-				$line_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
-				$line_total = $cart_item['line_total'] + $cart_item['line_tax'];
-			} else {
-				$line_subtotal = $cart_item['line_subtotal'];
-				$line_total    = $cart_item['line_total'];
-			}
-			$line_subtotal = $line_subtotal - $wps_sfw_subscription_initial_signup_price * $cart_item['quantity'];
-			$line_total    = $line_total - $wps_sfw_subscription_initial_signup_price * $cart_item['quantity'];
-		} else {
-			$line_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
-			$line_total    = $cart_item['line_total'] + $cart_item['line_tax'];
-		}
-		if ( $is_sub_coupon_exist ) {
-			$line_subtotal = $line_total;
-		}
-		// calcutating the taxes.
-		$_product = wc_get_product( $product_id );
-		// additional code.
-		$wc_tax = new WC_Tax();
-		// Get User billing country.
-		$billing_country = WC()->customer->get_billing_country();
-		// Get the item tax class (your code).
-		$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
-		// Get the related Data for Germany and "default" tax class.
-		$tax_data = $wc_tax->find_rates(
-			array(
-				'country' => $billing_country,
-				'tax_class' => $tax_class,
-			)
-		);
-		if ( 'yes' == $inclusive_tax ) {
-			$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
-			$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
-		} else {
-			// if tax is disable or exculsive tax is applicable.
-			$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
-			$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
-		}
-		$array                      = array();
-		$array['p_id']                = $product_id;
-		$array['line_total']        = $line_total;
-		$array['line_subtotal']     = $line_subtotal;
-		$array['qty']               = $cart_item['quantity'];
-		$array['line_tax']          = $total_taxes;
-		$array['line_subtotal_tax'] = $substotal_taxes;
-		$array['inclusive_tax']     = $inclusive_tax;
-		if ( $wps_sfw_subscription_initial_signup_price ) {
-			$array['signup_fee'] = $wps_sfw_subscription_initial_signup_price;
-		}
-		return $array;
-
 	}
 }
