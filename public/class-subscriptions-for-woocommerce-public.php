@@ -347,6 +347,7 @@ class Subscriptions_For_Woocommerce_Public {
 						} else {
 							// Cart price.
 							$wps_cart_price = apply_filters( 'wps_sfw_cart_price_subscription', 0, $cart_data );
+
 							$cart_data['data']->set_price( $wps_cart_price );
 						}
 					} else {
@@ -1154,9 +1155,18 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_customer_id = get_post_meta( $wps_subscription_id, 'wps_customer_id', true );
 		if ( 'active' == $wps_status && $wps_customer_id == $user_id ) {
 
-			do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+			$wps_wsp_payment_type = get_post_meta( $wps_subscription_id, 'wps_wsp_payment_type', true );
+			if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
+				wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
+				update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 
-			do_action( 'wps_sfw_cancel_susbcription', $wps_subscription_id, $user_id );
+			} else {
+
+				do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+
+				do_action( 'wps_sfw_cancel_susbcription', $wps_subscription_id, $user_id );
+			}
+
 			wc_add_notice( __( 'Subscription Cancelled Successfully', 'subscriptions-for-woocommerce' ), 'success' );
 			$redirect_url = wc_get_endpoint_url( 'show-subscription', $wps_subscription_id, wc_get_page_permalink( 'myaccount' ) );
 			wp_safe_redirect( $redirect_url );
@@ -1653,8 +1663,20 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_subtotal = $cart_item['line_subtotal'];
 				$line_total    = $cart_item['line_total'];
 			}
-			$line_subtotal = $line_subtotal - $wps_sfw_subscription_initial_signup_price;
-			$line_total    = $line_total - $wps_sfw_subscription_initial_signup_price;
+			// fix after.
+			$wps_sfw_subscription_free_trial_number = get_post_meta( $product_id, 'wps_sfw_subscription_free_trial_number', true );
+			if ( isset( $wps_sfw_subscription_free_trial_number ) && ! empty( $wps_sfw_subscription_free_trial_number ) ) {
+				if ( $wps_sfw_subscription_initial_signup_price ) {
+					$price = $_product->get_price();
+					$line_subtotal = $price;
+					$line_total = $price;
+				}
+			} else {
+				// fix before.
+				$line_subtotal = $line_subtotal - $wps_sfw_subscription_initial_signup_price;
+				$line_total    = $line_total - $wps_sfw_subscription_initial_signup_price;
+
+			}
 
 			if ( $is_sub_coupon_exist ) {
 				$line_subtotal = $line_total;
@@ -1666,17 +1688,37 @@ class Subscriptions_For_Woocommerce_Public {
 				$total_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
 
 			} else {
-				// if tax is disable or exculsive tax is applicable.
-				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
-				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
+				if ( is_checkout() ) {
+					// if tax is disable or exculsive tax is applicable.
+					$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
+					$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
 
-				$line_total = $line_total + $total_taxes;
-				$line_subtotal = $line_subtotal + $substotal_taxes;
+					$line_total = $line_total + $total_taxes;
+					$line_subtotal = $line_subtotal + $substotal_taxes;
+				}
 			}
 			$line_subtotal = apply_filters( 'wps_sfw_fix_recurring_info_price', $line_subtotal, $cart_item );
 		} else {
-			$line_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
-			$line_total    = $cart_item['line_total'] + $cart_item['line_tax'];
+			// fix new.
+			if ( empty( $wps_sfw_subscription_initial_signup_price ) ) {
+
+				$price = $_product->get_price();
+
+				if ( is_checkout() ) {
+
+					$line_subtotal = $price + $cart_item['line_subtotal_tax'];
+					$line_total    = $price + $cart_item['line_tax'];
+
+				} else {
+					$line_subtotal = $price;
+					$line_total    = $price;
+
+				}
+			} else {
+				// fix before.
+				$line_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
+				$line_total    = $cart_item['line_total'] + $cart_item['line_tax'];
+			}
 			if ( $is_sub_coupon_exist ) {
 				$line_subtotal = $line_total;
 			}

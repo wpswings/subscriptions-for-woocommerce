@@ -15,16 +15,16 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.5.4
+ * Version:           1.5.5
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
  * Requires at least:        5.1.0
- * Tested up to:             6.3
+ * Tested up to:             6.3.1
  * WC requires at least:     5.1.0
- * WC tested up to:          8.0.2
+ * WC tested up to:          8.1.1
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -34,6 +34,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
+
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $old_pro_exists = false;
 $plug           = get_plugins();
@@ -177,7 +178,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.5.4' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.5.5' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -280,8 +281,18 @@ if ( $activated ) {
 		update_option( 'wps_all_plugins_active', $wps_sfw_deactive_plugin );
 	}
 
+	/**
+	 * To Remove Cron schedule.
+	 *
+	 * @return void
+	 */
+	function wps_sfw_remove_cron_for_notification_update() {
+		wp_clear_scheduled_hook( 'wps_wgm_check_for_notification_update' );
+	}
+
 	register_activation_hook( __FILE__, 'activate_subscriptions_for_woocommerce' );
 	register_deactivation_hook( __FILE__, 'deactivate_subscriptions_for_woocommerce' );
+	register_deactivation_hook( __FILE__, 'wps_sfw_remove_cron_for_notification_update' );
 
 	/**
 	 * The core plugin class that is used to define internationalization,
@@ -437,7 +448,7 @@ if ( $activated ) {
 					'map_meta_cap'                     => true,
 					'publicly_queryable'               => false,
 					'exclude_from_search'              => true,
-					'show_in_menu'                     => false,
+					'show_in_menu'                     => true,
 					'hierarchical'                     => false,
 					'show_in_nav_menus'                => false,
 					'rewrite'                          => false,
@@ -662,5 +673,78 @@ function subscriptions_for_woocommerce_upgrade_wp_options() {
 			$new_value = get_option( $key, $value );
 			update_option( $new_key, $new_value );
 		}
+}
+add_action( 'admin_notices', 'wps_banner_notification_plugin_html' );
+if ( ! function_exists( 'wps_banner_notification_plugin_html' ) ) {
+	/**
+	 * Common Function To show banner image.
+	 *
+	 * @return void
+	 */
+	function wps_banner_notification_plugin_html() {
+
+		$screen = get_current_screen();
+		if ( isset( $screen->id ) ) {
+			$pagescreen = $screen->id;
+		}
+		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) || ( 'wp-swings_page_home' == $pagescreen ) ) {
+			$banner_id = get_option( 'wps_wgm_notify_new_banner_id', false );
+			if ( isset( $banner_id ) && '' !== $banner_id ) {
+				$hidden_banner_id            = get_option( 'wps_wgm_notify_hide_baneer_notification', false );
+				$banner_image = get_option( 'wps_wgm_notify_new_banner_image', '' );
+				$banner_url = get_option( 'wps_wgm_notify_new_banner_url', '' );
+				if ( isset( $hidden_banner_id ) && $hidden_banner_id < $banner_id ) {
+
+					if ( '' !== $banner_image && '' !== $banner_url ) {
+
+						?>
+							<div class="wps-offer-notice notice notice-warning is-dismissible">
+								<div class="notice-container">
+									<a href="<?php echo esc_url( $banner_url ); ?>" target="_blank"><img src="<?php echo esc_url( $banner_image ); ?>" alt="Subscription cards"/></a>
+								</div>
+								<button type="button" class="notice-dismiss dismiss_banner" id="dismiss-banner"><span class="screen-reader-text">Dismiss this notice.</span></button>
+							</div>
+							
+						<?php
+					}
+				}
+			}
+		}
+	}
+}
+add_action( 'admin_notices', 'wps_sfw_banner_notification_html' );
+/**
+ * Function to show banner image based on subscription.
+ *
+ * @return void
+ */
+function wps_sfw_banner_notification_html() {
+	$screen = get_current_screen();
+	if ( isset( $screen->id ) ) {
+		$pagescreen = $screen->id;
+	}
+	if ( ( isset( $_GET['page'] ) && 'subscriptions_for_woocommerce_menu' === $_GET['page'] ) ) {
+		$banner_id = get_option( 'wps_wgm_notify_new_banner_id', false );
+		if ( isset( $banner_id ) && '' !== $banner_id ) {
+			$hidden_banner_id            = get_option( 'wps_wgm_notify_hide_baneer_notification', false );
+			$banner_image = get_option( 'wps_wgm_notify_new_banner_image', '' );
+			$banner_url = get_option( 'wps_wgm_notify_new_banner_url', '' );
+			if ( isset( $hidden_banner_id ) && $hidden_banner_id < $banner_id ) {
+
+				if ( '' !== $banner_image && '' !== $banner_url ) {
+
+					?>
+							<div class="wps-offer-notice notice notice-warning is-dismissible">
+								<div class="notice-container">
+									<a href="<?php echo esc_url( $banner_url ); ?>"target="_blank"><img src="<?php echo esc_url( $banner_image ); ?>" alt="Subscription cards"/></a>
+								</div>
+								<button type="button" class="notice-dismiss dismiss_banner" id="dismiss-banner"><span class="screen-reader-text">Dismiss this notice.</span></button>
+							</div>
+							
+						<?php
+				}
+			}
+		}
+	}
 }
 

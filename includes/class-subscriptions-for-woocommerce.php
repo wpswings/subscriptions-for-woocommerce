@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.5.4';
+			$this->version = '1.5.5';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -252,6 +252,13 @@ class Subscriptions_For_Woocommerce {
 			// paypal Keys Validation.
 			$this->loader->add_filter( 'wp_ajax_wps_sfw_paypal_keys_validation', $sfw_plugin_admin, 'wps_sfw_paypal_keys_validation_callack' );
 		}
+
+		/*cron for notification*/
+		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'wps_sfw_set_cron_for_plugin_notification' );
+		$this->loader->add_action( 'wps_wgm_check_for_notification_update', $sfw_plugin_admin, 'wps_sfw_save_notice_message' );
+		$this->loader->add_action( 'wp_ajax_wps_sfw_dismiss_notice_banner', $sfw_plugin_admin, 'wps_sfw_dismiss_notice_banner_callback' );
+
+		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_remove_subscription_custom_menu' );
 
 	}
 
