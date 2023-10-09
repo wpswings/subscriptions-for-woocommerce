@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.5.5
+ * Version:           1.5.6
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -34,7 +34,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
-
+use Automattic\WooCommerce\Utilities\OrderUtil;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $old_pro_exists = false;
 $plug           = get_plugins();
@@ -178,7 +178,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.5.5' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.5.6' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -280,6 +280,14 @@ if ( $activated ) {
 		}
 		update_option( 'wps_all_plugins_active', $wps_sfw_deactive_plugin );
 	}
+
+	add_action( 'before_woocommerce_init',
+		function() {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
+		}
+	);
 
 	/**
 	 * To Remove Cron schedule.
@@ -462,6 +470,7 @@ if ( $activated ) {
 					'exclude_from_order_webhooks'      => true,
 					'exclude_from_order_reports'       => true,
 					'exclude_from_order_sales_reports' => true,
+					'class_name'                       => 'WC_Subscription',
 				)
 			)
 		);
@@ -526,6 +535,67 @@ if ( $activated ) {
 		}
 	}
 	add_action( 'init', 'wps_sfw_enable_paypal_standard' );
+
+
+	/**
+	 *
+	 * Get the data from the order table if hpos enabled otherwise default working.
+	 *
+	 * @param int    $id .
+	 * @param string $key .
+	 * @param int    $v .
+	 */
+	function wps_sfw_get_meta_data( $id, $key, $v ) {
+
+		if ( 'shop_order' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+	
+			// HPOS usage is enabled.
+	
+			$order    = wc_get_order( $id );
+	
+			$meta_val = $order->get_meta( $key );
+	
+			return $meta_val;
+	
+		} else {
+	
+			// Traditional CPT-based orders are in use.
+	
+		   $meta_val = get_post_meta( $id, $key, $v );
+	
+		   return $meta_val; 
+	
+		}
+	
+	}
+	/**
+	 *
+	 * Update the data into the order table if hpos enabled otherwise default working.
+	 *
+	 * @param int               $id .
+	 * @param string            $key .
+	 * @param init|array|object $value .
+	 */
+	function wps_sfw_update_meta_data( $id, $key, $value ) {
+	
+	
+		if ( 'shop_order' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+	
+			// HPOS usage is enabled.
+	
+			$order = wc_get_order( $id );
+	
+			$order->update_meta_data( $key, $value );
+			$order->save();
+	
+		} else {
+	
+			// Traditional CPT-based orders are in use.
+	
+		   update_post_meta( $id, $key, $value );
+	
+		}
+	}
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );
@@ -748,3 +818,59 @@ function wps_sfw_banner_notification_html() {
 	}
 }
 
+add_action( 'woocommerce_init', function(){
+	require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscription.php';
+});
+/**
+ * Create a new subscription
+ *
+ * Returns a new WC_Subscription object on success which can then be used to add additional data.
+ *
+ * @return WC_Subscription | WP_Error A WC_Subscription on success or WP_Error object on failure
+ * @since  1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+ */
+function wps_create_subscription( $args = array() ) {
+	$now   = gmdate( 'Y-m-d H:i:s' );
+	$order = ( isset( $args['order_id'] ) ) ? wc_get_order( $args['order_id'] ) : null;
+
+	$default_args = array(
+		'status'             => '',
+		'order_id'           => 0,
+		'customer_note'      => null,
+		'customer_id'        => null,
+		'start_date'         => $args['date_created'] ?? $now,
+		'date_created'       => $now,
+		'created_via'        => '',
+		'currency'           => get_woocommerce_currency(),
+		'prices_include_tax' => get_option( 'woocommerce_prices_include_tax' ), // we don't use wc_prices_include_tax() here because WC doesn't use it in wc_create_order(), not 100% sure why it doesn't also check the taxes are enabled, but there could forseeably be a reason
+	);
+
+	// If we are creating a subscription from an order, we use some of the order's data as defaults.
+	if ( $order instanceof \WC_Order ) {
+		$default_args['customer_id']        = $order->get_user_id();
+		$default_args['created_via']        = $order->get_created_via( 'edit' );
+		$default_args['currency']           = $order->get_currency( 'edit' );
+		$default_args['prices_include_tax'] = $order->get_prices_include_tax( 'edit' ) ? 'yes' : 'no';
+		$default_args['date_created']       = $order->get_date_created( 'edit' );
+	}
+
+	$args = wp_parse_args( $args, $default_args );
+
+	$subscription = new \WPS_Subscription();
+
+	// Only call set_status() if required as this triggers a number of WC flows. Default status of 'wc-pending' is during
+	if ( $args['status'] ) {
+		$subscription->update_status( $args['status'] );
+	}
+
+	
+	$subscription->set_customer_id( $args['customer_id'] );
+	$subscription->set_date_created( $args['date_created'] );
+	$subscription->set_created_via( $args['created_via'] );
+	$subscription->set_currency( $args['currency'] );
+	$subscription->set_prices_include_tax( 'no' !== $args['prices_include_tax'] );
+
+	$subscription->save();
+
+	return $subscription;
+}

@@ -100,7 +100,7 @@ class Subscriptions_For_Woocommerce_Stripe {
 					// show the data in log file.
 					WC_Stripe_Logger::log( 'WPS response succes: ' . wc_print_r( $response, true ) );
 
-					update_post_meta( $order_id, '_wps_sfw_payment_transaction_id', $response->id );
+					wps_sfw_update_meta_data( $order_id, '_wps_sfw_payment_transaction_id', $response->id );
 					/* translators: %s: transaction id */
 					$order_note = sprintf( __( 'Stripe Renewal Transaction Successful (%s)', 'subscriptions-for-woocommerce' ), $response->id );
 					$order->add_order_note( $order_note );

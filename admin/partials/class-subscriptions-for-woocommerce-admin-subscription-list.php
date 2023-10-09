@@ -356,7 +356,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 			if ( empty( $wps_subscriptions ) ) {
-				$wps_subs_id = get_post_meta( $data, 'wps_parent_order', true );
+				$wps_subs_id = wps_sfw_get_meta_data( $data, 'wps_parent_order', true );
 				$args2['meta_query'] = array(
 					array(
 						'key'   => 'wps_parent_order',
@@ -374,14 +374,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 			foreach ( $wps_subscriptions as $id ) {
 
-				$parent_order_id   = get_post_meta( $id, 'wps_parent_order', true );
+				$parent_order_id   = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
 				if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 					$total_count = --$total_count;
 					continue;
 				}
-							$wps_subscription_status   = get_post_meta( $id, 'wps_subscription_status', true );
-							$product_name   = get_post_meta( $id, 'product_name', true );
-							$wps_recurring_total   = get_post_meta( $id, 'wps_recurring_total', true );
+							$wps_subscription_status   = wps_sfw_get_meta_data( $id, 'wps_subscription_status', true );
+							$product_name   = wps_sfw_get_meta_data( $id, 'product_name', true );
+							$wps_recurring_total   = wps_sfw_get_meta_data( $id, 'wps_recurring_total', true );
 							$wps_curr_args = array();
 							$susbcription = wc_get_order( $id );
 				if ( isset( $susbcription ) && ! empty( $susbcription ) ) {
@@ -390,14 +390,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 						'currency' => $susbcription->get_currency(),
 					);
 				}
-				if ( get_post_meta( $id, 'wps_show_recurring_total', true ) ) {
-					$wps_recurring_total = get_post_meta( $id, 'wps_show_recurring_total', true );
+				if ( wps_sfw_get_meta_data( $id, 'wps_show_recurring_total', true ) ) {
+					$wps_recurring_total = wps_sfw_get_meta_data( $id, 'wps_show_recurring_total', true );
 				}
 							$wps_recurring_total = wps_sfw_recerring_total_price_list_table_callback( wc_price( $wps_recurring_total, $wps_curr_args ), $id );
 
 							$wps_recurring_total = apply_filters( 'wps_sfw_recerring_total_price_list_table', $wps_recurring_total, $id );
-							$wps_next_payment_date   = get_post_meta( $id, 'wps_next_payment_date', true );
-							$wps_susbcription_end   = get_post_meta( $id, 'wps_susbcription_end', true );
+							$wps_next_payment_date   = wps_sfw_get_meta_data( $id, 'wps_next_payment_date', true );
+							$wps_susbcription_end   = wps_sfw_get_meta_data( $id, 'wps_susbcription_end', true );
 				if ( $wps_next_payment_date === $wps_susbcription_end ) {
 					$wps_next_payment_date = '';
 				}
@@ -411,21 +411,21 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_susbcription_end = '';
 					$wps_recurring_total = '---';
 				}
-							$wps_customer_id   = get_post_meta( $id, 'wps_customer_id', true );
+							$wps_customer_id   = wps_sfw_get_meta_data( $id, 'wps_customer_id', true );
 							$user = get_user_by( 'id', $wps_customer_id );
 
 				if ( ! $wps_sfw_pro_plugin_activated ) {
-					$subp_id = get_post_meta( $id, 'product_id', true );
-					$check_variable = get_post_meta( $subp_id, 'wps_sfw_variable_product', true );
+					$subp_id = wps_sfw_get_meta_data( $id, 'product_id', true );
+					$check_variable = wps_sfw_get_meta_data( $subp_id, 'wps_sfw_variable_product', true );
 					if ( 'yes' === $check_variable ) {
 						continue;
 					}
 				}
 
-				$payment_type = get_post_meta( $id, 'wps_wsp_payment_type', true );
+				$payment_type = wps_sfw_get_meta_data( $id, 'wps_wsp_payment_type', true );
 				if ( empty( $payment_type ) ) {
 
-					$payment_type = get_post_meta( $parent_order_id, '_payment_method_title', true );
+					$payment_type = wps_sfw_get_meta_data( $parent_order_id, '_payment_method_title', true );
 					$payment_type = 'Via ' . $payment_type;
 
 				} else {

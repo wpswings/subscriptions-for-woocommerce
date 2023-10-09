@@ -152,7 +152,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$response = WPS_Paypal_Requests::refund_order( $order, $amount, $reason );
 		if ( 'success' === $response['result'] ) {
 			if ( 'COMPLETED' === $response['response']->status ) {
-				update_post_meta( $order_id, '_wps_paypal_payment_status', 'refunded' );
+				wps_sfw_update_meta_data( $order_id, '_wps_paypal_payment_status', 'refunded' );
 				$order->add_order_note(
 					sprintf(
 						/* translators: %s paypal refund ID. */
@@ -562,7 +562,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				if ( isset( $response->links ) ) {
 					foreach ( $response->links as $link ) {
 						if ( 'approve' === $link->rel || 'payer-action' === $link->rel ) {
-							update_post_meta( $order->get_id(), 'wps_paypal_request_id', $request_id );
+							wps_sfw_update_meta_data( $order->get_id(), 'wps_paypal_request_id', $request_id );
 							return array(
 								'result'   => 'success',
 								'redirect' => $link->href,
@@ -716,12 +716,12 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 						'Authorization'                 => 'Bearer ' . $access_response['access_token'],
 						'Content-Type'                  => 'application/json',
 						'Prefer'                        => 'return=representation',
-						'PayPal-Request-Id'             => get_post_meta( $order->get_id(), 'wps_paypal_request_id', true ),
+						'PayPal-Request-Id'             => wps_sfw_get_meta_data( $order->get_id(), 'wps_paypal_request_id', true ),
 						'PayPal-Partner-Attribution-Id' => 'Woo-wps_paypal',
 					),
 				)
 			);
-			update_post_meta( $order->get_id(), 'wps_order_payment_token', json_decode( $response['body'], true )['payment_source']['paypal']['attributes']['vault']['id'] );
+			wps_sfw_update_meta_data( $order->get_id(), 'wps_order_payment_token', json_decode( $response['body'], true )['payment_source']['paypal']['attributes']['vault']['id'] );
 
 			if ( ! is_wp_error( $response ) && in_array( (int) wp_remote_retrieve_response_code( $response ), array( 200, 201 ), true ) ) {
 				return array(
@@ -848,7 +848,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			'address_line_2' => $order->get_shipping_address_2() ? $order->get_shipping_address_2() : $order->get_billing_address_2(),
 			'postal_code'    => $order->get_shipping_postcode() ? $order->get_shipping_postcode() : $order->get_billing_postcode(),
 		);
-		// $payer['payer_id'] = get_post_meta( $parent_order->get_id(), '_wps_paypal_payer_id', true );
+		// $payer['payer_id'] = wps_sfw_get_meta_data( $parent_order->get_id(), '_wps_paypal_payer_id', true );
 
 		$data['payer'] = $payer;
 
@@ -876,7 +876,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			'body'    => wp_json_encode( $data ),
 		);
 
-		update_post_meta( $order->get_id(), 'wps_paypal_request_id', $request_id );
+		wps_sfw_update_meta_data( $order->get_id(), 'wps_paypal_request_id', $request_id );
 		$response = wp_remote_post( $url, $args );
 
 		$json = json_decode( $response['body'] );

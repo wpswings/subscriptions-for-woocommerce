@@ -42,7 +42,7 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 		<tbody>
 			<tr>
 				<td><?php esc_html_e( 'Status', 'subscriptions-for-woocommerce' ); ?></td>
-				<?php $wps_status = get_post_meta( $wps_subscription_id, 'wps_subscription_status', true ); ?>
+				<?php $wps_status = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_subscription_status', true ); ?>
 				<td class="<?php echo esc_html( 'wps_sfw_' . $wps_status ); ?>">
 				<?php
 					echo esc_html( $wps_status );
@@ -53,7 +53,7 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 				<td><?php esc_html_e( 'Subscription Date', 'subscriptions-for-woocommerce' ); ?></td>
 				<td>
 				<?php
-					$wps_schedule_start = get_post_meta( $wps_subscription_id, 'wps_schedule_start', true );
+					$wps_schedule_start = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_schedule_start', true );
 					echo esc_html( wps_sfw_get_the_wordpress_date_format( $wps_schedule_start ) );
 				?>
 				</td>
@@ -62,7 +62,7 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 				<td><?php esc_html_e( 'Next Payment Date', 'subscriptions-for-woocommerce' ); ?></td>
 				<td>
 				<?php
-					$wps_next_payment_date = get_post_meta( $wps_subscription_id, 'wps_next_payment_date', true );
+					$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_next_payment_date', true );
 				if ( 'cancelled' === $wps_status ) {
 					$wps_next_payment_date = '';
 					$wps_susbcription_end = '';
@@ -73,7 +73,7 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 				</td>
 			</tr>
 			<?php
-			$wps_trail_date = get_post_meta( $wps_subscription_id, 'wps_susbcription_trial_end', true );
+			$wps_trail_date = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_susbcription_trial_end', true );
 
 			if ( ! empty( $wps_trail_date ) ) {
 				?>
@@ -90,7 +90,7 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 			?>
 			
 			<?php
-				$wps_next_payment_date = get_post_meta( $wps_subscription_id, '_payment_method', true );
+				$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription_id, '_payment_method', true );
 			if ( empty( $wps_next_payment_date ) ) {
 					$subscription = wc_get_order( $wps_subscription_id );
 					$wps_sfw_add_payment_url = wp_nonce_url( add_query_arg( array( 'wps_add_payment_method' => $wps_subscription_id ), $subscription->get_checkout_payment_url() ) );
@@ -124,8 +124,8 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 			<tr>
 				<td>
 					<?php
-						$wps_product_name = get_post_meta( $wps_subscription_id, 'product_name', true );
-						$product_qty = get_post_meta( $wps_subscription_id, 'product_qty', true );
+						$wps_product_name = wps_sfw_get_meta_data( $wps_subscription_id, 'product_name', true );
+						$product_qty = wps_sfw_get_meta_data( $wps_subscription_id, 'product_qty', true );
 
 						echo esc_html( $wps_product_name ) . ' x ' . esc_html( $product_qty );
 						do_action( 'wps_sfw_product_details_html', $wps_subscription_id );
@@ -145,7 +145,7 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 					$wps_sfw_cancel_subscription = apply_filters( 'wps_sfw_customer_cancel_button', $wps_sfw_cancel_subscription, $wps_subscription_id );
 				if ( 'on' == $wps_sfw_cancel_subscription ) {
 
-					$wps_status = get_post_meta( $wps_subscription_id, 'wps_subscription_status', true );
+					$wps_status = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_subscription_status', true );
 					if ( 'active' == $wps_status ) {
 						$wps_cancel_url = wps_sfw_cancel_url( $wps_subscription_id, $wps_status );
 						?>

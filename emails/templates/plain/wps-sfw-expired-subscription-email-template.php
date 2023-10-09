@@ -18,8 +18,8 @@ echo esc_html( $email_heading ) . "\n\n"; // PHPCS:Ignore WordPress.Security.Esc
 <p><?php printf( esc_html__( 'A subscription [#%s] has been expired. Their subscription\'s details are as follows:', 'subscriptions-for-woocommerce' ), esc_html( $wps_subscription ) ); ?></p>
 
 <?php
-$wps_product_name = get_post_meta( $wps_subscription, 'product_name', true );
-$product_qty = get_post_meta( $wps_subscription, 'product_qty', true );
+$wps_product_name = wps_sfw_get_meta_data( $wps_subscription, 'product_name', true );
+$product_qty = wps_sfw_get_meta_data( $wps_subscription, 'product_qty', true );
 
 ?>
 <table>

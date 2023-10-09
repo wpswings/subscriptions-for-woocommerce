@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<tbody>
 					<?php
 					foreach ( $wps_subscriptions as $key => $wps_subscription ) {
-						$parent_order_id   = get_post_meta( $wps_subscription->ID, 'wps_parent_order', true );
+						$parent_order_id   = wps_sfw_get_meta_data( $wps_subscription->ID, 'wps_parent_order', true );
 						$wps_wsfw_is_order = false;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							$wps_wsfw_is_order = apply_filters( 'wps_wsfw_check_parent_order', $wps_wsfw_is_order, $parent_order_id );
@@ -45,13 +45,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</td>
 									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status">
 								<?php
-									$wps_status = get_post_meta( $wps_subscription->ID, 'wps_subscription_status', true );
+									$wps_status = wps_sfw_get_meta_data( $wps_subscription->ID, 'wps_subscription_status', true );
 									echo esc_html( $wps_status );
 								?>
 									</td>
 									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date">
 								<?php
-									$wps_next_payment_date = get_post_meta( $wps_subscription->ID, 'wps_next_payment_date', true );
+									$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription->ID, 'wps_next_payment_date', true );
 								if ( 'cancelled' === $wps_status ) {
 									$wps_next_payment_date = '';
 								}

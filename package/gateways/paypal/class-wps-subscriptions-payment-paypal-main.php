@@ -210,13 +210,13 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 		public function wps_sfw_process_subscription_payment( $order, $subscription_id, $payment_method ) {
 			if ( $order && is_object( $order ) ) {
 				$order_id = $order->get_id();
-				$payment_method = get_post_meta( $order_id, '_payment_method', true );
-				$wps_sfw_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
+				$payment_method = wps_sfw_get_meta_data( $order_id, '_payment_method', true );
+				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 
 				if ( 'paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
 					if ( $this->wps_sfw_paypal_check_settings() && $this->wps_sfw_paypal_credential_set() ) {
 						if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
-							$paypal_profile_id = get_post_meta( $subscription_id, '_wps_paypal_subscription_id', true );
+							$paypal_profile_id = wps_sfw_get_meta_data( $subscription_id, '_wps_paypal_subscription_id', true );
 
 							if ( isset( $paypal_profile_id ) && ! empty( $paypal_profile_id ) ) {
 								if ( $this->wps_sfw_check_billing_id( $paypal_profile_id, 'billing_agreement' ) ) {
@@ -235,7 +235,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 					}
 				} elseif ( 'ppec_paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
-						$paypal_profile_id = get_post_meta( $subscription_id, '_wps_paypal_subscription_id', true );
+						$paypal_profile_id = wps_sfw_get_meta_data( $subscription_id, '_wps_paypal_subscription_id', true );
 
 						if ( isset( $paypal_profile_id ) && ! empty( $paypal_profile_id ) ) {
 
@@ -245,7 +245,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 							}
 							if ( $this->wps_sfw_check_paypal_express_enable() && class_exists( 'WC_Gateway_PPEC_With_PayPal_Addons' ) ) {
 
-								update_post_meta( $order_id, '_ppec_billing_agreement_id', $paypal_profile_id );
+								wps_sfw_update_meta_data( $order_id, '_ppec_billing_agreement_id', $paypal_profile_id );
 								$paypal_obj = new WC_Gateway_PPEC_With_PayPal_Addons();
 								$paypal_obj->scheduled_subscription_payment( $order->get_total(), $order );
 								wps_sfw_send_email_for_renewal_susbcription( $order_id );
@@ -268,8 +268,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( $order && is_object( $order ) ) {
 
 				$order_id = $order->get_id();
-				$payment_method = get_post_meta( $order_id, '_payment_method', true );
-				$wps_sfw_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
+				$payment_method = wps_sfw_get_meta_data( $order_id, '_payment_method', true );
+				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( 'paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';
 				}
@@ -630,12 +630,12 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( ! is_object( $order ) ) {
 				$order = wc_get_order( $order );
 			}
-			$wps_subscription_id = get_post_meta( $order->get_id(), 'wps_subscription_id', true );
+			$wps_subscription_id = wps_sfw_get_meta_data( $order->get_id(), 'wps_subscription_id', true );
 			if ( isset( $wps_subscription_id ) && ! empty( $wps_subscription_id ) ) {
 				if ( ! in_array( $paypal_subscription_id, get_user_meta( $order->get_user_id(), '_paypal_subscription_id', false ) ) ) {
 					add_user_meta( $order->get_user_id(), '_wps_paypal_subscription_id', $paypal_subscription_id );
 				}
-				update_post_meta( $wps_subscription_id, '_wps_paypal_subscription_id', $paypal_subscription_id );
+				wps_sfw_update_meta_data( $wps_subscription_id, '_wps_paypal_subscription_id', $paypal_subscription_id );
 
 			}
 		}
@@ -849,7 +849,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 				return $wps_args;
 			}
 			$order_id = $order->get_id();
-			$wps_order_has_susbcription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
+			$wps_order_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 			if ( 'yes' != $wps_order_has_susbcription ) {
 				return $wps_args;
 			}
@@ -871,36 +871,36 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			);
 			return $wps_args;
 
-			$wps_is_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
+			$wps_is_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 
-			$wps_upgrade_downgrade_order = get_post_meta( $order_id, 'wps_upgrade_downgrade_order', true );
+			$wps_upgrade_downgrade_order = wps_sfw_get_meta_data( $order_id, 'wps_upgrade_downgrade_order', true );
 
 			if ( 'yes' == $wps_is_renewal_order ) {
 				return $wps_args;
 			}
 
 			if ( wps_sfw_check_valid_subscription( $order_id ) ) {
-				$wps_susbcription_free_trial = get_post_meta( $order_id, 'wps_susbcription_trial_end', true );
+				$wps_susbcription_free_trial = wps_sfw_get_meta_data( $order_id, 'wps_susbcription_trial_end', true );
 				if ( isset( $wps_susbcription_free_trial ) && ! empty( $wps_susbcription_free_trial ) ) {
 					$wps_subscription_id = $order_id;
 				}
 			} elseif ( 'yes' == $wps_upgrade_downgrade_order ) {
-				$wps_subscription_id = get_post_meta( $order_id, 'wps_subscription_id', true );
-				$wps_old_subscription_id = get_post_meta( $order_id, 'wps_old_subscription_id', true );
-				$wps_old_subscription_data = get_post_meta( $wps_old_subscription_id, 'wps_upgrade_downgrade_data', true );
+				$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
+				$wps_old_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_old_subscription_id', true );
+				$wps_old_subscription_data = wps_sfw_get_meta_data( $wps_old_subscription_id, 'wps_upgrade_downgrade_data', true );
 
-				update_post_meta( $wps_subscription_id, 'wps_upgrade_downgrade_data', $wps_old_subscription_data );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_upgrade_downgrade_data', $wps_old_subscription_data );
 
 				if ( empty( $wps_subscription_id ) ) {
 					return $wps_args;
 				}
 			} else {
-				$wps_order_has_susbcription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
+				$wps_order_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 				if ( 'yes' != $wps_order_has_susbcription ) {
 					return $wps_args;
 				}
 
-				$wps_subscription_id = get_post_meta( $order_id, 'wps_subscription_id', true );
+				$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 				if ( empty( $wps_subscription_id ) ) {
 
 					return $wps_args;
@@ -942,33 +942,33 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 					// reattempt failed payments use 0 for not.
 
 					$wps_args['sra'] = 1;
-					$wps_sfw_subscription_interval = get_post_meta( $wps_subscription_id, 'wps_sfw_subscription_interval', true );
+					$wps_sfw_subscription_interval = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_interval', true );
 					$wps_price_frequency = $this->wps_sfw_get_reccuring_time_interval_for_paypal( $wps_sfw_subscription_interval );
-					$wps_price_is_per = get_post_meta( $wps_subscription_id, 'wps_sfw_subscription_number', true );
-					$wps_sfw_subscription_expiry_number = get_post_meta( $wps_subscription_id, 'wps_sfw_subscription_expiry_number', true );
+					$wps_price_is_per = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_number', true );
+					$wps_sfw_subscription_expiry_number = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_expiry_number', true );
 
-					$wps_schedule_start = get_post_meta( $wps_subscription_id, 'wps_schedule_start', true );
+					$wps_schedule_start = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_schedule_start', true );
 
-					$wps_susbcription_trial_end = get_post_meta( $wps_subscription_id, 'wps_susbcription_trial_end', true );
+					$wps_susbcription_trial_end = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_susbcription_trial_end', true );
 					$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $wps_subscription_id, $wps_schedule_start );
-					update_post_meta( $wps_subscription_id, 'wps_susbcription_trial_end', $wps_susbcription_trial_end );
+					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_susbcription_trial_end', $wps_susbcription_trial_end );
 
 					if ( isset( $wps_sfw_subscription_expiry_number ) && ! empty( $wps_sfw_subscription_expiry_number ) ) {
 
 						$wps_susbcription_end = wps_sfw_susbcription_expiry_date( $wps_subscription_id, $wps_schedule_start, $wps_susbcription_trial_end );
-						update_post_meta( $wps_subscription_id, 'wps_susbcription_end', $wps_susbcription_end );
+						wps_sfw_update_meta_data( $wps_subscription_id, 'wps_susbcription_end', $wps_susbcription_end );
 
 						$wps_subscription_num = ( $wps_sfw_subscription_expiry_number ) ? $wps_sfw_subscription_expiry_number / $wps_price_is_per : '';
 					} else {
 						$wps_subscription_num = '';
 
 					}
-					$wps_free_trial_num = get_post_meta( $wps_subscription_id, 'wps_sfw_subscription_free_trial_number', true );
+					$wps_free_trial_num = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_free_trial_number', true );
 
 					// order total.
 					if ( $wps_free_trial_num > 0 ) {
 
-						$wps_free_trial_frequency = get_post_meta( $wps_subscription_id, 'wps_sfw_subscription_free_trial_interval', true );
+						$wps_free_trial_frequency = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_free_trial_interval', true );
 
 						$wps_free_trial_frequency = $this->wps_sfw_get_reccuring_time_interval_for_paypal( $wps_free_trial_frequency );
 						$wps_args['a1'] = wc_format_decimal( $order->get_total(), 2 );
@@ -1108,14 +1108,14 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * @since    1.0.1
 		 */
 		public function wps_sfw_cancel_paypal_subscription( $wps_subscription_id, $status ) {
-			$wps_sfw_paypal_subscriber_id = get_post_meta( $wps_subscription_id, 'wps_sfw_paypal_subscriber_id', true );
-			$paypal_profile_id = get_post_meta( $wps_subscription_id, '_wps_paypal_subscription_id', true );
+			$wps_sfw_paypal_subscriber_id = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_paypal_subscriber_id', true );
+			$paypal_profile_id = wps_sfw_get_meta_data( $wps_subscription_id, '_wps_paypal_subscription_id', true );
 
 			if ( isset( $paypal_profile_id ) && ! empty( $paypal_profile_id ) ) {
 				if ( $this->wps_sfw_check_billing_id( $paypal_profile_id, 'billing_agreement' ) ) {
 					if ( 'Cancel' == $status ) {
 						wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
-						update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+						wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 					}
 				}
 			} elseif ( isset( $wps_sfw_paypal_subscriber_id ) && ! empty( $wps_sfw_paypal_subscriber_id ) && $this->wps_sfw_paypal_check_settings() ) {
@@ -1127,7 +1127,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 					} elseif ( 'Success' == $response['ACK'] ) {
 						if ( 'Cancel' == $status ) {
 							wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
-							update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+							wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 						}
 					}
 				}
