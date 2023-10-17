@@ -6,6 +6,7 @@
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/admin/partials
  */
+use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -178,7 +179,7 @@ if ( ! function_exists( 'wps_sfw_check_valid_subscription' ) ) {
 		$wps_is_subscription = false;
 
 		if ( isset( $wps_subscription_id ) && ! empty( $wps_subscription_id ) ) {
-			if ( 'wps_subscriptions' == get_post_type( absint( $wps_subscription_id ) ) ) {
+			if ( 'shop_order_placehold' === get_post_type( absint( $wps_subscription_id ) ) || 'wps_subscriptions' == get_post_type( absint( $wps_subscription_id ) ) ) {
 				$wps_is_subscription = true;
 			}
 		}
@@ -594,28 +595,56 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 	 */
 	function wps_sfw_delete_failed_subscription( $order_id ) {
 		if ( isset( $order_id ) && ! empty( $order_id ) ) {
-			$args = array(
-				'numberposts' => -1,
-				'post_type'   => 'wps_subscriptions',
-				'post_status'   => 'wc-wps_renewal',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $order_id,
-					),
-					array(
-						'key'   => 'wps_subscription_status',
-						'value' => 'pending',
-					),
 
-				),
-			);
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$args = array(
+					'return' => 'ids',
+					// 'numberposts' => -1,
+					'type'   => 'wps_subscriptions',
+					// 'status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $order_id,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => 'pending',
+						),
+	
+					),
+				);
+				$wps_subscriptions = wc_get_orders( $args );
+			} else {
+				$args = array(
+					'numberposts' => -1,
+					'post_type'   => 'wps_subscriptions',
+					'post_status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $order_id,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => 'pending',
+						),
+	
+					),
+				);
 				$wps_subscriptions = get_posts( $args );
+			}
 
 			if ( ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 				foreach ( $wps_subscriptions as $key => $value ) {
-					wp_delete_post( $value->ID, true );
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						$subscription = new WPS_Subscription( $value );
+						$subscription->delete( true );
+					} else {
+						wp_delete_post( $value->ID, true );
+					}
 				}
 			}
 		}

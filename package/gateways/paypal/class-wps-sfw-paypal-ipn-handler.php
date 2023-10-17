@@ -12,7 +12,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
+use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 
@@ -489,24 +489,30 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 				if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
 					WC_Gateway_Paypal::log( 'WPS - Renewal Order result1:' . $subscription_id );
 					$current_time = current_time( 'timestamp' );
-					$subscription = get_post( $subscription_id );
+
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						$subscription = new WPS_Subscription( $subscription_id );
+					} else {
+						$subscription = get_post( $subscription_id );
+					}
 					// show the data in log file.
-					WC_Gateway_Paypal::log( 'WPS - Renewal Order subscription1:' . wc_print_r( $subscription, true ) );
-					// show the data in log file.
-					WC_Gateway_Paypal::log( 'WPS - Renewal Order subscription2:' . wc_print_r( $subscription, true ) );
+					WC_Gateway_Paypal::log( 'WPS - Renewal Order subscription:' . wc_print_r( $subscription_id, true ) );
+
 					$parent_order_id  = $subscription->wps_parent_order;
 					WC_Gateway_Paypal::log( 'WPS - Renewal Order result parent order:' . $parent_order_id );
+					
 					$parent_order = wc_get_order( $parent_order_id );
 					$billing_details = $parent_order->get_address( 'billing' );
 					$shipping_details = $parent_order->get_address( 'shipping' );
-
+					
 					$new_status = 'wc-wps_renewal';
-
-					$user_id = $subscription->wps_customer_id;
-					$product_id = $subscription->product_id;
-					$product_qty = $subscription->product_qty;
-					$payment_method = $subscription->_payment_method;
-					$payment_method_title = $subscription->_payment_method_title;
+					
+					
+					$user_id = $parent_order->get_user_id();
+					$product_id = wps_sfw_get_meta_data( $subscription_id, 'product_id', true );
+					$product_qty = wps_sfw_get_meta_data( $subscription_id, 'product_qty', true );
+					$payment_method = $subscription->get_payment_method();
+					$payment_method_title = $subscription->get_payment_method_title();
 
 					$wps_old_payment_method = wps_sfw_get_meta_data( $parent_order_id, '_payment_method', true );
 					$args = array(
@@ -529,8 +535,9 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 					$wps_new_order->calculate_totals();
 					$order_id = $wps_new_order->get_id();
 					WC_Gateway_Paypal::log( 'WPS - Renewal Order result order_id:' . $order_id );
-					wps_sfw_update_meta_data( $order_id, '_payment_method', $payment_method );
-					wps_sfw_update_meta_data( $order_id, '_payment_method_title', $payment_method_title );
+
+					$wps_new_order->set_payment_method( $payment_method );
+					$wps_new_order->set_payment_method_title( $payment_method_title );
 
 					$wps_new_order->set_address( $billing_details, 'billing' );
 					$wps_new_order->set_address( $shipping_details, 'shipping' );

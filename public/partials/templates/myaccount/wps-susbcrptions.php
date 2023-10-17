@@ -8,6 +8,7 @@
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/public
  */
+use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -30,7 +31,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<tbody>
 					<?php
 					foreach ( $wps_subscriptions as $key => $wps_subscription ) {
-						$parent_order_id   = wps_sfw_get_meta_data( $wps_subscription->ID, 'wps_parent_order', true );
+						if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+							$subcription_id = $wps_subscription;
+						} else {
+							$subcription_id = $wps_subscription->ID;
+						}
+						$parent_order_id   = wps_sfw_get_meta_data( $subcription_id, 'wps_parent_order', true );
 						$wps_wsfw_is_order = false;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							$wps_wsfw_is_order = apply_filters( 'wps_wsfw_check_parent_order', $wps_wsfw_is_order, $parent_order_id );
@@ -39,45 +45,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 							}
 						}
 						?>
-								<tr class="wps_sfw_account_row woocommerce-orders-table__row woocommerce-orders-table__row--status-processing order">
-									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number">
-								<?php echo esc_html( $wps_subscription->ID ); ?>
-									</td>
-									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status">
-								<?php
-									$wps_status = wps_sfw_get_meta_data( $wps_subscription->ID, 'wps_subscription_status', true );
-									echo esc_html( $wps_status );
-								?>
-									</td>
-									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date">
-								<?php
-									$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription->ID, 'wps_next_payment_date', true );
-								if ( 'cancelled' === $wps_status ) {
-									$wps_next_payment_date = '';
-								}
-									echo esc_html( wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ) );
-								?>
-									</td>
-									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total">
-									<?php
-									do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $wps_subscription->ID );
-									?>
-									</td>
-									<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions">
-										<span class="wps_sfw_account_show_subscription">
-											<a href="
-									<?php
-									echo esc_url( wc_get_endpoint_url( 'show-subscription', $wps_subscription->ID, wc_get_page_permalink( 'myaccount' ) ) );
-									?>
-											">
-									<?php
-									esc_html_e( 'Show', 'subscriptions-for-woocommerce' );
-									?>
-											</a>
-										</span>
-									</td>
-								</tr>
-								<?php
+						<tr class="wps_sfw_account_row woocommerce-orders-table__row woocommerce-orders-table__row--status-processing order">
+							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number">
+						<?php echo esc_html( $subcription_id ); ?>
+							</td>
+							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status">
+						<?php
+							$wps_status = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
+							echo esc_html( $wps_status );
+						?>
+							</td>
+							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date">
+						<?php
+							$wps_next_payment_date = wps_sfw_get_meta_data( $subcription_id, 'wps_next_payment_date', true );
+						if ( 'cancelled' === $wps_status ) {
+							$wps_next_payment_date = '';
+						}
+							echo esc_html( wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ) );
+						?>
+							</td>
+							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total">
+							<?php
+							do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $subcription_id );
+							?>
+							</td>
+							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions">
+								<span class="wps_sfw_account_show_subscription">
+									<a href="
+							<?php
+							echo esc_url( wc_get_endpoint_url( 'show-subscription', $subcription_id, wc_get_page_permalink( 'myaccount' ) ) );
+							?>
+									">
+							<?php
+							esc_html_e( 'Show', 'subscriptions-for-woocommerce' );
+							?>
+									</a>
+								</span>
+							</td>
+						</tr>
+						<?php
 					}
 					?>
 					</tbody>

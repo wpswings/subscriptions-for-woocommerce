@@ -557,6 +557,14 @@ if ( $activated ) {
 	
 			return $meta_val;
 	
+		} elseif ( 'wps_subscriptions' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				// HPOS usage is enabled.
+	
+				$order    = new WPS_Subscription( $id );
+	
+				$meta_val = $order->get_meta( $key );
+		
+				return $meta_val;
 		} else {
 	
 			// Traditional CPT-based orders are in use.
@@ -582,12 +590,18 @@ if ( $activated ) {
 		if ( 'shop_order' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
 	
 			// HPOS usage is enabled.
-	
-			$order = wc_get_order( $id );
+			$order = wc_get_order( $id );	
 	
 			$order->update_meta_data( $key, $value );
 			$order->save();
 	
+		} elseif ( 'wps_subscriptions' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			// HPOS usage is enabled.
+
+			$order = new WPS_Subscription( $id );
+	
+			$order->update_meta_data( $key, $value );
+			$order->save();
 		} else {
 	
 			// Traditional CPT-based orders are in use.
@@ -834,11 +848,10 @@ function wps_create_subscription( $args = array() ) {
 	$order = ( isset( $args['order_id'] ) ) ? wc_get_order( $args['order_id'] ) : null;
 
 	$default_args = array(
-		'status'             => '',
+		'status'             => 'wc-wps_renewal',
 		'order_id'           => 0,
 		'customer_note'      => null,
 		'customer_id'        => null,
-		'start_date'         => $args['date_created'] ?? $now,
 		'date_created'       => $now,
 		'created_via'        => '',
 		'currency'           => get_woocommerce_currency(),
@@ -860,7 +873,7 @@ function wps_create_subscription( $args = array() ) {
 
 	// Only call set_status() if required as this triggers a number of WC flows. Default status of 'wc-pending' is during
 	if ( $args['status'] ) {
-		$subscription->update_status( $args['status'] );
+		$subscription->set_status( $args['status'] );
 	}
 
 	
@@ -874,3 +887,40 @@ function wps_create_subscription( $args = array() ) {
 
 	return $subscription;
 }
+
+
+add_action( 'init', function(){
+	return;
+	if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+		$args = array(
+			'return' => 'ids',
+			// 'numberposts' => -1,
+			'type'   => 'wps_subscriptions',
+			// 'status'   => 'wc-wps_renewal',
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'   => 'wps_parent_order',
+					'value' => 375,
+				),
+				array(
+					'key'   => 'wps_subscription_status',
+					'value' => 'pending',
+				),
+
+			),
+		);
+		$wps_subscriptions = wc_get_orders( $args );
+		
+		foreach ( $wps_subscriptions as $key => $value ) {
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$subscription = new WPS_Subscription( $value );
+				$subscription->delete( true );
+				die('end here');
+			}
+		}
+		echo '<pre>';
+		print_r($wps_subscriptions);
+		die;
+	}
+});

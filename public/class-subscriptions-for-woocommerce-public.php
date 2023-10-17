@@ -563,32 +563,20 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_subscription_data['post_title']    = sprintf( _x( 'WPS Subscription &ndash; %s', 'Subscription post title', 'subscriptions-for-woocommerce' ), $post_title_date );
 			$wps_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );
 			$wps_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );			
-			ini_set('display_errors',1);
-			error_reporting(E_ALL);
+
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				// $subscription_order = wc_create_order();
-				// echo '<pre>';
-				// print_r($subscription_order);
-				// die;
-				$args = array(
-					'status'      => 'wc-wps_renewal',
-					'customer_id' => $order->get_user_id(),
-					'type'        => 'wps_subscriptions',
-					'created_via' => sprintf( _x( 'WPS Subscription &ndash; %s', 'Subscription post title', 'subscriptions-for-woocommerce' ), $post_title_date ),
-				);
-				$subscription_order = wps_create_subscription( $args );
+
+				$subscription_order = wps_create_subscription();
 				$subscription_id    = $subscription_order->get_id();
-				print_r($subscription_id);die;
-
-				// $subscription_order->update_status('wc-wps_renewal');
-				// $subscription_order->set_customer_id( $order->get_customer_id() );
-				// $subscription_order->save();
-
-
-				// $subscription->set_customer_id( $args['customer_id'] );
-				// $subscription->set_date_created( $args['date_created'] );
+				
+				$subscription_order->set_customer_id( $order->get_user_id() );
+				
+				$new_order = new WPS_Subscription( $subscription_id );
+				$new_order->update_status( 'wc-wps_renewal' );
 			} else {
 				$subscription_id = wp_insert_post( $wps_subscription_data, true );
+
+				$new_order = wc_get_order( $subscription_id );
 			}
 			if ( is_wp_error( $subscription_id ) ) {
 				return $subscription_id;
@@ -601,8 +589,6 @@ class Subscriptions_For_Woocommerce_Public {
 			wps_sfw_update_meta_data( $subscription_id, '_order_key', wc_generate_order_key() );
 
 			/*if free trial*/
-
-			$new_order = new WC_Order( $subscription_id );
 
 			$billing_details = $order->get_address( 'billing' );
 			$shipping_details = $order->get_address( 'shipping' );
@@ -1043,19 +1029,35 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$user_id = get_current_user_id();
 
-		$args = array(
-			'numberposts' => -1,
-			'post_type'   => 'wps_subscriptions',
-			'post_status' => 'wc-wps_renewal',
-			'meta_query' => array(
-				array(
-					'key'   => 'wps_customer_id',
-					'value' => $user_id,
+		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$args = array(
+				'type'   => 'wps_subscriptions',
+				// 'post_status' => 'wc-wps_renewal',
+				'meta_query' => array(
+					array(
+						'key'   => 'wps_customer_id',
+						'value' => $user_id,
+					),
 				),
-			),
+				'return' => 'ids',
+			);
+			$wps_subscriptions = wc_get_orders( $args );
+		} else {
+			$args = array(
+				'numberposts' => -1,
+				'post_type'   => 'wps_subscriptions',
+				'post_status' => 'wc-wps_renewal',
+				'meta_query' => array(
+					array(
+						'key'   => 'wps_customer_id',
+						'value' => $user_id,
+					),
+				),
+	
+			);
+			$wps_subscriptions = get_posts( $args );
+		}
 
-		);
-		$wps_subscriptions = get_posts( $args );
 
 		$wps_per_page = get_option( 'posts_per_page', 10 );
 		$wps_current_page = empty( $wps_current_page ) ? 1 : absint( $wps_current_page );
@@ -1222,54 +1224,83 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 
 				if ( 'yes' == $wps_has_susbcription ) {
-					$args = array(
-						'numberposts' => -1,
-						'post_type'   => 'wps_subscriptions',
-						'post_status'   => 'wc-wps_renewal',
-						'meta_query' => array(
-							'relation' => 'AND',
-							array(
-								'key'   => 'wps_parent_order',
-								'value' => $order_id,
+					
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						$args = array(
+							// 'status' => 'wc-wps_renewal',
+							'number' => 1,
+							'return' => 'ids',
+							'type'   => 'wps_subscriptions',
+							'meta_query' => array(
+								'relation' => 'AND',
+								array(
+									'key'   => 'wps_parent_order',
+									'value' => $order_id,
+								),
+								array(
+									'key'   => 'wps_subscription_status',
+									'value' => 'pending',
+								),
 							),
-							array(
-								'key'   => 'wps_subscription_status',
-								'value' => 'pending',
+						);
+						$wps_subscriptions = wc_get_orders( $args );
+					} else {
+						$args = array(
+							'numberposts' => -1,
+							'post_type'   => 'wps_subscriptions',
+							'post_status'   => 'wc-wps_renewal',
+							'meta_query' => array(
+								'relation' => 'AND',
+								array(
+									'key'   => 'wps_parent_order',
+									'value' => $order_id,
+								),
+								array(
+									'key'   => 'wps_subscription_status',
+									'value' => 'pending',
+								),
+	
 							),
+						);
+						$wps_subscriptions = get_posts( $args );
 
-						),
-					);
-					$wps_subscriptions = get_posts( $args );
+					}
 
 					if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 						foreach ( $wps_subscriptions as $key => $subscription ) {
 
+							if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+								$subscription_id = $subscription;
+							} else {
+								$subscription_id = $subscription->ID;
+							}
+
 							$status = 'active';
-							$status = apply_filters( 'wps_sfw_set_subscription_status', $status, $subscription->ID );
-							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription->ID );
+							$status = apply_filters( 'wps_sfw_set_subscription_status', $status, $subscription_id );
+							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
 
-							wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', $status );
-							wps_sfw_update_meta_data( $subscription->ID, 'wps_schedule_start', $current_time );
+							wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', $status );
+							wps_sfw_update_meta_data( $subscription_id, 'wps_schedule_start', $current_time );
 
-							$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $subscription->ID, $current_time );
-							wps_sfw_update_meta_data( $subscription->ID, 'wps_susbcription_trial_end', $wps_susbcription_trial_end );
+							$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $subscription_id, $current_time );
+							wps_sfw_update_meta_data( $subscription_id, 'wps_susbcription_trial_end', $wps_susbcription_trial_end );
 
-							$wps_next_payment_date = wps_sfw_next_payment_date( $subscription->ID, $current_time, $wps_susbcription_trial_end );
+							$wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, $current_time, $wps_susbcription_trial_end );
 
-							$wps_next_payment_date = apply_filters( 'wps_sfw_next_payment_date', $wps_next_payment_date, $subscription->ID );
+							$wps_next_payment_date = apply_filters( 'wps_sfw_next_payment_date', $wps_next_payment_date, $subscription_id );
 
-							wps_sfw_update_meta_data( $subscription->ID, 'wps_next_payment_date', $wps_next_payment_date );
+							wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 
-							$wps_susbcription_end = wps_sfw_susbcription_expiry_date( $subscription->ID, $current_time, $wps_susbcription_trial_end );
-							$wps_susbcription_end = apply_filters( 'wps_sfw_susbcription_end_date', $wps_susbcription_end, $subscription->ID );
-							wps_sfw_update_meta_data( $subscription->ID, 'wps_susbcription_end', $wps_susbcription_end );
+							$wps_susbcription_end = wps_sfw_susbcription_expiry_date( $subscription_id, $current_time, $wps_susbcription_trial_end );
+							$wps_susbcription_end = apply_filters( 'wps_sfw_susbcription_end_date', $wps_susbcription_end, $subscription_id );
+							wps_sfw_update_meta_data( $subscription_id, 'wps_susbcription_end', $wps_susbcription_end );
 
 							// Set billing id.
 							$billing_agreement_id = wps_sfw_get_meta_data( $order_id, '_ppec_billing_agreement_id', true );
 							if ( isset( $billing_agreement_id ) && ! empty( $billing_agreement_id ) ) {
-								wps_sfw_update_meta_data( $subscription->ID, '_wps_paypal_subscription_id', $billing_agreement_id );
+								wps_sfw_update_meta_data( $subscription_id, '_wps_paypal_subscription_id', $billing_agreement_id );
 							}
-							do_action( 'wps_sfw_order_status_changed', $order_id, $subscription->ID );
+							do_action( 'wps_sfw_order_status_changed', $order_id, $subscription_id );
 						}
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription_activated', 'yes' );
 					}
@@ -1400,27 +1431,55 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 
 				if ( 'yes' == $wps_has_susbcription ) {
-					$args = array(
-						'numberposts' => -1,
-						'post_type'   => 'wps_subscriptions',
-						'post_status'   => 'wc-wps_renewal',
-						'meta_query' => array(
-							'relation' => 'AND',
-							array(
-								'key'   => 'wps_parent_order',
-								'value' => $order_id,
+
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						$args = array(
+							'return' => 'ids',
+							// 'numberposts' => -1,
+							'type'   => 'wps_subscriptions',
+							// 'status'   => 'wc-wps_renewal',
+							'meta_query' => array(
+								'relation' => 'AND',
+								array(
+									'key'   => 'wps_parent_order',
+									'value' => $order_id,
+								),
+								array(
+									'key'   => 'wps_subscription_status',
+									'value' => array( 'active', 'pending' ),
+								),
 							),
-							array(
-								'key'   => 'wps_subscription_status',
-								'value' => array( 'active', 'pending' ),
+						);
+						$wps_subscriptions = wc_get_orders( $args );
+					} else {
+						$args = array(
+							'numberposts' => -1,
+							'post_type'   => 'wps_subscriptions',
+							'post_status'   => 'wc-wps_renewal',
+							'meta_query' => array(
+								'relation' => 'AND',
+								array(
+									'key'   => 'wps_parent_order',
+									'value' => $order_id,
+								),
+								array(
+									'key'   => 'wps_subscription_status',
+									'value' => array( 'active', 'pending' ),
+								),
 							),
-						),
-					);
-					$wps_subscriptions = get_posts( $args );
+						);
+						$wps_subscriptions = get_posts( $args );
+					}
 					if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 						foreach ( $wps_subscriptions as $key => $subscription ) {
-							wps_sfw_send_email_for_cancel_susbcription( $subscription->ID );
-							wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'cancelled' );
+							if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+								wps_sfw_send_email_for_cancel_susbcription( $subscription );
+								wps_sfw_update_meta_data( $subscription, 'wps_subscription_status', 'cancelled' );
+							} else {
+								wps_sfw_send_email_for_cancel_susbcription( $subscription->ID );
+								wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'cancelled' );
+
+							}
 						}
 					}
 				}
@@ -1447,53 +1506,106 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 		if ( 'yes' == $wps_has_susbcription ) {
 			$parent_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_parent_order_id', true );
-			$args = array(
-				'numberposts' => -1,
-				'post_type'   => 'wps_subscriptions',
-				'post_status'   => 'wc-wps_renewal',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $parent_order,
+			
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$args = array(
+					'return' => 'ids',
+					// 'numberposts' => -1,
+					'type'   => 'wps_subscriptions',
+					// 'status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $parent_order,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => array( 'active', 'pending' ),
+						),
 					),
-					array(
-						'key'   => 'wps_subscription_status',
-						'value' => array( 'active', 'pending' ),
+				);
+				$wps_subscriptions = wc_get_orders( $args );
+			} else {
+				$args = array(
+					'numberposts' => -1,
+					'post_type'   => 'wps_subscriptions',
+					'post_status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $parent_order,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => array( 'active', 'pending' ),
+						),
 					),
-				),
-			);
-			$wps_subscriptions = get_posts( $args );
+				);
+				$wps_subscriptions = get_posts( $args );
+			}
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 				foreach ( $wps_subscriptions as $key => $subscription ) {
-
-					wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'on-hold' );
-					do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription->ID );
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						wps_sfw_update_meta_data( $subscription, 'wps_subscription_status', 'on-hold' );
+						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription );
+					} else {
+						wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'on-hold' );
+						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription->ID );
+					}
 				}
 			}
 		} else {
-			$args = array(
-				'numberposts' => -1,
-				'post_type'   => 'wps_subscriptions',
-				'post_status'   => 'wc-wps_renewal',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $order_id,
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$args = array(
+					'return' => 'ids',
+					// 'numberposts' => -1,
+					'post_type'   => 'wps_subscriptions',
+					// 'post_status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $order_id,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => array( 'active', 'pending' ),
+						),
 					),
-					array(
-						'key'   => 'wps_subscription_status',
-						'value' => array( 'active', 'pending' ),
+				);
+	
+				$wps_subscriptions = wc_get_orders( $args );
+			} else {
+				$args = array(
+					'numberposts' => -1,
+					'post_type'   => 'wps_subscriptions',
+					'post_status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $order_id,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => array( 'active', 'pending' ),
+						),
 					),
-				),
-			);
-
-			$wps_subscriptions = get_posts( $args );
+				);
+	
+				$wps_subscriptions = get_posts( $args );
+			}
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 				foreach ( $wps_subscriptions as $key => $subscription ) {
-					wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'on-hold' );
-					do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription->ID );
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						wps_sfw_update_meta_data( $subscription, 'wps_subscription_status', 'on-hold' );
+						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription );
+					} else {
+						wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'on-hold' );
+						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription->ID );
+					}
 				}
 			}
 		}
@@ -1511,30 +1623,58 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 		if ( 'yes' == $wps_has_susbcription ) {
 			$parent_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_parent_order_id', true );
-			$args = array(
-				'numberposts' => -1,
-				'post_type'   => 'wps_subscriptions',
-				'post_status'   => 'wc-wps_renewal',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $parent_order,
+			
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$args = array(
+					'return' => 'ids',
+					// 'numberposts' => -1,
+					'type'   => 'wps_subscriptions',
+					// 'post_status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $parent_order,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => 'on-hold',
+						),
 					),
-					array(
-						'key'   => 'wps_subscription_status',
-						'value' => 'on-hold',
+				);
+	
+				$wps_subscriptions = wc_get_orders( $args );
+			} else {
+				$args = array(
+					'numberposts' => -1,
+					'post_type'   => 'wps_subscriptions',
+					'post_status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $parent_order,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => 'on-hold',
+						),
 					),
-				),
-			);
-
-			$wps_subscriptions = get_posts( $args );
+				);
+	
+				$wps_subscriptions = get_posts( $args );
+			}
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 				foreach ( $wps_subscriptions as $key => $subscription ) {
-					$wps_next_payment_date = wps_sfw_next_payment_date( $subscription->ID, current_time( 'timestamp' ), 0 );
-					wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'active' );
-					wps_sfw_update_meta_data( $subscription->ID, 'wps_next_payment_date', $wps_next_payment_date );
-					do_action( 'wps_sfw_subscription_active_renewal', $subscription->ID );
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						$subscription_id = $subscription;
+					} else {
+						$subscription_id = $subscription->ID;
+					}
+					$wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, current_time( 'timestamp' ), 0 );
+					wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', 'active' );
+					wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
+					do_action( 'wps_sfw_subscription_active_renewal', $subscription_id );
 
 				}
 			}

@@ -286,7 +286,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee' );
 
-			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 99, 2 );
+			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 999, 2 );
 
 			$this->loader->add_action( 'woocommerce_available_payment_gateways', $sfw_plugin_public, 'wps_sfw_unset_offline_payment_gateway_for_subscription' );
 
@@ -437,6 +437,15 @@ class Subscriptions_For_Woocommerce {
 			'name'        => 'subscriptions-for-woocommerce-subscriptions-table',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
+
+		if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-free-vs-pro'] = array(
+				'title'       => esc_html__( 'Free Vs Pro', 'subscriptions-for-woocommerce' ),
+				'name'        => 'subscriptions-for-woocommerce-subscriptions-free-vs-pro',
+				'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+			);
+		}
+
 		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),
