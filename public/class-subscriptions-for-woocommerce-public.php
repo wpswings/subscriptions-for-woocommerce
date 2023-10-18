@@ -1102,7 +1102,11 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param int $subscription_id subscription_id.
 	 */
 	public function wps_sfw_display_susbcription_recerring_total_account_page_callback( $subscription_id ) {
-		$susbcription = wc_get_order( $subscription_id );
+		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$susbcription = new WPS_Subscription( $subscription_id );
+		} else {
+			$susbcription = wc_get_order( $subscription_id );
+		}
 
 		if ( isset( $susbcription ) && ! empty( $susbcription ) ) {
 			$price = $susbcription->get_total();

@@ -115,7 +115,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$actions = apply_filters( 'wps_sfw_add_action_details', $actions, $item['subscription_id'] );
 				return $item[ $column_name ] . $this->row_actions( $actions );
 			case 'parent_order_id':
-				$html = '<a href="' . esc_url( get_edit_post_link( $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
+				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+					$html = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-orders&action=edit&id=' . $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
+				} else {
+					$html = '<a href="' . esc_url( get_edit_post_link( $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
+				}
 				return $html;
 			case 'status':
 				return $item[ $column_name ];

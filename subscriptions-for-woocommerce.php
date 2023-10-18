@@ -890,7 +890,16 @@ function wps_create_subscription( $args = array() ) {
 
 
 add_action( 'init', function(){
+
 	return;
+
+	$subscription = new WPS_Subscription( 386 );
+	$user_email = $subscription->get_billing_email();
+
+	echo $user_email;die;
+
+	$wps_renewal_order_data = wps_sfw_get_meta_data( 386, 'wps_wsp_renewal_order_data', true );
+
 	if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		$args = array(
 			'return' => 'ids',
@@ -914,7 +923,7 @@ add_action( 'init', function(){
 		
 		foreach ( $wps_subscriptions as $key => $value ) {
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				$subscription = new WPS_Subscription( $value );
+				
 				$subscription->delete( true );
 				die('end here');
 			}
