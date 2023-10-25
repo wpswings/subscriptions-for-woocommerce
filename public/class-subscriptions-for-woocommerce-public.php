@@ -899,8 +899,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 				if ( 'success' == $result['result'] ) {
 					$result['redirect'] = wc_get_endpoint_url( 'show-subscription', $wps_subscription->get_id(), wc_get_page_permalink( 'myaccount' ) );
-						wps_sfw_update_meta_data( $wps_subscription->get_id(), '_payment_method', $new_payment_method );
-						wps_sfw_update_meta_data( $wps_subscription->get_id(), '_payment_method_title', $payment_method_title );
+					$wps_subscription->set_payment_method( $new_payment_method );	
+					$wps_subscription->set_payment_method_title( $payment_method_title );					
 				}
 
 				if ( 'success' != $result['result'] ) {
@@ -1875,7 +1875,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 				$price = $_product->get_price();
 
-				if ( is_checkout() ) {
+				$woocommerce_tax_display_cart = get_option( 'woocommerce_tax_display_cart' );
+                if ( 'excl' == $woocommerce_tax_display_cart ) {
 
 					$line_subtotal = $price + $cart_item['line_subtotal_tax'];
 					$line_total    = $price + $cart_item['line_tax'];

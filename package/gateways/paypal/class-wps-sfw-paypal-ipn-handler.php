@@ -514,7 +514,7 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 					$payment_method = $subscription->get_payment_method();
 					$payment_method_title = $subscription->get_payment_method_title();
 
-					$wps_old_payment_method = wps_sfw_get_meta_data( $parent_order_id, '_payment_method', true );
+					$wps_old_payment_method = $parent_order->get_payment_method();
 					$args = array(
 						'status'      => $new_status,
 						'customer_id' => $user_id,

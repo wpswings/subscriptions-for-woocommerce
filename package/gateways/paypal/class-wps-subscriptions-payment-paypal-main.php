@@ -210,7 +210,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 		public function wps_sfw_process_subscription_payment( $order, $subscription_id, $payment_method ) {
 			if ( $order && is_object( $order ) ) {
 				$order_id = $order->get_id();
-				$payment_method = wps_sfw_get_meta_data( $order_id, '_payment_method', true );
+
+				$payment_method = $order->get_payment_method();
+
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 
 				if ( 'paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
@@ -268,7 +270,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( $order && is_object( $order ) ) {
 
 				$order_id = $order->get_id();
-				$payment_method = wps_sfw_get_meta_data( $order_id, '_payment_method', true );
+
+				$payment_method = $order->get_payment_method();
+
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( 'paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';

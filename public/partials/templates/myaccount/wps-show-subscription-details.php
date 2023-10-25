@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
 
 /**
  * This function is used to cancel url.
@@ -90,20 +91,24 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 			?>
 			
 			<?php
-				$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription_id, '_payment_method', true );
-			if ( empty( $wps_next_payment_date ) ) {
+				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+					$subscription = new WPS_Subscription( $wps_subscription_id );
+				} else {
+					$subscription = wc_get_order( $wps_subscription_id );
+				}
+				
+				$wps_next_payment_date = $subscription->get_payment_method();
+				if ( empty( $wps_next_payment_date ) ) {
 					$subscription = wc_get_order( $wps_subscription_id );
 					$wps_sfw_add_payment_url = wp_nonce_url( add_query_arg( array( 'wps_add_payment_method' => $wps_subscription_id ), $subscription->get_checkout_payment_url() ) );
-				?>
-							<tr>
-								<td>
-									<a href="<?php echo esc_url( $wps_sfw_add_payment_url ); ?>" class="button wps_sfw_add_payment_url"><?php esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' ); ?></a>
-								</td>
-							</tr>
-						<?php
-
-			}
-
+					?>
+					<tr>
+						<td>
+							<a href="<?php echo esc_url( $wps_sfw_add_payment_url ); ?>" class="button wps_sfw_add_payment_url"><?php esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' ); ?></a>
+						</td>
+					</tr>
+				<?php
+				}
 			?>
 			<?php do_action( 'wps_sfw_subscription_details_html', $wps_subscription_id ); ?>
 		</tbody>

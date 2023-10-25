@@ -492,8 +492,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 				$payment_type = wps_sfw_get_meta_data( $id, 'wps_wsp_payment_type', true );
 				if ( empty( $payment_type ) ) {
+					$parent_order = wc_get_order( $parent_order_id );
 
-					$payment_type = wps_sfw_get_meta_data( $parent_order_id, '_payment_method_title', true );
+					$payment_type =  $parent_order->get_payment_method_title();
 					$payment_type = 'Via ' . $payment_type;
 
 				} else {

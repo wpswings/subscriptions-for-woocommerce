@@ -19,6 +19,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 	/**
@@ -48,7 +50,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 			if ( $order && is_object( $order ) ) {
 				$allmethod = array( 'stripe', 'stripe_sepa' );
 				$order_id = $order->get_id();
-				$payment_method = wps_sfw_get_meta_data( $order_id, '_payment_method', true );
+
+				$payment_method = $order->get_payment_method();
+
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( in_array( $payment_method, $allmethod ) && 'yes' == $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';
@@ -88,7 +92,15 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		 */
 		public function wps_sfw_cancel_stripe_subscription( $wps_subscription_id, $status ) {
 
-			$wps_payment_method = wps_sfw_get_meta_data( $wps_subscription_id, '_payment_method', true );
+			$payment_method = $order->get_payment_method();
+
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$subscription = new WPS_Subscription( $wps_subscription_id );
+			} else {
+				$subscription = wc_get_order( $wps_subscription_id );
+			}
+			$wps_payment_method = $subscription->get_payment_method();
+
 			$allmethod = array( 'stripe', 'stripe_sepa' );
 			if ( in_array( $wps_payment_method, $allmethod ) || ( 'cod' == $wps_payment_method ) || ( 'bacs' == $wps_payment_method ) || ( 'cheque' == $wps_payment_method ) ) {
 				if ( 'Cancel' == $status ) {
