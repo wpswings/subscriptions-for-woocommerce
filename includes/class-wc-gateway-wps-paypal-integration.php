@@ -87,19 +87,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * If this payment method needs further setup.
-	 *
-	 * @since 1.0.0
-	 * @return boolean
-	 */
-	public function needs_setup() {
-		if ( empty( $this->client_id ) || empty( $this->client_secret ) ) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Show admin options is valid for use.
 	 *
 	 * @since 1.0.0
