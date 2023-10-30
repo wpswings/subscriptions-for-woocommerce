@@ -92,8 +92,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		 */
 		public function wps_sfw_cancel_stripe_subscription( $wps_subscription_id, $status ) {
 
-			$payment_method = $order->get_payment_method();
-
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$subscription = new WPS_Subscription( $wps_subscription_id );
 			} else {
