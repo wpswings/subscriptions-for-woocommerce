@@ -1,17 +1,1 @@
-<?php
-/**
- * Provide a public-facing view for the plugin
- *
- * This file is used to markup the build aspects of the plugin.
- *
- * @link       https://wpswing.com/
- * @since      1.0.0
- *
- * @package    Subscriptions_For_Woocommerce
- * @subpackage Subscriptions_For_Woocommerce/build
- */
-
-return array(
-	'dependencies' => array( 'wp-element', 'wp-polyfill' ),
-	'version' => '96cd1792583da9be77cd72f1ae5580ae',
-);
+<?php return array('dependencies' => array('wp-element', 'wp-polyfill'), 'version' => '07a23af41c73bb8c8cc595f8913a02bf');

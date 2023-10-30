@@ -1021,7 +1021,8 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @return void
 	 */
 	public function wps_sfw_remove_subscription_custom_menu() {
-		remove_menu_page( 'edit.php?post_type=wps_subscriptions' );
+		remove_menu_page( 'edit.php?post_type=wps_subscriptions' );		
+		remove_submenu_page( 'woocommerce', 'wc-orders--wps_subscriptions');
 	}
 
 	/**

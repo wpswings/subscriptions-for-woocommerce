@@ -434,22 +434,22 @@ if ( $activated ) {
 				'wps_sfw_register_custom_order_types',
 				array(
 					'labels'                           => array(
-						'name'               => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
-						'singular_name'      => __( 'Subscription', 'subscriptions-for-woocommerce' ),
-						'add_new'            => __( 'Add Subscription', 'subscriptions-for-woocommerce' ),
-						'add_new_item'       => __( 'Add New Subscription', 'subscriptions-for-woocommerce' ),
+						'name'               => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+						'singular_name'      => __( 'WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'add_new'            => __( 'Add WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'add_new_item'       => __( 'Add New WPS Subscription', 'subscriptions-for-woocommerce' ),
 						'edit'               => __( 'Edit', 'subscriptions-for-woocommerce' ),
-						'edit_item'          => __( 'Edit Subscription', 'subscriptions-for-woocommerce' ),
-						'new_item'           => __( 'New Subscription', 'subscriptions-for-woocommerce' ),
-						'view'               => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
-						'view_item'          => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
-						'search_items'       => __( 'Search Subscriptions', 'subscriptions-for-woocommerce' ),
+						'edit_item'          => __( 'Edit WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'new_item'           => __( 'New WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'view'               => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'view_item'          => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'search_items'       => __( 'Search WPS Subscriptions', 'subscriptions-for-woocommerce' ),
 						'not_found'          => __( 'Not Found', 'subscriptions-for-woocommerce' ),
-						'not_found_in_trash' => __( 'No Subscriptions found in the trash', 'subscriptions-for-woocommerce' ),
-						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
-						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+						'not_found_in_trash' => __( 'No WPS Subscriptions found in the trash', 'subscriptions-for-woocommerce' ),
+						'parent'             => __( 'Parent WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+						'menu_name'          => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
 					),
-					'description'                      => __( 'These subscriptions are stored.', 'subscriptions-for-woocommerce' ),
+					'description'                      => __( 'These WPS subscriptions are stored.', 'subscriptions-for-woocommerce' ),
 					'public'                           => false,
 					'show_ui'                          => true,
 					'capability_type'                  => 'shop_order',
@@ -458,7 +458,7 @@ if ( $activated ) {
 					'exclude_from_search'              => true,
 					'show_in_menu'                     => true,
 					'hierarchical'                     => false,
-					'show_in_nav_menus'                => false,
+					'show_in_nav_menus'                => true,
 					'rewrite'                          => false,
 					'query_var'                        => false,
 					'supports'                         => array( 'title', 'comments', 'custom-fields' ),
@@ -470,7 +470,7 @@ if ( $activated ) {
 					'exclude_from_order_webhooks'      => true,
 					'exclude_from_order_reports'       => true,
 					'exclude_from_order_sales_reports' => true,
-					'class_name'                       => 'WC_Subscription',
+					'class_name'                       => 'WPS_Subscription',
 				)
 			)
 		);
@@ -887,49 +887,3 @@ function wps_create_subscription( $args = array() ) {
 
 	return $subscription;
 }
-
-
-add_action( 'init', function(){
-
-	return;
-
-	$subscription = new WPS_Subscription( 386 );
-	$user_email = $subscription->get_billing_email();
-
-	echo $user_email;die;
-
-	$wps_renewal_order_data = wps_sfw_get_meta_data( 386, 'wps_wsp_renewal_order_data', true );
-
-	if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-		$args = array(
-			'return' => 'ids',
-			// 'numberposts' => -1,
-			'type'   => 'wps_subscriptions',
-			// 'status'   => 'wc-wps_renewal',
-			'meta_query' => array(
-				'relation' => 'AND',
-				array(
-					'key'   => 'wps_parent_order',
-					'value' => 375,
-				),
-				array(
-					'key'   => 'wps_subscription_status',
-					'value' => 'pending',
-				),
-
-			),
-		);
-		$wps_subscriptions = wc_get_orders( $args );
-		
-		foreach ( $wps_subscriptions as $key => $value ) {
-			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				
-				$subscription->delete( true );
-				die('end here');
-			}
-		}
-		echo '<pre>';
-		print_r($wps_subscriptions);
-		die;
-	}
-});
