@@ -6,6 +6,7 @@
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/admin/partials
  */
+
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -612,7 +613,6 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 							'key'   => 'wps_subscription_status',
 							'value' => 'pending',
 						),
-	
 					),
 				);
 				$wps_subscriptions = wc_get_orders( $args );
@@ -631,7 +631,6 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 							'key'   => 'wps_subscription_status',
 							'value' => 'pending',
 						),
-	
 					),
 				);
 				$wps_subscriptions = get_posts( $args );
@@ -860,8 +859,3 @@ if ( ! function_exists( 'wps_sfw_check_valid_order' ) ) {
 		return $valid;
 	}
 }
-
-
-
-
-

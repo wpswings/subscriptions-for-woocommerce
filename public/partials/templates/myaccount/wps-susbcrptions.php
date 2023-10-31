@@ -8,6 +8,7 @@
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/public
  */
+
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -562,15 +562,15 @@ class Subscriptions_For_Woocommerce_Public {
 			/* translators: %s: post title date */
 			$wps_subscription_data['post_title']    = sprintf( _x( 'WPS Subscription &ndash; %s', 'Subscription post title', 'subscriptions-for-woocommerce' ), $post_title_date );
 			$wps_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );
-			$wps_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );			
+			$wps_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );
 
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 
 				$subscription_order = wps_create_subscription();
 				$subscription_id    = $subscription_order->get_id();
-				
+
 				$subscription_order->set_customer_id( $order->get_user_id() );
-				
+
 				$new_order = new WPS_Subscription( $subscription_id );
 				$new_order->update_status( 'wc-wps_renewal' );
 			} else {
@@ -899,8 +899,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 				if ( 'success' == $result['result'] ) {
 					$result['redirect'] = wc_get_endpoint_url( 'show-subscription', $wps_subscription->get_id(), wc_get_page_permalink( 'myaccount' ) );
-					$wps_subscription->set_payment_method( $new_payment_method );	
-					$wps_subscription->set_payment_method_title( $payment_method_title );					
+					$wps_subscription->set_payment_method( $new_payment_method );
+					$wps_subscription->set_payment_method_title( $payment_method_title );
 				}
 
 				if ( 'success' != $result['result'] ) {
@@ -1053,11 +1053,9 @@ class Subscriptions_For_Woocommerce_Public {
 						'value' => $user_id,
 					),
 				),
-	
 			);
 			$wps_subscriptions = get_posts( $args );
 		}
-
 
 		$wps_per_page = get_option( 'posts_per_page', 10 );
 		$wps_current_page = empty( $wps_current_page ) ? 1 : absint( $wps_current_page );
@@ -1154,7 +1152,6 @@ class Subscriptions_For_Woocommerce_Public {
 
 	}
 
-
 	/**
 	 * This function is used to cancel susbcription.
 	 *
@@ -1228,7 +1225,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 
 				if ( 'yes' == $wps_has_susbcription ) {
-					
+
 					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 						$args = array(
 							// 'status' => 'wc-wps_renewal',
@@ -1263,7 +1260,6 @@ class Subscriptions_For_Woocommerce_Public {
 									'key'   => 'wps_subscription_status',
 									'value' => 'pending',
 								),
-	
 							),
 						);
 						$wps_subscriptions = get_posts( $args );
@@ -1510,7 +1506,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 		if ( 'yes' == $wps_has_susbcription ) {
 			$parent_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_parent_order_id', true );
-			
+
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
 					'return' => 'ids',
@@ -1579,7 +1575,6 @@ class Subscriptions_For_Woocommerce_Public {
 						),
 					),
 				);
-	
 				$wps_subscriptions = wc_get_orders( $args );
 			} else {
 				$args = array(
@@ -1598,7 +1593,6 @@ class Subscriptions_For_Woocommerce_Public {
 						),
 					),
 				);
-	
 				$wps_subscriptions = get_posts( $args );
 			}
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
@@ -1627,7 +1621,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 		if ( 'yes' == $wps_has_susbcription ) {
 			$parent_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_parent_order_id', true );
-			
+
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
 					'return' => 'ids',
@@ -1646,7 +1640,6 @@ class Subscriptions_For_Woocommerce_Public {
 						),
 					),
 				);
-	
 				$wps_subscriptions = wc_get_orders( $args );
 			} else {
 				$args = array(
@@ -1665,7 +1658,6 @@ class Subscriptions_For_Woocommerce_Public {
 						),
 					),
 				);
-	
 				$wps_subscriptions = get_posts( $args );
 			}
 			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
@@ -1876,11 +1868,9 @@ class Subscriptions_For_Woocommerce_Public {
 				$price = $_product->get_price();
 
 				$woocommerce_tax_display_cart = get_option( 'woocommerce_tax_display_cart' );
-                if ( 'excl' == $woocommerce_tax_display_cart ) {
-
+				if ( 'excl' == $woocommerce_tax_display_cart ) {
 					$line_subtotal = $price + $cart_item['line_subtotal_tax'];
 					$line_total    = $price + $cart_item['line_tax'];
-
 				} else {
 					$line_subtotal = $price;
 					$line_total    = $price;

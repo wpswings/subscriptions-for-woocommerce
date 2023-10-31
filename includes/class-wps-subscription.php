@@ -1,52 +1,71 @@
 <?php
 /**
- * Subscription Object
+ * The file that defines the main WPS_Subscription class
  *
- * Extends WC_Order because the Edit Order/Subscription interface requires some of the refund related methods
- * from WC_Order that don't exist in WC_Abstract_Order (which would seem the more appropriate choice)
+ * @link  https://wpswings.com/
+ * @since 1.5.6
  *
- * @class    WPS_Subscription
- * @version  1.0.0 - Migrated from WooCommerce Subscriptions v2.0
- * @package  WooCommerce Subscriptions/Classes
- * @category Class
- * @author   Brent Shepherd
+ * @package    Subscriptions_For_Woocommerce
+ * @subpackage Subscriptions_For_Woocommerce/include
  */
 
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Main payment class.
+ *
+ * This is used to extend the WC_Order class.
+ *
+ * @since      1.5.6
+ * @package    Subscriptions_For_Woocommerce
+ * @subpackage Subscriptions_For_Woocommerce/include
+ */
 class WPS_Subscription extends WC_Order {
 
-	/** @public WC_Order Stores order data for the order in which the subscription was purchased (if any) */
+	/**
+	 * Store the order data
+	 *
+	 * @public WC_Order Stores order data for the order in which the subscription was purchased (if any)
+	 * @var bool
+	 */
 	protected $order = null;
 
-	/** @public string Order type */
+	/**
+	 * Store the order type
+	 *
+	 * @public string Order type
+	 * @var bool
+	 */
 	public $order_type = 'wps_subscriptions';
 
-	/** @private int Stores get_payment_count when used multiple times */
+	/**
+	 * Store the order data
+	 *
+	 * @private int Stores get_payment_count when used multiple times
+	 * @var bool
+	 */
 	private $cached_payment_count = null;
 
-	/**
-	 * Which data store to load. WC 3.0+ property.
-	 *
-	 * @var string
-	 */
-	// protected $data_store_name = 'subscription';
 
 	/**
-	 * This is the name of this object type. WC 3.0+ property.
+	 * Store the order data
 	 *
-	 * @var string
-	 */
-	// protected $object_type = 'subscription';
-
-	/**
 	 * Stores the $this->is_editable() returned value in memory
 	 *
 	 * @var bool
 	 */
 	private $editable;
 
-	/** @private array The set of valid date types that can be set on the subscription */
+	/**
+	 * Store the order data
+	 *
+	 * @private array The set of valid date types that can be set on the subscription
+	 * @var bool
+	 */
 	protected $valid_date_types = array();
-
 
 	/**
 	 * Initializes a specific subscription if the ID is passed, otherwise a new and empty instance of a subscription.
@@ -62,7 +81,7 @@ class WPS_Subscription extends WC_Order {
 		$this->order_type = 'wps_subscriptions';
 	}
 
-    /**
+	/**
 	 * Get internal type.
 	 *
 	 * @return string

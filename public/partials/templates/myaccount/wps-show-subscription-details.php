@@ -88,29 +88,25 @@ function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
 				</tr>
 				<?php
 			}
-			?>
-			
-			<?php
-				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-					$subscription = new WPS_Subscription( $wps_subscription_id );
-				} else {
-					$subscription = wc_get_order( $wps_subscription_id );
-				}
-				
-				$wps_next_payment_date = $subscription->get_payment_method();
-				if ( empty( $wps_next_payment_date ) ) {
-					$subscription = wc_get_order( $wps_subscription_id );
-					$wps_sfw_add_payment_url = wp_nonce_url( add_query_arg( array( 'wps_add_payment_method' => $wps_subscription_id ), $subscription->get_checkout_payment_url() ) );
-					?>
-					<tr>
-						<td>
-							<a href="<?php echo esc_url( $wps_sfw_add_payment_url ); ?>" class="button wps_sfw_add_payment_url"><?php esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' ); ?></a>
-						</td>
-					</tr>
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$subscription = new WPS_Subscription( $wps_subscription_id );
+			} else {
+				$subscription = wc_get_order( $wps_subscription_id );
+			}
+			$wps_next_payment_date = $subscription->get_payment_method();
+			if ( empty( $wps_next_payment_date ) ) {
+				$subscription = wc_get_order( $wps_subscription_id );
+				$wps_sfw_add_payment_url = wp_nonce_url( add_query_arg( array( 'wps_add_payment_method' => $wps_subscription_id ), $subscription->get_checkout_payment_url() ) );
+				?>
+				<tr>
+					<td>
+						<a href="<?php echo esc_url( $wps_sfw_add_payment_url ); ?>" class="button wps_sfw_add_payment_url"><?php esc_html_e( 'Add Payment Method', 'subscriptions-for-woocommerce' ); ?></a>
+					</td>
+				</tr>
 				<?php
-				}
+			}
+			do_action( 'wps_sfw_subscription_details_html', $wps_subscription_id );
 			?>
-			<?php do_action( 'wps_sfw_subscription_details_html', $wps_subscription_id ); ?>
 		</tbody>
 	</table>
 	<table class="shop_table wps_sfw_order_details">

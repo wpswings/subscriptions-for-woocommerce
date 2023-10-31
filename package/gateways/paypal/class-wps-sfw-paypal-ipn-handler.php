@@ -500,14 +500,13 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 
 					$parent_order_id  = $subscription->wps_parent_order;
 					WC_Gateway_Paypal::log( 'WPS - Renewal Order result parent order:' . $parent_order_id );
-					
+
 					$parent_order = wc_get_order( $parent_order_id );
 					$billing_details = $parent_order->get_address( 'billing' );
 					$shipping_details = $parent_order->get_address( 'shipping' );
-					
+
 					$new_status = 'wc-wps_renewal';
-					
-					
+
 					$user_id = $parent_order->get_user_id();
 					$product_id = wps_sfw_get_meta_data( $subscription_id, 'product_id', true );
 					$product_qty = wps_sfw_get_meta_data( $subscription_id, 'product_qty', true );

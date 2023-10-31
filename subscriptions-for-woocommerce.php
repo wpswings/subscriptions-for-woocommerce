@@ -281,7 +281,8 @@ if ( $activated ) {
 		update_option( 'wps_all_plugins_active', $wps_sfw_deactive_plugin );
 	}
 
-	add_action( 'before_woocommerce_init',
+	add_action(
+		'before_woocommerce_init',
 		function() {
 			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
@@ -548,33 +549,27 @@ if ( $activated ) {
 	function wps_sfw_get_meta_data( $id, $key, $v ) {
 
 		if ( 'shop_order' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
-	
+
 			// HPOS usage is enabled.
-	
+
 			$order    = wc_get_order( $id );
-	
+
 			$meta_val = $order->get_meta( $key );
-	
+
 			return $meta_val;
-	
+
 		} elseif ( 'wps_subscriptions' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				// HPOS usage is enabled.
-	
-				$order    = new WPS_Subscription( $id );
-	
-				$meta_val = $order->get_meta( $key );
-		
-				return $meta_val;
+			// HPOS usage is enabled.
+			$order    = new WPS_Subscription( $id );
+			$meta_val = $order->get_meta( $key );
+
+			return $meta_val;
 		} else {
-	
 			// Traditional CPT-based orders are in use.
-	
-		   $meta_val = get_post_meta( $id, $key, $v );
-	
-		   return $meta_val; 
-	
+			$meta_val = get_post_meta( $id, $key, $v );
+
+			return $meta_val;
 		}
-	
 	}
 	/**
 	 *
@@ -585,29 +580,24 @@ if ( $activated ) {
 	 * @param init|array|object $value .
 	 */
 	function wps_sfw_update_meta_data( $id, $key, $value ) {
-	
-	
+
 		if ( 'shop_order' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
-	
+
 			// HPOS usage is enabled.
-			$order = wc_get_order( $id );	
-	
+			$order = wc_get_order( $id );
+
 			$order->update_meta_data( $key, $value );
 			$order->save();
-	
+
 		} elseif ( 'wps_subscriptions' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			// HPOS usage is enabled.
-
 			$order = new WPS_Subscription( $id );
-	
+
 			$order->update_meta_data( $key, $value );
 			$order->save();
 		} else {
-	
 			// Traditional CPT-based orders are in use.
-	
-		   update_post_meta( $id, $key, $value );
-	
+			update_post_meta( $id, $key, $value );
 		}
 	}
 } else {
@@ -832,16 +822,17 @@ function wps_sfw_banner_notification_html() {
 	}
 }
 
-add_action( 'woocommerce_init', function(){
-	require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscription.php';
-});
+add_action(
+	'woocommerce_init',
+	function() {
+		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscription.php';
+	}
+);
+
 /**
  * Create a new subscription
  *
- * Returns a new WC_Subscription object on success which can then be used to add additional data.
- *
- * @return WC_Subscription | WP_Error A WC_Subscription on success or WP_Error object on failure
- * @since  1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+ * @param array() $args .
  */
 function wps_create_subscription( $args = array() ) {
 	$now   = gmdate( 'Y-m-d H:i:s' );
@@ -855,10 +846,9 @@ function wps_create_subscription( $args = array() ) {
 		'date_created'       => $now,
 		'created_via'        => '',
 		'currency'           => get_woocommerce_currency(),
-		'prices_include_tax' => get_option( 'woocommerce_prices_include_tax' ), // we don't use wc_prices_include_tax() here because WC doesn't use it in wc_create_order(), not 100% sure why it doesn't also check the taxes are enabled, but there could forseeably be a reason
+		'prices_include_tax' => get_option( 'woocommerce_prices_include_tax' ),
 	);
 
-	// If we are creating a subscription from an order, we use some of the order's data as defaults.
 	if ( $order instanceof \WC_Order ) {
 		$default_args['customer_id']        = $order->get_user_id();
 		$default_args['created_via']        = $order->get_created_via( 'edit' );
@@ -871,12 +861,10 @@ function wps_create_subscription( $args = array() ) {
 
 	$subscription = new \WPS_Subscription();
 
-	// Only call set_status() if required as this triggers a number of WC flows. Default status of 'wc-pending' is during
 	if ( $args['status'] ) {
 		$subscription->set_status( $args['status'] );
 	}
 
-	
 	$subscription->set_customer_id( $args['customer_id'] );
 	$subscription->set_date_created( $args['date_created'] );
 	$subscription->set_created_via( $args['created_via'] );

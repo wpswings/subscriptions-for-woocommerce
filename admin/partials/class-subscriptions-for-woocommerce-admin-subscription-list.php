@@ -407,7 +407,6 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			}
 			$wps_subscriptions2 = get_posts( $args2 );
 		}
-		
 		$total_count = count( $wps_subscriptions2 );
 
 		// search with subscription id code.
@@ -493,29 +492,27 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$payment_type = wps_sfw_get_meta_data( $id, 'wps_wsp_payment_type', true );
 				if ( empty( $payment_type ) ) {
 					$parent_order = wc_get_order( $parent_order_id );
-
-					$payment_type =  $parent_order->get_payment_method_title();
+					$payment_type = $parent_order->get_payment_method_title();
 					$payment_type = 'Via ' . $payment_type;
 
 				} else {
 					$payment_type = 'Via Manual Method';
 				}
-
-							$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
-							$wps_subscriptions_data[] = apply_filters(
-								'wps_sfw_subs_table_data',
-								array(
-									'subscription_id'           => $id,
-									'parent_order_id'           => $parent_order_id,
-									'status'                    => $wps_subscription_status,
-									'product_name'              => $product_name,
-									'recurring_amount'          => $wps_recurring_total,
-									'payment_type'              => $payment_type,
-									'user_name'                 => $user_nicename,
-									'next_payment_date'         => wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ),
-									'subscriptions_expiry_date' => wps_sfw_get_the_wordpress_date_format( $wps_susbcription_end ),
-								)
-							);
+				$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
+				$wps_subscriptions_data[] = apply_filters(
+					'wps_sfw_subs_table_data',
+					array(
+						'subscription_id'           => $id,
+						'parent_order_id'           => $parent_order_id,
+						'status'                    => $wps_subscription_status,
+						'product_name'              => $product_name,
+						'recurring_amount'          => $wps_recurring_total,
+						'payment_type'              => $payment_type,
+						'user_name'                 => $user_nicename,
+						'next_payment_date'         => wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ),
+						'subscriptions_expiry_date' => wps_sfw_get_the_wordpress_date_format( $wps_susbcription_end ),
+					)
+				);
 			}
 		}
 		$this->wps_total_count = $total_count;
