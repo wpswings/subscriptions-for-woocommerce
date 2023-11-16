@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This is used to extend the WC_Order class.
  *
- * @since      1.5.6
+ * @since      1.5.7
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/include
  */

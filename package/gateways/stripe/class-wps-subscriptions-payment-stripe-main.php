@@ -94,10 +94,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$subscription = new WPS_Subscription( $wps_subscription_id );
+				$wps_payment_method = $subscription->get_payment_method();
 			} else {
-				$subscription = wc_get_order( $wps_subscription_id );
+				$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
 			}
-			$wps_payment_method = $subscription->get_payment_method();
 
 			$allmethod = array( 'stripe', 'stripe_sepa' );
 			if ( in_array( $wps_payment_method, $allmethod ) || ( 'cod' == $wps_payment_method ) || ( 'bacs' == $wps_payment_method ) || ( 'cheque' == $wps_payment_method ) ) {

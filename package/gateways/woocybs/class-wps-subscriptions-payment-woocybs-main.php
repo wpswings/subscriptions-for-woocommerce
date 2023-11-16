@@ -269,10 +269,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$subscription = new WPS_Subscription( $wps_subscription_id );
+				$wps_payment_method = $subscription->get_payment_method();
 			} else {
-				$subscription = wc_get_order( $wps_subscription_id );
+				$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
 			}
-			$wps_payment_method = $subscription->get_payment_method();
 			if ( $this->wps_wsp_check_supported_payment_options( $wps_payment_method ) ) {
 				if ( 'Cancel' == $status ) {
 					wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
