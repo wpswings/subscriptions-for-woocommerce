@@ -282,9 +282,9 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_product_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_order_button_text', $sfw_plugin_public, 'wps_sfw_woocommerce_order_button_text' );
 
-			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'wps_sfw_show_subscription_price_on_cart', 10, 3 );
+			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'wps_sfw_show_subscription_price_on_cart', 99, 3 );
 
-			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee' );
+			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee', 999 );
 
 			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 999, 2 );
 
@@ -328,6 +328,10 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_customizing_failed_email_subject', 10, 2 );
 
+			// wc block
+			$this->loader->add_action( 'template_redirect', $sfw_plugin_public, 'wps_sfw_to_cart_and_checkout_blocks' );
+			$this->loader->add_filter( 'woocommerce_get_item_data',  $sfw_plugin_public, 'wps_sfw_get_subscription_meta_on_cart', 10, 2 );
+			$this->loader->add_action( 'woocommerce_store_api_checkout_order_processed',  $sfw_plugin_public, 'wps_sfw_create_sub_order', 100 );
 		}
 	}
 

@@ -457,9 +457,6 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 						'currency' => $susbcription->get_currency(),
 					);
 				}
-				if ( wps_sfw_get_meta_data( $id, 'wps_show_recurring_total', true ) ) {
-					$wps_recurring_total = wps_sfw_get_meta_data( $id, 'wps_show_recurring_total', true );
-				}
 				$wps_recurring_total = wps_sfw_recerring_total_price_list_table_callback( wc_price( $wps_recurring_total, $wps_curr_args ), $id );
 
 				$wps_recurring_total = apply_filters( 'wps_sfw_recerring_total_price_list_table', $wps_recurring_total, $id );
