@@ -1642,6 +1642,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$substotal_taxes = 0;
 		$total_taxes = 0;
 
+		// Get the only item price from the cart.
 		if ( 'yes' === $include_tax ) {
 			$line_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
 			$line_total    = $cart_item['line_total'] + $cart_item['line_tax'];
@@ -1649,6 +1650,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_subtotal = $cart_item['line_subtotal'];
 			$line_total    = $cart_item['line_total'];
 		}
+		// Get the item price from product object if free trial valid.
 		$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
 		if ( ! empty( $wps_sfw_subscription_free_trial_number ) ) {
 			$product = wc_get_product( $product_id );
@@ -1657,23 +1659,21 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_total = $price;
 		}
 
+		// Substract the signup fee from the line item.
 		$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
-
 		if ( ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
 			$qty           = $cart_item['quantity'];
 			$line_subtotal = $line_subtotal - $wps_sfw_subscription_initial_signup_price * $qty;
 			$line_total    = $line_total - $wps_sfw_subscription_initial_signup_price * $qty;
 		}
-		// additional code.
+		// Manage the line item during the upgrade/downgrade process
+		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item );
+		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item );
+
+		// Calculate the taxes for the line item total and subtotal
 		$wc_tax = new WC_Tax();
-
-		// Get User billing country.
 		$billing_country = WC()->customer->get_billing_country();
-
-		// Get the item tax class (your code).
 		$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
-
-		// Get the related Data for Germany and "default" tax class.
 		$tax_data = $wc_tax->find_rates(
 			array(
 				'country' => $billing_country,
@@ -1690,6 +1690,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
 			$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
 		}
+		// Make sure you have correct line data if coupon applied on the cart
 		$is_coupon_applied = false;
 		$coupons = WC()->cart->get_applied_coupons();
 		if ( ! empty( $coupons ) ) {
@@ -1706,6 +1707,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_total = $line_subtotal;
 			$total_taxes = $substotal_taxes;
 		}
+		// Prepare the line data
 		$tax_data = array(
 			'subtotal' => array( $substotal_taxes ),
 			'total'    => array( $total_taxes ),
@@ -1753,7 +1755,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
 					$new_content = '<div>' . esc_attr__( 'Recurring Amount will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount ) . ' ' . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . esc_html( $cart_item['data']->get_name() ) . '</div>';
-					return $content . '<div class="sfw-recurring-totals-items">' . $new_content . '</div>';
+					$content = $content . '<div class="sfw-recurring-totals-items">' . $new_content . '</div>';
 				}
 			}
 		}
