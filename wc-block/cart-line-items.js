@@ -1,4 +1,7 @@
 jQuery(function(){
+	if ( ! window.wc ) {
+		return;
+	}
 	const { registerCheckoutFilters } = window.wc.blocksCheckout;
 
 	const wpsSfwmodifySubtotalPriceFormat = (
@@ -14,9 +17,16 @@ jQuery(function(){
 		}
 	    const cartItem = args?.cartItem.item_data;
 
-	    const sfwData = cartItem.find( item => item.name === 'wps-sfw-price-html');
-	    if ( sfwData ) {
-			val = sfwData?.value;
+	    const sfwPrice = cartItem.find( item => item.name === 'wps-sfw-price-html');
+
+	    const sfwSubCheck = cartItem.find( item => item.name === 'wps-simple-subscription');
+
+		console.log(sfwSubCheck);
+	    if ( sfwPrice ) {
+			val = sfwPrice?.value;
+			if ( sfwSubCheck && 'yes' != sfwSubCheck?.value ) {
+				// val = '';
+			}
 	        if ( val != '' ) {
 	           return defaultValue + val;
 	        }

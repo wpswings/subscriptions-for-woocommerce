@@ -142,23 +142,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$_product = wc_get_product( $product_id );
 
-						$include = get_option( 'woocommerce_prices_include_tax' );
-						// check for manual subscription.
-						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
-						// check for manual subscription.
-						if ( 'yes' == $include && empty( $payment_type ) ) {
-							$wps_args = array(
-								'variation' => array(),
-								'totals'    => array(
-									'subtotal'     => $line_subtotal - $subscription->line_subtotal_tax,
-									'subtotal_tax' => $subscription->line_subtotal_tax,
-									'total'        => $line_total - $subscription->line_subtotal_tax,
-									'tax'          => $subscription->line_tax,
-									'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
-								),
-							);
-						} else {
+						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
+						if ( 'yes' === $new_sub ) {
 							$wps_args = array(
 								'variation' => array(),
 								'totals'    => array(
@@ -169,7 +155,37 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 									'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
 								),
 							);
+						} else {
+							$include = get_option( 'woocommerce_prices_include_tax' );
+							// check for manual subscription.
+							$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
+							// check for manual subscription.
+							if ( 'yes' == $include && empty( $payment_type ) ) {
+								$wps_args = array(
+									'variation' => array(),
+									'totals'    => array(
+										'subtotal'     => $line_subtotal - $subscription->line_subtotal_tax,
+										'subtotal_tax' => $subscription->line_subtotal_tax,
+										'total'        => $line_total - $subscription->line_subtotal_tax,
+										'tax'          => $subscription->line_tax,
+										'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
+									),
+								);
+							} else {
+	
+								$wps_args = array(
+									'variation' => array(),
+									'totals'    => array(
+										'subtotal'     => $line_subtotal,
+										'subtotal_tax' => $subscription->line_subtotal_tax,
+										'total'        => $line_total,
+										'tax'          => $subscription->line_tax,
+										'tax_data'     => maybe_unserialize( $subscription->line_tax_data ),
+									),
+								);
+							}
 						}
+
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
@@ -660,24 +676,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$_product = wc_get_product( $product_id );
 
-						$include = get_option( 'woocommerce_prices_include_tax' );
-						// check for manual subscription.
-						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
+						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
-						// check for manual subscription.
-						if ( 'yes' == $include && empty( $payment_type ) ) {
-							$wps_args = array(
-								'variation' => array(),
-								'totals'    => array(
-									'subtotal'     => $line_subtotal - $line_subtotal_tax,
-									'subtotal_tax' => $line_subtotal_tax,
-									'total'        => $line_total - $line_subtotal_tax,
-									'tax'          => $line_tax,
-									'tax_data'     => maybe_unserialize( $line_tax_data ),
-								),
-							);
-						} else {
-
+						if ( 'yes' === $new_sub ) {
 							$wps_args = array(
 								'variation' => array(),
 								'totals'    => array(
@@ -688,6 +689,36 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 									'tax_data'     => maybe_unserialize( $line_tax_data ),
 								),
 							);
+						} else {
+							$include = get_option( 'woocommerce_prices_include_tax' );
+							// check for manual subscription.
+							$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
+	
+							// check for manual subscription.
+							if ( 'yes' == $include && empty( $payment_type ) ) {
+								$wps_args = array(
+									'variation' => array(),
+									'totals'    => array(
+										'subtotal'     => $line_subtotal - $line_subtotal_tax,
+										'subtotal_tax' => $line_subtotal_tax,
+										'total'        => $line_total - $line_subtotal_tax,
+										'tax'          => $line_tax,
+										'tax_data'     => maybe_unserialize( $line_tax_data ),
+									),
+								);
+							} else {
+	
+								$wps_args = array(
+									'variation' => array(),
+									'totals'    => array(
+										'subtotal'     => $line_subtotal,
+										'subtotal_tax' => $line_subtotal_tax,
+										'total'        => $line_total,
+										'tax'          => $line_tax,
+										'tax_data'     => maybe_unserialize( $line_tax_data ),
+									),
+								);
+							}
 						}
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
@@ -696,7 +727,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
 
 						} else {
-
 							$item_id = $wps_new_order->add_product(
 								$_product,
 								$product_qty,

@@ -294,7 +294,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$order = new WC_Order( $order_id );
 
 		$response = self::paypal_create_order( $order );
-		print_r( $response );
 		if ( 'success' !== $response['result'] ) {
 			wc_add_notice( $response['response'], 'error' );
 			return;

@@ -517,6 +517,7 @@ if ( $activated ) {
 	}
 
 	add_filter( 'woocommerce_payment_gateways', 'wps_paypal_integration_for_woocommerce_extended' );
+
 	/**
 	 * Extending main WC_Payment_Gateway class.
 	 *
@@ -524,9 +525,11 @@ if ( $activated ) {
 	 * @return void
 	 */
 	function wps_paypal_integration_for_woocommerce_gateway() {
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
+		if ( class_exists( 'WC_Payment_Gateway' ) ) {
+			require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
+		}
 	}
-	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
+	add_action( 'plugin_loaded', 'wps_paypal_integration_for_woocommerce_gateway' );
 
 
 	/**

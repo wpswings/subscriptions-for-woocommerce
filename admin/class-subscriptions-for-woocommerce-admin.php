@@ -102,7 +102,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
 		}
-
 	}
 
 	/**
