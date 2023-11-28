@@ -308,7 +308,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $product_price );
 			}
-			$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item );
+			$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
 
 			$price = $line_data['line_total'];
 			$include_tax = get_option( 'woocommerce_prices_include_tax' );
@@ -432,7 +432,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 					$wps_recurring_data = $this->wps_sfw_get_subscription_recurring_data( $product_id );
 
-					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item );
+					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
 					
 					$show_price = $line_data['line_total'] + $line_data['total_taxes'];
 
@@ -1603,7 +1603,7 @@ class Subscriptions_For_Woocommerce_Public {
 					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
 						return;
 					}
-					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item );
+					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
 					$renewal_amount = $line_data['line_total'] + $line_data['total_taxes'];
 					$product_price  = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
@@ -1637,8 +1637,9 @@ class Subscriptions_For_Woocommerce_Public {
 	 *
 	 * @param integer $price .
 	 * @param array() $cart_item .
+	 * @param bool    $bool will decide to show or create subscription
 	 */
-	public function wps_sfw_calculate_recurring_price( $cart_item ) {
+	public function wps_sfw_calculate_recurring_price( $cart_item, $bool ) {
 		$product_id = empty( $cart_item['variation_id'] ) ? $cart_item['product_id'] : $cart_item['variation_id'];
 
 		$_product    = wc_get_product( $product_id );
@@ -1655,7 +1656,6 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_subtotal = $cart_item['line_subtotal'];
 			$line_total    = $cart_item['line_total'];
 		}
-
 		// Substract the signup fee from the line item.
 		$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
 		if ( ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
@@ -1672,8 +1672,8 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_total = $price;
 		}
 		// Manage the line item during the upgrade/downgrade process
-		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item );
-		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item );
+		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item, $bool );
+		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item, $bool );
 
 		// Calculate the taxes for the line item total and subtotal
 		$wc_tax = new WC_Tax();
@@ -1759,7 +1759,7 @@ class Subscriptions_For_Woocommerce_Public {
 					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
 						return;
 					}
-					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item );
+					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
 					$renewal_amount = $line_data['line_total'] + $line_data['total_taxes'];
 					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
@@ -1885,7 +1885,7 @@ class Subscriptions_For_Woocommerce_Public {
 	
 					$wps_recurring_data = $this->wps_sfw_get_subscription_recurring_data( $product_id );
 	
-					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item );
+					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
 
 					$show_price = $line_data['line_total'] + $line_data['total_taxes'];
 	
