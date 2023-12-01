@@ -91,8 +91,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_price_html_subscription_product( $price, $product ) {
-
-		if ( ! wps_sfw_check_product_is_subscription( $product ) ) {
+		if ( ! wps_sfw_check_product_is_subscription( $product ) || ! $price ) {
 			return $price;
 		}
 		$price = apply_filters( 'wps_rbpfw_price', $price, $product );
@@ -308,7 +307,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( function_exists( 'wps_mmcsfw_admin_fetch_currency_rates_from_base_currency' ) ) {
 				$price = wps_mmcsfw_admin_fetch_currency_rates_from_base_currency( '', $product_price );
 			}
-			$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
+			$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
 
 			$price = $line_data['line_total'];
 			$include_tax = get_option( 'woocommerce_prices_include_tax' );
@@ -336,6 +335,14 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_add_subscription_price_and_sigup_fee( $cart ) {
+
+		// This is necessary for WC 3.0+
+		if ( is_admin() && ! defined( 'DOING_AJAX' ) )
+			return;
+ 
+		// Avoiding hook repetition (when using price calculations for example | optional)
+		if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 )
+			return;
 
 		if ( isset( $cart ) && ! empty( $cart ) ) {
 
@@ -547,6 +554,8 @@ class Subscriptions_For_Woocommerce_Public {
 			);
 
 			$wps_args = wp_parse_args( $wps_recurring_data, $wps_default_args );
+			$get_wps_payment_method = null;
+			$get_wps_payment_method_title = null;
 			if ( isset( $posted_data['payment_method'] ) && $posted_data['payment_method'] ) {
 				$wps_enabled_gateways = WC()->payment_gateways->get_available_payment_gateways();
 
@@ -606,7 +615,9 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->set_address( $billing_details, 'billing' );
 			$new_order->set_address( $shipping_details, 'shipping' );
 
-			
+			$new_order->set_payment_method( $order->get_payment_method() );
+			$new_order->set_payment_method_title( $order->get_payment_method_title() );
+
 			$line_subtotal   = $wps_args['line_subtotal'];
 			$line_total      = $wps_args['line_total'];
 			$total_taxes     = $wps_args['total_taxes'];
@@ -1675,6 +1686,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item, $bool );
 		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item, $bool );
 
+
 		// Calculate the taxes for the line item total and subtotal
 		$wc_tax = new WC_Tax();
 		$billing_country = WC()->customer->get_billing_country();
@@ -1685,15 +1697,17 @@ class Subscriptions_For_Woocommerce_Public {
 				'tax_class' => $tax_class,
 			)
 		);
-		if ( 'yes' === $include_tax ) {
-			$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
-			$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
-
-			$line_total    = $line_total - $total_taxes;
-			$line_subtotal = $line_subtotal - $substotal_taxes;
-		} else {
-			$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
-			$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
+		if ( function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) && wps_sfw_is_woocommerce_tax_enabled() ) {
+			if ( 'yes' === $include_tax ) {
+				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
+				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
+	
+				$line_total    = $line_total - $total_taxes;
+				$line_subtotal = $line_subtotal - $substotal_taxes;
+			} else {
+				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
+				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
+			}
 		}
 		// Make sure you have correct line data if coupon applied on the cart
 		$is_coupon_applied = false;
@@ -1849,13 +1863,6 @@ class Subscriptions_For_Woocommerce_Public {
 				'hidden' => true,
 				'value'  => html_entity_decode( $price ),
 			);
-			if ( empty( $wps_sfw_subscription_initial_signup_price ) && empty( $wps_sfw_subscription_free_trial_number ) ) {
-				$data[] = array(
-					'name'   => 'wps-simple-subscription',
-					'hidden' => true,
-					'value'  => 'yes'
-				);
-			}
 		}
 		return $data;
 	}

@@ -1112,6 +1112,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 		 * @since    1.0.1
 		 */
 		public function wps_sfw_cancel_paypal_subscription( $wps_subscription_id, $status ) {
+
 			$wps_sfw_paypal_subscriber_id = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_paypal_subscriber_id', true );
 			$paypal_profile_id = wps_sfw_get_meta_data( $wps_subscription_id, '_wps_paypal_subscription_id', true );
 

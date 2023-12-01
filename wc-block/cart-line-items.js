@@ -4,6 +4,8 @@ jQuery(function(){
 	}
 	const { registerCheckoutFilters } = window.wc.blocksCheckout;
 
+	const { applyCheckoutFilter } = wc.blocksCheckout;
+
 	const wpsSfwmodifySubtotalPriceFormat = (
 		defaultValue,
 		extensions,
@@ -19,16 +21,10 @@ jQuery(function(){
 
 	    const sfwPrice = cartItem.find( item => item.name === 'wps-sfw-price-html');
 
-	    const sfwSubCheck = cartItem.find( item => item.name === 'wps-simple-subscription');
-
-		console.log(sfwSubCheck);
 	    if ( sfwPrice ) {
 			val = sfwPrice?.value;
-			if ( sfwSubCheck && 'yes' != sfwSubCheck?.value ) {
-				// val = '';
-			}
 	        if ( val != '' ) {
-	           return defaultValue + val;
+	           return defaultValue + ' ' + val;
 	        }
 	    }
 		return defaultValue;
@@ -57,8 +53,17 @@ jQuery(function(){
 		return defaultValue;
 	};
 
-	registerCheckoutFilters( 'example-extension', {
-		subtotalPriceFormat: wpsSfwmodifySubtotalPriceFormat,
+	
+	const options = {
+		filterName: 'subtotalPriceFormat',
+		defaultValue: wpsSfwmodifySubtotalPriceFormat,
+	}
+	
+	const filteredValue = applyCheckoutFilter( options );
+	
+	registerCheckoutFilters( 'wps-sfw-checkout-block', {
+		subtotalPriceFormat: filteredValue,
 		cartItemPrice: wpsWspmodifyCartItemPrice,
 	} );
+	console.log(filteredValue);
 });
