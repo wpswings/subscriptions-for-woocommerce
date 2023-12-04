@@ -769,7 +769,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( empty( $wps_renewal_order_data ) ) {
 							$wps_renewal_order_data = array( $order_id );
 							wps_sfw_update_meta_data( $subscription_id, 'wps_wsp_renewal_order_data', $wps_renewal_order_data );
-
 						} else {
 							$wps_renewal_order_data[] = $order_id;
 							wps_sfw_update_meta_data( $subscription_id, 'wps_wsp_renewal_order_data', $wps_renewal_order_data );

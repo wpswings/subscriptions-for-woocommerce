@@ -1795,11 +1795,11 @@ class Subscriptions_For_Woocommerce_Public {
 	function wps_sfw_get_subscription_meta_on_cart( $data = array(), $cart_item = array() ) {
 
 		if ( isset( $cart_item['variation_id'] ) && ! empty( $cart_item['variation_id'] ) ) {
-			$wps_subscription_product = wps_wsp_get_meta_data( $cart_item['variation_id'], 'wps_sfw_variable_product', true );
+			$wps_subscription_product = wps_sfw_get_meta_data( $cart_item['variation_id'], 'wps_sfw_variable_product', true );
 		} else {
 			$wps_subscription_product = wps_sfw_get_meta_data( $cart_item['product_id'], '_wps_sfw_product', true );
 		}
-		if ( 'yes' !== $wps_subscription_product ) {
+		if ( 'yes' !== $wps_subscription_product || ! wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 			return $data;
 		}
 		$price   = null;
