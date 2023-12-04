@@ -744,6 +744,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_new_order->set_address( $billing_details, 'billing' );
 						$wps_new_order->set_address( $shipping_details, 'shipping' );
 
+						$wps_new_order->set_payment_method( $parent_order->get_payment_method() );
+                        $wps_new_order->set_payment_method_title( $parent_order->get_payment_method_title() );
+
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_renewal_order', 'yes' );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription', $subscription_id );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_parent_order_id', $parent_order_id );
