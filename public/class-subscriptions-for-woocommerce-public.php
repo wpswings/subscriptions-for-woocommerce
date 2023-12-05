@@ -1871,6 +1871,9 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param object $order
 	 */
 	public function wps_sfw_create_sub_order( $order ) {
+		/*delete failed order subscription*/
+		wps_sfw_delete_failed_subscription( $order->get_id() );
+
 		if ( ! wps_sfw_is_cart_has_subscription_product() || isset( $_REQUEST['cancel_order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}

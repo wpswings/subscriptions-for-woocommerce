@@ -54,7 +54,7 @@ jQuery(function(){
 	};
 	
 	registerCheckoutFilters( 'wps-sfw-checkout-block', {
-		subtotalPriceFormat: filteredValue,
+		subtotalPriceFormat: wpsSfwmodifySubtotalPriceFormat,
 		cartItemPrice: wpsWspmodifyCartItemPrice,
 	} );
 });
