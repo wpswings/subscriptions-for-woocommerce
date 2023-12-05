@@ -682,9 +682,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( ! isset( $wp->query_vars['order-pay'] ) || ! wps_sfw_check_valid_subscription( absint( $wp->query_vars['order-pay'] ) ) ) {
 			return;
 		}
-
-		ob_clean();
-		echo '<div class="woocommerce">';
 		if ( ! isset( $_GET['wps_add_payment_method'] ) && empty( $_GET['wps_add_payment_method'] ) ) {
 			return;
 		}
@@ -692,9 +689,10 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_valid_request = wps_sfw_validate_payment_request( $wps_subscription );
 
 		if ( $wps_valid_request ) {
+			ob_clean();
 			$this->wps_sfw_set_customer_address( $wps_subscription );
-
 			wc_get_template( 'myaccount/wps-add-new-payment-details.php', array( 'wps_subscription' => $wps_subscription ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+			ob_end_flush();
 		}
 	}
 

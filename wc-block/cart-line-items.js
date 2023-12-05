@@ -52,18 +52,9 @@ jQuery(function(){
 	    }
 		return defaultValue;
 	};
-
-	
-	const options = {
-		filterName: 'subtotalPriceFormat',
-		defaultValue: wpsSfwmodifySubtotalPriceFormat,
-	}
-	
-	const filteredValue = applyCheckoutFilter( options );
 	
 	registerCheckoutFilters( 'wps-sfw-checkout-block', {
 		subtotalPriceFormat: filteredValue,
 		cartItemPrice: wpsWspmodifyCartItemPrice,
 	} );
-	console.log(filteredValue);
 });
