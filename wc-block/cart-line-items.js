@@ -4,8 +4,6 @@ jQuery(function(){
 	}
 	const { registerCheckoutFilters } = window.wc.blocksCheckout;
 
-	const { applyCheckoutFilter } = wc.blocksCheckout;
-
 	const wpsSfwmodifySubtotalPriceFormat = (
 		defaultValue,
 		extensions,

@@ -157,7 +157,12 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					if ( isset( $_POST['wps_sfw_subscriptions_ids'] ) && ! empty( $_POST['wps_sfw_subscriptions_ids'] ) ) {
 						$all_id = map_deep( wp_unslash( $_POST['wps_sfw_subscriptions_ids'] ), 'sanitize_text_field' );
 						foreach ( $all_id as $key => $value ) {
-							 wp_delete_post( $value, true );
+							if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+								$subscription = new WPS_Subscription( $value );
+								$subscription->delete( true );
+							} else {
+								wp_delete_post( $value, true );
+							}
 						}
 					}
 				}

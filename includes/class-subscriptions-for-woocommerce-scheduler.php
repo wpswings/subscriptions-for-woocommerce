@@ -678,6 +678,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
+						// check for manual subscription.
+						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 						if ( 'yes' === $new_sub ) {
 							$wps_args = array(
 								'variation' => array(),
@@ -691,8 +693,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							);
 						} else {
 							$include = get_option( 'woocommerce_prices_include_tax' );
-							// check for manual subscription.
-							$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 	
 							// check for manual subscription.
 							if ( 'yes' == $include && empty( $payment_type ) ) {
@@ -777,20 +777,16 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
 
-						if ( $line_subtotal_tax || $line_tax ) {
-							$wps_new_order->update_taxes();
-							$wps_new_order->calculate_totals();
+						$wps_new_order->update_taxes();
+						$wps_new_order->calculate_totals();
+						$wps_new_order->save();
 
-						} else {
-							$wps_new_order->calculate_totals( false );
-						}
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
 						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
 
-						$wps_new_order->save();
 
 						/*if trial period enable*/
 						if ( '' == $wps_old_payment_method ) {
