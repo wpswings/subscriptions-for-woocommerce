@@ -1683,8 +1683,8 @@ class Subscriptions_For_Woocommerce_Public {
 		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item, $bool );
 		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item, $bool );
 
-		$line_total = $line_total * $cart_item['quantity'];
-		$line_subtotal = $line_subtotal * $cart_item['quantity'];
+		// $line_total = $line_total * $cart_item['quantity'];
+		// $line_subtotal = $line_subtotal * $cart_item['quantity'];
 		// Calculate the taxes for the line item total and subtotal
 		$wc_tax = new WC_Tax();
 		$billing_country = WC()->customer->get_billing_country();
@@ -1728,6 +1728,11 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_total = $line_subtotal;
 			$total_taxes = $substotal_taxes;
 		}
+
+		// add the shipping fee,to display only 
+		$line_total    = apply_filters( 'wps_sfw_add_shipping_fee_for_display', $line_total, $cart_item, $bool );
+		$line_subtotal = apply_filters( 'wps_sfw_add_shipping_fee_for_display', $line_subtotal, $cart_item, $bool );
+
 		// Prepare the line data
 		$tax_data = array(
 			'subtotal' => array( $substotal_taxes ),
@@ -1836,7 +1841,8 @@ class Subscriptions_For_Woocommerce_Public {
 						$price .= '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
 				}
-				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id );
+				// return correct price format
+				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id );
 
 			} elseif ( isset( $wps_sfw_subscription_number ) && ! empty( $wps_sfw_subscription_number ) ) {
 				$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
@@ -1854,8 +1860,10 @@ class Subscriptions_For_Woocommerce_Public {
 						$price .= '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ),  wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
 				}
-				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id );
+				// return correct price format
+				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id );
 			}
+			// Do not allow subscription price for the one-time product
 			if ( apply_filters( 'wps_sfw_check_one_time_product', true, $price, $product_id ) ) {
 				$data[] = array(
 					'name'   => 'wps-sfw-price-html',
