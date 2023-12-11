@@ -1864,7 +1864,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id );
 			}
 			// Do not allow subscription price for the one-time product
-			if ( apply_filters( 'wps_sfw_check_one_time_product', true, $price, $product_id ) ) {
+			if ( apply_filters( 'wps_sfw_check_one_time_product', true, $price, $product_id ) && $price ) {
 				$data[] = array(
 					'name'   => 'wps-sfw-price-html',
 					'hidden' => true,
