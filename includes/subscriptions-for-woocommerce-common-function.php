@@ -866,16 +866,16 @@ if ( ! function_exists( 'wps_sfw_check_valid_order' ) ) {
 	 * @return bool
 	 */
 	function wps_sfw_is_woocommerce_tax_enabled() {
-		// Check if WooCommerce is active
-		if ( class_exists('WooCommerce') ) {
-			// Get the tax options
-			$tax_options = get_option('woocommerce_calc_taxes');
+		// Check if WooCommerce is active.
+		if ( class_exists( 'WooCommerce' ) ) {
+			// Get the tax options.
+			$tax_options = get_option( 'woocommerce_calc_taxes' );
 
-			// Check if taxes are enabled
+			// Check if taxes are enabled.
 			if ( 'yes' === $tax_options ) {
-				return true; // Taxes are enabled
+				return true; // Taxes are enabled.
 			}
 		}
-		return false; // Taxes are not enabled or WooCommerce is not active
+		return false; // Taxes are not enabled or WooCommerce is not active.
 	}
 }

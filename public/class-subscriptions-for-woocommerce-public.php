@@ -3,7 +3,7 @@
  * The public-facing functionality of the plugin.
  *
  * @link       https://wpswing.com/
- * @since      1.0.0
+ * @since      1.5.8
  *
  * @package    Subscriptions_For_Woocommerce
  * @subpackage Subscriptions_For_Woocommerce/public
@@ -77,7 +77,7 @@ class Subscriptions_For_Woocommerce_Public {
 		wp_enqueue_script( $this->plugin_name );
 
 		if ( is_cart() || is_checkout() ) {
-			wp_register_script( 'wps_sfw_wc_blocks', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'wc-block/cart-line-items.js', array('jquery','wp-data'), '1.5.8', true );
+			wp_register_script( 'wps_sfw_wc_blocks', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'wc-block/cart-line-items.js', array( 'jquery', 'wp-data' ), $this->version, true );
 			wp_enqueue_script( 'wps_sfw_wc_blocks' );
 		}
 	}
@@ -142,10 +142,10 @@ class Subscriptions_For_Woocommerce_Public {
 
 			} elseif ( isset( $wps_sfw_subscription_number ) && ! empty( $wps_sfw_subscription_number ) ) {
 				$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
-				
+
 				/* translators: %s: susbcription interval */
 				$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price_html ) . '</span>';
-				
+
 				$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
 
 					$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
@@ -335,13 +335,15 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_add_subscription_price_and_sigup_fee( $cart ) {
 
-		// This is necessary for WC 3.0+
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) )
+		// This is necessary for WC 3.0+.
+		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
 			return;
- 
-		// Avoiding hook repetition (when using price calculations for example | optional)
-		if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 )
+		}
+
+		// Avoiding hook repetition (when using price calculations for example | optional).
+		if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 ) {
 			return;
+		}
 
 		if ( isset( $cart ) && ! empty( $cart ) ) {
 
@@ -439,7 +441,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$wps_recurring_data = $this->wps_sfw_get_subscription_recurring_data( $product_id );
 
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
-					
+
 					$show_price = $line_data['line_total'] + $line_data['total_taxes'];
 
 					$wps_recurring_data['wps_recurring_total'] = $show_price;
@@ -654,7 +656,7 @@ class Subscriptions_For_Woocommerce_Public {
 			// After susbcription order created.
 			do_action( 'wps_sfw_subscription_order', $new_order, $order_id );
 
-			// new subscription meta from the version  1.5.8
+			// new subscription meta from the version  1.5.8.
 			wps_sfw_update_meta_data( $subscription_id, 'wps_sfw_new_sub', 'yes' );
 
 			wps_sfw_update_meta_key_for_susbcription( $subscription_id, $wps_args );
@@ -1641,11 +1643,10 @@ class Subscriptions_For_Woocommerce_Public {
 	}
 
 	/**
-	 * Calculating correct recurring price
+	 * Calculating correct recurring price.
 	 *
-	 * @param integer $price .
 	 * @param array() $cart_item .
-	 * @param bool    $bool will decide to show or create subscription
+	 * @param bool    $bool will decide to show or create subscription.
 	 */
 	public function wps_sfw_calculate_recurring_price( $cart_item, $bool ) {
 		$product_id = empty( $cart_item['variation_id'] ) ? $cart_item['product_id'] : $cart_item['variation_id'];
@@ -1679,13 +1680,11 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_subtotal = $price;
 			$line_total = $price;
 		}
-		// Manage the line item during the upgrade/downgrade process
+		// Manage the line item during the upgrade/downgrade process.
 		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item, $bool );
 		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item, $bool );
 
-		// $line_total = $line_total * $cart_item['quantity'];
-		// $line_subtotal = $line_subtotal * $cart_item['quantity'];
-		// Calculate the taxes for the line item total and subtotal
+		// Calculate the taxes for the line item total and subtotal.
 		$wc_tax = new WC_Tax();
 		$billing_country = WC()->customer->get_billing_country();
 		$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
@@ -1699,7 +1698,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( 'yes' === $include_tax ) {
 				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
 				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
-	
+
 				$line_total    = $line_total - $total_taxes;
 				$line_subtotal = $line_subtotal - $substotal_taxes;
 			} else {
@@ -1707,7 +1706,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
 			}
 		}
-		// Make sure you have correct line data if coupon applied on the cart
+		// Make sure you have correct line data if coupon applied on the cart.
 		$is_coupon_applied = false;
 		$is_initital_discount = false;
 		$coupons = WC()->cart->get_applied_coupons();
@@ -1729,11 +1728,11 @@ class Subscriptions_For_Woocommerce_Public {
 			$total_taxes = $substotal_taxes;
 		}
 
-		// add the shipping fee,to display only 
+		// add the shipping fee,to display only.
 		$line_total    = apply_filters( 'wps_sfw_add_shipping_fee_for_display', $line_total, $cart_item, $bool );
 		$line_subtotal = apply_filters( 'wps_sfw_add_shipping_fee_for_display', $line_subtotal, $cart_item, $bool );
 
-		// Prepare the line data
+		// Prepare the line data.
 		$tax_data = array(
 			'subtotal' => array( $substotal_taxes ),
 			'total'    => array( $total_taxes ),
@@ -1749,11 +1748,11 @@ class Subscriptions_For_Woocommerce_Public {
 	}
 
 	/**
-	 * Add filter for Cart and Checkout Blocks Integration
+	 * Add filter for Cart and Checkout Blocks Integration.
 	 *
-	 * @since 3.0.0
+	 * @since 1.5.8
 	 */
-	function wps_sfw_to_cart_and_checkout_blocks() {
+	public function wps_sfw_to_cart_and_checkout_blocks() {
 		if ( has_block( 'woocommerce/cart-totals-block' ) ) {
 			add_filter( 'render_block_woocommerce/cart-order-summary-block', array( $this, 'wps_sfw_add_subscription_totals_on_cart_block' ), 999 );
 		}
@@ -1762,13 +1761,13 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 	}
 	/**
-	 * Show the recurring totals
+	 * Show the recurring totals.
 	 *
 	 * @since 1.5.8
 	 * @param string $content Current content.
 	 * @return string
 	 */
-	function wps_sfw_add_subscription_totals_on_cart_block( $content ) {
+	public function wps_sfw_add_subscription_totals_on_cart_block( $content ) {
 		if ( ! empty( WC()->cart->cart_contents ) ) {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
@@ -1786,8 +1785,8 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 		}
 		return $content;
-	}	
-	
+	}
+
 	/**
 	 * Add additional cart item data to the subscription products.
 	 *
@@ -1795,7 +1794,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param array $cart_item .
 	 * @return array
 	 */
-	function wps_sfw_get_subscription_meta_on_cart( $data = array(), $cart_item = array() ) {
+	public function wps_sfw_get_subscription_meta_on_cart( $data = array(), $cart_item = array() ) {
 
 		if ( isset( $cart_item['variation_id'] ) && ! empty( $cart_item['variation_id'] ) ) {
 			$wps_subscription_product = wps_sfw_get_meta_data( $cart_item['variation_id'], 'wps_sfw_variable_product', true );
@@ -1841,29 +1840,29 @@ class Subscriptions_For_Woocommerce_Public {
 						$price .= '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
 				}
-				// return correct price format
+				// return correct price format.
 				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id );
 
 			} elseif ( isset( $wps_sfw_subscription_number ) && ! empty( $wps_sfw_subscription_number ) ) {
 				$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
 				/* translators: %s: susbcription interval */
 				$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price_html ) . '</span>';
-				
+
 				$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
 
 				$price = $this->wps_sfw_get_free_trial_period_html( $product_id, $price );
-				
+
 				if ( ! is_checkout() ) {
 					if ( isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
 						/* translators: %s: signup fee */
 
-						$price .= '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ),  wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
+						$price .= '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
 				}
-				// return correct price format
+				// return correct price format.
 				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id );
 			}
-			// Do not allow subscription price for the one-time product
+			// Do not allow subscription price for the one-time product.
 			if ( apply_filters( 'wps_sfw_check_one_time_product', true, $price, $product_id ) && $price ) {
 				$data[] = array(
 					'name'   => 'wps-sfw-price-html',
@@ -1877,8 +1876,9 @@ class Subscriptions_For_Woocommerce_Public {
 
 	/**
 	 * Subscription creation from the submission from the WC checkout block
-	 * 
-	 * @param object $order
+	 *
+	 * @param object $order .
+	 * @throws \Exception Return error.
 	 */
 	public function wps_sfw_create_sub_order( $order ) {
 		/*delete failed order subscription*/
@@ -1898,31 +1898,31 @@ class Subscriptions_For_Woocommerce_Public {
 						$price = $cart_item['data']->get_regular_price();
 					}
 					$wps_recurring_total = $price * $cart_item['quantity'];
-	
+
 					$product_id = $cart_item['data']->get_id();
-	
+
 					$wps_recurring_data = $this->wps_sfw_get_subscription_recurring_data( $product_id );
-	
+
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
 
 					$show_price = $line_data['line_total'] + $line_data['total_taxes'];
-	
+
 					$wps_recurring_data['wps_recurring_total'] = $show_price;
 					$wps_recurring_data['wps_show_recurring_total'] = $show_price;
 					$wps_recurring_data['product_id'] = $product_id;
 					$wps_recurring_data['product_name'] = $cart_item['data']->get_name();
 					$wps_recurring_data['product_qty'] = $cart_item['quantity'];
-	
+
 					$wps_recurring_data['line_tax_data'] = $line_data['tax_data'];
 					$wps_recurring_data['line_subtotal'] = $line_data['line_subtotal'];
 					$wps_recurring_data['line_subtotal_tax'] = $line_data['substotal_taxes'];
 					$wps_recurring_data['line_total'] = $line_data['line_total'];
 					$wps_recurring_data['line_tax'] = $line_data['total_taxes'];
-	
+
 					$wps_recurring_data['cart_price'] = $line_data['line_total'] + $line_data['line_tax'];
-	
+
 					$wps_recurring_data = apply_filters( 'wps_sfw_cart_data_for_susbcription', $wps_recurring_data, $cart_item );
-	
+
 					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, $posted_data, $cart_item ) ) {
 						return;
 					}
@@ -1939,7 +1939,7 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 			}
 			$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
-	
+
 			if ( 'yes' === $wps_has_susbcription ) {
 				// phpcs:disable WordPress.Security.NonceVerification.Missing
 				// After process checkout.
@@ -1949,19 +1949,18 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 	}
 
-	/** 
+	/**
 	 * WPS Paypal support during wc checkout block
-	 *
-	*/
+	 */
 	public function wsp_sfw_wps_paypal_woocommerce_block_support() {
 		if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
-            require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-paypal-block-support.php';
-            add_action(
-                'woocommerce_blocks_payment_method_type_registration',
-                function ( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
-                    $payment_method_registry->register( new WPS_Paypal_Block_Support() );
-                }
-            );
-        }
+			require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-paypal-block-support.php';
+			add_action(
+				'woocommerce_blocks_payment_method_type_registration',
+				function ( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
+					$payment_method_registry->register( new WPS_Paypal_Block_Support() );
+				}
+			);
+		}
 	}
 }

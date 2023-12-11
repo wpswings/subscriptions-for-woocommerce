@@ -31,7 +31,6 @@ final class WPS_Paypal_Block_Support extends AbstractPaymentMethodType {
 	 * @var string
 	 */
 	protected $name = 'wps_paypal';
-    
 
 	/**
 	 * Extend the WPS Paypal Gateway function

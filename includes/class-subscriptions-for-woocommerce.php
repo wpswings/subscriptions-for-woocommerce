@@ -328,10 +328,10 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_customizing_failed_email_subject', 10, 2 );
 
-			// wc block
+			// WC block.
 			$this->loader->add_action( 'template_redirect', $sfw_plugin_public, 'wps_sfw_to_cart_and_checkout_blocks' );
-			$this->loader->add_filter( 'woocommerce_get_item_data',  $sfw_plugin_public, 'wps_sfw_get_subscription_meta_on_cart', 10, 2 );
-			$this->loader->add_action( 'woocommerce_store_api_checkout_order_processed',  $sfw_plugin_public, 'wps_sfw_create_sub_order', 100 );
+			$this->loader->add_filter( 'woocommerce_get_item_data', $sfw_plugin_public, 'wps_sfw_get_subscription_meta_on_cart', 10, 2 );
+			$this->loader->add_action( 'woocommerce_store_api_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_create_sub_order', 100 );
 			$this->loader->add_action( 'woocommerce_blocks_loaded', $sfw_plugin_public, 'wsp_sfw_wps_paypal_woocommerce_block_support' );
 		}
 	}

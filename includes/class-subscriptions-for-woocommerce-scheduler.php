@@ -172,7 +172,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 									),
 								);
 							} else {
-	
 								$wps_args = array(
 									'variation' => array(),
 									'totals'    => array(
@@ -693,7 +692,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							);
 						} else {
 							$include = get_option( 'woocommerce_prices_include_tax' );
-	
+
 							// check for manual subscription.
 							if ( 'yes' == $include && empty( $payment_type ) ) {
 								$wps_args = array(
@@ -707,7 +706,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 									),
 								);
 							} else {
-	
 								$wps_args = array(
 									'variation' => array(),
 									'totals'    => array(
@@ -745,7 +743,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_new_order->set_address( $shipping_details, 'shipping' );
 
 						$wps_new_order->set_payment_method( $parent_order->get_payment_method() );
-                        $wps_new_order->set_payment_method_title( $parent_order->get_payment_method_title() );
+						$wps_new_order->set_payment_method_title( $parent_order->get_payment_method_title() );
 
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_renewal_order', 'yes' );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription', $subscription_id );
@@ -786,7 +784,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
 						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
-
 
 						/*if trial period enable*/
 						if ( '' == $wps_old_payment_method ) {
