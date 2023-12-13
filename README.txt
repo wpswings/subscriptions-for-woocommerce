@@ -3,10 +3,10 @@ Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions, recurring payments, subscription billing, subscription Box, paypal subscriptions, subscription, woocommerce subscriptions
 Requires at least: 5.0
-Tested up to: 6.4.1
+Tested up to: 6.4.2
 WC requires at least: 5.0
-WC tested up to: 8.2.2
-Stable tag: 1.5.7
+WC tested up to: 8.3.1
+Stable tag: 1.5.8
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -136,7 +136,7 @@ Subscriptions for WooCommerce Pro plugin is an amazing and cost-effective soluti
 
 If you need support or have any questions then kindly use our online chat window [**here**](https://wpswings.com/?utm_source=wpswings-subs-here&utm_medium=subs-org-page&utm_campaign=here) and discover all types of [**WooCommerce Extensions**](https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-page&utm_campaign=woocommerce-plugins) for your eCommerce store. 
 
-> Get Huge Discounts on WooCommerce Subscriptions plugin during BFCM Sales 2023 – [**Get More Offers**](https://wpswings.com/offers/?utm_source=wpswings-subs-offers&utm_medium=subs-org-page&utm_campaign=offers)
+> Get Huge Discounts on WooCommerce Subscriptions plugin during Christmas Sales 2023 – [**Get More Offers**](https://wpswings.com/offers/?utm_source=wpswings-subs-offers&utm_medium=subs-org-page&utm_campaign=offers)
 
 > If our documentation doesn’t contain the solution to your problem, you can visit the [**Forums Community**](https://forums.wpswings.com/?utm_source=wpswings-forums&utm_medium=subs-org-page&utm_campaign=forum) or  [**Generate a Ticket**](https://wpswings.com/submit-query/?utm_source=wpswings-subs-query&utm_medium=subs-org-page&utm_campaign=query)
 
@@ -221,6 +221,11 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 11. Keys Validation
 
 == Changelog ==
+
+= 1.5.8 - Released on 12 December 2023 =
+* Latest WP( 6.4.2 ) and WC( 8.3.1 ) compatibility
+* WC Cart and checkout block compatibility
+* Plugin Code Enhancement and Bug Fixes
 
 = 1.5.7 - Released on 16 November 2023 =
 * New: Latest WP( 6.4.1 ) and WC( 8.2.2 )
@@ -383,6 +388,9 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.5.7 - Released on 16 November 2023 =
-* New: Latest WP( 6.4.1 ) and WC( 8.2.2 )
-* Fix: Subscription Cancel Issue
+= 1.5.8 - Released on 12 December 2023 =
+* Latest WP( 6.4.2 ) and WC( 8.3.1 ) compatibility
+* WC Cart and checkout block compatibility
+* Plugin Code Enhancement and Bug Fixes
+
+
