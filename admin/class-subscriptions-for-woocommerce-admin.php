@@ -102,7 +102,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
 		}
-
 	}
 
 	/**
@@ -533,20 +532,20 @@ class Subscriptions_For_Woocommerce_Admin {
 		$post_id = $post->ID;
 		$product = wc_get_product( $post_id );
 
-		$wps_sfw_subscription_number = get_post_meta( $post_id, 'wps_sfw_subscription_number', true );
+		$wps_sfw_subscription_number = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_number', true );
 		if ( empty( $wps_sfw_subscription_number ) ) {
 			$wps_sfw_subscription_number = 1;
 		}
-		$wps_sfw_subscription_interval = get_post_meta( $post_id, 'wps_sfw_subscription_interval', true );
+		$wps_sfw_subscription_interval = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_interval', true );
 		if ( empty( $wps_sfw_subscription_interval ) ) {
 			$wps_sfw_subscription_interval = 'day';
 		}
 
-		$wps_sfw_subscription_expiry_number = get_post_meta( $post_id, 'wps_sfw_subscription_expiry_number', true );
-		$wps_sfw_subscription_expiry_interval = get_post_meta( $post_id, 'wps_sfw_subscription_expiry_interval', true );
-		$wps_sfw_subscription_initial_signup_price = get_post_meta( $post_id, 'wps_sfw_subscription_initial_signup_price', true );
-		$wps_sfw_subscription_free_trial_number = get_post_meta( $post_id, 'wps_sfw_subscription_free_trial_number', true );
-		$wps_sfw_subscription_free_trial_interval = get_post_meta( $post_id, 'wps_sfw_subscription_free_trial_interval', true );
+		$wps_sfw_subscription_expiry_number = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', true );
+		$wps_sfw_subscription_expiry_interval = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_expiry_interval', true );
+		$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_initial_signup_price', true );
+		$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_free_trial_number', true );
+		$wps_sfw_subscription_free_trial_interval = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_free_trial_interval', true );
 		?>
 		<div id="wps_sfw_product_target_section" class="panel woocommerce_options_panel hidden">
 
@@ -634,7 +633,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			return;
 		}
 		$wps_sfw_product = isset( $_POST['_wps_sfw_product'] ) ? 'yes' : 'no';
-		update_post_meta( $post_id, '_wps_sfw_product', $wps_sfw_product );
+		wps_sfw_update_meta_data( $post_id, '_wps_sfw_product', $wps_sfw_product );
 		if ( isset( $_POST['_wps_sfw_product'] ) && ! empty( $_POST['_wps_sfw_product'] ) ) {
 
 			$wps_sfw_subscription_number = isset( $_POST['wps_sfw_subscription_number'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_number'] ) ) : '';
@@ -645,13 +644,13 @@ class Subscriptions_For_Woocommerce_Admin {
 			$wps_sfw_subscription_free_trial_number = isset( $_POST['wps_sfw_subscription_free_trial_number'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_free_trial_number'] ) ) : '';
 			$wps_sfw_subscription_free_trial_interval = isset( $_POST['wps_sfw_subscription_free_trial_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_free_trial_interval'] ) ) : '';
 
-			update_post_meta( $post_id, 'wps_sfw_subscription_number', $wps_sfw_subscription_number );
-			update_post_meta( $post_id, 'wps_sfw_subscription_interval', $wps_sfw_subscription_interval );
-			update_post_meta( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_expiry_number );
-			update_post_meta( $post_id, 'wps_sfw_subscription_expiry_interval', $wps_sfw_subscription_expiry_interval );
-			update_post_meta( $post_id, 'wps_sfw_subscription_initial_signup_price', $wps_sfw_subscription_initial_signup_price );
-			update_post_meta( $post_id, 'wps_sfw_subscription_free_trial_number', $wps_sfw_subscription_free_trial_number );
-			update_post_meta( $post_id, 'wps_sfw_subscription_free_trial_interval', $wps_sfw_subscription_free_trial_interval );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_number', $wps_sfw_subscription_number );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_interval', $wps_sfw_subscription_interval );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_expiry_number );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_interval', $wps_sfw_subscription_expiry_interval );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_initial_signup_price', $wps_sfw_subscription_initial_signup_price );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_number', $wps_sfw_subscription_free_trial_number );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_interval', $wps_sfw_subscription_free_trial_interval );
 
 			do_action( 'wps_sfw_save_simple_subscription_field', $post_id, $_POST );
 		}
@@ -671,9 +670,9 @@ class Subscriptions_For_Woocommerce_Admin {
 			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 				// Cancel subscription.
-				$wps_wsp_payment_type = get_post_meta( $wps_subscription_id, 'wps_wsp_payment_type', true );
+				$wps_wsp_payment_type = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_wsp_payment_type', true );
 				if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
-					update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 				} else {
 
 					do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
@@ -789,16 +788,16 @@ class Subscriptions_For_Woocommerce_Admin {
 			);
 
 			wp_set_object_terms( $post_id, 'simple', 'product_type' );
-			update_post_meta( $post_id, '_visibility', 'visible' );
-			update_post_meta( $post_id, '_stock_status', 'instock' );
+			wps_sfw_update_meta_data( $post_id, '_visibility', 'visible' );
+			wps_sfw_update_meta_data( $post_id, '_stock_status', 'instock' );
 
-			update_post_meta( $post_id, '_wps_sfw_product', 'yes' );
-			update_post_meta( $post_id, 'wps_sfw_subscription_number', $subscription_number );
+			wps_sfw_update_meta_data( $post_id, '_wps_sfw_product', 'yes' );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_number', $subscription_number );
 
-			update_post_meta( $post_id, '_regular_price', $product_price );
-			update_post_meta( $post_id, '_sale_price', '' );
-			update_post_meta( $post_id, 'wps_sfw_subscription_interval', $subscription_interval );
-			update_post_meta( $post_id, '_price', $product_price );
+			wps_sfw_update_meta_data( $post_id, '_regular_price', $product_price );
+			wps_sfw_update_meta_data( $post_id, '_sale_price', '' );
+			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_interval', $subscription_interval );
+			wps_sfw_update_meta_data( $post_id, '_price', $product_price );
 			$product = wc_get_product( $post_id );
 
 			$product->save();
@@ -1022,6 +1021,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_remove_subscription_custom_menu() {
 		remove_menu_page( 'edit.php?post_type=wps_subscriptions' );
+		remove_submenu_page( 'woocommerce', 'wc-orders--wps_subscriptions' );
 	}
 
 	/**

@@ -19,6 +19,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 	/**
@@ -57,10 +59,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 */
 		public function wps_wsp_woo_cybs_save_payment_token( $payment_token, $order_id ) {
 			if ( ! empty( $payment_token ) ) {
-				$wps_has_subscription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
-				$wps_subscription_id = get_post_meta( $order_id, 'wps_subscription_id', true );
+				$wps_has_subscription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
+				$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 				if ( 'yes' === $wps_has_subscription ) {
-					update_post_meta( $wps_subscription_id, '_woo_cybs_payment_token', $payment_token );
+					wps_sfw_update_meta_data( $wps_subscription_id, '_woo_cybs_payment_token', $payment_token );
 				}
 			}
 
@@ -82,12 +84,12 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 			}
 			if ( isset( $_POST['woocommerce-process-checkout-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['woocommerce-process-checkout-nonce'] ) ), 'woocommerce-process_checkout' ) ) {
 				if ( ! isset( $_POST['wc-cybs-payment-token'] ) && ! $bool ) {
-					$wps_has_subscription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
+					$wps_has_subscription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 					if ( 'yes' === $wps_has_subscription ) {
 						$bool = true;
 					}
 				} elseif ( isset( $_POST['wc-cybs-payment-token'] ) && 'new' == $_POST['wc-cybs-payment-token'] && ! $bool ) {
-					$wps_has_subscription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
+					$wps_has_subscription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 					if ( 'yes' === $wps_has_subscription ) {
 						$bool = true;
 					}
@@ -97,10 +99,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 					// Verify token belongs to the logged in user.
 					if ( $token->get_user_id() == get_current_user_id() ) {
-						$wps_has_subscription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
-						$wps_subscription_id = get_post_meta( $order_id, 'wps_subscription_id', true );
+						$wps_has_subscription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
+						$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 						if ( 'yes' == $wps_has_subscription ) {
-							update_post_meta( $wps_subscription_id, '_woo_cybs_payment_token', $token->get_token() );
+							wps_sfw_update_meta_data( $wps_subscription_id, '_woo_cybs_payment_token', $token->get_token() );
 						}
 					}
 				}
@@ -122,7 +124,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 			if ( $order && is_object( $order ) ) {
 				$order_id = $order->get_id();
-				$wps_sfw_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
+				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( ! $this->wps_wsp_check_supported_payment_options( $payment_method ) || 'yes' != $wps_sfw_renewal_order ) {
 					return;
 				}
@@ -136,8 +138,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 				if ( class_exists( 'CybsSoapiCC' ) ) {
 					$payment_token = '';
-					$woo_cybs_payment_token = get_post_meta( $subscription_id, '_woo_cybs_payment_token', true );
-					$wps_parent_order_id = get_post_meta( $subscription_id, 'wps_parent_order', true );
+					$woo_cybs_payment_token = wps_sfw_get_meta_data( $subscription_id, '_woo_cybs_payment_token', true );
+					$wps_parent_order_id = wps_sfw_get_meta_data( $subscription_id, 'wps_parent_order', true );
 
 					$user_id = $order->get_user_id();
 					$tokens = WC_Payment_Tokens::get_tokens( $user_id );
@@ -187,18 +189,18 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 					if ( strcmp( $decision, 'ACCEPT' ) == 0 && strcmp( $reason_code, '100' ) == 0 ) {
 
 						foreach ( $reply as $key => $value ) {
-							update_post_meta( $order_id, $key, $value );
+							wps_sfw_update_meta_data( $order_id, $key, $value );
 						}
 
 						$numero_cuenta = substr( $token->get_token(), -4 );
 
-						$card_name  = get_post_meta( $wps_parent_order_id, 'cardholder', true );
-						$brand_card = get_post_meta( $wps_parent_order_id, 'brand_card', true );
+						$card_name  = wps_sfw_get_meta_data( $wps_parent_order_id, 'cardholder', true );
+						$brand_card = wps_sfw_get_meta_data( $wps_parent_order_id, 'brand_card', true );
 						// Save last 4 digits.
-						update_post_meta( $order_id, 'last_digits', $numero_cuenta );
-						update_post_meta( $order_id, 'transaction_time', gmdate( 'd-m-Y H:i', current_time( 'timestamp', 0 ) ) );
-						update_post_meta( $order_id, 'cardholder', $card_name );
-						update_post_meta( $order_id, 'brand_card', $brand_card );
+						wps_sfw_update_meta_data( $order_id, 'last_digits', $numero_cuenta );
+						wps_sfw_update_meta_data( $order_id, 'transaction_time', gmdate( 'd-m-Y H:i', current_time( 'timestamp', 0 ) ) );
+						wps_sfw_update_meta_data( $order_id, 'cardholder', $card_name );
+						wps_sfw_update_meta_data( $order_id, 'brand_card', $brand_card );
 						$audit_cybs_number = str_pad( (int) get_option( 'audit_cybs_number' ) + 1, 10, '0', STR_PAD_LEFT );
 						update_option( 'audit_cybs_number', $audit_cybs_number );
 
@@ -241,8 +243,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 			if ( $order && is_object( $order ) ) {
 
 				$order_id = $order->get_id();
-				$payment_method = get_post_meta( $order_id, '_payment_method', true );
-				$wps_sfw_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
+
+				$payment_method = $order->get_payment_method();
+
+				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( $this->wps_wsp_check_supported_payment_options( $payment_method ) && 'yes' == $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';
 
@@ -263,11 +267,16 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 		 */
 		public function wps_wsp_cancel_woo_cybs_subscription( $wps_subscription_id, $status ) {
 
-			$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$subscription = new WPS_Subscription( $wps_subscription_id );
+				$wps_payment_method = $subscription->get_payment_method();
+			} else {
+				$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
+			}
 			if ( $this->wps_wsp_check_supported_payment_options( $wps_payment_method ) ) {
 				if ( 'Cancel' == $status ) {
 					wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
-					update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 				}
 			}
 		}

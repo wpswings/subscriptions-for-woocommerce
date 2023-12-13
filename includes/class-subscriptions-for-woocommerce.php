@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.5.5';
+			$this->version = '1.5.7';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -282,11 +282,11 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_product_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_order_button_text', $sfw_plugin_public, 'wps_sfw_woocommerce_order_button_text' );
 
-			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'wps_sfw_show_subscription_price_on_cart', 10, 3 );
+			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'wps_sfw_show_subscription_price_on_cart', 99, 3 );
 
-			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee' );
+			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee', 999 );
 
-			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 99, 2 );
+			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 999, 2 );
 
 			$this->loader->add_action( 'woocommerce_available_payment_gateways', $sfw_plugin_public, 'wps_sfw_unset_offline_payment_gateway_for_subscription' );
 
@@ -328,6 +328,11 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_customizing_failed_email_subject', 10, 2 );
 
+			// WC block.
+			$this->loader->add_action( 'template_redirect', $sfw_plugin_public, 'wps_sfw_to_cart_and_checkout_blocks' );
+			$this->loader->add_filter( 'woocommerce_get_item_data', $sfw_plugin_public, 'wps_sfw_get_subscription_meta_on_cart', 10, 2 );
+			$this->loader->add_action( 'woocommerce_store_api_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_create_sub_order', 100 );
+			$this->loader->add_action( 'woocommerce_blocks_loaded', $sfw_plugin_public, 'wsp_sfw_wps_paypal_woocommerce_block_support' );
 		}
 	}
 
@@ -437,6 +442,15 @@ class Subscriptions_For_Woocommerce {
 			'name'        => 'subscriptions-for-woocommerce-subscriptions-table',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
+
+		if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
+			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-free-vs-pro'] = array(
+				'title'       => esc_html__( 'Free Vs Pro', 'subscriptions-for-woocommerce' ),
+				'name'        => 'subscriptions-for-woocommerce-subscriptions-free-vs-pro',
+				'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+			);
+		}
+
 		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),

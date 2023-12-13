@@ -48,6 +48,7 @@ const SecondStep = (props) => {
                 onChange={ctx.changeHandler} 
                 id="ProductPrice" 
                 name="ProductPrice"
+                type="number"
                 label={__('Subscription Price','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
         </FormControl>
         <FormControl component="fieldset" fullWidth className="fieldsetWrapper">
@@ -56,6 +57,7 @@ const SecondStep = (props) => {
                 onChange={ctx.changeHandler} 
                 id="SubscriptionNumber"
                 name="SubscriptionNumber" 
+                type="number"
                 label={__('Subscription Interval','subscriptions-for-woocommerce')}  variant="outlined" className={classes.margin}/>
         </FormControl>
         <FormControl component="fieldset" variant="outlined" fullWidth className="fieldsetWrapper">

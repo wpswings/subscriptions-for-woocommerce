@@ -7,6 +7,8 @@
  * @subpackage Subscriptions_For_Woocommerce/admin/partials
  */
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -49,8 +51,8 @@ if ( ! function_exists( 'wps_sfw_next_payment_date' ) ) {
 	function wps_sfw_next_payment_date( $subscription_id, $current_time, $wps_susbcription_trial_end ) {
 
 		$wps_sfw_next_pay_date = 0;
-		$wps_recurring_number = get_post_meta( $subscription_id, 'wps_sfw_subscription_number', true );
-		$wps_recurring_interval = get_post_meta( $subscription_id, 'wps_sfw_subscription_interval', true );
+		$wps_recurring_number = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_number', true );
+		$wps_recurring_interval = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_interval', true );
 
 		if ( 0 != $wps_susbcription_trial_end ) {
 
@@ -75,8 +77,8 @@ if ( ! function_exists( 'wps_sfw_susbcription_expiry_date' ) ) {
 	 */
 	function wps_sfw_susbcription_expiry_date( $subscription_id, $current_time, $trial_end = 0 ) {
 		$wps_sfw_expiry_date = 0;
-		$expiry_number = get_post_meta( $subscription_id, 'wps_sfw_subscription_expiry_number', true );
-		$expiry_interval = get_post_meta( $subscription_id, 'wps_sfw_subscription_expiry_interval', true );
+		$expiry_number = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_expiry_number', true );
+		$expiry_interval = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_expiry_interval', true );
 		if ( isset( $expiry_number ) && ! empty( $expiry_number ) ) {
 			if ( 0 != $trial_end ) {
 				$wps_sfw_expiry_date = wps_sfw_susbcription_calculate_time( $trial_end, $expiry_number, $expiry_interval );
@@ -100,8 +102,8 @@ if ( ! function_exists( 'wps_sfw_susbcription_trial_date' ) ) {
 	 */
 	function wps_sfw_susbcription_trial_date( $subscription_id, $current_time ) {
 		$wps_sfw_trial_date = 0;
-		$trial_number = get_post_meta( $subscription_id, 'wps_sfw_subscription_free_trial_number', true );
-		$trial_interval = get_post_meta( $subscription_id, 'wps_sfw_subscription_free_trial_interval', true );
+		$trial_number = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_free_trial_number', true );
+		$trial_interval = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_free_trial_interval', true );
 
 		if ( isset( $trial_number ) && ! empty( $trial_number ) ) {
 			$wps_sfw_trial_date = wps_sfw_susbcription_calculate_time( $current_time, $trial_number, $trial_interval );
@@ -178,7 +180,7 @@ if ( ! function_exists( 'wps_sfw_check_valid_subscription' ) ) {
 		$wps_is_subscription = false;
 
 		if ( isset( $wps_subscription_id ) && ! empty( $wps_subscription_id ) ) {
-			if ( 'wps_subscriptions' == get_post_type( absint( $wps_subscription_id ) ) ) {
+			if ( 'shop_order_placehold' === get_post_type( absint( $wps_subscription_id ) ) || 'wps_subscriptions' == get_post_type( absint( $wps_subscription_id ) ) ) {
 				$wps_is_subscription = true;
 			}
 		}
@@ -198,7 +200,7 @@ if ( ! function_exists( 'wps_sfw_update_meta_key_for_susbcription' ) ) {
 	function wps_sfw_update_meta_key_for_susbcription( $subscription_id, $wps_args ) {
 		if ( isset( $wps_args ) && ! empty( $wps_args ) && is_array( $wps_args ) ) {
 			foreach ( $wps_args as $key => $value ) {
-				update_post_meta( $subscription_id, $key, $value );
+				wps_sfw_update_meta_data( $subscription_id, $key, $value );
 			}
 		}
 	}
@@ -291,13 +293,13 @@ if ( ! function_exists( 'wps_sfw_email_subscriptions_details' ) ) {
 					<tr>
 						<td>
 							<?php
-								$wps_product_name = get_post_meta( $wps_subscription_id, 'product_name', true );
+								$wps_product_name = wps_sfw_get_meta_data( $wps_subscription_id, 'product_name', true );
 								echo esc_html( $wps_product_name );
 							?>
 						 </td>
 						<td>
 							<?php
-							$product_qty = get_post_meta( $wps_subscription_id, 'product_qty', true );
+							$product_qty = wps_sfw_get_meta_data( $wps_subscription_id, 'product_qty', true );
 							echo esc_html( $product_qty );
 							?>
 						</td>
@@ -422,7 +424,7 @@ if ( ! function_exists( 'wps_sfw_check_product_is_subscription' ) ) {
 		$wps_is_subscription = false;
 		if ( is_object( $product ) ) {
 			$product_id = $product->get_id();
-			$wps_subscription_product = get_post_meta( $product_id, '_wps_sfw_product', true );
+			$wps_subscription_product = wps_sfw_get_meta_data( $product_id, '_wps_sfw_product', true );
 			if ( 'yes' === $wps_subscription_product ) {
 				$wps_is_subscription = true;
 			}
@@ -594,28 +596,54 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 	 */
 	function wps_sfw_delete_failed_subscription( $order_id ) {
 		if ( isset( $order_id ) && ! empty( $order_id ) ) {
-			$args = array(
-				'numberposts' => -1,
-				'post_type'   => 'wps_subscriptions',
-				'post_status'   => 'wc-wps_renewal',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $order_id,
-					),
-					array(
-						'key'   => 'wps_subscription_status',
-						'value' => 'pending',
-					),
 
-				),
-			);
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$args = array(
+					'return' => 'ids',
+					// 'numberposts' => -1,
+					'type'   => 'wps_subscriptions',
+					// 'status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $order_id,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => 'pending',
+						),
+					),
+				);
+				$wps_subscriptions = wc_get_orders( $args );
+			} else {
+				$args = array(
+					'numberposts' => -1,
+					'post_type'   => 'wps_subscriptions',
+					'post_status'   => 'wc-wps_renewal',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $order_id,
+						),
+						array(
+							'key'   => 'wps_subscription_status',
+							'value' => 'pending',
+						),
+					),
+				);
 				$wps_subscriptions = get_posts( $args );
+			}
 
 			if ( ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 				foreach ( $wps_subscriptions as $key => $value ) {
-					wp_delete_post( $value->ID, true );
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						$subscription = new WPS_Subscription( $value );
+						$subscription->delete( true );
+					} else {
+						wp_delete_post( $value->ID, true );
+					}
 				}
 			}
 		}
@@ -708,8 +736,8 @@ if ( ! function_exists( 'wps_sfw_recerring_total_price_list_table_callback' ) ) 
 	 */
 	function wps_sfw_recerring_total_price_list_table_callback( $wps_price, $wps_subscription_id ) {
 		if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
-			$wps_recurring_number = get_post_meta( $wps_subscription_id, 'wps_sfw_subscription_number', true );
-			$wps_recurring_interval = get_post_meta( $wps_subscription_id, 'wps_sfw_subscription_interval', true );
+			$wps_recurring_number = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_number', true );
+			$wps_recurring_interval = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_interval', true );
 			$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_recurring_number, $wps_recurring_interval );
 
 			/* translators: %s: frequency interval. */
@@ -830,9 +858,24 @@ if ( ! function_exists( 'wps_sfw_check_valid_order' ) ) {
 
 		return $valid;
 	}
+
+
+	/**
+	 * Check if WooCommerce taxes are enabled.
+	 *
+	 * @return bool
+	 */
+	function wps_sfw_is_woocommerce_tax_enabled() {
+		// Check if WooCommerce is active.
+		if ( class_exists( 'WooCommerce' ) ) {
+			// Get the tax options.
+			$tax_options = get_option( 'woocommerce_calc_taxes' );
+
+			// Check if taxes are enabled.
+			if ( 'yes' === $tax_options ) {
+				return true; // Taxes are enabled.
+			}
+		}
+		return false; // Taxes are not enabled or WooCommerce is not active.
+	}
 }
-
-
-
-
-

@@ -19,6 +19,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 
 	/**
@@ -89,12 +91,12 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 		public function wps_pifw_process_subscription_payment( $order, $subscription_id, $payment_method ) {
 			if ( $order && is_object( $order ) ) {
 				$order_id              = $order->get_id();
-				$payment_method        = get_post_meta( $order_id, '_payment_method', true );
-				$wps_sfw_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
+				$payment_method        = $order->get_payment_method();
+				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 
 				if ( 'wps_paypal' === $payment_method && 'yes' === $wps_sfw_renewal_order ) {
 
-					$wps_parent_order_id = get_post_meta( $subscription_id, 'wps_parent_order', true );
+					$wps_parent_order_id = wps_sfw_get_meta_data( $subscription_id, 'wps_parent_order', true );
 
 					$saved_setting = get_option( 'woocommerce_wps_paypal_settings', array() );
 					$client_id     = null;
@@ -108,7 +110,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 						}
 					}
 					if ( $client_secret && $client_id ) {
-						$saved_token = get_post_meta( $wps_parent_order_id, 'wps_order_payment_token', true );
+						$saved_token = wps_sfw_get_meta_data( $wps_parent_order_id, 'wps_order_payment_token', true );
 						if ( empty( $saved_token ) ) {
 							$order_notes = __( 'payment token not found', 'subscriptions-for-woocommerce' );
 							$order->update_status( 'failed', $order_notes );
@@ -145,11 +147,16 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 		 * @since 1.6.4
 		 */
 		public function wps_pifw_cancel_paypal_subscription( $wps_subscription_id, $status ) {
-			$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$subscription = new WPS_Subscription( $wps_subscription_id );
+				$wps_payment_method = $subscription->get_payment_method();
+			} else {
+				$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
+			}
 			if ( 'wps_paypal' === $wps_payment_method ) {
 				if ( 'Cancel' === $status ) {
 					wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
-					update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 				}
 			}
 		}
@@ -167,8 +174,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 			if ( $order && is_object( $order ) ) {
 
 				$order_id              = $order->get_id();
-				$payment_method        = get_post_meta( $order_id, '_payment_method', true );
-				$wps_sfw_renewal_order = get_post_meta( $order_id, 'wps_sfw_renewal_order', true );
+				$payment_method        = $order->get_payment_method();
+				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( 'wps_paypal' === $payment_method && 'yes' === $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';
 

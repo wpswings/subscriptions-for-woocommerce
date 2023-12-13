@@ -12,7 +12,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
+use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 
@@ -165,24 +165,24 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 				}
 				$order_id = $order->get_id();
 				// check if the transaction has been processed.
-				$wps_order_transaction_id = get_post_meta( $order_id, '_wps_paypal_transaction_ids', true );
+				$wps_order_transaction_id = wps_sfw_get_meta_data( $order_id, '_wps_paypal_transaction_ids', true );
 				$wps_order_transactions   = $this->wps_sfw_validate_transaction( $wps_order_transaction_id, $wps_transaction_details );
 
 				if ( $wps_order_transactions ) {
-					update_post_meta( $order_id, '_wps_paypal_transaction_ids', $order_transactions );
+					wps_sfw_update_meta_data( $order_id, '_wps_paypal_transaction_ids', $order_transactions );
 				} else {
 					WC_Gateway_Paypal::log( 'WPS - Transaction ID already processed' );
 					return;
 				}
 
-				$wps_order_has_susbcription = get_post_meta( $order_id, 'wps_sfw_order_has_subscription', true );
+				$wps_order_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 
 				if ( 'yes' != $wps_order_has_susbcription ) {
 					WC_Gateway_Paypal::log( 'WPS - Not a valid Subscription' );
 					return;
 				}
 
-				$wps_subscription_id = get_post_meta( $order_id, 'wps_subscription_id', true );
+				$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 
 				if ( empty( $wps_subscription_id ) ) {
 
@@ -226,10 +226,10 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 						WC_Gateway_Paypal::log( 'WPS - Transaction log for subscr_payment:' . wc_print_r( $wps_transaction_details, true ) );
 						if ( 'completed' == strtolower( $wps_transaction_details['payment_status'] ) ) {
 
-							$wps_order_transactions = get_post_meta( $wps_subscription_id, '_wps_paypal_transaction_ids', true );
+							$wps_order_transactions = wps_sfw_get_meta_data( $wps_subscription_id, '_wps_paypal_transaction_ids', true );
 							$wps_order_transactions    = $this->wps_sfw_validate_transaction( $wps_order_transactions, $wps_transaction_details );
 							if ( $wps_order_transactions ) {
-								update_post_meta( $wps_subscription_id, '_wps_paypal_transaction_ids', $wps_order_transactions );
+								wps_sfw_update_meta_data( $wps_subscription_id, '_wps_paypal_transaction_ids', $wps_order_transactions );
 							} else {
 								WC_Gateway_Paypal::log( 'WPS - Transaction ID Error' );
 								return;
@@ -327,7 +327,7 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 						if ( $wps_subscriber_id != $wps_transaction_details['subscr_id'] ) {
 							WC_Gateway_Paypal::log( 'IPN subscription cancellation request ignored ' . $wps_subscription_id );
 						} else {
-							update_post_meta( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+							wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 							$order->add_order_note( __( 'WPS-IPN subscription cancelled for this order.', 'subscriptions-for-woocommerce' ) );
 							WC_Gateway_Paypal::log( 'IPN subscription cancelled for subscription ' . $wps_subscription_id );
 
@@ -343,10 +343,10 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 							WC_Gateway_Paypal::log( 'IPN subscription cancellation request ignored ' . $wps_subscription_id );
 						} else {
 
-							$wps_order_transactions = get_post_meta( $wps_subscription_id, '_wps_paypal_transaction_ids', true );
+							$wps_order_transactions = wps_sfw_get_meta_data( $wps_subscription_id, '_wps_paypal_transaction_ids', true );
 							$wps_order_transactions    = $this->wps_sfw_validate_transaction( $wps_order_transactions, $wps_transaction_details );
 							if ( $wps_order_transactions ) {
-								update_post_meta( $wps_subscription_id, '_wps_paypal_transaction_ids', $wps_order_transactions );
+								wps_sfw_update_meta_data( $wps_subscription_id, '_wps_paypal_transaction_ids', $wps_order_transactions );
 							} else {
 								WC_Gateway_Paypal::log( 'WPS - Transaction ID Error' );
 								return;
@@ -429,7 +429,7 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 			private function wps_sfw_save_post_data( $order_id, $args ) {
 				if ( isset( $order_id ) && ! empty( $order_id ) && ! empty( $args ) && is_array( $args ) ) {
 					foreach ( $args as $key => $value ) {
-						update_post_meta( $order_id, $key, $value );
+						wps_sfw_update_meta_data( $order_id, $key, $value );
 					}
 				}
 			}
@@ -471,7 +471,7 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 			private function wps_sfw_get_paypal_susbcriber_id( $subscription_id ) {
 				$wps_subscriber_id = '';
 				if ( isset( $subscription_id ) && ! empty( $subscription_id ) ) {
-					$wps_subscriber_id = get_post_meta( $subscription_id, 'wps_sfw_paypal_subscriber_id', true );
+					$wps_subscriber_id = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_paypal_subscriber_id', true );
 				}
 				return $wps_subscriber_id;
 			}
@@ -489,26 +489,31 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 				if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
 					WC_Gateway_Paypal::log( 'WPS - Renewal Order result1:' . $subscription_id );
 					$current_time = current_time( 'timestamp' );
-					$subscription = get_post( $subscription_id );
+
+					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+						$subscription = new WPS_Subscription( $subscription_id );
+					} else {
+						$subscription = get_post( $subscription_id );
+					}
 					// show the data in log file.
-					WC_Gateway_Paypal::log( 'WPS - Renewal Order subscription1:' . wc_print_r( $subscription, true ) );
-					// show the data in log file.
-					WC_Gateway_Paypal::log( 'WPS - Renewal Order subscription2:' . wc_print_r( $subscription, true ) );
+					WC_Gateway_Paypal::log( 'WPS - Renewal Order subscription:' . wc_print_r( $subscription_id, true ) );
+
 					$parent_order_id  = $subscription->wps_parent_order;
 					WC_Gateway_Paypal::log( 'WPS - Renewal Order result parent order:' . $parent_order_id );
+
 					$parent_order = wc_get_order( $parent_order_id );
 					$billing_details = $parent_order->get_address( 'billing' );
 					$shipping_details = $parent_order->get_address( 'shipping' );
 
 					$new_status = 'wc-wps_renewal';
 
-					$user_id = $subscription->wps_customer_id;
-					$product_id = $subscription->product_id;
-					$product_qty = $subscription->product_qty;
-					$payment_method = $subscription->_payment_method;
-					$payment_method_title = $subscription->_payment_method_title;
+					$user_id = $parent_order->get_user_id();
+					$product_id = wps_sfw_get_meta_data( $subscription_id, 'product_id', true );
+					$product_qty = wps_sfw_get_meta_data( $subscription_id, 'product_qty', true );
+					$payment_method = $subscription->get_payment_method();
+					$payment_method_title = $subscription->get_payment_method_title();
 
-					$wps_old_payment_method = get_post_meta( $parent_order_id, '_payment_method', true );
+					$wps_old_payment_method = $parent_order->get_payment_method();
 					$args = array(
 						'status'      => $new_status,
 						'customer_id' => $user_id,
@@ -529,14 +534,15 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 					$wps_new_order->calculate_totals();
 					$order_id = $wps_new_order->get_id();
 					WC_Gateway_Paypal::log( 'WPS - Renewal Order result order_id:' . $order_id );
-					update_post_meta( $order_id, '_payment_method', $payment_method );
-					update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
+
+					$wps_new_order->set_payment_method( $payment_method );
+					$wps_new_order->set_payment_method_title( $payment_method_title );
 
 					$wps_new_order->set_address( $billing_details, 'billing' );
 					$wps_new_order->set_address( $shipping_details, 'shipping' );
-					update_post_meta( $order_id, 'wps_sfw_renewal_order', 'yes' );
-					update_post_meta( $order_id, 'wps_sfw_subscription', $subscription_id );
-					update_post_meta( $order_id, 'wps_sfw_parent_order_id', $parent_order_id );
+					wps_sfw_update_meta_data( $order_id, 'wps_sfw_renewal_order', 'yes' );
+					wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription', $subscription_id );
+					wps_sfw_update_meta_data( $order_id, 'wps_sfw_parent_order_id', $parent_order_id );
 
 					do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
 
@@ -547,7 +553,7 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 					/*update next payment date*/
 					$wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
-					update_post_meta( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
+					wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 					do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $susbcription_id, $payment_method );
 					return $wps_new_order;
 				}

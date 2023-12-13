@@ -77,7 +77,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 			if ( $wps_subscription ) {
 
 				$this->object = $wps_subscription;
-				$wps_parent_order_id = get_post_meta( $wps_subscription, 'wps_parent_order', true );
+				$wps_parent_order_id = wps_sfw_get_meta_data( $wps_subscription, 'wps_parent_order', true );
 				$wps_parent_order = wc_get_order( $wps_parent_order_id );
 				if ( ! empty( $wps_parent_order ) ) {
 					$user_email = $wps_parent_order->get_billing_email();

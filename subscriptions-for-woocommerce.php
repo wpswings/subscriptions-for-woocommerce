@@ -15,16 +15,16 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.5.5
+ * Version:           1.5.8
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
  * Requires at least:        5.1.0
- * Tested up to:             6.3.1
+ * Tested up to:             6.4.2
  * WC requires at least:     5.1.0
- * WC tested up to:          8.1.1
+ * WC tested up to:          8.3.1
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -34,7 +34,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
-
+use Automattic\WooCommerce\Utilities\OrderUtil;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $old_pro_exists = false;
 $plug           = get_plugins();
@@ -178,7 +178,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.5.5' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.5.8' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -280,6 +280,18 @@ if ( $activated ) {
 		}
 		update_option( 'wps_all_plugins_active', $wps_sfw_deactive_plugin );
 	}
+
+	add_action(
+		'before_woocommerce_init',
+		function() {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
+			if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
+			}
+		}
+	);
 
 	/**
 	 * To Remove Cron schedule.
@@ -426,22 +438,22 @@ if ( $activated ) {
 				'wps_sfw_register_custom_order_types',
 				array(
 					'labels'                           => array(
-						'name'               => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
-						'singular_name'      => __( 'Subscription', 'subscriptions-for-woocommerce' ),
-						'add_new'            => __( 'Add Subscription', 'subscriptions-for-woocommerce' ),
-						'add_new_item'       => __( 'Add New Subscription', 'subscriptions-for-woocommerce' ),
+						'name'               => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+						'singular_name'      => __( 'WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'add_new'            => __( 'Add WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'add_new_item'       => __( 'Add New WPS Subscription', 'subscriptions-for-woocommerce' ),
 						'edit'               => __( 'Edit', 'subscriptions-for-woocommerce' ),
-						'edit_item'          => __( 'Edit Subscription', 'subscriptions-for-woocommerce' ),
-						'new_item'           => __( 'New Subscription', 'subscriptions-for-woocommerce' ),
-						'view'               => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
-						'view_item'          => __( 'View Subscription', 'subscriptions-for-woocommerce' ),
-						'search_items'       => __( 'Search Subscriptions', 'subscriptions-for-woocommerce' ),
+						'edit_item'          => __( 'Edit WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'new_item'           => __( 'New WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'view'               => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'view_item'          => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
+						'search_items'       => __( 'Search WPS Subscriptions', 'subscriptions-for-woocommerce' ),
 						'not_found'          => __( 'Not Found', 'subscriptions-for-woocommerce' ),
-						'not_found_in_trash' => __( 'No Subscriptions found in the trash', 'subscriptions-for-woocommerce' ),
-						'parent'             => __( 'Parent Subscriptions', 'subscriptions-for-woocommerce' ),
-						'menu_name'          => __( 'Subscriptions', 'subscriptions-for-woocommerce' ),
+						'not_found_in_trash' => __( 'No WPS Subscriptions found in the trash', 'subscriptions-for-woocommerce' ),
+						'parent'             => __( 'Parent WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+						'menu_name'          => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
 					),
-					'description'                      => __( 'These subscriptions are stored.', 'subscriptions-for-woocommerce' ),
+					'description'                      => __( 'These WPS subscriptions are stored.', 'subscriptions-for-woocommerce' ),
 					'public'                           => false,
 					'show_ui'                          => true,
 					'capability_type'                  => 'shop_order',
@@ -450,7 +462,7 @@ if ( $activated ) {
 					'exclude_from_search'              => true,
 					'show_in_menu'                     => true,
 					'hierarchical'                     => false,
-					'show_in_nav_menus'                => false,
+					'show_in_nav_menus'                => true,
 					'rewrite'                          => false,
 					'query_var'                        => false,
 					'supports'                         => array( 'title', 'comments', 'custom-fields' ),
@@ -462,6 +474,7 @@ if ( $activated ) {
 					'exclude_from_order_webhooks'      => true,
 					'exclude_from_order_reports'       => true,
 					'exclude_from_order_sales_reports' => true,
+					'class_name'                       => 'WPS_Subscription',
 				)
 			)
 		);
@@ -504,6 +517,7 @@ if ( $activated ) {
 	}
 
 	add_filter( 'woocommerce_payment_gateways', 'wps_paypal_integration_for_woocommerce_extended' );
+
 	/**
 	 * Extending main WC_Payment_Gateway class.
 	 *
@@ -511,9 +525,11 @@ if ( $activated ) {
 	 * @return void
 	 */
 	function wps_paypal_integration_for_woocommerce_gateway() {
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
+		if ( class_exists( 'WC_Payment_Gateway' ) ) {
+			require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
+		}
 	}
-	add_action( 'init', 'wps_paypal_integration_for_woocommerce_gateway' );
+	add_action( 'plugin_loaded', 'wps_paypal_integration_for_woocommerce_gateway' );
 
 
 	/**
@@ -526,6 +542,70 @@ if ( $activated ) {
 		}
 	}
 	add_action( 'init', 'wps_sfw_enable_paypal_standard' );
+
+
+	/**
+	 *
+	 * Get the data from the order table if hpos enabled otherwise default working.
+	 *
+	 * @param int    $id .
+	 * @param string $key .
+	 * @param int    $v .
+	 */
+	function wps_sfw_get_meta_data( $id, $key, $v ) {
+
+		if ( 'shop_order' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+
+			// HPOS usage is enabled.
+
+			$order    = wc_get_order( $id );
+
+			$meta_val = $order->get_meta( $key );
+
+			return $meta_val;
+
+		} elseif ( 'wps_subscriptions' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			// HPOS usage is enabled.
+			$order    = new WPS_Subscription( $id );
+			$meta_val = $order->get_meta( $key );
+
+			return $meta_val;
+		} else {
+			// Traditional CPT-based orders are in use.
+			$meta_val = get_post_meta( $id, $key, $v );
+
+			return $meta_val;
+		}
+	}
+	/**
+	 *
+	 * Update the data into the order table if hpos enabled otherwise default working.
+	 *
+	 * @param int               $id .
+	 * @param string            $key .
+	 * @param init|array|object $value .
+	 */
+	function wps_sfw_update_meta_data( $id, $key, $value ) {
+
+		if ( 'shop_order' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+
+			// HPOS usage is enabled.
+			$order = wc_get_order( $id );
+
+			$order->update_meta_data( $key, $value );
+			$order->save();
+
+		} elseif ( 'wps_subscriptions' === OrderUtil::get_order_type( $id ) && OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			// HPOS usage is enabled.
+			$order = new WPS_Subscription( $id );
+
+			$order->update_meta_data( $key, $value );
+			$order->save();
+		} else {
+			// Traditional CPT-based orders are in use.
+			update_post_meta( $id, $key, $value );
+		}
+	}
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );
@@ -698,13 +778,12 @@ if ( ! function_exists( 'wps_banner_notification_plugin_html' ) ) {
 					if ( '' !== $banner_image && '' !== $banner_url ) {
 
 						?>
-							<div class="wps-offer-notice notice notice-warning is-dismissible">
+							<div class="wps-offer-notice notice notice-warning is-dismissible">                
 								<div class="notice-container">
 									<a href="<?php echo esc_url( $banner_url ); ?>" target="_blank"><img src="<?php echo esc_url( $banner_image ); ?>" alt="Subscription cards"/></a>
 								</div>
 								<button type="button" class="notice-dismiss dismiss_banner" id="dismiss-banner"><span class="screen-reader-text">Dismiss this notice.</span></button>
 							</div>
-							
 						<?php
 					}
 				}
@@ -748,3 +827,56 @@ function wps_sfw_banner_notification_html() {
 	}
 }
 
+add_action(
+	'woocommerce_init',
+	function() {
+		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscription.php';
+	}
+);
+
+/**
+ * Create a new subscription
+ *
+ * @param array() $args .
+ */
+function wps_create_subscription( $args = array() ) {
+	$now   = gmdate( 'Y-m-d H:i:s' );
+	$order = ( isset( $args['order_id'] ) ) ? wc_get_order( $args['order_id'] ) : null;
+
+	$default_args = array(
+		'status'             => 'wc-wps_renewal',
+		'order_id'           => 0,
+		'customer_note'      => null,
+		'customer_id'        => null,
+		'date_created'       => $now,
+		'created_via'        => '',
+		'currency'           => get_woocommerce_currency(),
+		'prices_include_tax' => get_option( 'woocommerce_prices_include_tax' ),
+	);
+
+	if ( $order instanceof \WC_Order ) {
+		$default_args['customer_id']        = $order->get_user_id();
+		$default_args['created_via']        = $order->get_created_via( 'edit' );
+		$default_args['currency']           = $order->get_currency( 'edit' );
+		$default_args['prices_include_tax'] = $order->get_prices_include_tax( 'edit' ) ? 'yes' : 'no';
+		$default_args['date_created']       = $order->get_date_created( 'edit' );
+	}
+
+	$args = wp_parse_args( $args, $default_args );
+
+	$subscription = new \WPS_Subscription();
+
+	if ( $args['status'] ) {
+		$subscription->set_status( $args['status'] );
+	}
+
+	$subscription->set_customer_id( $args['customer_id'] );
+	$subscription->set_date_created( $args['date_created'] );
+	$subscription->set_created_via( $args['created_via'] );
+	$subscription->set_currency( $args['currency'] );
+	$subscription->set_prices_include_tax( 'no' !== $args['prices_include_tax'] );
+
+	$subscription->save();
+
+	return $subscription;
+}
