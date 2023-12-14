@@ -480,8 +480,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_susbcription_end = '';
 					$wps_recurring_total = '---';
 				}
-							$wps_customer_id   = wps_sfw_get_meta_data( $id, 'wps_customer_id', true );
-							$user = get_user_by( 'id', $wps_customer_id );
+				$wps_customer_id   = wps_sfw_get_meta_data( $id, 'wps_customer_id', true );
+				$user = get_user_by( 'id', $wps_customer_id );
 
 				if ( ! $wps_sfw_pro_plugin_activated ) {
 					$subp_id = wps_sfw_get_meta_data( $id, 'product_id', true );
@@ -508,7 +508,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 						'parent_order_id'           => $parent_order_id,
 						'status'                    => $wps_subscription_status,
 						'product_name'              => $product_name,
-						'recurring_amount'          => $wps_recurring_total,
+						'recurring_amount'          => apply_filters( 'wps_sfw_display_recurring_price', $wps_recurring_total, $id ),
 						'payment_type'              => $payment_type,
 						'user_name'                 => $user_nicename,
 						'next_payment_date'         => wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ),

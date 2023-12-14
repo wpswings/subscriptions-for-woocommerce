@@ -140,8 +140,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$line_subtotal = $subscription->line_subtotal;
 						$line_total = $subscription->line_total;
 
-						$_product = wc_get_product( $product_id );
+						$_product = wc_get_product( $product_id );						
+						
+						// check for manual subscription.
+						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 
+						// this code will run from the 1.5.8
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
 						if ( 'yes' === $new_sub ) {
@@ -157,8 +161,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							);
 						} else {
 							$include = get_option( 'woocommerce_prices_include_tax' );
-							// check for manual subscription.
-							$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
+
 							// check for manual subscription.
 							if ( 'yes' == $include && empty( $payment_type ) ) {
 								$wps_args = array(
@@ -184,7 +187,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								);
 							}
 						}
-
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
@@ -675,10 +677,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$_product = wc_get_product( $product_id );
 
-						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
-
 						// check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
+
+						// this code will run from the 1.5.8
+						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
+
 						if ( 'yes' === $new_sub ) {
 							$wps_args = array(
 								'variation' => array(),
@@ -693,7 +697,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						} else {
 							$include = get_option( 'woocommerce_prices_include_tax' );
 
-							// check for manual subscription.
 							if ( 'yes' == $include && empty( $payment_type ) ) {
 								$wps_args = array(
 									'variation' => array(),
