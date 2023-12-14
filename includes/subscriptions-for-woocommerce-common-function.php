@@ -611,7 +611,7 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 						),
 						array(
 							'key'   => 'wps_subscription_status',
-							'value' => 'pending',
+							'value' => array( 'pending', 'on-hold', 'failed' ),
 						),
 					),
 				);
@@ -629,7 +629,7 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 						),
 						array(
 							'key'   => 'wps_subscription_status',
-							'value' => 'pending',
+							'value' => array( 'pending', 'on-hold', 'failed' ),
 						),
 					),
 				);

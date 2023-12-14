@@ -311,7 +311,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$price = $line_data['line_total'];
 			$include_tax = get_option( 'woocommerce_prices_include_tax' );
 			if ( 'yes' === $include_tax ) {
-				$price = $price + $line_data['total_taxes'];
+				$price = $price + $line_data['line_tax'];
 			}
 			$price = $price / $cart_item['quantity'];
 
@@ -442,7 +442,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
 
-					$show_price = $line_data['line_total'] + $line_data['total_taxes'];
+					$show_price = $line_data['line_total'] + $line_data['line_tax'];
 
 					$wps_recurring_data['wps_recurring_total'] = $show_price;
 					$wps_recurring_data['wps_show_recurring_total'] = $show_price;
@@ -450,11 +450,11 @@ class Subscriptions_For_Woocommerce_Public {
 					$wps_recurring_data['product_name'] = $cart_item['data']->get_name();
 					$wps_recurring_data['product_qty'] = $cart_item['quantity'];
 
-					$wps_recurring_data['line_tax_data'] = $line_data['tax_data'];
+					$wps_recurring_data['line_tax_data'] = $line_data['line_tax_data'];
 					$wps_recurring_data['line_subtotal'] = $line_data['line_subtotal'];
-					$wps_recurring_data['line_subtotal_tax'] = $line_data['substotal_taxes'];
+					$wps_recurring_data['line_subtotal_tax'] = $line_data['line_subtotal_tax'];
 					$wps_recurring_data['line_total'] = $line_data['line_total'];
-					$wps_recurring_data['line_tax'] = $line_data['total_taxes'];
+					$wps_recurring_data['line_tax'] = $line_data['line_tax'];
 
 					$wps_recurring_data['cart_price'] = $price;
 
@@ -609,6 +609,7 @@ class Subscriptions_For_Woocommerce_Public {
 			wps_sfw_update_meta_data( $subscription_id, '_order_key', wc_generate_order_key() );
 
 			/*if free trial*/
+			$_product = $cart_item['data'];
 
 			$billing_details = $order->get_address( 'billing' );
 			$shipping_details = $order->get_address( 'shipping' );
@@ -619,10 +620,12 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->set_payment_method( $order->get_payment_method() );
 			$new_order->set_payment_method_title( $order->get_payment_method_title() );
 
+			$new_order->set_currency( $order->get_currency() );
+
 			$line_subtotal   = $wps_args['line_subtotal'];
 			$line_total      = $wps_args['line_total'];
-			$total_taxes     = $wps_args['total_taxes'];
-			$substotal_taxes = $wps_args['substotal_taxes'];
+			$total_taxes     = $wps_args['line_tax'];
+			$substotal_taxes = $wps_args['line_subtotal_tax'];
 
 			$wps_pro_args = array(
 				'variation' => array(),
@@ -1007,6 +1010,8 @@ class Subscriptions_For_Woocommerce_Public {
 			$price = wps_sfw_get_meta_data( $subscription_id, 'wps_recurring_total', true );
 		}
 		$wps_curr_args = array();
+
+		$price = apply_filters( 'c', $price, $subscription_id );
 
 		$price = wc_price( $price, $wps_curr_args );
 		$wps_recurring_number = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_number', true );
@@ -1614,7 +1619,7 @@ class Subscriptions_For_Woocommerce_Public {
 						return;
 					}
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
-					$renewal_amount = $line_data['line_total'] + $line_data['total_taxes'];
+					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'];
 					$product_price  = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
 					?>
@@ -1654,8 +1659,8 @@ class Subscriptions_For_Woocommerce_Public {
 		$_product    = wc_get_product( $product_id );
 		$include_tax = get_option( 'woocommerce_prices_include_tax' );
 
-		$substotal_taxes = 0;
-		$total_taxes = 0;
+		$line_subtotal_tax = 0;
+		$line_tax = 0;
 
 		// Get the only item price from the cart.
 		if ( 'yes' === $include_tax ) {
@@ -1688,7 +1693,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$wc_tax = new WC_Tax();
 		$billing_country = WC()->customer->get_billing_country();
 		$tax_class = apply_filters( 'woocommerce_cart_item_tax', $_product->get_tax_class(), $cart_item, $cart_item['key'] );
-		$tax_data = $wc_tax->find_rates(
+		$line_tax_data = $wc_tax->find_rates(
 			array(
 				'country' => $billing_country,
 				'tax_class' => $tax_class,
@@ -1696,14 +1701,14 @@ class Subscriptions_For_Woocommerce_Public {
 		);
 		if ( function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) && wps_sfw_is_woocommerce_tax_enabled() ) {
 			if ( 'yes' === $include_tax ) {
-				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_data ) );
-				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_data ) );
+				$line_subtotal_tax = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $line_tax_data ) );
+				$line_tax     = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $line_tax_data ) );
 
-				$line_total    = $line_total - $total_taxes;
-				$line_subtotal = $line_subtotal - $substotal_taxes;
+				$line_total    = $line_total - $line_tax;
+				$line_subtotal = $line_subtotal - $line_subtotal_tax;
 			} else {
-				$substotal_taxes = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_data ) );
-				$total_taxes     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_data ) );
+				$line_subtotal_tax = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $line_tax_data ) );
+				$line_tax     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $line_tax_data ) );
 			}
 		}
 		// Make sure you have correct line data if coupon applied on the cart.
@@ -1725,7 +1730,7 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		if ( $is_coupon_applied ) {
 			$line_total = $line_subtotal;
-			$total_taxes = $substotal_taxes;
+			$line_tax = $line_subtotal_tax;
 		}
 
 		// add the shipping fee,to display only.
@@ -1733,16 +1738,16 @@ class Subscriptions_For_Woocommerce_Public {
 		$line_subtotal = apply_filters( 'wps_sfw_add_shipping_fee_for_display', $line_subtotal, $cart_item, $bool );
 
 		// Prepare the line data.
-		$tax_data = array(
-			'subtotal' => array( $substotal_taxes ),
-			'total'    => array( $total_taxes ),
+		$line_tax_data = array(
+			'subtotal' => array( $line_subtotal_tax ),
+			'total'    => array( $line_tax ),
 		);
 		$line_data = array(
-			'line_total'         => $line_total,
-			'line_subtotal'      => $line_subtotal,
-			'total_taxes'        => $total_taxes,
-			'substotal_taxes'    => $substotal_taxes,
-			'tax_data'           => $tax_data,
+			'line_total'        => $line_total,
+			'line_subtotal'     => $line_subtotal,
+			'line_tax'          => $line_tax,
+			'line_subtotal_tax' => $line_subtotal_tax,
+			'line_tax_data'     => $line_tax_data,
 		);
 		return $line_data;
 	}
@@ -1776,7 +1781,7 @@ class Subscriptions_For_Woocommerce_Public {
 						return;
 					}
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
-					$renewal_amount = $line_data['line_total'] + $line_data['total_taxes'];
+					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'];
 					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
 					$new_content = '<div>' . esc_attr__( 'Recurring For', 'subscriptions-for-woocommerce' ) . ' <b>' . esc_html( $cart_item['data']->get_name() ) . '</b></div>' . esc_attr__( 'Will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount );
@@ -1881,6 +1886,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @throws \Exception Return error.
 	 */
 	public function wps_sfw_create_sub_order( $order ) {
+
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
 
@@ -1905,7 +1911,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, false );
 
-					$show_price = $line_data['line_total'] + $line_data['total_taxes'];
+					$show_price = $line_data['line_total'] + $line_data['line_tax'];
 
 					$wps_recurring_data['wps_recurring_total'] = $show_price;
 					$wps_recurring_data['wps_show_recurring_total'] = $show_price;
@@ -1913,20 +1919,20 @@ class Subscriptions_For_Woocommerce_Public {
 					$wps_recurring_data['product_name'] = $cart_item['data']->get_name();
 					$wps_recurring_data['product_qty'] = $cart_item['quantity'];
 
-					$wps_recurring_data['line_tax_data'] = $line_data['tax_data'];
+					$wps_recurring_data['line_tax_data'] = $line_data['line_tax_data'];
 					$wps_recurring_data['line_subtotal'] = $line_data['line_subtotal'];
-					$wps_recurring_data['line_subtotal_tax'] = $line_data['substotal_taxes'];
+					$wps_recurring_data['line_subtotal_tax'] = $line_data['line_subtotal_tax'];
 					$wps_recurring_data['line_total'] = $line_data['line_total'];
-					$wps_recurring_data['line_tax'] = $line_data['total_taxes'];
+					$wps_recurring_data['line_tax'] = $line_data['line_tax'];
 
 					$wps_recurring_data['cart_price'] = $line_data['line_total'] + $line_data['line_tax'];
 
 					$wps_recurring_data = apply_filters( 'wps_sfw_cart_data_for_susbcription', $wps_recurring_data, $cart_item );
 
-					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, $posted_data, $cart_item ) ) {
+					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, array(), $cart_item ) ) {
 						return;
 					}
-					$subscription = $this->wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data, $cart_item );
+					$subscription = $this->wps_sfw_create_subscription( $order, array(), $wps_recurring_data, $cart_item );
 					if ( is_wp_error( $subscription ) ) {
 						throw new Exception( $subscription->get_error_message() );
 					} else {
