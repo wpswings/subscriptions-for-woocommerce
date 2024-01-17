@@ -211,8 +211,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			if ( $order && is_object( $order ) ) {
 				$order_id = $order->get_id();
 
-				$payment_method = $order->get_payment_method();
-
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 
 				if ( 'paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
@@ -746,7 +744,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			} elseif ( $this->wps_sfw_check_transaction( $response ) ) {
 				// translators: placeholder is a transaction ID.
 				$order->add_order_note( sprintf( __( 'PayPal payment approved (ID: %s)', 'subscriptions-for-woocommerce' ), $this->get_transaction_id( $response ) ) );
-
+				$order->update_status( 'processing' );
 				$order->payment_complete( $this->get_transaction_id( $response ) );
 				$order_id = $order->get_id();
 				wps_sfw_send_email_for_renewal_susbcription( $order_id );
