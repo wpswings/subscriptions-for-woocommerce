@@ -432,52 +432,54 @@ if ( $activated ) {
 	 * @since 1.0.0
 	 */
 	function wps_sfw_register_custom_order_types() {
-		wc_register_order_type(
-			'wps_subscriptions',
-			apply_filters(
-				'wps_sfw_register_custom_order_types',
-				array(
-					'labels'                           => array(
-						'name'               => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
-						'singular_name'      => __( 'WPS Subscription', 'subscriptions-for-woocommerce' ),
-						'add_new'            => __( 'Add WPS Subscription', 'subscriptions-for-woocommerce' ),
-						'add_new_item'       => __( 'Add New WPS Subscription', 'subscriptions-for-woocommerce' ),
-						'edit'               => __( 'Edit', 'subscriptions-for-woocommerce' ),
-						'edit_item'          => __( 'Edit WPS Subscription', 'subscriptions-for-woocommerce' ),
-						'new_item'           => __( 'New WPS Subscription', 'subscriptions-for-woocommerce' ),
-						'view'               => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
-						'view_item'          => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
-						'search_items'       => __( 'Search WPS Subscriptions', 'subscriptions-for-woocommerce' ),
-						'not_found'          => __( 'Not Found', 'subscriptions-for-woocommerce' ),
-						'not_found_in_trash' => __( 'No WPS Subscriptions found in the trash', 'subscriptions-for-woocommerce' ),
-						'parent'             => __( 'Parent WPS Subscriptions', 'subscriptions-for-woocommerce' ),
-						'menu_name'          => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
-					),
-					'description'                      => __( 'These WPS subscriptions are stored.', 'subscriptions-for-woocommerce' ),
-					'public'                           => false,
-					'show_ui'                          => true,
-					'capability_type'                  => 'shop_order',
-					'map_meta_cap'                     => true,
-					'publicly_queryable'               => false,
-					'exclude_from_search'              => true,
-					'show_in_menu'                     => true,
-					'hierarchical'                     => false,
-					'show_in_nav_menus'                => true,
-					'rewrite'                          => false,
-					'query_var'                        => false,
-					'supports'                         => array( 'title', 'comments', 'custom-fields' ),
-					'has_archive'                      => false,
-					'exclude_from_orders_screen'       => true,
-					'add_order_meta_boxes'             => true,
-					'exclude_from_order_count'         => true,
-					'exclude_from_order_views'         => true,
-					'exclude_from_order_webhooks'      => true,
-					'exclude_from_order_reports'       => true,
-					'exclude_from_order_sales_reports' => true,
-					'class_name'                       => 'WPS_Subscription',
+		if ( function_exists( 'wc_register_order_type' ) ) {
+			wc_register_order_type(
+				'wps_subscriptions',
+				apply_filters(
+					'wps_sfw_register_custom_order_types',
+					array(
+						'labels'                           => array(
+							'name'               => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+							'singular_name'      => __( 'WPS Subscription', 'subscriptions-for-woocommerce' ),
+							'add_new'            => __( 'Add WPS Subscription', 'subscriptions-for-woocommerce' ),
+							'add_new_item'       => __( 'Add New WPS Subscription', 'subscriptions-for-woocommerce' ),
+							'edit'               => __( 'Edit', 'subscriptions-for-woocommerce' ),
+							'edit_item'          => __( 'Edit WPS Subscription', 'subscriptions-for-woocommerce' ),
+							'new_item'           => __( 'New WPS Subscription', 'subscriptions-for-woocommerce' ),
+							'view'               => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
+							'view_item'          => __( 'View WPS Subscription', 'subscriptions-for-woocommerce' ),
+							'search_items'       => __( 'Search WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+							'not_found'          => __( 'Not Found', 'subscriptions-for-woocommerce' ),
+							'not_found_in_trash' => __( 'No WPS Subscriptions found in the trash', 'subscriptions-for-woocommerce' ),
+							'parent'             => __( 'Parent WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+							'menu_name'          => __( 'WPS Subscriptions', 'subscriptions-for-woocommerce' ),
+						),
+						'description'                      => __( 'These WPS subscriptions are stored.', 'subscriptions-for-woocommerce' ),
+						'public'                           => false,
+						'show_ui'                          => true,
+						'capability_type'                  => 'shop_order',
+						'map_meta_cap'                     => true,
+						'publicly_queryable'               => false,
+						'exclude_from_search'              => true,
+						'show_in_menu'                     => true,
+						'hierarchical'                     => false,
+						'show_in_nav_menus'                => true,
+						'rewrite'                          => false,
+						'query_var'                        => false,
+						'supports'                         => array( 'title', 'comments', 'custom-fields' ),
+						'has_archive'                      => false,
+						'exclude_from_orders_screen'       => true,
+						'add_order_meta_boxes'             => true,
+						'exclude_from_order_count'         => true,
+						'exclude_from_order_views'         => true,
+						'exclude_from_order_webhooks'      => true,
+						'exclude_from_order_reports'       => true,
+						'exclude_from_order_sales_reports' => true,
+						'class_name'                       => 'WPS_Subscription',
+					)
 				)
-			)
-		);
+			);
+		}
 	}
 	add_action( 'activated_plugin', 'wps_sfe_redirect_on_settings' );
 

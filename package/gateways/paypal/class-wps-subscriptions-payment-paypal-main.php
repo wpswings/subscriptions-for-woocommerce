@@ -638,7 +638,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 					add_user_meta( $order->get_user_id(), '_wps_paypal_subscription_id', $paypal_subscription_id );
 				}
 				wps_sfw_update_meta_data( $wps_subscription_id, '_wps_paypal_subscription_id', $paypal_subscription_id );
-
 			}
 		}
 
@@ -745,7 +744,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 				// translators: placeholder is a transaction ID.
 				$order->add_order_note( sprintf( __( 'PayPal payment approved (ID: %s)', 'subscriptions-for-woocommerce' ), $this->get_transaction_id( $response ) ) );
 				$order->update_status( 'processing' );
-				$order->payment_complete( $this->get_transaction_id( $response ) );
+				$order->set_transaction_id( $this->get_transaction_id( $response ) );
 				$order_id = $order->get_id();
 				wps_sfw_send_email_for_renewal_susbcription( $order_id );
 			} elseif ( $this->wps_sfw_check_pending_transaction( $response ) ) {
