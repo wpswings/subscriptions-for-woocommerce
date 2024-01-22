@@ -145,7 +145,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						// check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 
-						// this code will run from the 1.5.8
+						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
 						if ( 'yes' === $new_sub ) {
@@ -680,7 +680,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						// check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 
-						// this code will run from the 1.5.8
+						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
 						if ( 'yes' === $new_sub ) {

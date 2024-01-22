@@ -744,7 +744,7 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
-// HPOS Compatibility for Custom Order type i.e. WPS_Subscription
+// HPOS Compatibility for Custom Order type i.e. WPS_Subscription.
 add_action(
 	'woocommerce_init',
 	function() {
