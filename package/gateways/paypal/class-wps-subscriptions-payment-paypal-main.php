@@ -275,10 +275,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( 'paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
-					$order_status[] = 'wps_renewal';
+					$order_status[] = 'wc-wps_renewal';
 				}
 				if ( 'ppec_paypal' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
-					$order_status[] = 'wps_renewal';
+					$order_status[] = 'wc-wps_renewal';
 				}
 			}
 			return $order_status;

@@ -177,7 +177,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 				$payment_method        = $order->get_payment_method();
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( 'wps_paypal' === $payment_method && 'yes' === $wps_sfw_renewal_order ) {
-					$order_status[] = 'wps_renewal';
+					$order_status[] = 'wc-wps_renewal';
 
 				}
 			}
