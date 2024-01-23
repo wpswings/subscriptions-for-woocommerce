@@ -5,8 +5,8 @@ Tags: subscriptions, recurring payments, subscription billing, subscription Box,
 Requires at least: 5.0
 Tested up to: 6.4.2
 WC requires at least: 5.0
-WC tested up to: 8.4.0
-Stable tag: 1.5.9
+WC tested up to: 8.5.1
+Stable tag: 1.6.0
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -307,9 +307,12 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.6.0 - Released on 23 January 2024 =
+* New : Latest WC( 8.5.1 ) Compatibility
+* Fix : Missing payment method issue during the renewal payment
 
 = 1.5.9 - Released on 14 December 2023 =
-* New: Latest WP( 6.4.2 ) and WC(8.4.0) compatibility
+* New: WC(8.4.0) compatibility
 * Fix: Undefined value issue
 
 
@@ -530,6 +533,6 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 == Upgrade Notice ==
 
 
-= 1.5.9 - Released on 14 December 2023 =
-* New: Latest WP( 6.4.2 ) and WC(8.4.0) compatibility
-* Fix: Undefined value issue
+= 1.6.0 - Released on 23 January 2024 =
+* New : Latest WC( 8.5.1 ) Compatibility
+* Fix : Missing payment method issue during the renewal payment
