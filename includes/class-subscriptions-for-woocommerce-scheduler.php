@@ -145,7 +145,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						// check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 
-						// this code will run from the 1.5.8
+						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
 						if ( 'yes' === $new_sub ) {
@@ -680,7 +680,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						// check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 
-						// this code will run from the 1.5.8
+						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
 						if ( 'yes' === $new_sub ) {
@@ -744,9 +744,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$wps_new_order->set_address( $billing_details, 'billing' );
 						$wps_new_order->set_address( $shipping_details, 'shipping' );
-
-						$wps_new_order->set_payment_method( $parent_order->get_payment_method() );
-						$wps_new_order->set_payment_method_title( $parent_order->get_payment_method_title() );
 
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_renewal_order', 'yes' );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription', $subscription_id );
