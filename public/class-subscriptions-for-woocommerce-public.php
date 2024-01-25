@@ -1625,7 +1625,7 @@ class Subscriptions_For_Woocommerce_Public {
 					?>
 					<tr class="order-total wps_wsp_recurring_total">
 					<th class="wps_wsp_recurring_total_td" data-title="<?php esc_attr_e( 'wps-sfw-recurring', 'subscriptions-for-woocommerce' ); ?>"><?php esc_attr_e( 'Recurring', 'subscriptions-for-woocommerce' ); ?></th>
-					<td><?php echo esc_attr__( 'Recurring Amount will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount ) . ' ' . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . esc_html( $cart_item['data']->get_name() ); ?></td>
+					<td><?php echo apply_filters('wps_sfw_show_recurring_information_content', esc_attr__( 'Recurring Amount will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount ) . ' ' . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . esc_html( $cart_item['data']->get_name() ), $cart_item, $line_data, $renewal_amount); ?></td>
 					<tr>
 					<?php
 				}
@@ -1784,7 +1784,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'];
 					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
-					$new_content = '<div>' . esc_attr__( 'Recurring For', 'subscriptions-for-woocommerce' ) . ' <b>' . esc_html( $cart_item['data']->get_name() ) . '</b></div>' . esc_attr__( 'Will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount );
+					$new_content = apply_filters('wps_sfw_add_subscription_totals_on_cart_block_content', '<div>' . esc_attr__( 'Recurring For', 'subscriptions-for-woocommerce' ) . ' <b>' . esc_html( $cart_item['data']->get_name() ) . '</b></div>' . esc_attr__( 'Will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount ), $cart_item, $line_data, $renewal_amount);
 					$content = $content . '<div class="sfw-recurring-totals-items">' . $new_content . '</div>';
 				}
 			}
