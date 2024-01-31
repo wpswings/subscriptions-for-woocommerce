@@ -265,15 +265,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 						$allmethod = array( 'stripe', 'stripe_sepa' );
 
-						if ( in_array( $payment_method, $allmethod ) ) {
-							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
-								$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
-								$result = $wps_stripe->wps_sfw_process_renewal_payment( $order_id, $parent_order_id );
-								wps_sfw_update_meta_data( $order_id, '_stripe_charge_captured', 'yes' );
-								do_action( 'wps_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
-								wps_sfw_send_email_for_renewal_susbcription( $order_id );
-							}
-						}
+						// if ( in_array( $payment_method, $allmethod ) ) {
+						// 	if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
+						// 		$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
+						// 		$result = $wps_stripe->wps_sfw_process_renewal_payment( $order_id, $parent_order_id );
+						// 		wps_sfw_update_meta_data( $order_id, '_stripe_charge_captured', 'yes' );
+						// 		do_action( 'wps_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
+						// 		wps_sfw_send_email_for_renewal_susbcription( $order_id );
+						// 	}
+						// }
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
 
 						// hook for par plugin compatible .
@@ -796,15 +796,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$allmethod = array( 'stripe', 'stripe_sepa' );
 
-						if ( in_array( $payment_method, $allmethod ) ) {
-							if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
-								$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
-								$result = $wps_stripe->wps_sfw_process_renewal_payment( $order_id, $parent_order_id );
-								wps_sfw_update_meta_data( $order_id, '_stripe_charge_captured', 'yes' );
-								do_action( 'wps_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
-								wps_sfw_send_email_for_renewal_susbcription( $order_id );
-							}
-						}
+						// if ( in_array( $payment_method, $allmethod ) ) {
+						// 	if ( class_exists( 'Subscriptions_For_Woocommerce_Stripe' ) ) {
+						// 		$wps_stripe = new Subscriptions_For_Woocommerce_Stripe();
+						// 		$result = $wps_stripe->wps_sfw_process_renewal_payment( $order_id, $parent_order_id );
+						// 		wps_sfw_update_meta_data( $order_id, '_stripe_charge_captured', 'yes' );
+						// 		do_action( 'wps_sfw_cancel_failed_susbcription', $result, $order_id, $subscription_id );
+						// 		wps_sfw_send_email_for_renewal_susbcription( $order_id );
+						// 	}
+						// }
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
 
 						// hook for par plugin compatible .

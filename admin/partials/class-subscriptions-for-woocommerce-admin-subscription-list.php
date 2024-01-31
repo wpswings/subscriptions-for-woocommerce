@@ -402,6 +402,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 				$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+				
 				$args2['meta_query'] = array(
 					array(
 						'key'   => 'wps_parent_order',
@@ -417,6 +418,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		// search with subscription id code.
 		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+
+			$wps_subscriptions = apply_filters( 'wps_sfw_search_subscription_username', $wps_subscriptions, $data );
 			if ( empty( $wps_subscriptions ) ) {
 				$wps_subs_id = wps_sfw_get_meta_data( $data, 'wps_parent_order', true );
 				$args2['meta_query'] = array(

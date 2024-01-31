@@ -679,7 +679,9 @@ if ( ! function_exists( 'wps_sfw_include_process_directory' ) ) {
 						wps_sfw_include_process_directory( $wps_sfw_dir . '/' . $wps_file, $wps_file );
 
 					} elseif ( 'class-wps-subscriptions-payment-' . $wps_selected_dir . '-main.php' == $wps_file ) {
-
+						if ( 'stripe' == $wps_selected_dir || 'stripe-sepa' == $wps_selected_dir ) {
+							continue;
+						}
 						include $wps_sfw_dir . '/' . $wps_file;
 					}
 				}
@@ -860,6 +862,8 @@ if ( ! function_exists( 'wps_sfw_check_valid_order' ) ) {
 	}
 
 
+}
+if ( ! function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) ) {
 	/**
 	 * Check if WooCommerce taxes are enabled.
 	 *
@@ -870,12 +874,38 @@ if ( ! function_exists( 'wps_sfw_check_valid_order' ) ) {
 		if ( class_exists( 'WooCommerce' ) ) {
 			// Get the tax options.
 			$tax_options = get_option( 'woocommerce_calc_taxes' );
-
+	
 			// Check if taxes are enabled.
 			if ( 'yes' === $tax_options ) {
 				return true; // Taxes are enabled.
 			}
 		}
 		return false; // Taxes are not enabled or WooCommerce is not active.
+	}
+}
+if ( ! function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) ) {
+	/**
+	 * Check if order contain subscrption product.
+	 *
+	 * @return bool
+	 */
+	function wps_sfw_order_has_subscription( $order_id ) {
+
+		$wps_has_subscription = false;
+
+		$order = wc_get_order( $order_id );
+
+		foreach( $order->get_items() as $item ) {
+			$product_id = $item->get_product_id();
+			if ( $item->get_variation_id() ) {
+				$product_id = $item->get_variation_id();
+			}
+			$product = wc_get_product( $product_id );
+			if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
+				$wps_has_subscription = true;
+				break;
+			}
+		}
+		return $wps_has_subscription;
 	}
 }
