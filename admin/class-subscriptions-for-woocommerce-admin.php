@@ -585,7 +585,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			echo esc_html( '(' . get_woocommerce_currency_symbol() . ')' );
 			?>
 			</label>
-			<input type="number" class="short wc_input_price"  min="1" step="any" name="wps_sfw_subscription_initial_signup_price" id="wps_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $wps_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e( 'Enter signup fee', 'subscriptions-for-woocommerce' ); ?>"> 
+			<input type="number" class="short wc_input_price"  min="0" step="any" name="wps_sfw_subscription_initial_signup_price" id="wps_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $wps_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e( 'Enter signup fee', 'subscriptions-for-woocommerce' ); ?>"> 
 			
 		 <?php
 			$description_text = __( 'Choose the subscriptions initial fee for the product "leave empty for no initial fee"', 'subscriptions-for-woocommerce' );

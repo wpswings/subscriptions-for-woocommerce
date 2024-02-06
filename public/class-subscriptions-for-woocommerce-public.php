@@ -1940,7 +1940,7 @@ class Subscriptions_For_Woocommerce_Public {
 						if ( 'yes' != $wps_has_susbcription ) {
 							wps_sfw_update_meta_data( $order_id, 'wps_sfw_order_has_subscription', 'yes' );
 						}
-						do_action( 'wps_sfw_subscription_process_checkout', $order_id, $posted_data, $subscription );
+						do_action( 'wps_sfw_subscription_process_checkout', $order_id, $wps_recurring_data, $subscription );
 					}
 				}
 			}
@@ -1949,7 +1949,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( 'yes' === $wps_has_susbcription ) {
 				// phpcs:disable WordPress.Security.NonceVerification.Missing
 				// After process checkout.
-				do_action( 'wps_sfw_subscription_process_checkout_payment_method', $order_id, $posted_data );
+				do_action( 'wps_sfw_subscription_process_checkout_payment_method', $order_id, $wps_recurring_data );
 				// phpcs:enable WordPress.Security.NonceVerification.Missing
 			}
 		}
