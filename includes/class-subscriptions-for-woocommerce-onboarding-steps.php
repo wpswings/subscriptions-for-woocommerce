@@ -369,7 +369,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 			rand() => array(
 				'id' => 'wps-sfw-onboard-number',
 				'title' => esc_html__( 'What is your contact number?', 'subscriptions-for-woocommerce' ),
-				'type' => 'text',
+				'type' => 'number',
 				'description' => '',
 				'name' => 'phone',
 				'value' => '',
