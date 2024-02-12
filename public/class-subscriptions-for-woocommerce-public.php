@@ -313,7 +313,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( 'yes' === $include_tax ) {
 				$price = $price + $line_data['line_tax'];
 			}
-			$price = $price / $cart_item['quantity'];
+			// $price = $price / $cart_item['quantity'];
 
 			$price = apply_filters( 'wps_sfw_recurring_price_info', $price, $cart_item, $product_id );
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
@@ -1681,7 +1681,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
 		if ( ! empty( $wps_sfw_subscription_free_trial_number ) ) {
 			$product = wc_get_product( $product_id );
-			$price = $product->get_price();
+			$price = $product->get_price() * $cart_item['quantity'];
 			$line_subtotal = $price;
 			$line_total = $price;
 		}

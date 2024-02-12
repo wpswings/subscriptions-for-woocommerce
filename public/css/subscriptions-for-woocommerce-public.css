@@ -4,11 +4,14 @@
  */
 
  .wps_sfw_account_wrap {
- 	overflow-x: auto;
- }
- .wps_sfw_free_trial, .wps_sfw_signup_fee {
+    overflow-x: auto;
+}
+
+.wps_sfw_free_trial,
+.wps_sfw_signup_fee {
     display: block;
 }
+
 .wps_sfw_experimental_feature_notice {
     color: red;
 }
@@ -55,6 +58,7 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     vertical-align: middle;
     margin: 0 5px 5px 0;
 }
+
 .wps_sfw_account_wrap table {
     width: 100%;
 }
@@ -72,7 +76,8 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     min-width: 150px;
 }
 
-.wps_sfw_account_wrap table th:last-of-type,.wps_sfw_account_wrap table td:last-of-type {
+.wps_sfw_account_wrap table th:last-of-type,
+.wps_sfw_account_wrap table td:last-of-type {
     min-width: 80px;
     text-align: center;
 }
@@ -101,9 +106,82 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     text-transform: capitalize;
     color: #3498db;
 }
-.wps_wsp_recurring_total_td{
+
+.wps_wsp_recurring_total_td {
     font-weight: 600;
 }
-.wps_wsp_recurring_total th{
+
+.wps_wsp_recurring_total th {
     vertical-align: top;
 }
+
+/* Subscription on my account page start  */
+
+.wps_sfw_order_details a.wps_upgrade_downgrade.button {
+    display: block;
+    max-width: max-content;
+    margin: 5px 0 0;
+    line-height: 1.25;
+    padding: 10px 10px;
+    background: #f8f8f8;
+    border: 2px solid #f8f8f8;
+    font-size: 14px;
+    color: #000;
+}
+
+.wps_sfw_details_wrap table.shop_table th,
+.wps_sfw_account_wrap table th {
+    border-bottom: 1px solid #ccc;
+    font-weight: 600;
+}
+
+.wps_sfw_details_wrap table.shop_table th,
+.wps_sfw_details_wrap table.shop_table td,
+.wps_sfw_account_wrap table thead th,
+.wps_sfw_account_wrap table tbody td {
+    background: transparent;
+    padding: 15px;
+    text-align: left;
+}
+
+.wps_sfw_details_wrap table.shop_table tr,
+.wps_sfw_account_wrap table tbody tr {
+    border: none;
+}
+
+.wps_sfw_details_wrap table.shop_table tr:nth-of-type(even),
+.wps_sfw_account_wrap table tbody tr:nth-of-type(even) {
+    background: #f8f8f8;
+}
+
+.wps_sfw_details_wrap table.shop_table,
+.wps_sfw_account_wrap table {
+    border: 1px solid #ccc;
+}
+
+.wps_sfw_details_wrap h3 {
+    font-size: 24px;
+    margin: 0 0 15px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.wps_sfw_details_wrap table+h3 {
+    margin: 25px 0 15px;
+}
+
+.wps_sfw_account_show_subscription a {
+    text-decoration: underline;
+    color: var(--wp--preset--color--vivid-cyan-blue);
+}
+
+/* Subscription on my account page end  */
+/* Single product page start */
+
+p.wps_sfw_inner_description {
+    padding: 10px;
+    background: #f8f8f8;
+    margin: 5px 0px 20px;
+}
+
+/* Single product page end */
