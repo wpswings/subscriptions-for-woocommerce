@@ -248,7 +248,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( $this->wps_wsp_check_supported_payment_options( $payment_method ) && 'yes' == $wps_sfw_renewal_order ) {
-					$order_status[] = 'wps_renewal';
+					$order_status[] = 'wc-wps_renewal';
 
 				}
 			}

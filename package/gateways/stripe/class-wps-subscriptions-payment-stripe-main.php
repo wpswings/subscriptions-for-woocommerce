@@ -55,7 +55,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( in_array( $payment_method, $allmethod ) && 'yes' == $wps_sfw_renewal_order ) {
-					$order_status[] = 'wps_renewal';
+					$order_status[] = 'wc-wps_renewal';
 
 				}
 			}
