@@ -331,7 +331,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
 			} else {
 				$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
 			}
-			if ( 'stripe_sepa' ==  $payment_method && 'Cancel' == $status  ) {
+			if ( 'stripe_sepa' ==  $wps_payment_method && 'Cancel' == $status  ) {
                 wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
                 wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 			}

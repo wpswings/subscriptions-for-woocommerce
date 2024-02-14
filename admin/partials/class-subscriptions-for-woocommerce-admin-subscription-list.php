@@ -172,6 +172,23 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				<p><strong><?php esc_html_e( 'Subscriptions Deleted Successfully', 'subscriptions-for-woocommerce' ); ?></strong></p>
 			</div>
 			<?php
+		} elseif ( 'bulk-cancel' === $this->current_action() ) {
+			if ( isset( $_POST['susbcription_list_table'] ) ) {
+				$susbcription_list_table = sanitize_text_field( wp_unslash( $_POST['susbcription_list_table'] ) );
+				if ( wp_verify_nonce( $susbcription_list_table, 'susbcription_list_table' ) ) {
+					if ( isset( $_POST['wps_sfw_subscriptions_ids'] ) && ! empty( $_POST['wps_sfw_subscriptions_ids'] ) ) {
+						$all_id = map_deep( wp_unslash( $_POST['wps_sfw_subscriptions_ids'] ), 'sanitize_text_field' );
+						foreach ( $all_id as $key => $value ) {
+							do_action( 'wps_sfw_subscription_cancel', $value, 'Cancel' );
+						}
+					}
+				}
+			}
+			?>
+			<div class="notice notice-success is-dismissible"> 
+				<p><strong><?php esc_html_e( 'Subscriptions Cancelled Successfully', 'subscriptions-for-woocommerce' ); ?></strong></p>
+			</div>
+			<?php
 		}
 		do_action( 'wps_sfw_process_bulk_reset_option', $this->current_action(), $_POST );
 
@@ -188,6 +205,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	public function get_bulk_actions() {
 		$actions = array(
 			'bulk-delete' => __( 'Delete', 'subscriptions-for-woocommerce' ),
+			'bulk-cancel' => __( 'Cancel', 'subscriptions-for-woocommerce' ),
 		);
 		return apply_filters( 'wps_sfw_bulk_option', $actions );
 	}

@@ -333,6 +333,8 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_get_item_data', $sfw_plugin_public, 'wps_sfw_get_subscription_meta_on_cart', 10, 2 );
 			$this->loader->add_action( 'woocommerce_store_api_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_create_sub_order', 100 );
 			$this->loader->add_action( 'woocommerce_blocks_loaded', $sfw_plugin_public, 'wsp_sfw_wps_paypal_woocommerce_block_support' );
+
+			$this->loader->add_action( 'wps_sfw_subscription_cancel', $sfw_plugin_public, 'wps_sfw_cancel_manual_subscription', 10, 2 );
 		}
 	}
 

@@ -313,7 +313,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( 'yes' === $include_tax ) {
 				$price = $price + $line_data['line_tax'];
 			}
-			// $price = $price / $cart_item['quantity'];
+			$price = $price / $cart_item['quantity'];
 
 			$price = apply_filters( 'wps_sfw_recurring_price_info', $price, $cart_item, $product_id );
 			$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $price ) ) );
@@ -1967,6 +1967,208 @@ class Subscriptions_For_Woocommerce_Public {
 					$payment_method_registry->register( new WPS_Paypal_Block_Support() );
 				}
 			);
+		}
+	}
+
+	/**
+	 * This function is used to cancel subscriptions status.
+	 *
+	 * @name wps_sfw_cancel_stripe_subscription
+	 * @param int    $wps_subscription_id wps_subscription_id.
+	 * @param string $status status.
+	 */
+	public function wps_sfw_cancel_manual_subscription( $wps_subscription_id, $status ) {
+
+		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$subscription = new WPS_Subscription( $wps_subscription_id );
+			$wps_payment_method = $subscription->get_payment_method();
+		} else {
+			$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
+		}
+		if ( 'Cancel' == $status  ) {
+			if ( ( 'cod' == $wps_payment_method ) || ( 'bacs' == $wps_payment_method ) || ( 'cheque' == $wps_payment_method ) ) {
+				wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+			}
+		}
+	}
+
+	/**
+	 * Creating subscription based on upselling products
+	 * 
+	 * @param object  $order .
+	 * @param array() $product_data .
+	 * @param object  $child_order .
+	 * 
+	 */
+	public function cartflow_subscription_creation_while_upselling( $order, $product_data, $child_order ) {
+		foreach ( $child_order->get_items() as $item_id => $item ) {
+			$product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
+
+			if ( function_exists( 'wps_sfw_check_product_is_subscription' ) && ! wps_sfw_check_product_is_subscription( wc_get_product( $product_id ) ) ) {
+				continue;
+			}
+
+			$product         = $item->get_product();
+			$product_name    = $item->get_name();
+			$quantity        = $item->get_quantity();
+			$subtotal        = $item->get_subtotal();
+			$total           = $item->get_total();
+			$subtotal_tax    = $item->get_subtotal_tax();
+			$tax             = $item->get_total_tax();
+			$parent_order_id = $order->get_id();
+			$current_date    = current_time( 'timestamp' );
+
+			$wps_args = array(
+				'wps_parent_order'   => $parent_order_id,
+				'wps_customer_id'    => $order->get_user_id(),
+				'wps_schedule_start' => $current_date,
+				'product_id'         => $product_id,
+				'product_name'       => $product_name,
+				'product_qty'        => $quantity,
+			);
+
+			$wps_recurring_data = $this->wps_sfw_get_subscription_recurring_data( $product_id );
+
+			$show_price = $total + $tax;
+
+			$wps_recurring_data['wps_recurring_total'] = $show_price;
+			$wps_recurring_data['wps_show_recurring_total'] = $show_price;
+			$wps_recurring_data['product_id']   = $product_id;
+			$wps_recurring_data['product_name'] = $product_name;
+			$wps_recurring_data['product_qty']  = $quantity;
+
+			$wps_recurring_data['line_tax_data'] = array(
+				'subtotal' => array( $subtotal_tax ),
+				'total'    => array( $tax ),
+			);
+			$wps_recurring_data['line_subtotal'] = $subtotal;
+			$wps_recurring_data['line_subtotal_tax'] = $subtotal_tax;
+			$wps_recurring_data['line_total'] = $total;
+			$wps_recurring_data['line_tax'] = $tax;
+
+			$wps_recurring_data = apply_filters( 'wps_sfw_cart_data_for_susbcription', $wps_recurring_data, $cart_item );
+
+			if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, $posted_data, $cart_item ) ) {
+				return;
+			}
+			// Subscription creation code start.
+
+			if ( ! empty( $order ) ) {
+				$order_id     = $order->get_id();
+				$current_date = current_time( 'timestamp' );
+
+				$wps_default_args = array(
+					'wps_parent_order'   => $order_id,
+					'wps_customer_id'    => $order->get_user_id(),
+					'wps_schedule_start' => $current_date,
+				);
+
+				$wps_args = wp_parse_args( $wps_recurring_data, $wps_default_args );
+				$wps_args['wps_order_currency'] = $order->get_currency();
+				$wps_args['wps_subscription_status'] = 'pending';
+
+				$wps_args = apply_filters( 'wps_sfw_new_subscriptions_data', $wps_args );
+				// translators: post title date parsed by strftime.
+				$post_title_date = gmdate( _x( '%1$b %2$d, %Y @ %I:%M %p', 'subscription post title. "Subscriptions order - <this>"', 'subscriptions-for-woocommerce' ) );
+				$wps_subscription_data = array();
+				$wps_subscription_data['post_type']     = 'wps_subscriptions';
+
+				$wps_subscription_data['post_status']   = 'wc-wps_renewal';
+				$wps_subscription_data['post_author']   = 1;
+				$wps_subscription_data['post_parent']   = $order_id;
+				/* translators: %s: post title date */
+				$wps_subscription_data['post_title']    = sprintf( _x( 'WPS Subscription &ndash; %s', 'Subscription post title', 'subscriptions-for-woocommerce' ), $post_title_date );
+				$wps_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );
+				$wps_subscription_data['post_date_gmt'] = $order->get_date_created()->date( 'Y-m-d H:i:s' );
+
+				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+
+					$subscription_order = wps_create_subscription();
+					$subscription_id    = $subscription_order->get_id();
+
+					$subscription_order->set_customer_id( $order->get_user_id() );
+
+					$new_order = new WPS_Subscription( $subscription_id );
+					$new_order->update_status( 'wc-wps_renewal' );
+				} else {
+					$subscription_id = wp_insert_post( $wps_subscription_data, true );
+
+					$new_order = wc_get_order( $subscription_id );
+				}
+				if ( ! $subscription_id ) {
+					return;
+				}
+
+				wps_sfw_update_meta_data( $order_id, 'wps_subscription_id', $subscription_id );
+				wps_sfw_update_meta_data( $subscription_id, 'wps_susbcription_trial_end', 0 );
+				wps_sfw_update_meta_data( $subscription_id, 'wps_susbcription_end', 0 );
+				wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', 0 );
+				wps_sfw_update_meta_data( $subscription_id, '_order_key', wc_generate_order_key() );
+
+				$_product = wc_get_product( $product_id );
+
+				$billing_details  = $order->get_address( 'billing' );
+				$shipping_details = $order->get_address( 'shipping' );
+
+				$new_order->set_address( $billing_details, 'billing' );
+				$new_order->set_address( $shipping_details, 'shipping' );
+
+				$new_order->set_payment_method( $order->get_payment_method() );
+				$new_order->set_payment_method_title( $order->get_payment_method_title() );
+
+				$new_order->set_currency( $order->get_currency() );
+
+				$line_subtotal   = $wps_args['line_subtotal'];
+				$line_total      = $wps_args['line_total'];
+				$total_taxes     = $wps_args['line_tax'];
+				$substotal_taxes = $wps_args['line_subtotal_tax'];
+
+				$wps_pro_args = array(
+					'variation' => array(),
+					'totals'    => array(
+						'subtotal'     => $line_subtotal,
+						'subtotal_tax' => $substotal_taxes,
+						'total'        => $line_total,
+						'tax'          => $total_taxes,
+						'tax_data'     => array(
+							'subtotal' => array( $substotal_taxes ),
+							'total'    => array( $total_taxes ),
+						),
+					),
+				);
+
+				$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_pro_args );
+
+				$wps_args = apply_filters( 'wps_product_args_for_renewal_order_propate_amount', $wps_args, $cart_item );
+
+				$item_id = $new_order->add_product(
+					$_product,
+					$wps_args['product_qty'],
+					$wps_pro_args
+				);
+				$new_order->update_taxes();
+				$new_order->calculate_totals();
+				$new_order->save();
+
+				do_action( 'wps_sfw_subscription_bundle_addition', $subscription_id, $order_id, $_product );
+
+				// After susbcription order created.
+				do_action( 'wps_sfw_subscription_order', $new_order, $order_id );
+
+				// new subscription meta from the version  1.5.8.
+				wps_sfw_update_meta_data( $subscription_id, 'wps_sfw_new_sub', 'yes' );
+
+				wps_sfw_update_meta_key_for_susbcription( $subscription_id, $wps_args );
+				// After susbcription order created.
+				do_action( 'wps_sfw_after_created_subscription', $subscription_id, $order_id );
+				// After susbcription created.
+
+				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
+				if ( 'yes' != $wps_has_susbcription ) {
+					wps_sfw_update_meta_data( $order_id, 'wps_sfw_order_has_subscription', 'yes' );
+				}
+			}
 		}
 	}
 }
