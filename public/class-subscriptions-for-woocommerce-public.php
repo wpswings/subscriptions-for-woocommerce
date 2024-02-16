@@ -370,7 +370,6 @@ class Subscriptions_For_Woocommerce_Public {
 					} else {
 						$product_price = $cart_data['data']->get_price();
 
-						// $product_price = wc_get_product( $cart_data['data']->get_id() )->get_price();
 						// Cart price.
 						$product_price = apply_filters( 'wps_sfw_cart_price_subscription', $product_price, $cart_data );
 						$product_price += $wps_sfw_signup_fee;
@@ -927,7 +926,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args = array(
 				'type'   => 'wps_subscriptions',
-				// 'post_status' => 'wc-wps_renewal',
 				'meta_query' => array(
 					array(
 						'key'   => 'wps_customer_id',
@@ -1122,7 +1120,6 @@ class Subscriptions_For_Woocommerce_Public {
 
 					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 						$args = array(
-							// 'status' => 'wc-wps_renewal',
 							'number' => 1,
 							'return' => 'ids',
 							'type'   => 'wps_subscriptions',
@@ -1404,9 +1401,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
 					'return' => 'ids',
-					// 'numberposts' => -1,
 					'type'   => 'wps_subscriptions',
-					// 'status'   => 'wc-wps_renewal',
 					'meta_query' => array(
 						'relation' => 'AND',
 						array(
@@ -1454,9 +1449,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
 					'return' => 'ids',
-					// 'numberposts' => -1,
 					'post_type'   => 'wps_subscriptions',
-					// 'post_status'   => 'wc-wps_renewal',
 					'meta_query' => array(
 						'relation' => 'AND',
 						array(
@@ -1519,9 +1512,7 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
 					'return' => 'ids',
-					// 'numberposts' => -1,
 					'type'   => 'wps_subscriptions',
-					// 'post_status'   => 'wc-wps_renewal',
 					'meta_query' => array(
 						'relation' => 'AND',
 						array(
@@ -1778,7 +1769,7 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$product_id = $cart_item['data']->get_id();
 					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
-						return;
+						return $content;
 					}
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
 					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'];

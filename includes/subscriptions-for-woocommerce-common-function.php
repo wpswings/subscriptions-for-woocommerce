@@ -887,6 +887,7 @@ if ( ! function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) ) {
 	/**
 	 * Check if order contain subscrption product.
 	 *
+	 * @param string $order_id order_id.
 	 * @return bool
 	 */
 	function wps_sfw_order_has_subscription( $order_id ) {

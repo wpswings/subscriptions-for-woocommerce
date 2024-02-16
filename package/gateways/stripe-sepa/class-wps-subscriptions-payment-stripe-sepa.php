@@ -20,11 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 use Automattic\WooCommerce\Utilities\OrderUtil;
-if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
-
-    class Wps_Subscriptions_Payment_Stripe_Sepa_Main extends WC_Gateway_Stripe_Sepa {
+if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
+	/**
+	 * Extending the existing stripe sepa class.
+	 */
+    class Wps_Subscriptions_Payment_Stripe_Sepa extends WC_Gateway_Stripe_Sepa {
         /**
-         * Instance of Wps_Subscriptions_Payment_Stripe_Sepa_Main
+         * Instance of Wps_Subscriptions_Payment_Stripe_Sepa
          *
          * @var null
          */
@@ -40,7 +42,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
         /**
          * Return the instance of Gateway
          *
-         * @return Wps_Subscriptions_Payment_Stripe_Sepa_Main
+         * @return Wps_Subscriptions_Payment_Stripe_Sepa
          */
         public static function get_instance() {
             return ! is_null( self::$instance ) ? self::$instance : self::$instance = new self();
@@ -71,6 +73,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
          * @param int  $order_id Reference.
          * @param bool $retry Should we retry on fail.
          * @param bool $force_save_source Force save the payment source.
+         * @param bool $previous_error .
+         * @param bool $use_order_source .
          *
          * @throws Exception If payment will not be accepted.
          *
@@ -112,9 +116,12 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
 		 * Process subscription payment.
 		 *
 		 * @name wps_sfw_process_subscription_payment.
-		 * @param object $order order.
+		 * @param object $renewal_order renewal order.
 		 * @param int    $subscription_id subscription_id.
 		 * @param string $payment_method payment_method.
+         * 
+         * @return array|bool|WP_Error
+         * @throws WC_Stripe_Exception Trigger an error.
 		 */
 		public function wps_sfw_process_stripe_sepa_renewal_payment( $renewal_order, $subscription_id, $payment_method ) {
 

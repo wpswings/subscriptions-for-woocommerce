@@ -20,12 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 use Automattic\WooCommerce\Utilities\OrderUtil;
-if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
-
-    class Wps_Subscriptions_Payment_Stripe_Main extends WC_Gateway_Stripe {
+if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
+	/**
+	 * Extending the existing stripe class.
+	 */
+    class Wps_Subscriptions_Payment_Stripe extends WC_Gateway_Stripe {
 
         /**
-         * Instance of Wps_Subscriptions_Payment_Stripe_Main
+         * Instance of Wps_Subscriptions_Payment_Stripe
          *
          * @var null
          */
@@ -41,7 +43,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
         /**
          * Return the instance of Gateway
          *
-         * @return Wps_Subscriptions_Payment_Stripe_Main
+         * @return Wps_Subscriptions_Payment_Stripe
          */
         public static function get_instance() {
             return ! is_null( self::$instance ) ? self::$instance : self::$instance = new self();
@@ -111,10 +113,13 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
         /**
 		 * Process subscription payment.
 		 *
-		 * @name wps_sfw_process_subscription_payment.
-		 * @param object $order order.
+		 * @name wps_sfw_process_stripe_renewal_payment.
+		 * @param object $renewal_order renewal order.
 		 * @param int    $subscription_id subscription_id.
 		 * @param string $payment_method payment_method.
+         *
+         * @return array|bool|WP_Error
+         * @throws WC_Stripe_Exception Trigger an error.
 		 */
 		public function wps_sfw_process_stripe_renewal_payment( $renewal_order, $subscription_id, $payment_method ) {
 
@@ -255,7 +260,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
                          * If this ID is empty, this means that the customer has no credit card saved on the account so the payment will fail.
                          */
 
-                        // Retrieve the available PaymentMethods from the customer
+                        // Retrieve the available PaymentMethods from the customer.
                         $customer       = WC_Stripe_API::retrieve( "payment_methods?customer=$stripe_customer_id" );
                         $default_source = '';
                         if ( ! empty( $customer->data ) && is_array( $customer->data ) ) {

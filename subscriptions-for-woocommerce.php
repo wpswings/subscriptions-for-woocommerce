@@ -24,7 +24,7 @@
  * Requires at least:        5.1.0
  * Tested up to:             6.4.3
  * WC requires at least:     5.1.0
- * WC tested up to:          8.5.2
+ * WC tested up to:          8.6.0
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -348,7 +348,6 @@ if ( $activated ) {
 		$GLOBALS['sfw_wps_sfw_obj'] = $sfw_sfw_plugin_standard;
 		$GLOBALS['wps_sfw_notices'] = false;
 	}
-	// add_action( 'plugin_loaded', 'run_subscriptions_for_woocommerce' );
 	run_subscriptions_for_woocommerce();
 
 
@@ -558,10 +557,10 @@ if ( $activated ) {
 	
 		foreach ( $methods as $key => $method ) {
 			if ( 'WC_Gateway_Stripe' === $method || $method instanceof WC_Gateway_Stripe ) {
-				$methods[ $key ] = 'Wps_Subscriptions_Payment_Stripe_Main';
+				$methods[ $key ] = 'Wps_Subscriptions_Payment_Stripe';
 			}
 			if ( 'WC_Gateway_Stripe_Sepa' === $method || $method instanceof WC_Gateway_Stripe_Sepa ) {
-				$methods[ $key ] = 'Wps_Subscriptions_Payment_Stripe_Sepa_Main';
+				$methods[ $key ] = 'Wps_Subscriptions_Payment_Stripe_Sepa';
 			}
 		}
 		return $methods;
