@@ -52,7 +52,6 @@ add_action( 'after_plugin_row_woocommerce-subscriptions-pro/woocommerce-subscrip
  * @param string $status Status filter currently applied to the plugin list.
  */
 function wps_sfw_old_upgrade_notice( $plugin_file, $plugin_data, $status ) {
-
 	global $old_pro_exists;
 	if ( $old_pro_exists ) {
 		?>
@@ -110,7 +109,7 @@ if ( $old_sfw_pro_present ) {
 		<style>
 			.wps-notice-section > p:before {
 				content: none;
-			}
+			}	
 		</style>
 			<?php
 		}
@@ -640,6 +639,16 @@ if ( $activated ) {
 			update_post_meta( $id, $key, $value );
 		}
 	}
+
+	add_action( 'admin_notices', function(){
+		?>
+		<style>
+			#toplevel_page_woocommerce a[href='admin.php?page=wc-orders--wps_subscriptions'] {
+				display:none;
+			}
+		</style>
+		<?php
+	});
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );
@@ -830,4 +839,3 @@ function wps_create_subscription( $args = array() ) {
 
 	return $subscription;
 }
-
