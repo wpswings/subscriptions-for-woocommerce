@@ -1,12 +1,12 @@
-﻿=== Subscriptions for WooCommerce - Subscription Plugin for Collecting Recurring Revenue, Sell Membership Subscription Services & Products ===
+=== Subscriptions for WooCommerce - Subscription Plugin for Collecting Recurring Revenue, Sell Membership Subscription Services & Products ===
 Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions, recurring payments, subscription billing, subscription Box, paypal subscriptions, subscription, woocommerce subscriptions
-Requires at least: 5.0
-Tested up to: 6.4.2
-WC requires at least: 5.0
-WC tested up to: 8.5.1
-Stable tag: 1.6.0
+Requires at least: 5.1.0
+Tested up to: 6.4.3
+WC requires at least: 5.1.0
+WC tested up to: 8.6.0
+Stable tag: 1.6.1
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -72,7 +72,7 @@ The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscri
 **4) Charge Initial Fee on Subscription-based Products With WooCommerce Payment Integrations:** You have the option to charge an initial sign-up fee for subscriptions. The WooCommerce Subscriptions free plugin also supports seamless integration with the Stripe payment gateway in WooCommerce, making the payment process smooth & efficient.
 
 
-**5) Offer Free Trial to WooCommerce Subscription Users:** You can offer free trials to subscription users and set the trial frequency. Encourage users to sign up by providing free trials for WooCommerce subscription products or services. After the trial period ends, users can continue the WooCommerce subscription plan.
+**5) Offer Free Trial to WooCommerce Subscription Users:** You can offer free trials to subscription users and set the trial frequency. Encourage users to sign up by providing free trials for WooCommerce subscription products or services. After the trial period ends, users can continue the Woo subscription plan.
 
 
 **6) Complete WooCommerce Subscription Reports for Admin:** The WooCommerce subscriptions plan report module includes essential details such as active and inactive subscriptions, upcoming recurring payment dates, subscription names, subscription expiry dates, & individual plan due dates, along with the recurring payment frequency. 
@@ -307,6 +307,14 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.6.1 - Released on 19 February 2024 =
+* New : Latest WP(6.4.3) and WC(8.6.0) Compatibility
+* New : Added Bulk cancellation of the subscription from the subscription table
+* New : HPOS Compatibility for the Manual Subscription
+* Enhancement : Improved Frontend UI Design
+* Fix : function exists error
+* Fix : Compatibility Issue with WooCommerce Stripe Gateway
+
 = 1.6.0 - Released on 23 January 2024 =
 * New : Latest WC( 8.5.1 ) Compatibility
 * Fix : Missing payment method issue during the renewal payment
@@ -533,6 +541,11 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 == Upgrade Notice ==
 
 
-= 1.6.0 - Released on 23 January 2024 =
-* New : Latest WC( 8.5.1 ) Compatibility
-* Fix : Missing payment method issue during the renewal payment
+= 1.6.1 - Released on 19 February 2024 =
+* New : Latest WP(6.4.3) and WC(8.6.0) Compatibility
+* New : Added Bulk cancellation of the subscription from the subscription table
+* New : HPOS Compatibility for the Manual Subscription
+* Enhancement : Improved Frontend UI Design
+* Fix : function exists error
+* Fix : Compatibility Issue with WooCommerce Stripe Gateway
+
