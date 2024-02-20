@@ -11,18 +11,18 @@ jQuery(function(){
 		validation
 	) => {
 		const isCartContext = args?.context === 'cart';
-
+		
 		if ( ! isCartContext ) {
 			return defaultValue;
 		}
 	    const cartItem = args?.cartItem.item_data;
-
+		
 	    const sfwPrice = cartItem.find( item => item.name === 'wps-sfw-price-html');
-
+		
 	    if ( sfwPrice ) {
 			val = sfwPrice?.value;
 	        if ( val != '' ) {
-	           return defaultValue + ' ' + val;
+				return defaultValue + ' ' + val;
 	        }
 	    }
 		return defaultValue;

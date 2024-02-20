@@ -15,16 +15,16 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.6.0
+ * Version:           1.6.1
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  *
  * Requires at least:        5.1.0
- * Tested up to:             6.4.2
+ * Tested up to:             6.4.3
  * WC requires at least:     5.1.0
- * WC tested up to:          8.5.1
+ * WC tested up to:          8.6.0
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -52,7 +52,6 @@ add_action( 'after_plugin_row_woocommerce-subscriptions-pro/woocommerce-subscrip
  * @param string $status Status filter currently applied to the plugin list.
  */
 function wps_sfw_old_upgrade_notice( $plugin_file, $plugin_data, $status ) {
-
 	global $old_pro_exists;
 	if ( $old_pro_exists ) {
 		?>
@@ -110,7 +109,7 @@ if ( $old_sfw_pro_present ) {
 		<style>
 			.wps-notice-section > p:before {
 				content: none;
-			}
+			}	
 		</style>
 			<?php
 		}
@@ -178,7 +177,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.6.0' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.6.1' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -347,7 +346,6 @@ if ( $activated ) {
 		$sfw_sfw_plugin_standard->sfw_run();
 		$GLOBALS['sfw_wps_sfw_obj'] = $sfw_sfw_plugin_standard;
 		$GLOBALS['wps_sfw_notices'] = false;
-
 	}
 	run_subscriptions_for_woocommerce();
 
@@ -521,7 +519,7 @@ if ( $activated ) {
 	add_filter( 'woocommerce_payment_gateways', 'wps_paypal_integration_for_woocommerce_extended' );
 
 	/**
-	 * Extending main WC_Payment_Gateway class.
+	 * Load the WPS Paypal and Woommerce Stripe.
 	 *
 	 * @since 1.0.0
 	 * @return void
@@ -529,10 +527,43 @@ if ( $activated ) {
 	function wps_paypal_integration_for_woocommerce_gateway() {
 		if ( class_exists( 'WC_Payment_Gateway' ) ) {
 			require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
+			$is_woo_stripe_enabled = false;
+			if ( class_exists( 'WC_Stripe' ) && version_compare( WC_STRIPE_VERSION, '4.1.11', '>' ) ) {
+				$is_woo_stripe_enabled = true;
+			} elseif (  function_exists( 'woocommerce_gateway_stripe' ) ) {
+				woocommerce_gateway_stripe();
+				if ( version_compare( WC_STRIPE_VERSION, '4.1.11', '>' ) ) {
+					$is_woo_stripe_enabled = true;
+				}
+			}
+			if ( $is_woo_stripe_enabled ) {
+				include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe/class-wps-subscriptions-payment-stripe.php';
+				include SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php';
+				add_filter( 'woocommerce_payment_gateways', 'wps_add_stripe_integration_gateway', 10 );
+			}
 		}
 	}
 	add_action( 'plugin_loaded', 'wps_paypal_integration_for_woocommerce_gateway' );
 
+	/**
+	 * Replace the main gateway with the sources gateway.
+	 *
+	 * @param array $methods List of gateways.
+	 *
+	 * @return array
+	 */
+	function wps_add_stripe_integration_gateway( $methods ) {
+	
+		foreach ( $methods as $key => $method ) {
+			if ( 'WC_Gateway_Stripe' === $method || $method instanceof WC_Gateway_Stripe ) {
+				$methods[ $key ] = 'Wps_Subscriptions_Payment_Stripe';
+			}
+			if ( 'WC_Gateway_Stripe_Sepa' === $method || $method instanceof WC_Gateway_Stripe_Sepa ) {
+				$methods[ $key ] = 'Wps_Subscriptions_Payment_Stripe_Sepa';
+			}
+		}
+		return $methods;
+	}
 
 	/**
 	 * Allow to enable/diasble paypal standard
@@ -608,6 +639,16 @@ if ( $activated ) {
 			update_post_meta( $id, $key, $value );
 		}
 	}
+
+	add_action( 'admin_notices', function(){
+		?>
+		<style>
+			#toplevel_page_woocommerce a[href='admin.php?page=wc-orders--wps_subscriptions'] {
+				display:none;
+			}
+		</style>
+		<?php
+	});
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );

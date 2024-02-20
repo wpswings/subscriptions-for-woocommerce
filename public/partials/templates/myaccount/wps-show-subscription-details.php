@@ -15,25 +15,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
-/**
- * This function is used to cancel url.
- *
- * @name wps_sfw_cancel_url.
- * @param int    $wps_subscription_id wps_subscription_id.
- * @param String $wps_status wps_status.
- * @since 1.0.0
- */
-function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
-
-	$wps_link = add_query_arg(
-		array(
-			'wps_subscription_id'        => $wps_subscription_id,
-			'wps_subscription_status' => $wps_status,
-		)
-	);
-	$wps_link = wp_nonce_url( $wps_link, $wps_subscription_id . $wps_status );
-
-	return $wps_link;
+if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
+	/**
+	 * This function is used to cancel url.
+	 *
+	 * @name wps_sfw_cancel_url.
+	 * @param int    $wps_subscription_id wps_subscription_id.
+	 * @param String $wps_status wps_status.
+	 * @since 1.0.0
+	 */
+	function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
+	
+		$wps_link = add_query_arg(
+			array(
+				'wps_subscription_id'        => $wps_subscription_id,
+				'wps_subscription_status' => $wps_status,
+			)
+		);
+		$wps_link = wp_nonce_url( $wps_link, $wps_subscription_id . $wps_status );
+	
+		return $wps_link;
+	}
 }
 
 ?>
