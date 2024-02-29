@@ -89,4 +89,8 @@ class WPS_Subscription extends WC_Order {
 	public function get_type() {
 		return 'wps_subscriptions';
 	}
+
+	public function get_report_customer_id() {
+		return null;
+	}
 }

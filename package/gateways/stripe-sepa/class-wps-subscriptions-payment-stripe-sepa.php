@@ -59,12 +59,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
                 'refunds',
                 'tokenization'
             );
-
-            add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_add_stripe_order_statuses_for_payment_complete' ), 10, 2 );
-			add_action( 'wps_sfw_subscription_cancel', array( $this, 'wps_sfw_cancel_stripe_subscription' ), 10, 2 );
-
-            add_action( 'wps_sfw_other_payment_gateway_renewal', array( $this, 'wps_sfw_process_stripe_sepa_renewal_payment' ), 10, 3 );
-
         }
 
         /**
@@ -90,27 +84,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
             return parent::process_payment( $order_id, $retry, $force_save_source, $previous_error );
         }
 
-        /**
-		 * This function is add subscription order status.
-		 *
-		 * @name wps_sfw_add_stripe_order_statuses_for_payment_complete
-		 * @param array  $order_status order_status.
-		 * @param object $order order.
-		 */
-		public function wps_sfw_add_stripe_order_statuses_for_payment_complete( $order_status, $order ) {
-			if ( $order && is_object( $order ) ) {
-				$order_id = $order->get_id();
-
-				$payment_method = $order->get_payment_method();
-
-				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-				if ( 'stripe_sepa' ==  $payment_method && 'yes' == $wps_sfw_renewal_order ) {
-					$order_status[] = 'wps_renewal';
-
-				}
-			}
-			return apply_filters( 'wps_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
-		}
 
          /**
 		 * Process subscription payment.
@@ -234,70 +207,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
                     }
                 }
             }
-        }
-
-        /**
-         * Get payment source from an order.
-         *
-         *
-         * @param WC_Order $order Order.
-         *
-         * @return  boolean|object
-         * @since   3.1.0
-         * @version 4.0.0
-         */
-        public function prepare_order_source( $order = null ) {
-            $stripe_customer = new WC_Stripe_Customer();
-            $stripe_source   = false;
-            $token_id        = false;
-            $source_object   = false;
-
-            if ( $order ) {
-                $order_id      = $order->get_id();
-
-                $stripe_customer_id = $order->get_meta( '_stripe_customer_id' );
-
-                if ( $stripe_customer_id ) {
-                    $stripe_customer->set_id( $stripe_customer_id );
-                }
-                $source_id = $order->get_meta( '_stripe_source_id' );
-                if ( $source_id ) {
-                    $stripe_source = $source_id;
-                    $source_object = WC_Stripe_API::retrieve( 'sources/' . $source_id );
-
-                    if ( ( empty( $source_object ) || ( ! empty( $source_object ) && isset( $source_object->status ) && 'consumed' === $source_object->status ) ) ) {
-                        /**
-                         * If the source status is "Consumed" this means that the customer has removed it from its account.
-                         * So we search for the default source ID.
-                         * If this ID is empty, this means that the customer has no credit card saved on the account so the payment will fail.
-                         */
-                        $customer       = WC_Stripe_API::retrieve( "customers/$stripe_customer_id" );
-                        $default_source = $customer->default_source;
-                        if ( $default_source ) {
-                            $stripe_source = $default_source;
-                            $source_object = WC_Stripe_API::retrieve( 'sources/' . $default_source );
-                        } else {
-                            return false;
-                        }
-                    }
-                } elseif ( apply_filters( 'wc_stripe_use_default_customer_source', true ) ) {
-                    /*
-                    * We can attempt to charge the customer's default source
-                    * by sending empty source id.
-                    */
-                    $stripe_source = '';
-                }
-
-                return (object) array(
-                    'token_id'      => $token_id,
-                    'customer'      => $stripe_customer ? $stripe_customer->get_id() : false,
-                    'source'        => $stripe_source,
-                    'source_object' => $source_object,
-                );
-            }
-
-            return false;
-
         }
 
         /**
