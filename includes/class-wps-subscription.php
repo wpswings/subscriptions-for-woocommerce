@@ -89,7 +89,11 @@ class WPS_Subscription extends WC_Order {
 	public function get_type() {
 		return 'wps_subscriptions';
 	}
-
+	/**
+	 * Added this function to avoid the critical error.
+	 *
+	 * @return null
+	 */
 	public function get_report_customer_id() {
 		return null;
 	}

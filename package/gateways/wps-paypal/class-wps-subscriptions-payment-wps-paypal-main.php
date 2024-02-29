@@ -2,7 +2,7 @@
 /**
  * The admin-specific cron functionality of the plugin.
  *
- * @link       https://wpswing.com
+ * @link       https://wpswings.com
  * @since      1.6.4
  *
  * @package    Subscriptions_For_Woocommerce

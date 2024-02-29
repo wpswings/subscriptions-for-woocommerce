@@ -2,7 +2,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       https://wpswing.com/
+ * @link       https://wpswings.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce

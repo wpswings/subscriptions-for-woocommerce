@@ -2,8 +2,8 @@
 /**
  * The admin-specific payment integration functionality of the plugin.
  *
- * @link       https://wpswing.com
- * @since      1.6.0
+ * @link       https://wpswings.com
+ * @since      1.6.2
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
@@ -24,7 +24,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 	 * Extending the existing stripe class.
 	 */
     class Wps_Subscriptions_Payment_Stripe extends \WC_Gateway_Stripe {
-
 
         /**
          * Instance of Wps_Subscriptions_Payment_Stripe
@@ -97,9 +96,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 		public function wps_sfw_process_stripe_renewal_payment( $renewal_order, $subscription_id, $payment_method ) {
 
             if ( $renewal_order && is_object( $renewal_order ) && 'stripe' === $payment_method  ) {
+                $previous_error        = false;
 				$order_id              = $renewal_order->get_id();
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-
                 
 				if ( 'yes' === $wps_sfw_renewal_order ) {
                     $renewal_order->update_status( 'pending' );

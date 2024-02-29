@@ -2,7 +2,7 @@
 /**
  * The admin-specific paypal functionality of the plugin.
  *
- * @link       https://wpswing.com
+ * @link       https://wpswings.com
  * @since      1.0.2
  *
  * @package     Subscriptions_For_Woocommerce

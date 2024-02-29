@@ -18,7 +18,7 @@
  * For more information, see the following discussion:
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
- * @link       https://wpswing.com/
+ * @link       https://wpswings.com/
  * @since      1.0.0
  *
  * @package    Subscriptions_For_Woocommerce

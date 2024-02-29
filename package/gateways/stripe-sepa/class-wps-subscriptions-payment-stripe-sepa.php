@@ -2,8 +2,8 @@
 /**
  * The admin-specific payment integration functionality of the plugin.
  *
- * @link       https://wpswing.com
- * @since      1.6.0
+ * @link       https://wpswings.com
+ * @since      1.6.2
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
@@ -99,6 +99,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 		public function wps_sfw_process_stripe_sepa_renewal_payment( $renewal_order, $subscription_id, $payment_method ) {
 
             if ( $renewal_order && is_object( $renewal_order ) && 'stripe_sepa' === $payment_method  ) {
+                $previous_error        = false;
 				$order_id              = $renewal_order->get_id();
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 

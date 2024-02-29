@@ -2,8 +2,8 @@
 /**
  * The admin-specific payment integration functionality of the plugin.
  *
- * @link       https://wpswing.com
- * @since      1.6.1
+ * @link       https://wpswings.com
+ * @since      1.6.2
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
@@ -23,7 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
-
+	/**
+	 * Define class to handle the recurring and cancellation.
+	 */
     class Wps_Subscriptions_Payment_Stripe_Main {
         /**
          * Constructor
@@ -43,9 +45,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
          * @param object $renewal_order renewal order.
          * @param int    $subscription_id subscription_id.
          * @param string $payment_method payment_method.
-         *
-         * @return array|bool|WP_Error
-         * @throws WC_Stripe_Exception Trigger an error.
          */
         public function wps_sfw_process_stripe_renewal_payment_callback( $renewal_order, $subscription_id, $payment_method ) {
             if ( class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
