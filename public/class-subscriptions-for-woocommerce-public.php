@@ -1860,11 +1860,11 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 			// Do not allow subscription price for the one-time product.
 			if ( apply_filters( 'wps_sfw_check_one_time_product', true, $price, $product_id ) && $price ) {
-				$data[] = array(
+				$data[] = apply_filters( 'wps_sfw_block_cart_price', array(
 					'name'   => 'wps-sfw-price-html',
 					'hidden' => true,
 					'value'  => html_entity_decode( $price ),
-				);
+				), $cart_item );
 			}
 		}
 		return $data;
