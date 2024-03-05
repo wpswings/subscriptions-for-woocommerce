@@ -78,6 +78,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 
             if ( wps_sfw_is_cart_has_subscription_product() || ! empty( $order_has_sub ) ) {
                 return parent::process_payment( $order_id, $retry, true, $previous_error );
+            } else {
+            	return parent::process_payment( $order_id, $retry, $force_save_source, $previous_error );
             }
         }
 
