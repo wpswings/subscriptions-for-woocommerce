@@ -2,8 +2,8 @@
 /**
  * The admin-specific payment integration functionality of the plugin.
  *
- * @link       https://wpswing.com
- * @since      1.6.0
+ * @link       https://wpswings.com
+ * @since      1.6.2
  *
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
@@ -19,12 +19,11 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-use Automattic\WooCommerce\Utilities\OrderUtil;
 if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 	/**
 	 * Extending the existing stripe class.
 	 */
-    class Wps_Subscriptions_Payment_Stripe extends WC_Gateway_Stripe {
+    class Wps_Subscriptions_Payment_Stripe extends \WC_Gateway_Stripe {
 
         /**
          * Instance of Wps_Subscriptions_Payment_Stripe
@@ -60,13 +59,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
                 'refunds',
                 'tokenization'
             );
-
-			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_add_stripe_order_statuses_for_payment_complete' ), 10, 2 );
-			add_action( 'wps_sfw_subscription_cancel', array( $this, 'wps_sfw_cancel_stripe_subscription' ), 10, 2 );
-
-            add_action( 'wps_sfw_other_payment_gateway_renewal', array( $this, 'wps_sfw_process_stripe_renewal_payment' ), 10, 3 );
         }
-
 
         /**
          * Process the payment
@@ -88,27 +81,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
             }
         }
 
-        /**
-		 * This function is add subscription order status.
-		 *
-		 * @name wps_sfw_add_stripe_order_statuses_for_payment_complete
-		 * @param array  $order_status order_status.
-		 * @param object $order order.
-		 */
-		public function wps_sfw_add_stripe_order_statuses_for_payment_complete( $order_status, $order ) {
-			if ( $order && is_object( $order ) ) {
-				$order_id = $order->get_id();
-
-				$payment_method = $order->get_payment_method();
-
-				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-				if ( 'stripe' ==  $payment_method && 'yes' == $wps_sfw_renewal_order ) {
-					$order_status[] = 'wps_renewal';
-
-				}
-			}
-			return apply_filters( 'wps_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
-		}
 
         /**
 		 * Process subscription payment.
@@ -124,9 +96,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 		public function wps_sfw_process_stripe_renewal_payment( $renewal_order, $subscription_id, $payment_method ) {
 
             if ( $renewal_order && is_object( $renewal_order ) && 'stripe' === $payment_method  ) {
+                $previous_error        = false;
 				$order_id              = $renewal_order->get_id();
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-
                 
 				if ( 'yes' === $wps_sfw_renewal_order ) {
                     $renewal_order->update_status( 'pending' );
@@ -215,108 +187,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
                         do_action( 'wc_gateway_stripe_process_payment_error', $e, $renewal_order );
                     }
                 }
-            }
-        }
-
-
-       /**
-         * Get payment source from an order.
-         *
-         * Not using 2.6 tokens for this part since we need a customer AND a card
-         * token, and not just one.
-         *
-         * @param WC_Order $order Order.
-         *
-         * @return  boolean|object
-         */
-        public function prepare_order_source( $order = null ) {
-            $stripe_customer = new WC_Stripe_Customer();
-            $stripe_source   = false;
-            $token_id        = false;
-            $source_object   = false;
-
-            if ( $order ) {
-
-                $stripe_customer_id = $order->get_meta( '_stripe_customer_id' );
-
-                if ( $stripe_customer_id ) {
-                    $stripe_customer->set_id( $stripe_customer_id );
-                }
-                $source_id = $order->get_meta( '_stripe_source_id' );
-                if ( $source_id ) {
-                    $stripe_source = $source_id;
-                    $source_object = WC_Stripe_API::retrieve( 'sources/' . $source_id );
-
-                    if (
-                        (
-                            empty( $source_object ) ||
-                            isset( $source_object->error->code ) && 'resource_missing' === $source_object->error->code ||
-                            isset( $source_object->status ) && 'consumed' === $source_object->status
-                        ) )
-                    {
-                        /**
-                         * If the source status is "Consumed" this means that the customer has removed it from its account.
-                         * So we search for the default source ID.
-                         * If this ID is empty, this means that the customer has no credit card saved on the account so the payment will fail.
-                         */
-
-                        // Retrieve the available PaymentMethods from the customer.
-                        $customer       = WC_Stripe_API::retrieve( "payment_methods?customer=$stripe_customer_id" );
-                        $default_source = '';
-                        if ( ! empty( $customer->data ) && is_array( $customer->data ) ) {
-                            // Iterate over the PaymentMethods and take the first one.
-                            foreach ( $customer->data as $payment_method ) {
-                                if ( ! empty( $payment_method->id ) ) {
-                                    $default_source = $payment_method->id;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if ( $default_source ) {
-                            $stripe_source = $default_source;
-                            $source_object = WC_Stripe_API::retrieve( 'sources/' . $default_source );
-                        } else {
-                            return false;
-                        }
-                    }
-                } elseif ( apply_filters( 'wc_stripe_use_default_customer_source', true ) ) {
-                    /*
-                    * We can attempt to charge the customer's default source
-                    * by sending empty source id.
-                    */
-                    $stripe_source = '';
-                }
-
-                return (object) array(
-                    'token_id'      => $token_id,
-                    'customer'      => $stripe_customer ? $stripe_customer->get_id() : false,
-                    'source'        => $stripe_source,
-                    'source_object' => $source_object,
-                );
-            }
-            return false;
-
-        }
-
-        /**
-         * This function is used to cancel subscriptions status.
-         *
-         * @name wps_sfw_cancel_stripe_subscription
-         * @param int    $wps_subscription_id wps_subscription_id.
-         * @param string $status status.
-         */
-        public function wps_sfw_cancel_stripe_subscription( $wps_subscription_id, $status ) {
-
-            if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-                $subscription = new WPS_Subscription( $wps_subscription_id );
-                $wps_payment_method = $subscription->get_payment_method();
-            } else {
-                $wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
-            }
-            if ( 'stripe' ==  $wps_payment_method && 'Cancel' == $status  ) {
-                wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
-                wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
             }
         }
     }

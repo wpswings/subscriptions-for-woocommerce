@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-02-19 11:12+0530\n"
-"PO-Revision-Date: 2024-02-19 11:12+0530\n"
+"POT-Creation-Date: 2024-02-29 15:56+0530\n"
+"PO-Revision-Date: 2024-02-29 15:57+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -1331,7 +1331,7 @@ msgid_plural "%s Years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:746
+#: includes/subscriptions-for-woocommerce-common-function.php:743
 #: public/class-subscriptions-for-woocommerce-public.php:131
 #: public/class-subscriptions-for-woocommerce-public.php:147
 #: public/class-subscriptions-for-woocommerce-public.php:1020
@@ -1341,11 +1341,11 @@ msgstr[1] ""
 msgid " / %s "
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:802
+#: includes/subscriptions-for-woocommerce-common-function.php:799
 msgid "WooCommerce Stripe Gateway"
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:809
+#: includes/subscriptions-for-woocommerce-common-function.php:806
 msgid "WooCommerce PayPal Checkout Payment Gateway"
 msgstr ""
 
@@ -1443,32 +1443,32 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:146
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:143
+#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:120
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:116
 #, php-format
 msgid ""
 "Sorry, the minimum allowed order total is %1$s to use this payment method."
 msgstr ""
 
-#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:166
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:162
+#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:140
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:135
 msgid "Customer not found"
 msgstr ""
 
-#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:204
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:189
+#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:178
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:162
 msgid ""
 "Sorry, we are unable to process your payment at this time. Please retry "
 "later."
 msgstr ""
 
-#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:214
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:197
+#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:188
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:170
 msgid "This transaction requires authentication."
 msgstr ""
 
-#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:221
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:204
+#: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:195
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:177
 #, php-format
 msgid "Stripe charge awaiting authentication by user: %s."
 msgstr ""
@@ -1745,24 +1745,24 @@ msgstr ""
 msgid "These WPS subscriptions are stored."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:685
+#: subscriptions-for-woocommerce.php:676
 msgid ""
 "WooCommerce is not activated, Please activate WooCommerce first to activate "
 "Subscriptions for Woocommerce."
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:711
+#: subscriptions-for-woocommerce.php:702
 msgid "Version 2.1.0 of Subscriptions For WooCommerce Pro "
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:711
+#: subscriptions-for-woocommerce.php:702
 msgid " is not available on your system! Please Update "
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:711
+#: subscriptions-for-woocommerce.php:702
 msgid "WooCommerce Subscripiton Pro"
 msgstr ""
 
-#: subscriptions-for-woocommerce.php:711
+#: subscriptions-for-woocommerce.php:702
 msgid "."
 msgstr ""

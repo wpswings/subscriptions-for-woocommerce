@@ -2,7 +2,7 @@
 /**
  * The admin-specific cron functionality of the plugin.
  *
- * @link       https://wpswing.com
+ * @link       https://wpswings.com
  * @since      1.0.0
  *
  * @package     Subscriptions_For_Woocommerce
@@ -282,7 +282,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 		public function wps_sfw_admin_create_order_scheduler() {
 			if ( class_exists( 'ActionScheduler' ) ) {
 				if ( function_exists( 'as_next_scheduled_action' ) && false === as_next_scheduled_action( 'wps_sfw_create_renewal_order_schedule' ) ) {
-					as_schedule_recurring_action( strtotime( 'hourly' ), 3600, 'wps_sfw_create_renewal_order_schedule' );
+					as_schedule_recurring_action( strtotime( 'hourly' ), 1800, 'wps_sfw_create_renewal_order_schedule' );
 				}
 				if ( function_exists( 'as_next_scheduled_action' ) && false === as_next_scheduled_action( 'wps_sfw_expired_renewal_subscription' ) ) {
 					as_schedule_recurring_action( strtotime( 'hourly' ), 1800, 'wps_sfw_expired_renewal_subscription' );

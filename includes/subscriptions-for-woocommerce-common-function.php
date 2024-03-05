@@ -679,9 +679,6 @@ if ( ! function_exists( 'wps_sfw_include_process_directory' ) ) {
 						wps_sfw_include_process_directory( $wps_sfw_dir . '/' . $wps_file, $wps_file );
 
 					} elseif ( 'class-wps-subscriptions-payment-' . $wps_selected_dir . '-main.php' == $wps_file ) {
-						if ( 'stripe' == $wps_selected_dir || 'stripe-sepa' == $wps_selected_dir ) {
-							continue;
-						}
 						include $wps_sfw_dir . '/' . $wps_file;
 					}
 				}
