@@ -6,7 +6,7 @@ Requires at least: 5.1.0
 Tested up to: 6.4.3
 WC requires at least: 5.1.0
 WC tested up to: 8.6.1
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 Requires PHP: 7.3.5 or higher
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -307,6 +307,9 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.6.3 - Released on 06 March 2024 =
+* fix : fix normal product purchase from stripe during checkout .
+
 = 1.6.2 - Released on 29 February 2024 =
 * New: Latest WC( 8.6.1 ) Compatibility
 * Fix: Renewal Order goes into the pending status through Stripe Payment
@@ -545,6 +548,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 == Upgrade Notice ==
 
 
-= 1.6.2 - Released on 29 February 2024 =
-* New: Latest WC( 8.6.1 ) Compatibility
-* Fix: Renewal Order goes into the pending status through Stripe Payment
+= 1.6.3 - Released on 06 March 2024 =
+* fix : fix normal product purchase from stripe during checkout 
+
+
