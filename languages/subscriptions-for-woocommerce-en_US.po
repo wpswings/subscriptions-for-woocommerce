@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-02-29 15:56+0530\n"
-"PO-Revision-Date: 2024-02-29 15:57+0530\n"
+"POT-Creation-Date: 2024-03-05 17:56+0530\n"
+"PO-Revision-Date: 2024-03-05 17:56+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -1444,31 +1444,31 @@ msgid "Something went wrong"
 msgstr ""
 
 #: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:120
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:116
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:118
 #, php-format
 msgid ""
 "Sorry, the minimum allowed order total is %1$s to use this payment method."
 msgstr ""
 
 #: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:140
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:135
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:137
 msgid "Customer not found"
 msgstr ""
 
 #: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:178
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:162
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:164
 msgid ""
 "Sorry, we are unable to process your payment at this time. Please retry "
 "later."
 msgstr ""
 
 #: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:188
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:170
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:172
 msgid "This transaction requires authentication."
 msgstr ""
 
 #: package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php:195
-#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:177
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe.php:179
 #, php-format
 msgid "Stripe charge awaiting authentication by user: %s."
 msgstr ""
