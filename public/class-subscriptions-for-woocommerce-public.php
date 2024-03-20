@@ -653,6 +653,8 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->calculate_totals();
 			$new_order->save();
 
+			$order->add_order_note( sprintf( __( 'A new Subscription #%s is created', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' ) . '">'. $subscription_id .'</a>' ) );
+
 			do_action( 'wps_sfw_subscription_bundle_addition', $subscription_id, $order_id, $_product );
 
 			// After susbcription order created.

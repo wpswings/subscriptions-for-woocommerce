@@ -247,6 +247,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						} else {
 							$wps_new_order->calculate_totals( false );
 						}
+
+						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' ) . '">'. $subscription_id .'</a>' ) );
+
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
 						// custom hook for addon.
@@ -271,6 +274,21 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						//custom filter.
 
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+
+						if ( $wps_new_order->get_status() == 'processing' ) {
+							$virtual_order = false;
+							foreach ( $wps_new_order->get_items() as $item) {
+								if ( $item->is_virtual() || $item->is_downloadable() ) {
+									$virtual_order = true;
+									break;
+								}
+							}
+					
+							// If the order only contains virtual or downloadable products, mark it as complete
+							if ($virtual_order) {
+								$wps_new_order->update_status('completed');
+							}
+						}
 
 						// hook for par plugin compatible .
 						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );
@@ -769,6 +787,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_new_order->calculate_totals();
 						$wps_new_order->save();
 
+						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' ) . '">'. $subscription_id .'</a>'  ) );
+
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
 						// custom hook for addon.
@@ -791,6 +811,22 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						//custom filter.
 
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+
+						if ( $wps_new_order->get_status() == 'processing' ) {
+							$virtual_order = false;
+							foreach ( $wps_new_order->get_items() as $item ) {
+								$product = $item->get_product(); 
+								if ( $product->is_virtual() || $product->is_downloadable() ) {
+									$virtual_order = true;
+									break;
+								}
+							}
+					
+							// If the order only contains virtual or downloadable products, mark it as complete
+							if ($virtual_order) {
+								$wps_new_order->update_status('completed');
+							}
+						}
 
 						// hook for par plugin compatible .
 						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );

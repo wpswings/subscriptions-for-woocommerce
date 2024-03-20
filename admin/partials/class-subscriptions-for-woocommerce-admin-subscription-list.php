@@ -331,7 +331,6 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$offset = ( $current_page - 1 ) * 10;
 			$args = array(
-				// 'status' => 'wc-wps_renewal',
 				'number' => 10,
 				'offset' => $offset,
 				'return' => 'ids',
@@ -384,7 +383,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args2 = array(
 				'type'   => 'wps_subscriptions',
-				// 'post_status' => 'wc-wps_renewal',
+				'limit'  => -1,
 				'meta_query' => array(
 					array(
 						'key'   => 'wps_customer_id',
@@ -403,7 +402,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					),
 				);
 			}
-			$wps_subscriptions2 = wc_get_orders( $args );
+			$wps_subscriptions2 = wc_get_orders( $args2 );
 
 		} else {
 			$args2 = array(
@@ -522,6 +521,16 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$payment_type = 'Via Manual Method';
 				}
 				$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
+
+				if ( 'active' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
+				} elseif ( 'on-hold' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
+				} elseif (  'cancelled' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
+				} elseif (  'paused' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
+				}
 				$wps_subscriptions_data[] = apply_filters(
 					'wps_sfw_subs_table_data',
 					array(

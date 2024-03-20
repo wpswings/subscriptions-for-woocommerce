@@ -48,6 +48,15 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 				<?php $wps_status = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_subscription_status', true ); ?>
 				<td class="<?php echo esc_html( 'wps_sfw_' . $wps_status ); ?>">
 				<?php
+					if ( 'active' === $wps_status ) {
+						$wps_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
+					} elseif ( 'on-hold' === $wps_status ) {
+						$wps_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
+					} elseif (  'cancelled' === $wps_status ) {
+						$wps_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
+					} elseif (  'paused' === $wps_status ) {
+						$wps_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
+					}
 					echo esc_html( $wps_status );
 				?>
 				</td>
