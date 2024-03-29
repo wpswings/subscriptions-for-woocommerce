@@ -247,8 +247,16 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						} else {
 							$wps_new_order->calculate_totals( false );
 						}
-
-						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' ) . '">'. $subscription_id .'</a>' ) );
+						$wps_sfw_status = 'pending';
+						$wps_link = add_query_arg(
+							array(
+								'wps_subscription_id'               => $subscription_id,
+								'wps_subscription_view_renewal_order'     => $wps_sfw_status,
+							),
+							admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' )
+						);
+						$wps_link = wp_nonce_url( $wps_link, $subscription_id . $wps_sfw_status );
+						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. $wps_link . '">'. $subscription_id .'</a>' ) );
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
@@ -787,13 +795,23 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_new_order->calculate_totals();
 						$wps_new_order->save();
 
-						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' ) . '">'. $subscription_id .'</a>'  ) );
+
+						$wps_sfw_status = 'pending';
+						$wps_link = add_query_arg(
+							array(
+								'wps_subscription_id'               => $subscription_id,
+								'wps_subscription_view_renewal_order'     => $wps_sfw_status,
+							),
+							admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' )
+						);
+						$wps_link = wp_nonce_url( $wps_link, $subscription_id . $wps_sfw_status );
+						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. $wps_link . '">'. $subscription_id .'</a>' ) );
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
-						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
+						// do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
 
 						// if trial period enable.
 						if ( '' == $wps_old_payment_method ) {

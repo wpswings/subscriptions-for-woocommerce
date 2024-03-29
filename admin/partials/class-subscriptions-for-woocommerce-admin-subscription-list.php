@@ -328,6 +328,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 		$current_page = isset( $_GET['paged'] ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
 
+		// get the data by pagination
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$offset = ( $current_page - 1 ) * 10;
 			$args = array(
@@ -380,6 +381,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$wps_subscriptions = get_posts( $args );
 		}
 
+		// get the item count
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args2 = array(
 				'type'   => 'wps_subscriptions',
@@ -454,7 +456,43 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 			}
 		}
-		// search with subscription id code.
+		// search with subscription id code end.
+
+		// redirection code
+		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type']  ) {
+			$order_id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+			$wps_subs_id = wps_sfw_get_meta_data( $order_id, 'wps_parent_order', true );
+			$args2['meta_query'] = array(
+				array(
+					'key'   => 'wps_parent_order',
+					'value' => $wps_subs_id,
+					'compare' => 'LIKE',
+				),
+			);
+
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$wps_subscriptions = wc_get_orders( $args2 );
+			} else {
+				$wps_subscriptions = get_posts( $args2 );
+			}
+		}
+
+		// if ( isset( $_GET['wps_order_type'] ) && 'renewal' == $_GET['wps_order_type']  ) {
+		// 	$order_id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+		// 	$subp_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
+		// 	$wps_sfw_status = wps_wsp_get_meta_data( $subp_id, 'wps_subscription_status', true );
+		// 	$wps_link = add_query_arg(
+		// 		array(
+		// 			'wps_subscription_id'               => $subp_id,
+		// 			'wps_subscription_view_renewal_order'     => $wps_sfw_status,
+		// 		),
+		// 		admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' )
+		// 	);
+
+		// 	$wps_link = wp_nonce_url( $wps_link, $subp_id . $wps_sfw_status );
+		// 	wp_safe_redirect( wp_sanitize_redirect( $wps_link ) );
+		// 	exit;
+		// }
 
 		$wps_subscriptions_data = array();
 
@@ -530,6 +568,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_subscription_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
 				} elseif (  'paused' === $wps_subscription_status ) {
 					$wps_subscription_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
+				} elseif ( 'pending' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
 				}
 				$wps_subscriptions_data[] = apply_filters(
 					'wps_sfw_subs_table_data',

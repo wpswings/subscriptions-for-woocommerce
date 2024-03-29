@@ -62,6 +62,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 										$wps_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
 									} elseif (  'paused' === $wps_status ) {
 										$wps_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
+									} elseif ( 'pending' === $wps_status ) {
+										$wps_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
 									}
 									echo esc_html( $wps_status );
 								?>
