@@ -286,7 +286,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( $wps_new_order->get_status() == 'processing' ) {
 							$virtual_order = false;
 							foreach ( $wps_new_order->get_items() as $item) {
-								if ( $item->is_virtual() || $item->is_downloadable() ) {
+								$product = $item->get_product(); 
+								if ( $product->is_virtual() || $product->is_downloadable() ) {
 									$virtual_order = true;
 									break;
 								}

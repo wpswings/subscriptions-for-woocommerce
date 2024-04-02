@@ -78,6 +78,15 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( is_cart() || is_checkout() ) {
 			wp_register_script( 'wps_sfw_wc_blocks', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'wc-block/cart-line-items.js', array( 'jquery', 'wp-data' ), $this->version, true );
+			$text = null;
+			$wps_sfw_place_order_button_text = $this->wps_sfw_get_place_order_button_text();
+			if ( isset( $wps_sfw_place_order_button_text ) && ! empty( $wps_sfw_place_order_button_text ) && $this->wps_sfw_check_cart_has_subscription_product() ) {
+				$text = $wps_sfw_place_order_button_text;
+			}
+			wp_localize_script( 'wps_sfw_wc_blocks', 'sfw_public_block', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'place_order_button_text' => $text,
+			) );
 			wp_enqueue_script( 'wps_sfw_wc_blocks' );
 		}
 	}
