@@ -812,7 +812,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
-						// do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
+						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
 
 						// if trial period enable.
 						if ( '' == $wps_old_payment_method ) {
