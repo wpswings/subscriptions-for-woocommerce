@@ -36,6 +36,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
             add_action( 'wps_sfw_subscription_cancel', array( $this, 'wps_sfw_cancel_stripe_subscription' ), 10, 2 );
 
             add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_add_stripe_order_statuses_for_payment_complete' ), 10, 2 );
+
+            add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback' ), 10, 2 );
         }
 
         /**
@@ -90,10 +92,22 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( 'stripe' ==  $payment_method && 'yes' == $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';
-
 				}
 			}
 			return apply_filters( 'wps_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
+        }
+
+        /**
+         * force stripe to Save payment information to my account for future purchases.
+         * 
+         * @param bool   $force_save_source Should we force save payment source.
+         * @param object stripe customer object WC_Stripe_Customer
+         */
+        public function wps_sfw_wc_stripe_force_save_source_callback( $force_save_source, $customer ) {
+            if ( wps_sfw_is_cart_has_subscription_product() ) {
+                return true;
+            }
+            return $force_save_source;
         }
     }
 }

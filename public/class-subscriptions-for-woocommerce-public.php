@@ -78,6 +78,15 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( is_cart() || is_checkout() ) {
 			wp_register_script( 'wps_sfw_wc_blocks', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'wc-block/cart-line-items.js', array( 'jquery', 'wp-data' ), $this->version, true );
+			$text = null;
+			$wps_sfw_place_order_button_text = $this->wps_sfw_get_place_order_button_text();
+			if ( isset( $wps_sfw_place_order_button_text ) && ! empty( $wps_sfw_place_order_button_text ) && $this->wps_sfw_check_cart_has_subscription_product() ) {
+				$text = $wps_sfw_place_order_button_text;
+			}
+			wp_localize_script( 'wps_sfw_wc_blocks', 'sfw_public_block', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'place_order_button_text' => $text,
+			) );
 			wp_enqueue_script( 'wps_sfw_wc_blocks' );
 		}
 	}
@@ -652,6 +661,8 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->update_taxes();
 			$new_order->calculate_totals();
 			$new_order->save();
+
+			$order->add_order_note( sprintf( __( 'A new Subscription #%s is created', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table&wps_order_type=subscription&id='. $subscription_id ) . '">'. $subscription_id .'</a>' ) );
 
 			do_action( 'wps_sfw_subscription_bundle_addition', $subscription_id, $order_id, $_product );
 

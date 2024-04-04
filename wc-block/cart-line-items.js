@@ -50,9 +50,19 @@ jQuery(function(){
 	    }
 		return defaultValue;
 	};
+
+
+	const modifyPlaceOrderButtonLabel = ( defaultValue, extensions, args ) => {
+
+		if ( sfw_public_block.place_order_button_text ) {
+			return sfw_public_block.place_order_button_text;
+		}
+		return defaultValue;
+	};
 	
 	registerCheckoutFilters( 'wps-sfw-checkout-block', {
 		subtotalPriceFormat: wpsSfwmodifySubtotalPriceFormat,
 		cartItemPrice: wpsWspmodifyCartItemPrice,
+		placeOrderButtonLabel: modifyPlaceOrderButtonLabel,
 	} );
 });

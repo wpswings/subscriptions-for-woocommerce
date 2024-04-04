@@ -328,10 +328,10 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 		$current_page = isset( $_GET['paged'] ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
 
+		// get the data by pagination
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$offset = ( $current_page - 1 ) * 10;
 			$args = array(
-				// 'status' => 'wc-wps_renewal',
 				'number' => 10,
 				'offset' => $offset,
 				'return' => 'ids',
@@ -381,10 +381,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$wps_subscriptions = get_posts( $args );
 		}
 
+		// get the item count
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args2 = array(
 				'type'   => 'wps_subscriptions',
-				// 'post_status' => 'wc-wps_renewal',
+				'limit'  => -1,
 				'meta_query' => array(
 					array(
 						'key'   => 'wps_customer_id',
@@ -403,7 +404,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					),
 				);
 			}
-			$wps_subscriptions2 = wc_get_orders( $args );
+			$wps_subscriptions2 = wc_get_orders( $args2 );
 
 		} else {
 			$args2 = array(
@@ -455,7 +456,26 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 			}
 		}
-		// search with subscription id code.
+		// search with subscription id code end.
+
+		// redirection code
+		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type']  ) {
+			$order_id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+			$wps_subs_id = wps_sfw_get_meta_data( $order_id, 'wps_parent_order', true );
+			$args2['meta_query'] = array(
+				array(
+					'key'   => 'wps_parent_order',
+					'value' => $wps_subs_id,
+					'compare' => 'LIKE',
+				),
+			);
+
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$wps_subscriptions = wc_get_orders( $args2 );
+			} else {
+				$wps_subscriptions = get_posts( $args2 );
+			}
+		}
 
 		$wps_subscriptions_data = array();
 
@@ -522,6 +542,18 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$payment_type = 'Via Manual Method';
 				}
 				$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
+
+				if ( 'active' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
+				} elseif ( 'on-hold' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
+				} elseif (  'cancelled' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
+				} elseif (  'paused' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
+				} elseif ( 'pending' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
+				}
 				$wps_subscriptions_data[] = apply_filters(
 					'wps_sfw_subs_table_data',
 					array(
@@ -558,7 +590,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 }
 
-if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) && defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_DIR_PATH' ) ) {
 	$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_view_renewal_order'] ) );
 	$subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
 	if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
