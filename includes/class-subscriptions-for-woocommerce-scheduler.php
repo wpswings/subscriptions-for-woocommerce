@@ -189,6 +189,27 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
+						if ( $_product->is_type( 'variation' ) ) {
+							$variation_attributes = $_product->get_variation_attributes();
+							
+							if (!empty($variation_attributes)) {
+								$meta_array = array();
+								// Output attribute name and value
+								foreach ($variation_attributes as $attribute_name => $attribute_value) {
+									// Get attribute label
+									$attribute_label = wc_attribute_label($attribute_name);
+						
+									$attribute_label = wc_attribute_label( strtolower(str_replace('pa_', '', $attribute_label)) );
+									$attribute_label = wc_attribute_label( strtolower(str_replace('attribute_', '', $attribute_label)) );
+									
+									// Output attribute label and value
+									$meta_array[ ucfirst( $attribute_label ) ] = ucfirst( $attribute_value );
+								}
+								$wps_pro_args['variation_id'] = $product_id;
+								$wps_pro_args['variation'] = $meta_array;
+							}
+						}
+
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
 							// hook to add product for renewal manual subscription order.
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
@@ -240,13 +261,10 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
 
-						if ( $subscription->line_subtotal_tax || $subscription->line_tax ) {
-							$wps_new_order->update_taxes();
-							$wps_new_order->calculate_totals();
+						$wps_new_order->update_taxes();
+						$wps_new_order->calculate_totals();
+						$wps_new_order->save();
 
-						} else {
-							$wps_new_order->calculate_totals( false );
-						}
 						$wps_sfw_status = 'pending';
 						$wps_link = add_query_arg(
 							array(
@@ -264,7 +282,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
 						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
 
-						$wps_new_order->save();
 
 						// if trial period enable.
 						if ( '' == $wps_old_payment_method ) {
@@ -739,6 +756,27 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							}
 						}
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
+
+						if ( $_product->is_type( 'variation' ) ) {
+							$variation_attributes = $_product->get_variation_attributes();
+							
+							if (!empty($variation_attributes)) {
+								$meta_array = array();
+								// Output attribute name and value
+								foreach ($variation_attributes as $attribute_name => $attribute_value) {
+									// Get attribute label
+									$attribute_label = wc_attribute_label($attribute_name);
+						
+									$attribute_label = wc_attribute_label( strtolower(str_replace('pa_', '', $attribute_label)) );
+									$attribute_label = wc_attribute_label( strtolower(str_replace('attribute_', '', $attribute_label)) );
+									
+									// Output attribute label and value
+									$meta_array[ ucfirst( $attribute_label ) ] = ucfirst( $attribute_value );
+								}
+								$wps_pro_args['variation_id'] = $product_id;
+								$wps_pro_args['variation'] = $meta_array;
+							}
+						}
 
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
 							// hook to add product for renewal manual subscription order.

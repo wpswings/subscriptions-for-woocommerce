@@ -832,6 +832,9 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_set_susbcription_total( $total, $wps_subscription ) {
 
+		if ( $wps_subscription && 'wps_paypal_subscription' === $wps_subscription->get_payment_method() ) {
+			return $total;
+		}
 		global $wp;
 		$order_key = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
 		if ( ! empty( $_POST['_wps_sfw_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wps_sfw_nonce'] ) ), 'wps_sfw__change_payment_method' ) && isset( $_POST['wps_change_change_payment'] ) && $wps_subscription->get_order_key() == $order_key && $wps_subscription->get_id() == absint( $_POST['wps_change_change_payment'] ) ) {
@@ -1618,16 +1621,31 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$product_id = $cart_item['data']->get_id();
 					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
-						return;
+						continue;
 					}
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
-					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'];
+					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'] + $line_data['shipping_fee'];
 					$product_price  = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
+
+					$product_permalink = $cart_item['data']->get_permalink();
+
+					$product_name = '<a href="' . esc_url( $product_permalink ) . '" target="_blank">' . esc_html( $cart_item['data']->get_name() ) . '</a><br>';
 					?>
-					<tr class="order-total wps_wsp_recurring_total">
-					<th class="wps_wsp_recurring_total_td" data-title="<?php esc_attr_e( 'wps-sfw-recurring', 'subscriptions-for-woocommerce' ); ?>"><?php esc_attr_e( 'Recurring', 'subscriptions-for-woocommerce' ); ?></th>
-					<td><?php echo esc_attr__( 'Recurring Amount will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount ) . ' ' . esc_attr__( 'For', 'subscriptions-for-woocommerce' ) . ' ' . esc_html( $cart_item['data']->get_name() ); ?></td>
+					<tr class="wps_recurring_bifurcation_wrapper">
+					<th><h4><?php echo esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . $product_name; ?></h4></th>
+					<td>
+					<ul>
+						<li><label><?php esc_html_e( 'Subtotal', 'subscriptions-for-woocommerce' ); ?>:</label> <span><?php echo wc_price( $line_data['line_subtotal'] ); ?></span></li>
+						<?php if ( isset( $line_data['line_tax'] ) && ! empty( $line_data['line_tax'] ) ) : ?>
+						<li><label><?php esc_html_e( 'Tax', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wc_price( $line_data['line_tax'] ); ?></span></li>
+						<?php endif; ?>
+						<?php if ( isset( $line_data['shipping_fee'] ) && ! empty( $line_data['shipping_fee'] ) ) : ?>
+						<li><label><?php esc_html_e( 'Shipping', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wc_price( $line_data['shipping_fee'] ); ?></span></li>
+						<?php endif; ?>
+						<li><label><?php esc_html_e( 'Total', 'subscriptions-for-woocommerce' ) ?>:</label><span><?php echo wp_kses_post( $renewal_amount ); ?></span></li>
+					</ul>	
+					</td>
 					<tr>
 					<?php
 				}
@@ -1735,10 +1753,6 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_tax = $line_subtotal_tax;
 		}
 
-		// add the shipping fee,to display only.
-		$line_total    = apply_filters( 'wps_sfw_add_shipping_fee_for_display', $line_total, $cart_item, $bool );
-		$line_subtotal = apply_filters( 'wps_sfw_add_shipping_fee_for_display', $line_subtotal, $cart_item, $bool );
-
 		// Prepare the line data.
 		$line_tax_data = array(
 			'subtotal' => array( $line_subtotal_tax ),
@@ -1750,8 +1764,9 @@ class Subscriptions_For_Woocommerce_Public {
 			'line_tax'          => $line_tax,
 			'line_subtotal_tax' => $line_subtotal_tax,
 			'line_tax_data'     => $line_tax_data,
+			'shipping_fee'      => 0,
 		);
-		return $line_data;
+		return apply_filters( 'wps_sfw_modify_cart_item_data', $line_data, $cart_item, $bool );
 	}
 
 	/**
@@ -1780,14 +1795,30 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$product_id = $cart_item['data']->get_id();
 					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
-						return $content;
+						continue;
 					}
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
-					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'];
+					$renewal_amount = $line_data['line_total'] + $line_data['line_tax'] + $line_data['shipping_fee'];
 					$product_price = wc_price( wc_get_price_to_display( $cart_item['data'], array( 'price' => $renewal_amount ) ) );
+
 					$renewal_amount = $this->wps_sfw_subscription_product_get_price_html( $product_price, $cart_item['data'], $cart_item );
-					$new_content = '<div>' . esc_attr__( 'Recurring For', 'subscriptions-for-woocommerce' ) . ' <b>' . esc_html( $cart_item['data']->get_name() ) . '</b></div>' . esc_attr__( 'Will be', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $renewal_amount );
-					$content = $content . '<div class="sfw-recurring-totals-items">' . $new_content . '</div>';
+
+					$product_permalink = $cart_item['data']->get_permalink();
+
+					$product_name = '<a href="' . esc_url( $product_permalink ) . '" target="_blank">' . esc_html( $cart_item['data']->get_name() ) . '</a><br>';
+					$content .=
+						'<div class="wps_recurring_bifurcation_wrapper"><tr class="order-total wps_wsp_recurring_total_tr">
+						<th><h4>' . esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . $product_name . '</h4></th>
+						<td>
+						<ul>
+							<li><label>' . esc_html__( 'Subtotal', 'subscriptions-for-woocommerce' ) . ':</label> <span>' . wc_price( $line_data['line_subtotal'] ) . '</span></li>';
+						if ( isset( $line_data['line_tax'] ) && ! empty( $line_data['line_tax'] ) ) {
+							$content .= '<li><label>' . esc_html__( 'Tax', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wc_price( $line_data['line_tax'] ) . '</span></li>';
+						}
+						if ( isset( $line_data['shipping_fee'] ) && ! empty( $line_data['shipping_fee'] ) ) {
+							$content .= '<li><label>' . esc_html__( 'Shipping', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wc_price( $line_data['shipping_fee'] ) . '</span></li>';
+						}
+						$content .= '<li><label>' . esc_html__( 'Total', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( $renewal_amount ) . '</span></li></ul></td><tr></div>';
 				}
 			}
 		}
