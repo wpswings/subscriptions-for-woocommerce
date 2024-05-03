@@ -3,6 +3,7 @@ node_modules/*
 vendor
 vendor/*
 .history
+src
 # ignore compiled files
 *.com
 *.class
@@ -10,6 +11,9 @@ vendor/*
 *.exe
 *.o
 *.so
+*.json
+*.lock
+*.js
 
 # ignore packaged files
 *.7z
