@@ -259,12 +259,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 						wps_sfw_update_meta_data( $subscription_id, 'wps_wsp_last_renewal_order_id', $order_id );
 
-						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
-
+						
 						$wps_new_order->update_taxes();
 						$wps_new_order->calculate_totals();
 						$wps_new_order->save();
 
+						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
+						
 						$wps_sfw_status = 'pending';
 						$wps_link = add_query_arg(
 							array(
@@ -828,12 +829,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 						wps_sfw_update_meta_data( $subscription_id, 'wps_wsp_last_renewal_order_id', $order_id );
 
-						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
-
+						
 						$wps_new_order->update_taxes();
 						$wps_new_order->calculate_totals();
 						$wps_new_order->save();
-
+						
+						do_action( 'wps_sfw_renewal_order_creation', $wps_new_order, $subscription_id );
 
 						$wps_sfw_status = 'pending';
 						$wps_link = add_query_arg(
