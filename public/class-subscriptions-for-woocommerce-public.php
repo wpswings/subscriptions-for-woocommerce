@@ -661,7 +661,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->update_taxes();
 			$new_order->calculate_totals();
 			$new_order->save();
-
+			/* translators: %s: subscription id */
 			$order->add_order_note( sprintf( __( 'A new Subscription #%s is created', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table&wps_order_type=subscription&id='. $subscription_id ) . '">'. $subscription_id .'</a>' ) );
 
 			do_action( 'wps_sfw_subscription_bundle_addition', $subscription_id, $order_id, $_product );
@@ -1633,15 +1633,15 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_name = '<a href="' . esc_url( $product_permalink ) . '" target="_blank">' . esc_html( $cart_item['data']->get_name() ) . '</a><br>';
 					?>
 					<tr class="wps_recurring_bifurcation_wrapper">
-					<th><h4><?php echo esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . $product_name; ?></h4></th>
+					<th><h4><?php echo esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $product_name ); ?></h4></th>
 					<td>
 					<ul>
-						<li><label><?php esc_html_e( 'Subtotal', 'subscriptions-for-woocommerce' ); ?>:</label> <span><?php echo wc_price( $line_data['line_subtotal'] ); ?></span></li>
+						<li><label><?php esc_html_e( 'Subtotal', 'subscriptions-for-woocommerce' ); ?>:</label> <span><?php echo wp_kses_post( wc_price( $line_data['line_subtotal'] ) ); ?></span></li>
 						<?php if ( isset( $line_data['line_tax'] ) && ! empty( $line_data['line_tax'] ) ) : ?>
-						<li><label><?php esc_html_e( 'Tax', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wc_price( $line_data['line_tax'] ); ?></span></li>
+						<li><label><?php esc_html_e( 'Tax', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wp_kses_post( wc_price( $line_data['line_tax'] ) ); ?></span></li>
 						<?php endif; ?>
 						<?php if ( isset( $line_data['shipping_fee'] ) && ! empty( $line_data['shipping_fee'] ) ) : ?>
-						<li><label><?php esc_html_e( 'Shipping', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wc_price( $line_data['shipping_fee'] ); ?></span></li>
+						<li><label><?php esc_html_e( 'Shipping', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wp_kses_post( wc_price( $line_data['shipping_fee'] ) ); ?></span></li>
 						<?php endif; ?>
 						<li><label><?php esc_html_e( 'Total', 'subscriptions-for-woocommerce' ) ?>:</label><span><?php echo wp_kses_post( $renewal_amount ); ?></span></li>
 					</ul>	
@@ -1808,15 +1808,15 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_name = '<a href="' . esc_url( $product_permalink ) . '" target="_blank">' . esc_html( $cart_item['data']->get_name() ) . '</a><br>';
 					$content .=
 						'<div class="wps_recurring_bifurcation_wrapper"><tr class="order-total wps_wsp_recurring_total_tr">
-						<th><h4>' . esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . $product_name . '</h4></th>
+						<th><h4>' . esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $product_name ) . '</h4></th>
 						<td>
 						<ul>
-							<li><label>' . esc_html__( 'Subtotal', 'subscriptions-for-woocommerce' ) . ':</label> <span>' . wc_price( $line_data['line_subtotal'] ) . '</span></li>';
+							<li><label>' . esc_html__( 'Subtotal', 'subscriptions-for-woocommerce' ) . ':</label> <span>' . wp_kses_post( wc_price( $line_data['line_subtotal'] ) ) . '</span></li>';
 						if ( isset( $line_data['line_tax'] ) && ! empty( $line_data['line_tax'] ) ) {
-							$content .= '<li><label>' . esc_html__( 'Tax', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wc_price( $line_data['line_tax'] ) . '</span></li>';
+							$content .= '<li><label>' . esc_html__( 'Tax', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( wc_price( $line_data['line_tax'] ) ) . '</span></li>';
 						}
 						if ( isset( $line_data['shipping_fee'] ) && ! empty( $line_data['shipping_fee'] ) ) {
-							$content .= '<li><label>' . esc_html__( 'Shipping', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wc_price( $line_data['shipping_fee'] ) . '</span></li>';
+							$content .= '<li><label>' . esc_html__( 'Shipping', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( wc_price( $line_data['shipping_fee'] ) ) . '</span></li>';
 						}
 						$content .= '<li><label>' . esc_html__( 'Total', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( $renewal_amount ) . '</span></li></ul></td><tr></div>';
 				}

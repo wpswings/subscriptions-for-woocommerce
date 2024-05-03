@@ -328,7 +328,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 		$current_page = isset( $_GET['paged'] ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
 
-		// get the data by pagination
+		// get the data by pagination.
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$offset = ( $current_page - 1 ) * 10;
 			$args = array(
@@ -381,7 +381,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$wps_subscriptions = get_posts( $args );
 		}
 
-		// get the item count
+		// get the item count.
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args2 = array(
 				'type'   => 'wps_subscriptions',
@@ -458,9 +458,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		}
 		// search with subscription id code end.
 
-		// redirection code
+		// redirection code.
 		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type']  ) {
-			$order_id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
 			$wps_subs_id = wps_sfw_get_meta_data( $order_id, 'wps_parent_order', true );
 			$args2['meta_query'] = array(
 				array(

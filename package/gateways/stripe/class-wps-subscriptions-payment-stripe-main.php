@@ -101,7 +101,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
          * force stripe to Save payment information to my account for future purchases.
          * 
          * @param bool   $force_save_source Should we force save payment source.
-         * @param object stripe customer object WC_Stripe_Customer
+         * @param object $customer customer object WC_Stripe_Customer
          */
         public function wps_sfw_wc_stripe_force_save_source_callback( $force_save_source, $customer ) {
             if ( wps_sfw_is_cart_has_subscription_product() ) {

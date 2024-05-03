@@ -1106,10 +1106,13 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 	}
 
-	/** wps_sfw_order_notes_link_redirection */
+	/**
+	 * Wps  order_notes_link_redirection.
+	 *
+	 */
 	public function wps_sfw_order_notes_link_redirection() {
 		if ( isset( $_GET['wps_order_type'] ) && 'renewal' == $_GET['wps_order_type']  ) {
-			$order_id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
 			$subp_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
 			$wps_sfw_status = wps_wsp_get_meta_data( $subp_id, 'wps_subscription_status', true );
 			$wps_link = add_query_arg(

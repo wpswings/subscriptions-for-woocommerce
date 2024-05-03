@@ -194,15 +194,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							
 							if (!empty($variation_attributes)) {
 								$meta_array = array();
-								// Output attribute name and value
+								// Output attribute name and value.
 								foreach ($variation_attributes as $attribute_name => $attribute_value) {
-									// Get attribute label
+									// Get attribute label.
 									$attribute_label = wc_attribute_label($attribute_name);
 						
 									$attribute_label = wc_attribute_label( strtolower(str_replace('pa_', '', $attribute_label)) );
 									$attribute_label = wc_attribute_label( strtolower(str_replace('attribute_', '', $attribute_label)) );
 									
-									// Output attribute label and value
+									// Output attribute label and value.
 									$meta_array[ ucfirst( $attribute_label ) ] = ucfirst( $attribute_value );
 								}
 								$wps_pro_args['variation_id'] = $product_id;
@@ -275,6 +275,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' )
 						);
 						$wps_link = wp_nonce_url( $wps_link, $subscription_id . $wps_sfw_status );
+						/* translators: %s: subscription name */
 						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. $wps_link . '">'. $subscription_id .'</a>' ) );
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
@@ -311,7 +312,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								}
 							}
 					
-							// If the order only contains virtual or downloadable products, mark it as complete
+							// If the order only contains virtual or downloadable products, mark it as complete.
 							if ($virtual_order) {
 								$wps_new_order->update_status('completed');
 							}
@@ -763,15 +764,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							
 							if (!empty($variation_attributes)) {
 								$meta_array = array();
-								// Output attribute name and value
+								// Output attribute name and value.
 								foreach ($variation_attributes as $attribute_name => $attribute_value) {
-									// Get attribute label
+									// Get attribute label.
 									$attribute_label = wc_attribute_label($attribute_name);
 						
 									$attribute_label = wc_attribute_label( strtolower(str_replace('pa_', '', $attribute_label)) );
 									$attribute_label = wc_attribute_label( strtolower(str_replace('attribute_', '', $attribute_label)) );
 									
-									// Output attribute label and value
+									// Output attribute label and value.
 									$meta_array[ ucfirst( $attribute_label ) ] = ucfirst( $attribute_value );
 								}
 								$wps_pro_args['variation_id'] = $product_id;
@@ -845,6 +846,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' )
 						);
 						$wps_link = wp_nonce_url( $wps_link, $subscription_id . $wps_sfw_status );
+						/* translators: %s: subscription name */
 						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="'. $wps_link . '">'. $subscription_id .'</a>' ) );
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
@@ -880,7 +882,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								}
 							}
 					
-							// If the order only contains virtual or downloadable products, mark it as complete
+							// If the order only contains virtual or downloadable products, mark it as complete.
 							if ($virtual_order) {
 								$wps_new_order->update_status('completed');
 							}
