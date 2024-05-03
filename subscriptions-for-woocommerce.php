@@ -479,7 +479,7 @@ if ( $activated ) {
 			);
 		}
 	}
-	add_action( 'activated_plugin', 'wps_sfe_redirect_on_settings' );
+	// add_action( 'activated_plugin', 'wps_sfe_redirect_on_settings' );
 
 	if ( ! function_exists( 'wps_sfe_redirect_on_settings' ) ) {
 		/**
