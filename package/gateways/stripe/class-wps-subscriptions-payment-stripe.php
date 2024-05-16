@@ -40,6 +40,13 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
         public static $gateway_id = 'stripe';
 
         /**
+         * Array mapping payment method string IDs to classes
+         *
+         * @var WC_Stripe_UPE_Payment_Method[]
+         */
+        public $payment_methods = [];
+
+        /**
          * Return the instance of Gateway
          *
          * @return Wps_Subscriptions_Payment_Stripe
@@ -81,6 +88,43 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
             } else {
             	return parent::process_payment( $order_id, $retry, $force_save_source, $previous_error );
             }
+        }
+
+        /**
+         * Returns the list of enabled payment method types that will function with the current checkout.
+         *
+         * @param int|null $order_id
+         * @return string[]
+         */
+        public function get_upe_enabled_at_checkout_payment_method_ids( $order_id = null ) {
+            $is_automatic_capture_enabled = $this->is_automatic_capture_enabled();
+            $available_method_ids         = [];
+
+            $arr = array( WC_Stripe_UPE_Payment_Method_CC::class );
+            foreach ( $arr as $payment_method_class ) {
+    
+                $payment_method                                     = new $payment_method_class();
+                $this->payment_methods[ $payment_method->get_id() ] = $payment_method;
+            }
+            $get_upe_enabled_payment_method_ids = $this->get_option( 'upe_checkout_experience_accepted_payments', [ 'card' ] );
+            foreach ( $get_upe_enabled_payment_method_ids as $payment_method_id ) {
+                if ( ! isset( $this->payment_methods[ $payment_method_id ] ) ) {
+                    continue;
+                }
+
+                $method = $this->payment_methods[ $payment_method_id ];
+                if ( $method->is_enabled_at_checkout( $order_id ) === false ) {
+                    continue;
+                }
+
+                if ( ! $is_automatic_capture_enabled && $method->requires_automatic_capture() ) {
+                    continue;
+                }
+
+                $available_method_ids[] = $payment_method_id;
+            }
+
+            return $available_method_ids;
         }
 
 

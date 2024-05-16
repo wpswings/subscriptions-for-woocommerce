@@ -425,11 +425,12 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_process_checkout( $order_id, $posted_data ) {
 		global $woocommerce;
+		$order = wc_get_order( $order_id );
 
 		if ( ! $this->wps_sfw_check_cart_has_subscription_product() ) {
 			return;
 		}
-		$order = wc_get_order( $order_id );
+	
 
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
@@ -1918,8 +1919,31 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param object $order .
 	 * @throws \Exception Return error.
 	 */
-	public function wps_sfw_create_sub_order( $order ) {
+	public function wps_sfw_process_checkout_hpos( $order ) {
+		
+		if( 'stripe' == $order->get_payment_method() && wps_sfw_is_cart_has_subscription_product() ){
+			$request_body = file_get_contents('php://input');
+			$data = json_decode($request_body);
+		
+			if( !empty( $data ) && isset( $data->payment_data ) && !empty( $data->payment_data ) ){
 
+				$payment_object = $data->payment_data; 
+				$save_payment_method = 'no';
+
+				foreach ( $payment_object as $data) {
+					if ( ( $data->key === 'save_payment_method' && $data->value == 'yes' ) || ( $data->key == 'wc-stripe-new-payment-method' && $data->value == 1 ) || ( $data->key == 'isSavedToken' && $data->value == 1) ) {
+						$save_payment_method = 'yes';
+						break;
+					}
+				}
+				
+				if(  'no' == $save_payment_method ){
+				
+					throw new Exception( __( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'subscriptions-for-woocommerce' ) );
+				}
+			}
+
+		}
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
 
