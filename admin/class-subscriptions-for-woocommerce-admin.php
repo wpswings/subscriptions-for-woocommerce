@@ -408,6 +408,13 @@ class Subscriptions_For_Woocommerce_Admin {
 				'class' => 'sfw-button-class',
 			),
 		);
+
+		if (class_exists('WooCommerce')) {
+			$woocommerce_version = WC()->version;
+			if ( version_compare( $woocommerce_version, '8.8.3', '>' ) ) {
+				unset( $sfw_settings_general[5]);
+			}
+		} 
 		// Add general settings.
 		return apply_filters( 'wps_sfw_add_general_settings_fields', $sfw_settings_general );
 	}
