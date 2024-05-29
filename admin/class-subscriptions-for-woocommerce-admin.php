@@ -66,7 +66,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$pagescreen = $screen->id;
 		}
 
-		if ( ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) ) || ( 'wp-swings_page_home' == $screen->id ) ) {
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids )  || ( 'wp-swings_page_home' == $screen->id ) ) {
 			// Multistep form css.
 			if ( ! wps_sfw_check_multistep() ) {
 				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
@@ -123,7 +123,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		wp_localize_script( $this->plugin_name . 'admin-notice', 'wps_sfw_branner_notice', $wps_sfw_branner_notice );
 		wp_enqueue_script( $this->plugin_name . 'admin-notice' );
 
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) && ( 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id || 'wps_subscriptions' == $screen->id ) ) {
+		if ( isset( $screen->id ) && ( in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id || 'wps_subscriptions' == $screen->id ) ) {
 
 			if ( ! wps_sfw_check_multistep() ) {
 
