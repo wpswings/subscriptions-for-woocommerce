@@ -181,7 +181,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 				}
 			}
 			return $order_status;
-
 		}
 	}
 }

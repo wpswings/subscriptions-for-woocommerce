@@ -180,7 +180,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_add_order_statuses_for_payment_complete' ), 10, 2 );
 
 			add_filter( 'woocommerce_paypal_express_checkout_needs_billing_agreement', array( $this, 'wps_sfw_create_billing_agreement_for_express_checkout' ) );
-
 		}
 
 		/**
@@ -326,7 +325,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 
 				$wps_paypal_obj->wps_sfw_valid_response( $wps_transaction_details );
 			}
-
 		}
 
 
@@ -358,7 +356,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			$this->wps_sfw_invoice_prefix  = ( isset( $wps_paypal_settings['invoice_prefix'] ) ) ? $wps_paypal_settings['invoice_prefix'] : 'WC-';
 
 			return $wps_paypal_enable;
-
 		}
 
 		/**
@@ -403,9 +400,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 						$wps_credential_set = true;
 
 					}
-				} else {
-
-					if ( '' != $wps_paypal_settings['api_username'] && '' != $wps_paypal_settings['api_password'] && '' != $wps_paypal_settings['api_signature'] ) {
+				} elseif ( '' != $wps_paypal_settings['api_username'] && '' != $wps_paypal_settings['api_password'] && '' != $wps_paypal_settings['api_signature'] ) {
 
 						$this->wps_sfw_api_username = $wps_paypal_settings['api_username'];
 						$this->wps_sfw_api_password = $wps_paypal_settings['api_password'];
@@ -413,8 +408,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 						$this->wps_sfw_api_endpoint = 'https://api-3t.paypal.com/nvp';
 
 						$wps_credential_set = true;
-
-					}
 				}
 			}
 
@@ -751,7 +744,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 				$order_note   = sprintf( __( 'PayPal Transaction Held:', 'subscriptions-for-woocommerce' ) );
 				$order->update_status( 'on-hold', $order_note );
 			}
-
 		}
 
 		/**
@@ -1035,7 +1027,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			WC_Gateway_Paypal::log( 'WPS - Subscription Request: ' . wc_print_r( $wps_args, true ) );
 
 			return apply_filters( 'wps_sfw_paypal_args_data', $wps_args, $order );
-
 		}
 
 		/**
@@ -1052,7 +1043,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 				$item_name = substr( $item_name, 0, 124 ) . '...';
 			}
 			return html_entity_decode( $item_name, ENT_NOQUOTES, 'UTF-8' );
-
 		}
 
 		/**
@@ -1098,7 +1088,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			}
 
 			return $response;
-
 		}
 		/**
 		 * This function is used to cancel subscriptions status.
@@ -1136,7 +1125,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 			} else {
 				return;
 			}
-
 		}
 
 		/**
@@ -1166,8 +1154,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 
 			return $wps_converted_period;
 		}
-
 	}
 }
 return new Wps_Subscriptions_Payment_Paypal_Main();
-

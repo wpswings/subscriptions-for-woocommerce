@@ -52,7 +52,6 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
@@ -62,7 +61,6 @@ class Subscriptions_For_Woocommerce_Public {
 	public function wps_sfw_public_enqueue_styles() {
 
 		wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/css/subscriptions-for-woocommerce-public.css', array(), $this->version, 'all' );
-
 	}
 
 	/**
@@ -83,10 +81,14 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( isset( $wps_sfw_place_order_button_text ) && ! empty( $wps_sfw_place_order_button_text ) && $this->wps_sfw_check_cart_has_subscription_product() ) {
 				$text = $wps_sfw_place_order_button_text;
 			}
-			wp_localize_script( 'wps_sfw_wc_blocks', 'sfw_public_block', array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'place_order_button_text' => $text,
-			) );
+			wp_localize_script(
+				'wps_sfw_wc_blocks',
+				'sfw_public_block',
+				array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'place_order_button_text' => $text,
+				)
+			);
 			wp_enqueue_script( 'wps_sfw_wc_blocks' );
 		}
 	}
@@ -125,7 +127,6 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_sfw_subscription_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_number', true );
 			$wps_sfw_subscription_expiry_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_expiry_number', true );
 			$wps_sfw_subscription_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_interval', true );
-
 			if ( isset( $wps_sfw_subscription_expiry_number ) && ! empty( $wps_sfw_subscription_expiry_number ) ) {
 
 				$wps_sfw_subscription_expiry_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_expiry_interval', true );
@@ -430,7 +431,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( ! $this->wps_sfw_check_cart_has_subscription_product() ) {
 			return;
 		}
-	
 
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
@@ -474,7 +474,7 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 					$subscription = $this->wps_sfw_create_subscription( $order, $posted_data, $wps_recurring_data, $cart_item );
 					if ( is_wp_error( $subscription ) ) {
-						throw new Exception( $subscription->get_error_message() );
+						throw new Exception( esc_html( $subscription->get_error_message() ) );
 					} else {
 						$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 						if ( 'yes' != $wps_has_susbcription ) {
@@ -663,7 +663,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->calculate_totals();
 			$new_order->save();
 			/* translators: %s: subscription id */
-			$order->add_order_note( sprintf( __( 'A new Subscription #%s is created', 'subscriptions-for-woocommerce' ), '<a href="'. admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table&wps_order_type=subscription&id='. $subscription_id ) . '">'. $subscription_id .'</a>' ) );
+			$order->add_order_note( sprintf( __( 'A new Subscription #%s is created', 'subscriptions-for-woocommerce' ), '<a href="' . admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table&wps_order_type=subscription&id=' . $subscription_id ) . '">' . $subscription_id . '</a>' ) );
 
 			do_action( 'wps_sfw_subscription_bundle_addition', $subscription_id, $order_id, $_product );
 
@@ -681,7 +681,6 @@ class Subscriptions_For_Woocommerce_Public {
 			return apply_filters( 'wps_sfw_created_subscription', $subscription_id, $order_id );
 
 		}
-
 	}
 
 	/**
@@ -731,7 +730,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $wps_sfw_billing_postcode ) {
 			WC()->customer->set_billing_postcode( $wps_sfw_billing_postcode );
 		}
-
 	}
 
 	/**
@@ -759,7 +757,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $wps_subscription_billing_city ) {
 			WC()->customer->set_billing_city( $wps_subscription_billing_city );
 		}
-
 	}
 
 	/**
@@ -833,6 +830,8 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_set_susbcription_total( $total, $wps_subscription ) {
 
+		return $total;
+
 		if ( $wps_subscription && 'wps_paypal_subscription' === $wps_subscription->get_payment_method() ) {
 			return $total;
 		}
@@ -856,7 +855,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_unset_offline_payment_gateway_for_subscription( $available_gateways ) {
-		if ( is_admin() || ! is_checkout() ) {
+		if ( is_admin() ) {
 			return $available_gateways;
 		}
 		$wps_has_subscription = false;
@@ -1056,7 +1055,6 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 
 		wc_get_template( 'myaccount/wps-show-subscription-details.php', array( 'wps_subscription_id' => $wps_subscription_id ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
-
 	}
 
 	/**
@@ -1509,7 +1507,6 @@ class Subscriptions_For_Woocommerce_Public {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -1608,7 +1605,6 @@ class Subscriptions_For_Woocommerce_Public {
 			$description .= '<i><span class="wps_sfw_experimental_feature_notice">' . esc_html__( 'Only the Card is supported for the recurring payment', 'subscriptions-for-woocommerce' ) . '</span><i><br>';
 		}
 		return $description;
-
 	}
 
 	/**
@@ -1644,7 +1640,7 @@ class Subscriptions_For_Woocommerce_Public {
 						<?php if ( isset( $line_data['shipping_fee'] ) && ! empty( $line_data['shipping_fee'] ) ) : ?>
 						<li><label><?php esc_html_e( 'Shipping', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wp_kses_post( wc_price( $line_data['shipping_fee'] ) ); ?></span></li>
 						<?php endif; ?>
-						<li><label><?php esc_html_e( 'Total', 'subscriptions-for-woocommerce' ) ?>:</label><span><?php echo wp_kses_post( $renewal_amount ); ?></span></li>
+						<li><label><?php esc_html_e( 'Total', 'subscriptions-for-woocommerce' ); ?>:</label><span><?php echo wp_kses_post( $renewal_amount ); ?></span></li>
 					</ul>	
 					</td>
 					<tr>
@@ -1813,12 +1809,12 @@ class Subscriptions_For_Woocommerce_Public {
 						<td>
 						<ul>
 							<li><label>' . esc_html__( 'Subtotal', 'subscriptions-for-woocommerce' ) . ':</label> <span>' . wp_kses_post( wc_price( $line_data['line_subtotal'] ) ) . '</span></li>';
-						if ( isset( $line_data['line_tax'] ) && ! empty( $line_data['line_tax'] ) ) {
-							$content .= '<li><label>' . esc_html__( 'Tax', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( wc_price( $line_data['line_tax'] ) ) . '</span></li>';
-						}
-						if ( isset( $line_data['shipping_fee'] ) && ! empty( $line_data['shipping_fee'] ) ) {
-							$content .= '<li><label>' . esc_html__( 'Shipping', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( wc_price( $line_data['shipping_fee'] ) ) . '</span></li>';
-						}
+					if ( isset( $line_data['line_tax'] ) && ! empty( $line_data['line_tax'] ) ) {
+						$content .= '<li><label>' . esc_html__( 'Tax', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( wc_price( $line_data['line_tax'] ) ) . '</span></li>';
+					}
+					if ( isset( $line_data['shipping_fee'] ) && ! empty( $line_data['shipping_fee'] ) ) {
+						$content .= '<li><label>' . esc_html__( 'Shipping', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( wc_price( $line_data['shipping_fee'] ) ) . '</span></li>';
+					}
 						$content .= '<li><label>' . esc_html__( 'Total', 'subscriptions-for-woocommerce' ) . ':</label><span> ' . wp_kses_post( $renewal_amount ) . '</span></li></ul></td><tr></div>';
 				}
 			}
@@ -1903,11 +1899,15 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 			// Do not allow subscription price for the one-time product.
 			if ( apply_filters( 'wps_sfw_check_one_time_product', true, $price, $product_id ) && $price ) {
-				$data[] = apply_filters( 'wps_sfw_block_cart_price', array(
-					'name'   => 'wps-sfw-price-html',
-					'hidden' => true,
-					'value'  => html_entity_decode( $price ),
-				), $cart_item );
+				$data[] = apply_filters(
+					'wps_sfw_block_cart_price',
+					array(
+						'name'   => 'wps-sfw-price-html',
+						'hidden' => true,
+						'value'  => html_entity_decode( $price ),
+					),
+					$cart_item
+				);
 			}
 		}
 		return $data;
@@ -1920,29 +1920,28 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @throws \Exception Return error.
 	 */
 	public function wps_sfw_process_checkout_hpos( $order ) {
-		
-		if( 'stripe' == $order->get_payment_method() && wps_sfw_is_cart_has_subscription_product() ){
-			$request_body = file_get_contents('php://input');
-			$data = json_decode($request_body);
-		
-			if( !empty( $data ) && isset( $data->payment_data ) && !empty( $data->payment_data ) ){
 
-				$payment_object = $data->payment_data; 
+		if ( 'stripe' == $order->get_payment_method() && wps_sfw_is_cart_has_subscription_product() ) {
+			$request_body = file_get_contents( 'php://input' );
+			$data = json_decode( $request_body );
+
+			if ( ! empty( $data ) && isset( $data->payment_data ) && ! empty( $data->payment_data ) ) {
+
+				$payment_object = $data->payment_data;
 				$save_payment_method = 'no';
 
-				foreach ( $payment_object as $data) {
-					if ( ( $data->key === 'save_payment_method' && $data->value == 'yes' ) || ( $data->key == 'wc-stripe-new-payment-method' && $data->value == 1 ) || ( $data->key == 'isSavedToken' && $data->value == 1) ) {
+				foreach ( $payment_object as $data ) {
+					if ( ( 'save_payment_method' === $data->key && 'yes' == $data->value ) || ( 'wc-stripe-new-payment-method' == $data->key && 1 == $data->value ) || ( 'isSavedToken' == $data->key && 1 == $data->value ) ) {
 						$save_payment_method = 'yes';
 						break;
 					}
 				}
-				
-				if(  'no' == $save_payment_method ){
-				
-					throw new Exception( __( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'subscriptions-for-woocommerce' ) );
+
+				if ( 'no' == $save_payment_method ) {
+
+					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'subscriptions-for-woocommerce' ) );
 				}
 			}
-
 		}
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
@@ -1991,7 +1990,7 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 					$subscription = $this->wps_sfw_create_subscription( $order, array(), $wps_recurring_data, $cart_item );
 					if ( is_wp_error( $subscription ) ) {
-						throw new Exception( $subscription->get_error_message() );
+						throw new Exception( esc_html( $subscription->get_error_message() ) );
 					} else {
 						$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 						if ( 'yes' != $wps_has_susbcription ) {
@@ -2042,7 +2041,7 @@ class Subscriptions_For_Woocommerce_Public {
 		} else {
 			$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
 		}
-		if ( 'Cancel' == $status  ) {
+		if ( 'Cancel' == $status ) {
 			if ( ( 'cod' == $wps_payment_method ) || ( 'bacs' == $wps_payment_method ) || ( 'cheque' == $wps_payment_method ) ) {
 				wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
 				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );

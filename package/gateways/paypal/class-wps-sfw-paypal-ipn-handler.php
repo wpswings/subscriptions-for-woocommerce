@@ -415,7 +415,6 @@ if ( ! class_exists( 'WPS_Sfw_PayPal_IPN_Handler' ) ) {
 				}
 
 				return $wps_transaction_ids;
-
 			}
 
 			/**

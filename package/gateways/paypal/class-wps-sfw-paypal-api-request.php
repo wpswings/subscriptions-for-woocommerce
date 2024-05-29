@@ -70,7 +70,6 @@ class Wps_Sfw_Paypal_Api_Request {
 		$this->payment_args['VERSION'] = $wps_sfw_api_version;
 
 		$this->invoice_prefix = $wps_sfw_invoice_prefix;
-
 	}
 
 	/**
@@ -330,7 +329,6 @@ class Wps_Sfw_Paypal_Api_Request {
 		$this->payment_args['TOKEN']  = $token;
 
 		return $this->payment_args;
-
 	}
 
 	/**
@@ -363,7 +361,6 @@ class Wps_Sfw_Paypal_Api_Request {
 
 		$this->wps_sfw_get_order_express_checkout_params( $order, $wps_params['payment_action'], 'reference_payment' );
 		return $this->payment_args;
-
 	}
 
 	/**
@@ -386,5 +383,4 @@ class Wps_Sfw_Paypal_Api_Request {
 			}
 		}
 	}
-
 }

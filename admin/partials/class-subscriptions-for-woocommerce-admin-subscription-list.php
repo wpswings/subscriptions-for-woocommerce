@@ -164,14 +164,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 								wp_delete_post( $value, true );
 							}
 						}
+						?>
+							<div class="notice notice-success is-dismissible"> 
+								<p><strong><?php esc_html_e( 'Subscriptions Deleted Successfully', 'subscriptions-for-woocommerce' ); ?></strong></p>
+							</div>
+						<?php
 					}
 				}
 			}
-			?>
-			<div class="notice notice-success is-dismissible"> 
-				<p><strong><?php esc_html_e( 'Subscriptions Deleted Successfully', 'subscriptions-for-woocommerce' ); ?></strong></p>
-			</div>
-			<?php
 		} elseif ( 'bulk-cancel' === $this->current_action() ) {
 			if ( isset( $_POST['susbcription_list_table'] ) ) {
 				$susbcription_list_table = sanitize_text_field( wp_unslash( $_POST['susbcription_list_table'] ) );
@@ -181,17 +181,16 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 						foreach ( $all_id as $key => $value ) {
 							do_action( 'wps_sfw_subscription_cancel', $value, 'Cancel' );
 						}
+						?>
+							<div class="notice notice-success is-dismissible"> 
+								<p><strong><?php esc_html_e( 'Subscriptions Cancelled Successfully', 'subscriptions-for-woocommerce' ); ?></strong></p>
+							</div>
+						<?php
 					}
 				}
 			}
-			?>
-			<div class="notice notice-success is-dismissible"> 
-				<p><strong><?php esc_html_e( 'Subscriptions Cancelled Successfully', 'subscriptions-for-woocommerce' ); ?></strong></p>
-			</div>
-			<?php
 		}
 		do_action( 'wps_sfw_process_bulk_reset_option', $this->current_action(), $_POST );
-
 	}
 	/**
 	 * Returns an associative array containing the bulk action
@@ -421,7 +420,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 				$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-				
+
 				$args2['meta_query'] = array(
 					array(
 						'key'   => 'wps_parent_order',
@@ -459,7 +458,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		// search with subscription id code end.
 
 		// redirection code.
-		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type']  ) {
+		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type'] ) {
 			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
 			$wps_subs_id = wps_sfw_get_meta_data( $order_id, 'wps_parent_order', true );
 			$args2['meta_query'] = array(
@@ -547,9 +546,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_subscription_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
 				} elseif ( 'on-hold' === $wps_subscription_status ) {
 					$wps_subscription_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
-				} elseif (  'cancelled' === $wps_subscription_status ) {
+				} elseif ( 'cancelled' === $wps_subscription_status ) {
 					$wps_subscription_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
-				} elseif (  'paused' === $wps_subscription_status ) {
+				} elseif ( 'paused' === $wps_subscription_status ) {
 					$wps_subscription_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
 				} elseif ( 'pending' === $wps_subscription_status ) {
 					$wps_subscription_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
@@ -587,7 +586,6 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		// Add list option.
 		do_action( 'wps_sfw_extra_tablenav_html', $which );
 	}
-
 }
 
 if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) && defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_DIR_PATH' ) ) {

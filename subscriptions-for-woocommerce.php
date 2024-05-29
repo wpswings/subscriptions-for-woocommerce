@@ -20,6 +20,7 @@
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
+ * Requires Plugins:  woocommerce
  *
  * Requires at least:        5.1.0
  * Tested up to:             6.5.2
@@ -113,7 +114,6 @@ if ( $old_sfw_pro_present ) {
 		</style>
 			<?php
 		}
-
 	}
 	// end of functio wps_sfw_lite_add_updatenow_notice.
 	add_action( 'admin_notices', 'wps_sfw_check_and_inform_update' );
@@ -122,7 +122,7 @@ if ( $old_sfw_pro_present ) {
 	 * Check update if pro is old.
 	 */
 	function wps_sfw_check_and_inform_update() {
-		$update_file = plugin_dir_path( dirname( __FILE__ ) ) . 'woocommerce-subscriptions-pro/class-woocommerce-subscriptions-pro-update.php';
+		$update_file = plugin_dir_path( __DIR__ ) . 'woocommerce-subscriptions-pro/class-woocommerce-subscriptions-pro-update.php';
 
 		// If present but not active.
 		if ( ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
@@ -163,10 +163,8 @@ if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 	if ( ! in_array( 'woocommerce/woocommerce.php', $active_plugins, true ) ) {
 		$activated = false;
 	}
-} else {
-	if ( ! in_array( 'woocommerce/woocommerce.php', $active_plugins, true ) ) {
+} elseif ( ! in_array( 'woocommerce/woocommerce.php', $active_plugins, true ) ) {
 		$activated = false;
-	}
 }
 if ( $activated ) {
 
@@ -282,7 +280,7 @@ if ( $activated ) {
 
 	add_action(
 		'before_woocommerce_init',
-		function() {
+		function () {
 			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
 			}
@@ -479,24 +477,7 @@ if ( $activated ) {
 			);
 		}
 	}
-	// add_action( 'activated_plugin', 'wps_sfe_redirect_on_settings' );
 
-	if ( ! function_exists( 'wps_sfe_redirect_on_settings' ) ) {
-		/**
-		 * This function is used to check plugin.
-		 *
-		 * @name wps_sfe_redirect_on_settings
-		 * @param string $plugin plugin.
-		 * @since 1.0.3
-		 */
-		function wps_sfe_redirect_on_settings( $plugin ) {
-			if ( plugin_basename( __FILE__ ) === $plugin ) {
-				$general_settings_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' );
-				wp_safe_redirect( esc_url( $general_settings_url ) );
-				exit();
-			}
-		}
-	}
 	if ( is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 		$sfw_plugins = get_plugins();
 		if ( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] < '2.1.0' ) {
@@ -526,11 +507,11 @@ if ( $activated ) {
 	 */
 	function wps_paypal_integration_for_woocommerce_gateway() {
 		if ( class_exists( 'WC_Payment_Gateway' ) ) {
-			require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';	
+			require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wc-gateway-wps-paypal-integration.php';
 		}
 	}
 	add_action( 'plugin_loaded', 'wps_paypal_integration_for_woocommerce_gateway' );
-	
+
 	/**
 	 * Replace the main gateway with the sources gateway.
 	 *
@@ -546,12 +527,11 @@ if ( $activated ) {
 			if ( 'WC_Gateway_Stripe_Sepa' === $method || $method instanceof WC_Gateway_Stripe_Sepa ) {
 				$methods[ $key ] = 'Wps_Subscriptions_Payment_Stripe_Sepa';
 			}
-
 		}
-		
+
 		return $methods;
 	}
-	
+
 	add_filter( 'woocommerce_payment_gateways', 'wps_add_stripe_integration_gateway' );
 
 	/**
@@ -562,7 +542,7 @@ if ( $activated ) {
 		if ( 'on' === $check_paypal_standard ) {
 			add_filter( 'woocommerce_should_load_paypal_standard', '__return_true' );
 		}
-		if ( class_exists('\WC_Gateway_Stripe') && version_compare( WC_STRIPE_VERSION, '4.1.11', '>' ) ) {
+		if ( class_exists( '\WC_Gateway_Stripe' ) && version_compare( WC_STRIPE_VERSION, '4.1.11', '>' ) ) {
 			include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php';
 			include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe/class-wps-subscriptions-payment-stripe.php';
 		}
@@ -633,15 +613,18 @@ if ( $activated ) {
 		}
 	}
 
-	add_action( 'admin_notices', function(){
-		?>
+	add_action(
+		'admin_notices',
+		function () {
+			?>
 		<style>
 			#toplevel_page_woocommerce a[href='admin.php?page=wc-orders--wps_subscriptions'] {
 				display:none;
 			}
 		</style>
-		<?php
-	});
+			<?php
+		}
+	);
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );
@@ -781,7 +764,7 @@ function wps_sfw_banner_notification_html() {
 // HPOS Compatibility for Custom Order type i.e. WPS_Subscription.
 add_action(
 	'woocommerce_init',
-	function() {
+	function () {
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscription.php';
 	}
 );
