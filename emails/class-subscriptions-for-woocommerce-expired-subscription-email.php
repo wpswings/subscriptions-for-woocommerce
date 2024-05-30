@@ -41,11 +41,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' 
 
 			parent::__construct();
 
-			$this->recipient = $this->get_option( 'recipient' );
-
-			if ( ! $this->recipient ) {
-				$this->recipient = get_option( 'admin_email' );
-			}
+			$this->recipient = $this->get_option( 'recipient', get_option( 'admin_email' ) );
 		}
 
 		/**

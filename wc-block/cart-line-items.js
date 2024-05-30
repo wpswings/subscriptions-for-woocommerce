@@ -2,7 +2,7 @@ jQuery(function(){
 	if ( ! window.wc ) {
 		return;
 	}
-	const { registerCheckoutFilters } = window.wc.blocksCheckout;
+	var { registerCheckoutFilters } = window.wc.blocksCheckout;
 
 	const wpsSfwmodifySubtotalPriceFormat = (
 		defaultValue,
@@ -16,9 +16,10 @@ jQuery(function(){
 			return defaultValue;
 		}
 	    const cartItem = args?.cartItem.item_data;
-		
-	    const sfwPrice = cartItem.find( item => item.name === 'wps-sfw-price-html');
-		
+		var sfwPrice = '';
+		if(cartItem != '' && cartItem != undefined){
+	     sfwPrice = cartItem.find( item => item.name === 'wps-sfw-price-html');
+		}
 	    if ( sfwPrice ) {
 			val = sfwPrice?.value;
 	        if ( val != '' ) {
@@ -40,8 +41,11 @@ jQuery(function(){
 			return defaultValue;
 		}
 	    const cartItem = args?.cartItem.item_data;
-
-		const wspData = cartItem.find( item => item.name === 'wps-wsp-switch-direction');
+		var wspData = '';
+		if(cartItem != '' && cartItem != undefined){
+			 wspData = cartItem.find( item => item.name === 'wps-wsp-switch-direction');
+		}
+		
 	    if ( wspData ) {
 			val = wspData?.value;
 	        if ( val != '' ) {

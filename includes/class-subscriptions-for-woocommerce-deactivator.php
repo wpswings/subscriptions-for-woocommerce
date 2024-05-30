@@ -28,7 +28,5 @@ class Subscriptions_For_Woocommerce_Deactivator {
 	 * @return void
 	 */
 	public static function subscriptions_for_woocommerce_deactivate( $network_wide ) {
-
 	}
-
 }

@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.5.7';
+			$this->version = '1.6.5';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -95,7 +95,6 @@ class Subscriptions_For_Woocommerce {
 		$this->subscriptions_for_woocommerce_api_hooks();
 		$this->init();
 		$this->wps_sfw_init_payment_integration();
-
 	}
 
 	/**
@@ -120,23 +119,23 @@ class Subscriptions_For_Woocommerce {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-loader.php';
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-i18n.php';
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-i18n.php';
 
 		if ( is_admin() ) {
 
 			// The class responsible for defining all actions that occur in the admin area.
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-subscriptions-for-woocommerce-admin.php';
+			require_once plugin_dir_path( __DIR__ ) . 'admin/class-subscriptions-for-woocommerce-admin.php';
 
 			// The class responsible for on-boarding steps for plugin.
-			if ( is_dir( plugin_dir_path( dirname( __FILE__ ) ) . 'onboarding' ) && ! class_exists( 'Subscriptions_For_Woocommerce_Onboarding_Steps' ) ) {
+			if ( is_dir( plugin_dir_path( __DIR__ ) . 'onboarding' ) && ! class_exists( 'Subscriptions_For_Woocommerce_Onboarding_Steps' ) ) {
 
-				require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-onboarding-steps.php';
+				require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-onboarding-steps.php';
 			}
 
 			if ( class_exists( 'Subscriptions_For_Woocommerce_Onboarding_Steps' ) ) {
@@ -145,23 +144,22 @@ class Subscriptions_For_Woocommerce {
 		}
 
 		// The class responsible for defining all actions that occur in the public-facing side of the site.
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-subscriptions-for-woocommerce-public.php';
+		require_once plugin_dir_path( __DIR__ ) . 'public/class-subscriptions-for-woocommerce-public.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'package/rest-api/class-subscriptions-for-woocommerce-rest-api.php';
+		require_once plugin_dir_path( __DIR__ ) . 'package/rest-api/class-subscriptions-for-woocommerce-rest-api.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/subscriptions-for-woocommerce-common-function.php';
+		require_once plugin_dir_path( __DIR__ ) . 'includes/subscriptions-for-woocommerce-common-function.php';
 
 		$this->loader = new Subscriptions_For_Woocommerce_Loader();
 
 		/**
 		 * Include the log file.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-log.php';
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-log.php';
 		/**
 		 * Include the cron file.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-subscriptions-for-woocommerce-scheduler.php';
-
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-scheduler.php';
 	}
 	/**
 	 * The function is used to include email class.
@@ -175,7 +173,7 @@ class Subscriptions_For_Woocommerce {
 	 */
 	public function wps_sfw_init_payment_integration() {
 
-		$wps_sfw_dir = plugin_dir_path( dirname( __FILE__ ) ) . 'package/gateways';
+		$wps_sfw_dir = plugin_dir_path( __DIR__ ) . 'package/gateways';
 		wps_sfw_include_process_directory( $wps_sfw_dir );
 		do_action( 'wps_sfw_payment_integration' );
 	}
@@ -194,7 +192,6 @@ class Subscriptions_For_Woocommerce {
 		$plugin_i18n = new Subscriptions_For_Woocommerce_I18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -261,7 +258,6 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'wp_ajax_wps_sfw_dismiss_notice_banner', $sfw_plugin_admin, 'wps_sfw_dismiss_notice_banner_callback' );
 
 		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_remove_subscription_custom_menu' );
-
 	}
 
 	/**
@@ -333,7 +329,7 @@ class Subscriptions_For_Woocommerce {
 			// WC block.
 			$this->loader->add_action( 'template_redirect', $sfw_plugin_public, 'wps_sfw_to_cart_and_checkout_blocks' );
 			$this->loader->add_filter( 'woocommerce_get_item_data', $sfw_plugin_public, 'wps_sfw_get_subscription_meta_on_cart', 10, 2 );
-			$this->loader->add_action( 'woocommerce_store_api_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_create_sub_order', 100 );
+			$this->loader->add_action( 'woocommerce_store_api_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout_hpos', 100 );
 			$this->loader->add_action( 'woocommerce_blocks_loaded', $sfw_plugin_public, 'wsp_sfw_wps_paypal_woocommerce_block_support' );
 
 			$this->loader->add_action( 'wps_sfw_subscription_cancel', $sfw_plugin_public, 'wps_sfw_cancel_manual_subscription', 10, 2 );
@@ -348,8 +344,8 @@ class Subscriptions_For_Woocommerce {
 	 * @param Array $emails emails.
 	 */
 	public function wps_sfw_woocommerce_email_classes( $emails ) {
-		$emails['wps_sfw_cancel_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
-		$emails['wps_sfw_expired_subscription'] = require_once plugin_dir_path( dirname( __FILE__ ) ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
+		$emails['wps_sfw_cancel_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
+		$emails['wps_sfw_expired_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
 
 		return apply_filters( 'wps_sfw_email_classes', $emails );
 	}
@@ -365,7 +361,6 @@ class Subscriptions_For_Woocommerce {
 		$sfw_plugin_api = new Subscriptions_For_Woocommerce_Rest_Api( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 
 		$this->loader->add_action( 'rest_api_init', $sfw_plugin_api, 'wps_sfw_add_endpoint' );
-
 	}
 
 

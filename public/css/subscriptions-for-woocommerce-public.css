@@ -185,3 +185,24 @@ p.wps_sfw_inner_description {
 }
 
 /* Single product page end */
+
+.wps_recurring_bifurcation_wrapper a {
+    text-decoration: none !important;
+}
+
+.wps_recurring_bifurcation_wrapper ul {
+    margin: 0 0 15px;
+}
+
+.wps_recurring_bifurcation_wrapper li label {
+    font-weight: 600;
+}
+
+.wps_recurring_bifurcation_wrapper li {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #dcdcdc;
+    flex-wrap: wrap;
+}

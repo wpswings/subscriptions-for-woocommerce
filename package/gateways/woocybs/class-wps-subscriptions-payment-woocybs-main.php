@@ -45,7 +45,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 				add_action( 'woo_cybs_save_payment_token', array( $this, 'wps_wsp_woo_cybs_save_payment_token' ), 10, 2 );
 
 			}
-
 		}
 
 		/**
@@ -65,7 +64,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 					wps_sfw_update_meta_data( $wps_subscription_id, '_woo_cybs_payment_token', $payment_token );
 				}
 			}
-
 		}
 
 
@@ -253,7 +251,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Woocybs_Main' ) ) {
 				}
 			}
 			return apply_filters( 'wps_wsp_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
-
 		}
 
 		/**

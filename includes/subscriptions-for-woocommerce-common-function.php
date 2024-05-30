@@ -527,7 +527,6 @@ if ( ! function_exists( 'wps_sfw_get_time_interval' ) ) {
 				break;
 		}
 		return apply_filters( 'wps_sfw_display_time_interval', $wps_price_html );
-
 	}
 }
 if ( ! function_exists( 'wps_sfw_get_time_interval_for_price' ) ) {
@@ -565,7 +564,6 @@ if ( ! function_exists( 'wps_sfw_get_time_interval_for_price' ) ) {
 				break;
 		}
 		return $wps_price_html;
-
 	}
 }
 
@@ -871,7 +869,7 @@ if ( ! function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) ) {
 		if ( class_exists( 'WooCommerce' ) ) {
 			// Get the tax options.
 			$tax_options = get_option( 'woocommerce_calc_taxes' );
-	
+
 			// Check if taxes are enabled.
 			if ( 'yes' === $tax_options ) {
 				return true; // Taxes are enabled.
@@ -893,7 +891,7 @@ if ( ! function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) ) {
 
 		$order = wc_get_order( $order_id );
 
-		foreach( $order->get_items() as $item ) {
+		foreach ( $order->get_items() as $item ) {
 			$product_id = $item->get_product_id();
 			if ( $item->get_variation_id() ) {
 				$product_id = $item->get_variation_id();

@@ -83,7 +83,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_thankyou', array( $this, 'wps_sfw_capture_payment' ), 5 );
-
 	}
 
 	/**
@@ -293,7 +292,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		global $woocommerce;
 		$order = new WC_Order( $order_id );
 
-
 		$response = self::paypal_create_order( $order );
 		if ( 'success' !== $response['result'] ) {
 			return $response;
@@ -401,7 +399,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			return ( 'VERIFIED' === wp_remote_retrieve_body( $response ) ) ? true : false;
 		}
 		return false;
-
 	}
 
 	/**
@@ -639,10 +636,8 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			if ( mb_strlen( $string ) > $limit ) {
 				$string = mb_strimwidth( $string, 0, $str_limit ) . '...';
 			}
-		} else {
-			if ( strlen( $string ) > $limit ) {
+		} elseif ( strlen( $string ) > $limit ) {
 				$string = substr( $string, 0, $str_limit ) . '...';
-			}
 		}
 		return $string;
 	}

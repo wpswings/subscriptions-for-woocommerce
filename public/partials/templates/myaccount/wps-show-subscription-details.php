@@ -25,7 +25,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 	 * @since 1.0.0
 	 */
 	function wps_sfw_cancel_url( $wps_subscription_id, $wps_status ) {
-	
+
 		$wps_link = add_query_arg(
 			array(
 				'wps_subscription_id'        => $wps_subscription_id,
@@ -33,7 +33,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 			)
 		);
 		$wps_link = wp_nonce_url( $wps_link, $wps_subscription_id . $wps_status );
-	
+
 		return $wps_link;
 	}
 }
@@ -48,17 +48,17 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 				<?php $wps_status = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_subscription_status', true ); ?>
 				<td class="<?php echo esc_html( 'wps_sfw_' . $wps_status ); ?>">
 				<?php
-					if ( 'active' === $wps_status ) {
-						$wps_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
-					} elseif ( 'on-hold' === $wps_status ) {
-						$wps_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
-					} elseif (  'cancelled' === $wps_status ) {
-						$wps_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
-					} elseif (  'paused' === $wps_status ) {
-						$wps_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
-					} elseif ( 'pending' === $wps_status ) {
-						$wps_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
-					}
+				if ( 'active' === $wps_status ) {
+					$wps_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
+				} elseif ( 'on-hold' === $wps_status ) {
+					$wps_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
+				} elseif ( 'cancelled' === $wps_status ) {
+					$wps_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
+				} elseif ( 'paused' === $wps_status ) {
+					$wps_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
+				} elseif ( 'pending' === $wps_status ) {
+					$wps_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
+				}
 					echo esc_html( $wps_status );
 				?>
 				</td>
@@ -83,6 +83,21 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 					$wps_recurring_total = '---';
 				}
 					echo esc_html( wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ) );
+				?>
+				</td>
+			</tr>
+			<tr>
+				<td><?php esc_html_e( 'Subscription Expiry Date', 'subscriptions-for-woocommerce' ); ?></td>
+				<td>
+				<?php
+					$wps_sfw_subscription_expire_date = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_susbcription_end', true );
+				if ( 0 == $wps_sfw_subscription_expire_date ) {
+						$wps_sfw_subscription_expire_date = '---';
+						echo esc_html( $wps_sfw_subscription_expire_date );
+				} else {
+
+					echo esc_html( wps_sfw_get_the_wordpress_date_format( $wps_sfw_subscription_expire_date ) );
+				}
 				?>
 				</td>
 			</tr>

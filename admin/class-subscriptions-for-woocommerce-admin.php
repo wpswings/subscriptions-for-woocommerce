@@ -50,7 +50,6 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -67,7 +66,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$pagescreen = $screen->id;
 		}
 
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || ( 'wp-swings_page_home' == $screen->id ) ) {
+		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids )  || ( 'wp-swings_page_home' == $screen->id ) ) {
 			// Multistep form css.
 			if ( ! wps_sfw_check_multistep() ) {
 				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
@@ -124,7 +123,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		wp_localize_script( $this->plugin_name . 'admin-notice', 'wps_sfw_branner_notice', $wps_sfw_branner_notice );
 		wp_enqueue_script( $this->plugin_name . 'admin-notice' );
 
-		if ( isset( $screen->id ) && in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id || 'wps_subscriptions' == $screen->id ) {
+		if ( isset( $screen->id ) && ( in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id || 'wps_subscriptions' == $screen->id ) ) {
 
 			if ( ! wps_sfw_check_multistep() ) {
 
@@ -240,17 +239,15 @@ class Subscriptions_For_Woocommerce_Admin {
 				}
 				$is_home = false;
 			}
-		} else {
-			if ( ! empty( $submenu['wps-plugins'] ) ) {
-				foreach ( $submenu['wps-plugins'] as $key => $value ) {
-					if ( 'Home' === $value[0] ) {
-						$is_home = true;
-					}
+		} elseif ( ! empty( $submenu['wps-plugins'] ) ) {
+			foreach ( $submenu['wps-plugins'] as $key => $value ) {
+				if ( 'Home' === $value[0] ) {
+					$is_home = true;
 				}
-				if ( ! $is_home ) {
-					if ( wps_sfw_check_multistep() ) {
-						add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'wps_sfw_welcome_callback_function' ), 1 );
-					}
+			}
+			if ( ! $is_home ) {
+				if ( wps_sfw_check_multistep() ) {
+					add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'wps_sfw_welcome_callback_function' ), 1 );
 				}
 			}
 		}
@@ -395,7 +392,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'Enable Paypal Standard', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
 				/* translators: %1s: links */
-				'description'  => sprintf( __( 'You will see the %1s in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=paypal' ) . '">' . __( 'Paypal Standard Gateway', 'subscriptions-for-woocommerc' ) . '</a>' ) . '<br/>' . sprintf( __( 'Please click %1s to know that, How to get the API Credentials for the setup', '' ), '<a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />' . __( 'Here', 'subscriptions-for-woocommerce' ) . '</a>' ),
+				'description'  => sprintf( __( 'You will see the %1s in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=paypal' ) . '">' . __( 'Paypal Standard Gateway', 'subscriptions-for-woocommerce' ) . '</a>' ) . '<br/>' . sprintf( __( 'Please click %1s to know that, How to get the API Credentials for the setup', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />' . __( 'Here', 'subscriptions-for-woocommerce' ) . '</a>' ),
 				'id'    => 'wps_sfw_enable_paypal_standard',
 				'value' => 'on',
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_paypal_standard', '' ) ? 'on' : 'off' ),
@@ -408,6 +405,13 @@ class Subscriptions_For_Woocommerce_Admin {
 				'class' => 'sfw-button-class',
 			),
 		);
+
+		if ( class_exists( 'WooCommerce' ) ) {
+			$woocommerce_version = WC()->version;
+			if ( version_compare( $woocommerce_version, '8.8.3', '>' ) ) {
+				unset( $sfw_settings_general[5] );
+			}
+		}
 		// Add general settings.
 		return apply_filters( 'wps_sfw_add_general_settings_fields', $sfw_settings_general );
 	}
@@ -493,7 +497,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			'default'       => 'no',
 		);
 		return $products_type;
-
 	}
 
 
@@ -515,7 +518,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		);
 		// Add tb for product.
 		return apply_filters( 'wps_swf_settings_tabs', $tabs );
-
 	}
 
 
@@ -614,7 +616,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		?>
 		</div>
 		<?php
-
 	}
 
 
@@ -653,7 +654,6 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			do_action( 'wps_sfw_save_simple_subscription_field', $post_id, $_POST );
 		}
-
 	}
 
 	/**
@@ -856,7 +856,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 		}
 		wp_send_json( $response );
-
 	}
 
 	/**
@@ -1106,10 +1105,12 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 	}
 
-	/** wps_sfw_order_notes_link_redirection */
+	/**
+	 * Wps  order_notes_link_redirection.
+	 */
 	public function wps_sfw_order_notes_link_redirection() {
-		if ( isset( $_GET['wps_order_type'] ) && 'renewal' == $_GET['wps_order_type']  ) {
-			$order_id = isset( $_GET['id'] ) ? $_GET['id'] : 0;
+		if ( isset( $_GET['wps_order_type'] ) && 'renewal' == $_GET['wps_order_type'] ) {
+			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
 			$subp_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
 			$wps_sfw_status = wps_wsp_get_meta_data( $subp_id, 'wps_subscription_status', true );
 			$wps_link = add_query_arg(
@@ -1119,7 +1120,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				),
 				admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' )
 			);
-	
+
 			$wps_link = wp_nonce_url( $wps_link, $subp_id . $wps_sfw_status );
 			wp_safe_redirect( $wps_link );
 			exit;

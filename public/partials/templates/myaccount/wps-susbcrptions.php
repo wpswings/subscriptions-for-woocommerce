@@ -54,17 +54,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status wps_sfw_<?php echo esc_html( $wps_status ); ?>">
 								<?php
 
-									if ( 'active' === $wps_status ) {
-										$wps_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
-									} elseif ( 'on-hold' === $wps_status ) {
-										$wps_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
-									} elseif (  'cancelled' === $wps_status ) {
-										$wps_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
-									} elseif (  'paused' === $wps_status ) {
-										$wps_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
-									} elseif ( 'pending' === $wps_status ) {
-										$wps_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
-									}
+								if ( 'active' === $wps_status ) {
+									$wps_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );
+								} elseif ( 'on-hold' === $wps_status ) {
+									$wps_status = esc_html__( 'on-hold', 'subscriptions-for-woocommerce' );
+								} elseif ( 'cancelled' === $wps_status ) {
+									$wps_status = esc_html__( 'cancelled', 'subscriptions-for-woocommerce' );
+								} elseif ( 'paused' === $wps_status ) {
+									$wps_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
+								} elseif ( 'pending' === $wps_status ) {
+									$wps_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
+								}
 									echo esc_html( $wps_status );
 								?>
 							</td>
