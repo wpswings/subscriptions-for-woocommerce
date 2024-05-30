@@ -859,14 +859,16 @@ class Subscriptions_For_Woocommerce_Public {
 			return $available_gateways;
 		}
 		$wps_has_subscription = false;
+				
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->get_cart_contents() as $key => $values ) {
 
-		foreach ( WC()->cart->get_cart_contents() as $key => $values ) {
-
-			if ( wps_sfw_check_product_is_subscription( $values['data'] ) ) {
-				$wps_has_subscription = true;
-				break;
+				if ( wps_sfw_check_product_is_subscription( $values['data'] ) ) {
+					$wps_has_subscription = true;
+					break;
+				}
 			}
-		}
+	    }
 		if ( $wps_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
