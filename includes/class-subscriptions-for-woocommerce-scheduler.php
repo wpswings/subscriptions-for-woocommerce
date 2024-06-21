@@ -296,8 +296,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
 							return;
 						}
-						// custom filter.
+						$wps_new_order = wc_get_order( $wps_new_order->get_id() ); // recalucate when shipping fee applied
 
+						// custom filter.
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
 
 						if ( $wps_new_order->get_status() == 'processing' ) {
@@ -864,6 +865,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
 							return;
 						}
+						$wps_new_order = wc_get_order( $wps_new_order->get_id() ); // recalucate when shipping fee applied
 						// custom filter.
 
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );

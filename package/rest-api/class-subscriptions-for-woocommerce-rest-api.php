@@ -74,12 +74,12 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 	 */
 	public function wps_sfw_add_endpoint() {
 		register_rest_route(
-			'sfw-route/v1',
-			'/sfw-dummy-data/',
+			'wsp-route/v1',
+			'/wsp-view-subscription/',
 			array(
 				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => array( $this, 'wps_sfw_default_callback' ),
-				'permission_callback' => array( $this, 'wps_sfw_default_permission_check' ),
+				'callback' => array( $this, 'wps_wsp_view_susbcription_callback' ),
+				'permission_callback' => array( $this, 'wps_wsp_subscription_permission_check' ),
 			)
 		);
 	}
@@ -92,11 +92,37 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 	 * @return  Array   $result   return rest response to server from where the endpoint hits.
 	 * @since    1.0.0
 	 */
-	public function wps_sfw_default_permission_check( $request ) {
+	public function wps_wsp_subscription_permission_check( $request ) {
 
-		// Add rest api validation for each request.
-		$result = true;
+		$request_params = $request->get_params();
+		$wps_secretkey = isset( $request_params['consumer_secret'] ) ? $request_params['consumer_secret'] : '';
+
+		$result = $this->wps_wsp_validate_secretkey( $wps_secretkey );
+
 		return $result;
+	}
+
+	/**
+	 * Valiadte secret key.
+	 *
+	 * @name wps_wsp_validate_secretkey
+	 * @param   string $wps_secretkey  wps_secretkey.
+	 * @since    1.0.0
+	 */
+	public function wps_wsp_validate_secretkey( $wps_secretkey ) {
+		$wps_secret_code = '';
+
+		if ( wps_wsp_check_api_enable() ) {
+			$wps_secret_code = wps_wsp_api_get_secret_key();
+		}
+
+		if ( '' == $wps_secretkey ) {
+			return false;
+		} elseif ( trim( $wps_secret_code ) === trim( $wps_secretkey ) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 
@@ -107,17 +133,23 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 	 * @return  Array   $wps_sfw_response   return rest response to server from where the endpoint hits.
 	 * @since    1.0.0
 	 */
-	public function wps_sfw_default_callback( $request ) {
+	public function wps_wsp_view_susbcription_callback( $request ) {
 
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/rest-api/version1/class-subscriptions-for-woocommerce-api-process.php';
 		$wps_sfw_api_obj = new Subscriptions_For_Woocommerce_Api_Process();
 		$wps_sfw_resultsdata = $wps_sfw_api_obj->wps_sfw_default_process( $request );
-		if ( is_array( $wps_sfw_resultsdata ) && isset( $wps_sfw_resultsdata['status'] ) && 200 == $wps_sfw_resultsdata['status'] ) {
-			unset( $wps_sfw_resultsdata['status'] );
-			$wps_sfw_response = new WP_REST_Response( $wps_sfw_resultsdata, 200 );
+		if ( is_array( $wps_sfw_resultsdata ) && isset( $wps_sfw_resultsdata['code'] ) && 200 == $wps_sfw_resultsdata['code'] ) {
+
+			$wps_wsp_response = new WP_REST_Response( $wps_sfw_resultsdata );
 		} else {
-			$wps_sfw_response = new WP_Error( $wps_sfw_resultsdata );
+			$wps_wsp_resultsdata = array(
+				'status' => 'error',
+				'code'   => 404,
+				'message' => __( 'Data not found', 'woocommerce-subscriptions-pro' ),
+
+			);
+			$wps_wsp_response = new WP_REST_Response( $wps_wsp_resultsdata );
 		}
-		return $wps_sfw_response;
+		return $wps_wsp_response;
 	}
 }

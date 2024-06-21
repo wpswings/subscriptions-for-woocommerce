@@ -416,6 +416,53 @@ class Subscriptions_For_Woocommerce_Admin {
 		return apply_filters( 'wps_sfw_add_general_settings_fields', $sfw_settings_general );
 	}
 
+	/**
+	 * Api settings fields.
+	 *
+	 * @since    1.0.0
+	 * @param array $wsp_api_settings Api fields.
+	 */
+	public function wps_sfw_admin_api_settings_fields( $wsp_api_settings ) {
+
+		$wsp_api_secret_key = get_option( 'wsp_api_secret_key', '' );
+
+		$wps_wsp_btn_txt = ! empty( $wsp_api_secret_key ) ? __( 'Save Settings', 'woocommerce-subscriptions-pro' ) : __( 'Generate & Save', 'woocommerce-subscriptions-pro' );
+
+		$wsp_api_settings = array(
+			array(
+				'title' => __( 'Enable API Features', 'woocommerce-subscriptions-pro' ),
+				'type'  => 'radio-switch',
+				'description'  => __( 'Enable this to allow API functionality to view subscription.', 'woocommerce-subscriptions-pro' ),
+				'id'    => 'wsp_enable_api_features',
+				'value' => get_option( 'wsp_enable_api_features' ),
+				'class' => 'wsp-radio-switch-class',
+				'options' => array(
+					'yes' => __( 'YES', 'woocommerce-subscriptions-pro' ),
+					'no' => __( 'NO', 'woocommerce-subscriptions-pro' ),
+				),
+			),
+			array(
+				'title' => __( 'API secret key', 'woocommerce-subscriptions-pro' ),
+				'type'  => 'text',
+				'description'  => __( 'API secret key.', 'woocommerce-subscriptions-pro' ),
+				'id'    => 'wsp_api_secret_key',
+				'value' => get_option( 'wsp_api_secret_key', '' ),
+				'class' => 'wsp-text-class',
+				'placeholder' => __( 'API secret key', 'woocommerce-subscriptions-pro' ),
+			),
+		);
+
+		$wsp_api_settings[] = array(
+			'type'  => 'button',
+			'id'    => 'wps_sfw_save_api_settings',
+			'button_text' => $wps_wsp_btn_txt,
+			'class' => 'sfw-button-class',
+		);
+		$wsp_api_settings = array_merge( $wsp_api_settings );
+
+		return $wsp_api_settings;
+	}
+
 
 	/**
 	 * Subscriptions For Woocommerce save tab settings.
@@ -461,6 +508,42 @@ class Subscriptions_For_Woocommerce_Admin {
 					} else {
 						$wps_sfw_notices = true;
 					}
+				}
+			}
+		} elseif ( isset( $_POST['wps_sfw_save_api_settings'] ) && isset( $_POST['wps-sfw-api-nonce-field'] ) ) {
+			if ( ! isset( $_POST['wps-sfw-api-nonce-field'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wps-sfw-api-nonce-field'] ) ), 'wps-sfw-api-nonce' ) ) {
+				return;
+			}
+			$wps_sfw_gen_flag = false;
+			$wsp_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
+			$wsp_button_index = array_search( 'submit', array_column( $wsp_api_settings, 'type' ) );
+			if ( isset( $wsp_button_index ) && ( null == $wsp_button_index || '' == $wsp_button_index ) ) {
+				$wsp_button_index = array_search( 'button', array_column( $wsp_api_settings, 'type' ) );
+			}
+			if ( isset( $wsp_button_index ) && '' !== $wsp_button_index ) {
+				unset( $wsp_api_settings[ $wsp_button_index ] );
+				if ( is_array( $wsp_api_settings ) && ! empty( $wsp_api_settings ) ) {
+					foreach ( $wsp_api_settings as $wsp_api_setting ) {
+						if ( isset( $wsp_api_setting['id'] ) && '' !== $wsp_api_setting['id'] ) {
+							if ( 'wsp_api_secret_key' == $wsp_api_setting['id'] && empty( $_POST[ $wsp_api_setting['id'] ] ) ) {
+								$_POST[ $wsp_api_setting['id'] ] = 'wps_' . wc_rand_hash();
+							}
+							if ( isset( $_POST[ $wsp_api_setting['id'] ] ) ) {
+								$posted_value = sanitize_text_field( wp_unslash( $_POST[ $wsp_api_setting['id'] ] ) );
+								update_option( $wsp_api_setting['id'], $posted_value );
+							} else {
+								update_option( $wsp_api_setting['id'], '' );
+							}
+						} else {
+							$wps_sfw_gen_flag = true;
+						}
+					}
+				}
+				if ( $wps_sfw_gen_flag ) {
+					$wps_sfw_error_text = esc_html__( 'Id of some field is missing', 'subscriptions-for-woocommerce' );
+					$sfw_wps_sfw_obj->wps_sfw_plug_admin_notice( $wps_sfw_error_text, 'error' );
+				} else {
+					$wps_sfw_notices = true;
 				}
 			}
 		}

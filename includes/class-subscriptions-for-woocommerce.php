@@ -229,6 +229,8 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'sfw_developer_admin_hooks_array', $sfw_plugin_admin, 'wps_developer_admin_hooks_listing' );
 		$this->loader->add_action( 'sfw_developer_public_hooks_array', $sfw_plugin_admin, 'wps_developer_public_hooks_listing' );
 
+		$this->loader->add_filter( 'wps_sfw_api_settings_array', $sfw_plugin_admin, 'wps_sfw_admin_api_settings_fields', 10 );
+
 		if ( wps_sfw_check_plugin_enable() ) {
 			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'wps_sfw_create_subscription_product_type' );
 
@@ -449,7 +451,11 @@ class Subscriptions_For_Woocommerce {
 				'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 			);
 		}
-
+		$sfw_default_tabs['subscription-for-woocommerce-api'] = array(
+			'title'       => esc_html__( 'API Settings', 'subscription-for-woocommerce' ),
+			'name'        => 'subscription-for-woocommerce-api',
+			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+		);
 		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),
