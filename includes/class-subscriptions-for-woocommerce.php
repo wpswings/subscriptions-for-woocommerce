@@ -443,6 +443,11 @@ class Subscriptions_For_Woocommerce {
 			'name'        => 'subscriptions-for-woocommerce-subscriptions-table',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
+		$sfw_default_tabs['subscription-for-woocommerce-api'] = array(
+			'title'       => esc_html__( 'API Settings', 'subscription-for-woocommerce' ),
+			'name'        => 'subscription-for-woocommerce-api',
+			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+		);
 
 		if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-free-vs-pro'] = array(
@@ -451,11 +456,6 @@ class Subscriptions_For_Woocommerce {
 				'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 			);
 		}
-		$sfw_default_tabs['subscription-for-woocommerce-api'] = array(
-			'title'       => esc_html__( 'API Settings', 'subscription-for-woocommerce' ),
-			'name'        => 'subscription-for-woocommerce-api',
-			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
-		);
 		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),
