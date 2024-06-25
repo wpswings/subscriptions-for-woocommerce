@@ -27,3 +27,77 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 		?>
 	</div>
 </form>
+<div class="wps_sfw_api_details_main_wrapper">
+	<h3><?php esc_html_e( 'Plugin API Details', 'subscription-for-woocommerce' ); ?></h3>
+	<!-- Show Authentication -->
+	<h4><?php esc_html_e( 'Authentication', 'subscription-for-woocommerce' ); ?></h4>
+	<div class="wps_sfw_rest_api_response">
+		<p>
+			<?php
+			esc_html_e( 'For authentication you need ', 'subscription-for-woocommerce' );
+			esc_html_e( ' Consumer Secret ', 'subscription-for-woocommerce' );
+			echo '<strong>{consumer_secret}</strong>';
+			esc_html_e( ' keys. Response on wrong api details:', 'subscription-for-woocommerce' );
+			?>
+		</p>
+	<pre>
+	{
+	"code": "rest_forbidden",
+	"message": "Sorry, you are not allowed to do that.",
+	"data": {
+		"status": 401
+		}
+	}
+	</pre>
+	</div>
+
+	<!-- To get user points -->
+	<h4><?php esc_html_e( 'To Retrive All Subscription', 'subscription-for-woocommerce' ); ?></h4>
+	<div class="wps_sfw_rest_api_response">
+		<p><strong><?php esc_html_e( 'Base Url to get all subscription  : ', 'subscription-for-woocommerce' ) ?></strong>{site_url}/wp-json/wsp-route/v1/wsp-view-subscription</p>
+		<p>
+			<strong>
+			<?php
+			esc_html_e( 'Example : ', 'subscription-for-woocommerce' );
+			echo esc_html( site_url() );
+			esc_html_e( '/wp-json/wsp-route/v1/wsp-view-subscription', 'subscription-for-woocommerce' );
+			?>
+			</strong>
+		<p>
+		<?php
+		esc_html_e( 'Parameters Required : ', 'subscription-for-woocommerce' );
+		echo wp_kses_post( '<strong> {consumer_secret}</strong>' );
+		?>
+		</p>
+		<p><?php esc_html_e( 'JSON response example:', 'subscription-for-woocommerce' ); ?></p>
+	<pre>
+	{
+	"code": 200,
+	"status": "success",
+	"data": [
+		{
+
+			"subscription_id": 490,
+			"parent_order_id": "489",
+			"status": "cancelled",
+			"product_name": "wpswings-daily-susbcription",
+			"recurring_amount": "6",
+			"user_name": "admin",
+			"next_payment_date": "April 8, 2021 9:09 am",
+			"subscriptions_expiry_date": "—"
+		},
+		{
+			"subscription_id": 486,
+			"parent_order_id": "485",
+			"status": "active",
+			"product_name": "free trial",
+			"recurring_amount": "8",
+			"user_name": "admin",
+			"next_payment_date": "May 4, 2021 12:42 pm",
+			"subscriptions_expiry_date": "—"
+		},
+		]
+	}
+	</pre>
+	</div>
+</div>

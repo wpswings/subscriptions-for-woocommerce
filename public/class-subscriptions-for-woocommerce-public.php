@@ -1169,9 +1169,7 @@ class Subscriptions_For_Woocommerce_Public {
 							),
 						);
 						$wps_subscriptions = get_posts( $args );
-
 					}
-
 					if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
 						foreach ( $wps_subscriptions as $key => $subscription ) {
 
@@ -1210,6 +1208,13 @@ class Subscriptions_For_Woocommerce_Public {
 						}
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription_activated', 'yes' );
 					}
+				}
+			} elseif ( 'failed' == $new_status || 'pending' == $new_status ) {
+				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
+
+				if ( 'yes' == $wps_has_susbcription ) {
+					$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
+					wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', 'on-hold' );
 				}
 			}
 		}
