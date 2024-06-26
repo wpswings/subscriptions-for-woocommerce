@@ -1127,7 +1127,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
 				$is_activated = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription_activated', true );
 
-				if ( 'yes' == $wps_has_susbcription && 'yes' == $is_activated ) {
+				if ( 'yes' == $wps_has_susbcription && 'yes' !== $is_activated ) {
 
 					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 						$args = array(
