@@ -1122,16 +1122,12 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
 
-		$is_activated = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription_activated', true );
-
-		if ( 'yes' == $is_activated ) {
-			return;
-		}
 		if ( $old_status != $new_status ) {
 			if ( 'completed' == $new_status || 'processing' == $new_status ) {
 				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
+				$is_activated = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription_activated', true );
 
-				if ( 'yes' == $wps_has_susbcription ) {
+				if ( 'yes' == $wps_has_susbcription && 'yes' == $is_activated ) {
 
 					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 						$args = array(
@@ -1209,11 +1205,23 @@ class Subscriptions_For_Woocommerce_Public {
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription_activated', 'yes' );
 					}
 				}
-			} elseif ( 'failed' == $new_status || 'pending' == $new_status ) {
-				$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_order_has_subscription', true );
+				// renewal order handling
+				$renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
+				$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
+				if ( $subscription_id && 'yes' == $renewal_order ) {
+					$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
+					$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $subscription_id, $current_time );
+					$wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, $current_time, $wps_susbcription_trial_end );
 
-				if ( 'yes' == $wps_has_susbcription ) {
-					$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
+					$wps_next_payment_date = apply_filters( 'wps_sfw_next_payment_date', $wps_next_payment_date, $subscription_id );
+
+					wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
+				}
+			} elseif ( 'failed' == $new_status || 'pending' == $new_status ) {
+				// renewal order handling
+				$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
+				$renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
+				if ( $subscription_id && 'yes' == $renewal_order ) {
 					wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', 'on-hold' );
 				}
 			}
