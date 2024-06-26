@@ -857,9 +857,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$parent_order_id = $subscription_id;
 						}
 						// update next payment date.
-						$wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, $current_time, 0 );
+						// $wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, $current_time, 0 );
 
-						wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
+						// wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 
 						// custom filter.
 						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
