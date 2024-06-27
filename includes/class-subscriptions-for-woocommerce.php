@@ -442,7 +442,7 @@ class Subscriptions_For_Woocommerce {
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs['subscription-for-woocommerce-api'] = array(
-			'title'       => esc_html__( 'API Settings', 'subscription-for-woocommerce' ),
+			'title'       => esc_html__( 'API Settings', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscription-for-woocommerce-api',
 			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
