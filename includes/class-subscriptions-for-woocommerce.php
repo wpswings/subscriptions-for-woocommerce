@@ -250,8 +250,6 @@ class Subscriptions_For_Woocommerce {
 
 			// paypal Keys Validation.
 			$this->loader->add_filter( 'wp_ajax_wps_sfw_paypal_keys_validation', $sfw_plugin_admin, 'wps_sfw_paypal_keys_validation_callack' );
-
-			// $this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_order_notes_link_redirection' );
 		}
 
 		/*cron for notification*/

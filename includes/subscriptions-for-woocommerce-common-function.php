@@ -598,9 +598,7 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
 					'return' => 'ids',
-					// 'numberposts' => -1,
 					'type'   => 'wps_subscriptions',
-					// 'status'   => 'wc-wps_renewal',
 					'meta_query' => array(
 						'relation' => 'AND',
 						array(
