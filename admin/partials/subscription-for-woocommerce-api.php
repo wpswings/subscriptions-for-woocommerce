@@ -28,16 +28,16 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 	</div>
 </form>
 <div class="wps_sfw_api_details_main_wrapper">
-	<h3><?php esc_html_e( 'Plugin API Details', 'subscription-for-woocommerce' ); ?></h3>
+	<h3><?php esc_html_e( 'Plugin API Details', 'subscriptions-for-woocommerce' ); ?></h3>
 	<!-- Show Authentication -->
-	<h4><?php esc_html_e( 'Authentication', 'subscription-for-woocommerce' ); ?></h4>
+	<h4><?php esc_html_e( 'Authentication', 'subscriptions-for-woocommerce' ); ?></h4>
 	<div class="wps_sfw_rest_api_response">
 		<p>
 			<?php
-			esc_html_e( 'For authentication you need ', 'subscription-for-woocommerce' );
-			esc_html_e( ' Consumer Secret ', 'subscription-for-woocommerce' );
+			esc_html_e( 'For authentication you need ', 'subscriptions-for-woocommerce' );
+			esc_html_e( ' Consumer Secret ', 'subscriptions-for-woocommerce' );
 			echo '<strong>{consumer_secret}</strong>';
-			esc_html_e( ' keys. Response on wrong api details:', 'subscription-for-woocommerce' );
+			esc_html_e( ' keys. Response on wrong api details:', 'subscriptions-for-woocommerce' );
 			?>
 		</p>
 	<pre>
@@ -52,24 +52,24 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 	</div>
 
 	<!-- To get user points -->
-	<h4><?php esc_html_e( 'To Retrive All Subscription', 'subscription-for-woocommerce' ); ?></h4>
+	<h4><?php esc_html_e( 'To Retrive All Subscription', 'subscriptions-for-woocommerce' ); ?></h4>
 	<div class="wps_sfw_rest_api_response">
-		<p><strong><?php esc_html_e( 'Base Url to get all subscription  : ', 'subscription-for-woocommerce' ) ?></strong>{site_url}/wp-json/wsp-route/v1/wsp-view-subscription</p>
+		<p><strong><?php esc_html_e( 'Base Url to get all subscription  : ', 'subscriptions-for-woocommerce' ) ?></strong>{site_url}/wp-json/wsp-route/v1/wsp-view-subscription</p>
 		<p>
 			<strong>
 			<?php
-			esc_html_e( 'Example : ', 'subscription-for-woocommerce' );
+			esc_html_e( 'Example : ', 'subscriptions-for-woocommerce' );
 			echo esc_html( site_url() );
-			esc_html_e( '/wp-json/wsp-route/v1/wsp-view-subscription', 'subscription-for-woocommerce' );
+			esc_html_e( '/wp-json/wsp-route/v1/wsp-view-subscription', 'subscriptions-for-woocommerce' );
 			?>
 			</strong>
 		<p>
 		<?php
-		esc_html_e( 'Parameters Required : ', 'subscription-for-woocommerce' );
+		esc_html_e( 'Parameters Required : ', 'subscriptions-for-woocommerce' );
 		echo wp_kses_post( '<strong> {consumer_secret}</strong>' );
 		?>
 		</p>
-		<p><?php esc_html_e( 'JSON response example:', 'subscription-for-woocommerce' ); ?></p>
+		<p><?php esc_html_e( 'JSON response example:', 'subscriptions-for-woocommerce' ); ?></p>
 	<pre>
 	{
 	"code": 200,
