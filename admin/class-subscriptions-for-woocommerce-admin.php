@@ -98,7 +98,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 
 		if ( isset( $screen->id ) && 'product' == $screen->id && 'wp-swings_page_home' == $screen->id ) {
-			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
 		}
 	}
@@ -188,7 +188,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 
 		if ( ( isset( $screen->id ) && 'product' == $screen->id ) || 'wps_subscriptions' == $screen->id ) {
-			wp_register_script( 'wps-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscription-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
+			wp_register_script( 'wps-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'wps-sfw-admin-single-product-js' );
 
 			$wps_sfw_data = array(
@@ -426,29 +426,29 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wsp_api_secret_key = get_option( 'wsp_api_secret_key', '' );
 
-		$wps_wsp_btn_txt = ! empty( $wsp_api_secret_key ) ? __( 'Save Settings', 'woocommerce-subscriptions-pro' ) : __( 'Generate & Save', 'woocommerce-subscriptions-pro' );
+		$wps_wsp_btn_txt = ! empty( $wsp_api_secret_key ) ? __( 'Save Settings', 'subscriptions-for-woocommerce' ) : __( 'Generate & Save', 'subscriptions-for-woocommerce' );
 
 		$wsp_api_settings = array(
 			array(
-				'title' => __( 'Enable API Features', 'woocommerce-subscriptions-pro' ),
+				'title' => __( 'Enable API Features', 'subscriptions-for-woocommerce' ),
 				'type'  => 'radio-switch',
-				'description'  => __( 'Enable this to allow API functionality to view subscription.', 'woocommerce-subscriptions-pro' ),
+				'description'  => __( 'Enable this to allow API functionality to view subscription.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wsp_enable_api_features',
 				'value' => get_option( 'wsp_enable_api_features' ),
 				'class' => 'wsp-radio-switch-class',
 				'options' => array(
-					'yes' => __( 'YES', 'woocommerce-subscriptions-pro' ),
-					'no' => __( 'NO', 'woocommerce-subscriptions-pro' ),
+					'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
+					'no' => __( 'NO', 'subscriptions-for-woocommerce' ),
 				),
 			),
 			array(
-				'title' => __( 'API secret key', 'woocommerce-subscriptions-pro' ),
+				'title' => __( 'API secret key', 'subscriptions-for-woocommerce' ),
 				'type'  => 'text',
-				'description'  => __( 'API secret key.', 'woocommerce-subscriptions-pro' ),
+				'description'  => __( 'API secret key.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wsp_api_secret_key',
 				'value' => get_option( 'wsp_api_secret_key', '' ),
 				'class' => 'wsp-text-class',
-				'placeholder' => __( 'API secret key', 'woocommerce-subscriptions-pro' ),
+				'placeholder' => __( 'API secret key', 'subscriptions-for-woocommerce' ),
 			),
 		);
 
