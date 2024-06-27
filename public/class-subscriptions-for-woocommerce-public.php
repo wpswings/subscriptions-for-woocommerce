@@ -1205,7 +1205,7 @@ class Subscriptions_For_Woocommerce_Public {
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription_activated', 'yes' );
 					}
 				}
-				// renewal order handling
+				// Renewal order handling.
 				$renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
 				if ( $subscription_id && 'yes' == $renewal_order ) {
@@ -1218,7 +1218,7 @@ class Subscriptions_For_Woocommerce_Public {
 					wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 				}
 			} elseif ( 'failed' == $new_status || 'pending' == $new_status ) {
-				// renewal order handling
+				// Renewal order handling.
 				$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
 				$renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 				if ( $subscription_id && 'yes' == $renewal_order ) {
