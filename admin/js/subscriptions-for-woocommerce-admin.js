@@ -113,6 +113,19 @@
 		})
     });
 
+	// Open API tab details.
+	jQuery(document).ready(function(){
+
+		jQuery('.wps_sfw_rest_api_response').hide();
+		jQuery('.wps_sfw_rest_api_response').first().show();
+		jQuery('.wps_sfw_api_details_main_wrapper h4').first().addClass('active');
+
+		jQuery(document).on('click','.wps_sfw_api_details_main_wrapper h4', function(){
+		jQuery(this).next('.wps_sfw_rest_api_response').slideToggle(500);
+			jQuery(this).toggleClass('active');
+	})
+	})
+
 	})( jQuery );
 	var wps_subscripiton_migration_success = function() {
 	

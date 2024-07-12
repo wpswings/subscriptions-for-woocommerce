@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.6.5';
+			$this->version = '1.6.8';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -229,6 +229,8 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'sfw_developer_admin_hooks_array', $sfw_plugin_admin, 'wps_developer_admin_hooks_listing' );
 		$this->loader->add_action( 'sfw_developer_public_hooks_array', $sfw_plugin_admin, 'wps_developer_public_hooks_listing' );
 
+		$this->loader->add_filter( 'wps_sfw_api_settings_array', $sfw_plugin_admin, 'wps_sfw_admin_api_settings_fields', 10 );
+
 		if ( wps_sfw_check_plugin_enable() ) {
 			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'wps_sfw_create_subscription_product_type' );
 
@@ -248,8 +250,6 @@ class Subscriptions_For_Woocommerce {
 
 			// paypal Keys Validation.
 			$this->loader->add_filter( 'wp_ajax_wps_sfw_paypal_keys_validation', $sfw_plugin_admin, 'wps_sfw_paypal_keys_validation_callack' );
-
-			// $this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_order_notes_link_redirection' );
 		}
 
 		/*cron for notification*/
@@ -441,6 +441,11 @@ class Subscriptions_For_Woocommerce {
 			'name'        => 'subscriptions-for-woocommerce-subscriptions-table',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
+		$sfw_default_tabs['subscription-for-woocommerce-api'] = array(
+			'title'       => esc_html__( 'API Settings', 'subscriptions-for-woocommerce' ),
+			'name'        => 'subscription-for-woocommerce-api',
+			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+		);
 
 		if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-free-vs-pro'] = array(
@@ -449,7 +454,6 @@ class Subscriptions_For_Woocommerce {
 				'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 			);
 		}
-
 		$sfw_default_tabs = apply_filters( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs_before', $sfw_default_tabs );
 		$sfw_default_tabs['subscriptions-for-woocommerce-system-status'] = array(
 			'title'       => esc_html__( 'System Status', 'subscriptions-for-woocommerce' ),

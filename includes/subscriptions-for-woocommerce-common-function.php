@@ -598,9 +598,7 @@ if ( ! function_exists( 'wps_sfw_delete_failed_subscription' ) ) {
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
 					'return' => 'ids',
-					// 'numberposts' => -1,
 					'type'   => 'wps_subscriptions',
-					// 'status'   => 'wc-wps_renewal',
 					'meta_query' => array(
 						'relation' => 'AND',
 						array(
@@ -903,5 +901,35 @@ if ( ! function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) ) {
 			}
 		}
 		return $wps_has_subscription;
+	}
+}
+
+if ( ! function_exists( 'wps_wsp_check_api_enable' ) ) {
+	/**
+	 * This function is used to check api enbale.
+	 *
+	 * @name wps_wsp_check_api_enable
+	 * @since 1.6.8
+	 */
+	function wps_wsp_check_api_enable() {
+		$is_enable = false;
+		$wps_wps_enable = get_option( 'wsp_enable_api_features', '' );
+		if ( 'on' == $wps_wps_enable ) {
+			$is_enable = true;
+		}
+		return $is_enable;
+	}
+}
+if ( ! function_exists( 'wps_wsp_api_get_secret_key' ) ) {
+	/**
+	 * This function is used to check api enbale.
+	 *
+	 * @name wps_wsp_api_get_secret_key
+	 * @since 1.6.8
+	 */
+	function wps_wsp_api_get_secret_key() {
+
+		$wsp_api_secret_key = get_option( 'wsp_api_secret_key', '' );
+		return $wsp_api_secret_key;
 	}
 }

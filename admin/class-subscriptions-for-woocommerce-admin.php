@@ -98,7 +98,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 
 		if ( isset( $screen->id ) && 'product' == $screen->id && 'wp-swings_page_home' == $screen->id ) {
-			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-admin-single-product-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-product-edit.css', array(), time(), 'all' );
 
 		}
 	}
@@ -188,7 +188,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 
 		if ( ( isset( $screen->id ) && 'product' == $screen->id ) || 'wps_subscriptions' == $screen->id ) {
-			wp_register_script( 'wps-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscription-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
+			wp_register_script( 'wps-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'wps-sfw-admin-single-product-js' );
 
 			$wps_sfw_data = array(
@@ -416,6 +416,53 @@ class Subscriptions_For_Woocommerce_Admin {
 		return apply_filters( 'wps_sfw_add_general_settings_fields', $sfw_settings_general );
 	}
 
+	/**
+	 * Api settings fields.
+	 *
+	 * @since    1.0.0
+	 * @param array $wsp_api_settings Api fields.
+	 */
+	public function wps_sfw_admin_api_settings_fields( $wsp_api_settings ) {
+
+		$wsp_api_secret_key = get_option( 'wsp_api_secret_key', '' );
+
+		$wps_wsp_btn_txt = ! empty( $wsp_api_secret_key ) ? __( 'Save Settings', 'subscriptions-for-woocommerce' ) : __( 'Generate & Save', 'subscriptions-for-woocommerce' );
+
+		$wsp_api_settings = array(
+			array(
+				'title' => __( 'Enable API Features', 'subscriptions-for-woocommerce' ),
+				'type'  => 'radio-switch',
+				'description'  => __( 'Enable this to allow API functionality to view subscription.', 'subscriptions-for-woocommerce' ),
+				'id'    => 'wsp_enable_api_features',
+				'value' => get_option( 'wsp_enable_api_features' ),
+				'class' => 'wsp-radio-switch-class',
+				'options' => array(
+					'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
+					'no' => __( 'NO', 'subscriptions-for-woocommerce' ),
+				),
+			),
+			array(
+				'title' => __( 'API secret key', 'subscriptions-for-woocommerce' ),
+				'type'  => 'text',
+				'description'  => __( 'API secret key.', 'subscriptions-for-woocommerce' ),
+				'id'    => 'wsp_api_secret_key',
+				'value' => get_option( 'wsp_api_secret_key', '' ),
+				'class' => 'wsp-text-class',
+				'placeholder' => __( 'API secret key', 'subscriptions-for-woocommerce' ),
+			),
+		);
+
+		$wsp_api_settings[] = array(
+			'type'  => 'button',
+			'id'    => 'wps_sfw_save_api_settings',
+			'button_text' => $wps_wsp_btn_txt,
+			'class' => 'sfw-button-class',
+		);
+		$wsp_api_settings = array_merge( $wsp_api_settings );
+
+		return $wsp_api_settings;
+	}
+
 
 	/**
 	 * Subscriptions For Woocommerce save tab settings.
@@ -461,6 +508,42 @@ class Subscriptions_For_Woocommerce_Admin {
 					} else {
 						$wps_sfw_notices = true;
 					}
+				}
+			}
+		} elseif ( isset( $_POST['wps_sfw_save_api_settings'] ) && isset( $_POST['wps-sfw-api-nonce-field'] ) ) {
+			if ( ! isset( $_POST['wps-sfw-api-nonce-field'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wps-sfw-api-nonce-field'] ) ), 'wps-sfw-api-nonce' ) ) {
+				return;
+			}
+			$wps_sfw_gen_flag = false;
+			$wsp_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
+			$wsp_button_index = array_search( 'submit', array_column( $wsp_api_settings, 'type' ) );
+			if ( isset( $wsp_button_index ) && ( null == $wsp_button_index || '' == $wsp_button_index ) ) {
+				$wsp_button_index = array_search( 'button', array_column( $wsp_api_settings, 'type' ) );
+			}
+			if ( isset( $wsp_button_index ) && '' !== $wsp_button_index ) {
+				unset( $wsp_api_settings[ $wsp_button_index ] );
+				if ( is_array( $wsp_api_settings ) && ! empty( $wsp_api_settings ) ) {
+					foreach ( $wsp_api_settings as $wsp_api_setting ) {
+						if ( isset( $wsp_api_setting['id'] ) && '' !== $wsp_api_setting['id'] ) {
+							if ( 'wsp_api_secret_key' == $wsp_api_setting['id'] && empty( $_POST[ $wsp_api_setting['id'] ] ) ) {
+								$_POST[ $wsp_api_setting['id'] ] = 'wps_' . wc_rand_hash();
+							}
+							if ( isset( $_POST[ $wsp_api_setting['id'] ] ) ) {
+								$posted_value = sanitize_text_field( wp_unslash( $_POST[ $wsp_api_setting['id'] ] ) );
+								update_option( $wsp_api_setting['id'], $posted_value );
+							} else {
+								update_option( $wsp_api_setting['id'], '' );
+							}
+						} else {
+							$wps_sfw_gen_flag = true;
+						}
+					}
+				}
+				if ( $wps_sfw_gen_flag ) {
+					$wps_sfw_error_text = esc_html__( 'Id of some field is missing', 'subscriptions-for-woocommerce' );
+					$sfw_wps_sfw_obj->wps_sfw_plug_admin_notice( $wps_sfw_error_text, 'error' );
+				} else {
+					$wps_sfw_notices = true;
 				}
 			}
 		}
@@ -1102,28 +1185,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 
 			wp_send_json_success();
-		}
-	}
-
-	/**
-	 * Wps  order_notes_link_redirection.
-	 */
-	public function wps_sfw_order_notes_link_redirection() {
-		if ( isset( $_GET['wps_order_type'] ) && 'renewal' == $_GET['wps_order_type'] ) {
-			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
-			$subp_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
-			$wps_sfw_status = wps_wsp_get_meta_data( $subp_id, 'wps_subscription_status', true );
-			$wps_link = add_query_arg(
-				array(
-					'wps_subscription_id'               => $subp_id,
-					'wps_subscription_view_renewal_order'     => $wps_sfw_status,
-				),
-				admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table' )
-			);
-
-			$wps_link = wp_nonce_url( $wps_link, $subp_id . $wps_sfw_status );
-			wp_safe_redirect( $wps_link );
-			exit;
 		}
 	}
 }

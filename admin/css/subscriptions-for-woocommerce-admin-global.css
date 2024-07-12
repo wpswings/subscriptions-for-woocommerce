@@ -166,12 +166,12 @@ select {
     display: inline-block;
 }
 
-.active {
-    color: #004EB6;
+.wps-navbar__items .active {
+    /* color: #004EB6; */
     position: relative;
 }
 
-.active::after {
+.wps-navbar__items .active::after {
     content: '';
     position: absolute;
     bottom: 0;

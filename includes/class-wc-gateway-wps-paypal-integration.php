@@ -894,7 +894,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			$order->update_meta_data( '_wps_paypal_payment_status', 'completed' );
 			$order->update_meta_data( '_wps_paypal_order_id', $json->id );
 			$order->update_meta_data( '_wps_paypal_payment_status', 'captured' );
-			// $order->update_status( 'wc-processing' );
 			$order->save();
 			do_action( 'wps_sfw_recurring_payment_success', $order->get_id() );
 		} else {
