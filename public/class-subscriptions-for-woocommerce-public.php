@@ -1217,7 +1217,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 					wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 				}
-			} elseif ( 'failed' == $new_status || 'pending' == $new_status ) {
+			} elseif ( 'failed' == $new_status || 'pending' == $new_status || 'wps_renewal' == $new_status ) {
 				// Renewal order handling.
 				$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
 				$renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
@@ -1615,7 +1615,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_has_subscription = wps_sfw_is_cart_has_subscription_product();
 
 		if ( 'stripe' === $gateway_id && $wps_has_subscription && 'yes' === $experimental_feature ) {
-			$description .= '<i><span class="wps_sfw_experimental_feature_notice">' . esc_html__( 'Only the Card is supported for the recurring payment', 'subscriptions-for-woocommerce' ) . '</span><i><br>';
+			$description .= '<i><span class="wps_sfw_experimental_feature_notice">' . esc_html__( 'Only the Card is supported for the recurring payment', 'subscriptions-for-woocommerce' ) . '</span></i><br>';
 		}
 		return $description;
 	}
