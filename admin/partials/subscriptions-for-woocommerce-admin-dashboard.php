@@ -92,8 +92,7 @@ $wps_sfw_pro_name = apply_filters( 'wps_sfw_dashboard_plugin_title', esc_attr( s
 				$sfw_active_tab = 'subscriptions-for-woocommerce-general';
 			}
 
-
-				// look for the path based on the tab id in the admin templates.
+			// look for the path based on the tab id in the admin templates.
 			if ( ! isset( $sfw_default_tabs[ $sfw_active_tab ]['file_path'] ) ) {
 				$file_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH;
 			} else {

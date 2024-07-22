@@ -341,14 +341,41 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				),
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-				$args['meta_query'] = array(
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $data,
-						'compare' => 'LIKE',
-					),
-				);
+				// logic to fetch subscription using subscription id or parent id
+				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+
+				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
+				if( $sub_id ) {
+					$maybe_subscription_or_parent_id = $sub_id;
+				}
+				if ( $maybe_subscription_or_parent_id ) {
+					$args['meta_query'] = array(
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $maybe_subscription_or_parent_id,
+							'compare' => 'LIKE',
+						),
+					);
+				} else {
+					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+					// logic to fetch subscription using username or email
+
+					$user = get_user_by('email', $username_or_email );
+    
+					// If no user is found by email, try to get by username
+					if (! $user ) {
+						$user = get_user_by('login', $username_or_email );
+					}
+					$customer_id = $user ? $user->ID : false;
+
+					$args['meta_query'] = array(
+						array(
+							'key'   => 'wps_customer_id',
+							'value' => $customer_id,
+							'compare' => 'LIKE',
+						),
+					);
+				}
 			}
 			$wps_subscriptions = wc_get_orders( $args );
 		} else {
@@ -368,19 +395,46 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			);
 
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-				$args['meta_query'] = array(
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $data,
-						'compare' => 'LIKE',
-					),
-				);
+				// logic to fetch subscription using subscription id or parent id
+				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+
+				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
+				if( $sub_id ) {
+					$maybe_subscription_or_parent_id = $sub_id;
+				}
+				if ( $maybe_subscription_or_parent_id ) {
+					$args['meta_query'] = array(
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $maybe_subscription_or_parent_id,
+							'compare' => 'LIKE',
+						),
+					);
+				} else {
+					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+					// logic to fetch subscription using username or email
+
+					$user = get_user_by('email', $username_or_email );
+    
+					// If no user is found by email, try to get by username
+					if (! $user ) {
+						$user = get_user_by('login', $username_or_email );
+					}
+					$customer_id = $user ? $user->ID : false;
+
+					$args['meta_query'] = array(
+						array(
+							'key'   => 'wps_customer_id',
+							'value' => $customer_id,
+							'compare' => 'LIKE',
+						),
+					);
+				}
 			}
 			$wps_subscriptions = get_posts( $args );
 		}
 
-		// get the item count.
+		// code to get the total item count.
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args2 = array(
 				'type'   => 'wps_subscriptions',
@@ -394,14 +448,42 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				'return' => 'ids',
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-				$args2['meta_query'] = array(
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $data,
-						'compare' => 'LIKE',
-					),
-				);
+				// logic to fetch subscription using subscription id or parent id
+				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+
+				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
+				if( $sub_id ) {
+					$maybe_subscription_or_parent_id = $sub_id;
+				}
+				if ( $maybe_subscription_or_parent_id ) {
+					$args2['meta_query'] = array(
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $maybe_subscription_or_parent_id,
+							'compare' => 'LIKE',
+						),
+					);
+				} else {
+					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+					// logic to fetch subscription using username or email
+
+					$user = get_user_by('email', $username_or_email );
+    
+					// If no user is found by email, try to get by username
+					if (! $user ) {
+						$user = get_user_by('login', $username_or_email );
+					}
+					$customer_id = $user ? $user->ID : false;
+
+
+					$args2['meta_query'] = array(
+						array(
+							'key'   => 'wps_customer_id',
+							'value' => $customer_id,
+							'compare' => 'LIKE',
+						),
+					);
+				}
 			}
 			$wps_subscriptions2 = wc_get_orders( $args2 );
 
@@ -419,45 +501,48 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				'fields' => 'ids',
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+				// logic to fetch subscription using subscription id or parent id
+				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 
-				$args2['meta_query'] = array(
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $data,
-						'compare' => 'LIKE',
-					),
-				);
+				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
+				if( $sub_id ) {
+					$maybe_subscription_or_parent_id = $sub_id;
+				}
+				if ( $maybe_subscription_or_parent_id ) {
+					$args2['meta_query'] = array(
+						array(
+							'key'   => 'wps_parent_order',
+							'value' => $maybe_subscription_or_parent_id,
+							'compare' => 'LIKE',
+						),
+					);
+				} else {
+					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+					// logic to fetch subscription using username or email
+
+					$user = get_user_by('email', $username_or_email );
+    
+					// If no user is found by email, try to get by username
+					if (! $user ) {
+						$user = get_user_by('login', $username_or_email );
+					}
+					$customer_id = $user ? $user->ID : false;
+
+
+					$args2['meta_query'] = array(
+						array(
+							'key'   => 'wps_customer_id',
+							'value' => $customer_id,
+							'compare' => 'LIKE',
+						),
+					);
+				}
 			}
 			$wps_subscriptions2 = get_posts( $args2 );
 		}
 		$total_count = count( $wps_subscriptions2 );
 
-		// search with subscription id code.
-		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-			$data           = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-
-			$wps_subscriptions = apply_filters( 'wps_sfw_search_subscription_username', $wps_subscriptions, $data );
-			if ( empty( $wps_subscriptions ) ) {
-				$wps_subs_id = wps_sfw_get_meta_data( $data, 'wps_parent_order', true );
-				$args2['meta_query'] = array(
-					array(
-						'key'   => 'wps_parent_order',
-						'value' => $wps_subs_id,
-						'compare' => 'LIKE',
-					),
-				);
-
-				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-					$wps_subscriptions = wc_get_orders( $args2 );
-				} else {
-					$wps_subscriptions = get_posts( $args2 );
-				}
-			}
-		}
-		// search with subscription id code end.
-
-		// redirection code.
+		// redirection from order edit page link to specific subscription .
 		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type'] ) {
 			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
 			$wps_subs_id = wps_sfw_get_meta_data( $order_id, 'wps_parent_order', true );
