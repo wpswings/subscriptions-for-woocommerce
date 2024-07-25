@@ -568,7 +568,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 				$parent_order_id   = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
 				if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
-					$total_count = --$total_count;
+					$total_count = --$total_count;	
 					continue;
 				}
 				$wps_subscription_status = wps_sfw_get_meta_data( $id, 'wps_subscription_status', true );
@@ -625,7 +625,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				} else {
 					$payment_type = 'Via Manual Method';
 				}
-				$user_nicename = isset( $user->user_nicename ) ? $user->user_nicename : '';
+				$user_nicename = isset( $user->user_login ) ? $user->user_login : '';
 
 				if ( 'active' === $wps_subscription_status ) {
 					$wps_subscription_status = esc_html__( 'active', 'subscriptions-for-woocommerce' );

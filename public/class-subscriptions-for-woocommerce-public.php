@@ -1700,6 +1700,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_subtotal = $cart_item['line_subtotal'];
 			$line_total    = $cart_item['line_total'];
 		}
+
 		// Substract the signup fee from the line item.
 		$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
 		if ( ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
@@ -1707,14 +1708,39 @@ class Subscriptions_For_Woocommerce_Public {
 			$line_subtotal = $line_subtotal - $wps_sfw_subscription_initial_signup_price * $qty;
 			$line_total    = $line_total - $wps_sfw_subscription_initial_signup_price * $qty;
 		}
+
+		// Make sure you have correct line data if coupon applied on the cart.
+		$is_coupon_applied = false;
+		$is_initital_discount = false;
+		$is_recurring_coupon_applied = false;
+
+		$coupons = WC()->cart->get_applied_coupons();
+		if ( ! empty( $coupons ) ) {
+			foreach ( $coupons as $coupon_code ) {
+				$coupon        = new WC_Coupon( $coupon_code );
+				$discount_type = $coupon->get_discount_type();
+				$allow_dis_sub = array( 'recurring_product_percent_discount', 'recurring_product_discount' );
+				if ( ! in_array( $discount_type, $allow_dis_sub, true ) ) {
+					$is_coupon_applied = true;
+				}
+				if ( in_array( $discount_type, $allow_dis_sub, true ) ) {
+					$is_recurring_coupon_applied = true;
+				}
+				if ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) {
+					$is_initital_discount = true;
+				}
+			}
+		}
+
 		// Get the item price from product object if free trial valid.
 		$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
-		if ( ! empty( $wps_sfw_subscription_free_trial_number ) ) {
+		if ( ! empty( $wps_sfw_subscription_free_trial_number ) && ! $is_recurring_coupon_applied ) {
 			$product = wc_get_product( $product_id );
 			$price = $product->get_price() * $cart_item['quantity'];
 			$line_subtotal = $price;
 			$line_total = $price;
 		}
+
 		// Manage the line item during the upgrade/downgrade process.
 		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item, $bool );
 		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item, $bool );
@@ -1741,23 +1767,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$line_tax     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $line_tax_data ) );
 			}
 		}
-		// Make sure you have correct line data if coupon applied on the cart.
-		$is_coupon_applied = false;
-		$is_initital_discount = false;
-		$coupons = WC()->cart->get_applied_coupons();
-		if ( ! empty( $coupons ) ) {
-			foreach ( $coupons as $coupon_code ) {
-				$coupon        = new WC_Coupon( $coupon_code );
-				$discount_type = $coupon->get_discount_type();
-				$allow_dis_sub = array( 'recurring_product_percent_discount', 'recurring_product_discount' );
-				if ( ! in_array( $discount_type, $allow_dis_sub, true ) ) {
-					$is_coupon_applied = true;
-				}
-				if ( 'initial_fee_percent_discount' == $discount_type || 'initial_fee_discount' == $discount_type ) {
-					$is_initital_discount = true;
-				}
-			}
-		}
+
 		if ( $is_coupon_applied ) {
 			$line_total = $line_subtotal;
 			$line_tax = $line_subtotal_tax;
