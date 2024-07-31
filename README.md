@@ -1,5 +1,5 @@
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen) ![Active installs](https://img.shields.io/badge/Active-10000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.6.1-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-9.1.4-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
-# Subscriptions For WooCommerce – WooCommerce Subscription Plugin for Collecting Recurring Revenue, Offer Subscription Box, Sell Subscription Services and products
+[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-9000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.5.3-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-8.9.1-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
+# Subscriptions For WooCommerce – Subscription Plugin for Collecting Recurring Revenue, Sell Membership Subscription Services and products
 ![Subscriptions For WooCommerce](https://ps.w.org/subscriptions-for-woocommerce/assets/banner-772x250.png?rev=2672125)
 * Contributors: WP Swings
 * Author URI: [**WP Swings**](https://wpswings.com/?utm_source=wpswings-official&utm_medium=subs-github-page&utm_campaign=official)

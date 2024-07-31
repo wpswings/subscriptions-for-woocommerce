@@ -1,8 +1,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2024-07-29 13:31+0530\n"
 "PO-Revision-Date: 2024-07-29 13:31+0530\n"
+=======
+"POT-Creation-Date: 2024-07-12 16:22+0530\n"
+"PO-Revision-Date: 2024-07-12 16:22+0530\n"
+>>>>>>> origin/master
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -379,7 +384,11 @@ msgstr ""
 msgid "pending"
 msgstr ""
 
+<<<<<<< HEAD
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:685
+=======
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:602
+>>>>>>> origin/master
 #: public/class-subscriptions-for-woocommerce-public.php:925
 msgid "Subscriptions"
 msgstr ""
@@ -824,59 +833,59 @@ msgstr ""
 msgid "This Email Notification Send if any subscription is Cancelled"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:55
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:56
 msgid "Cancelled Susbcription Email {site_title}"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:65
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:66
 msgid "Subscription Cancelled"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:151
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:153
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:136
 #: includes/class-wc-gateway-wps-paypal-integration.php:195
 msgid "Enable/Disable"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:153
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:155
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:138
 msgid "Enable this email notification"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:157
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:159
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:142
 msgid "Recipient Email Address"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:160
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:162
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:145
 #, php-format
 msgid "Enter recipient email address. Defaults to %s."
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:166
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:168
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:151
 msgid "Subject"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:168
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:170
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:153
 msgid "Enter the email subject"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:174
 #: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:176
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:178
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:159
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:161
 msgid "Email Heading"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:182
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:184
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:167
 msgid "Email type"
 msgstr ""
 
-#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:184
+#: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:186
 #: emails/class-subscriptions-for-woocommerce-expired-subscription-email.php:169
 msgid "Choose which format of email to send."
 msgstr ""
@@ -1444,8 +1453,13 @@ msgstr[1] ""
 #: public/class-subscriptions-for-woocommerce-public.php:141
 #: public/class-subscriptions-for-woocommerce-public.php:157
 #: public/class-subscriptions-for-woocommerce-public.php:1036
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1887
 #: public/class-subscriptions-for-woocommerce-public.php:1907
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1877
+#: public/class-subscriptions-for-woocommerce-public.php:1897
+>>>>>>> origin/master
 #, php-format
 msgid " / %s "
 msgstr ""
@@ -1612,14 +1626,23 @@ msgid "Data not found"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:146
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1892
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1882
+>>>>>>> origin/master
 #, php-format
 msgid " For %s "
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:199
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1898
 #: public/class-subscriptions-for-woocommerce-public.php:1917
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1888
+#: public/class-subscriptions-for-woocommerce-public.php:1907
+>>>>>>> origin/master
 #, php-format
 msgid " and %s  Sign up fee"
 msgstr ""
@@ -1670,32 +1693,56 @@ msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1646
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1831
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1821
+>>>>>>> origin/master
 msgid "Renewal For"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1649
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1834
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1824
+>>>>>>> origin/master
 msgid "Subtotal"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1651
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1836
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1826
+>>>>>>> origin/master
 msgid "Tax"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1654
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1839
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1829
+>>>>>>> origin/master
 msgid "Shipping"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1656
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1841
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1831
+>>>>>>> origin/master
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:148
 msgid "Total"
 msgstr ""
 
+<<<<<<< HEAD
 #: public/class-subscriptions-for-woocommerce-public.php:1965
+=======
+#: public/class-subscriptions-for-woocommerce-public.php:1955
+>>>>>>> origin/master
 msgid ""
 "Please check <strong>\"Save payment information to my account for future "
 "purchases\"</strong> to proceed further "
@@ -1868,6 +1915,13 @@ msgstr ""
 msgid "Subscription Interval"
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#: src/component/SecondStep.js:64 src/component/SecondStep.js:71
+msgid "Subscription Frequency"
+msgstr ""
+
+>>>>>>> origin/master
 #: src/component/ThirdStep.js:23
 msgid "Supported payment gateways for subscription"
 msgstr ""

@@ -12,6 +12,8 @@ License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
 
 
+
+
 With Subscriptions for WooCommerce, turn your physical or online store into a WooCommerce product subscription store and avail recurring revenue.
 
 
@@ -122,6 +124,7 @@ For previous users, the WPS PayPal Payment option will appear in the payment sec
 
 
 * [**Membership for WooCommerce Free**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-subs-membership-pro&utm_medium=subs-org-page&utm_campaign=membership-pro): Our WooCommerce Subscriptions plugin works seamlessly with the Membership for WooCommerce plugin. This integration allows you to sell subscription services and products as part of your membership plans. With our WordPress subscription plugin, you can easily create membership plans and offer exclusive discounts to your members.
+
 
 * [**Wallet System for WooCommerce Free**](https://wordpress.org/plugins/wallet-system-for-woocommerce/) and [**Wallet System for WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-org-page&utm_campaign=wallet-pro/).
 The Wallet system compatibility allows users to pay for their recurring services and products via a WooCommerce wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on the wallet amount.
@@ -693,6 +696,8 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 = 1.0.0 - Released on 9 April 2021 =
 
 * First version
+
+
 
 
 == Upgrade Notice ==
