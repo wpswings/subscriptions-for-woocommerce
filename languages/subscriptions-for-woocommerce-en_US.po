@@ -1,8 +1,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
+<<<<<<< HEAD
+"POT-Creation-Date: 2024-07-29 13:31+0530\n"
+"PO-Revision-Date: 2024-07-29 13:31+0530\n"
+=======
 "POT-Creation-Date: 2024-07-12 16:22+0530\n"
 "PO-Revision-Date: 2024-07-12 16:22+0530\n"
+>>>>>>> origin/master
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -349,42 +354,46 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:546
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:629
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:52
 #: public/partials/templates/myaccount/wps-susbcrptions.php:58
 msgid "active"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:548
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:631
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:54
 #: public/partials/templates/myaccount/wps-susbcrptions.php:60
 msgid "on-hold"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:550
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:633
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:56
 #: public/partials/templates/myaccount/wps-susbcrptions.php:62
 msgid "cancelled"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:552
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:635
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:58
 #: public/partials/templates/myaccount/wps-susbcrptions.php:64
 msgid "paused"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:554
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:637
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:60
 #: public/partials/templates/myaccount/wps-susbcrptions.php:66
 msgid "pending"
 msgstr ""
 
+<<<<<<< HEAD
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:685
+=======
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:602
+>>>>>>> origin/master
 #: public/class-subscriptions-for-woocommerce-public.php:925
 msgid "Subscriptions"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:612
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:695
 msgid "Search Order"
 msgstr ""
 
@@ -606,6 +615,190 @@ msgstr ""
 msgid ""
 "View all details of the subscription plans of every user of your store. The "
 "user can see his subscription plan details and history"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:47
+msgid "Features"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:48
+msgid "Basic"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:49
+msgid "Pro"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:52
+msgid "Subscription for Simple Products"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:57
+#: src/component/SecondStep.js:64 src/component/SecondStep.js:71
+msgid "Subscription Frequency"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:62
+msgid "Subscription Plan Expiry"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:67
+msgid "Charge Initial/Signup Fee"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:72
+msgid "Offer Free Trial"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:77
+msgid "Allow User to Cancel Subscription"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:82
+msgid "Subscription Report for Admin"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:87
+msgid "Edit Add-to-cart Text"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:92
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:127
+msgid "Change Place Order Text"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:97
+msgid "WooCommerce Stripe Payment Gateway Compatible"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:102
+msgid "WPS PayPal Payment Gateway"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:107
+msgid "WooCommerce PayPal Standard Payment Gateway Compatible"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:112
+msgid "PayPal Express Checkout Payment Gateway Compatible"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:117
+msgid "WooCommerce Integration with Authorize.net Compatible"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:122
+msgid "WPML Compatible"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:132
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:152
+msgid "Subscription Renewal Order Refund"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:137
+msgid "Canceled Subscriptions email Notification"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:142
+msgid "Expired Subscriptions email Notifications"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:147
+msgid "Compatible with WooCommerce Eway Gateway"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:157
+msgid "Manual Subscription Payment Option"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:162
+msgid "Manage Proration Amount as Wallet Credit"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:167
+msgid "Extend Next Payment Date for Prorated Amount"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:172
+msgid "Stop Downgrade Proration of Subscription Plans"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:177
+msgid "Compatible With Mollie Payments for WooCommerce"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:182
+msgid "Compatible With Multi Safe Payment Gateway"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:187
+msgid "Allow Multiple Quantities on Subscription Products"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:192
+msgid "Subscription on Variable Products"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:197
+msgid "Handle Proration"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:202
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:257
+msgid "Set Start Date (Admin)"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:207
+msgid "Allow Users to Switch Subscription Plans Within Same Interval"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:212
+msgid "Manual Subscription Payment"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:217
+msgid "Pause WooCommerce Subscription Plans"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:222
+msgid "Automated WooCommerce Subscription Cancellation"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:227
+msgid "Resume WooCommerce Subscription Plans"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:232
+msgid "View All Subscriptions Renewal Orders"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:237
+msgid "Email for Payment Received"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:242
+msgid "Email for Plan Expiration"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:247
+msgid "Emails for Subscriptions On Hold/ Pause"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:252
+msgid "Emails for Subscription Plan Resumed"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:262
+msgid "Upgrade Downgrade Variable Subscription Plan"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:267
+msgid "Alter Upgrade Downgrade Button Text"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:272
+msgid "One Time Subscription"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-system-status.php:30
@@ -1260,8 +1453,13 @@ msgstr[1] ""
 #: public/class-subscriptions-for-woocommerce-public.php:141
 #: public/class-subscriptions-for-woocommerce-public.php:157
 #: public/class-subscriptions-for-woocommerce-public.php:1036
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1887
+#: public/class-subscriptions-for-woocommerce-public.php:1907
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1877
 #: public/class-subscriptions-for-woocommerce-public.php:1897
+>>>>>>> origin/master
 #, php-format
 msgid " / %s "
 msgstr ""
@@ -1428,14 +1626,23 @@ msgid "Data not found"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:146
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1892
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1882
+>>>>>>> origin/master
 #, php-format
 msgid " For %s "
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:199
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1898
+#: public/class-subscriptions-for-woocommerce-public.php:1917
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1888
 #: public/class-subscriptions-for-woocommerce-public.php:1907
+>>>>>>> origin/master
 #, php-format
 msgid " and %s  Sign up fee"
 msgstr ""
@@ -1486,32 +1693,56 @@ msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1646
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1831
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1821
+>>>>>>> origin/master
 msgid "Renewal For"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1649
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1834
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1824
+>>>>>>> origin/master
 msgid "Subtotal"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1651
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1836
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1826
+>>>>>>> origin/master
 msgid "Tax"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1654
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1839
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1829
+>>>>>>> origin/master
 msgid "Shipping"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1656
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1841
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1831
+>>>>>>> origin/master
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:148
 msgid "Total"
 msgstr ""
 
+<<<<<<< HEAD
+#: public/class-subscriptions-for-woocommerce-public.php:1965
+=======
 #: public/class-subscriptions-for-woocommerce-public.php:1955
+>>>>>>> origin/master
 msgid ""
 "Please check <strong>\"Save payment information to my account for future "
 "purchases\"</strong> to proceed further "
@@ -1684,10 +1915,13 @@ msgstr ""
 msgid "Subscription Interval"
 msgstr ""
 
+<<<<<<< HEAD
+=======
 #: src/component/SecondStep.js:64 src/component/SecondStep.js:71
 msgid "Subscription Frequency"
 msgstr ""
 
+>>>>>>> origin/master
 #: src/component/ThirdStep.js:23
 msgid "Supported payment gateways for subscription"
 msgstr ""

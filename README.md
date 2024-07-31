@@ -1,4 +1,4 @@
-﻿﻿﻿![Build Status](https://img.shields.io/badge/build-passing-brightgreen) ![Active installs](https://img.shields.io/badge/Active-10000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.5.5-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-9.1.1-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
+[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-9000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.5.3-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-8.9.1-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
 # Subscriptions For WooCommerce – Subscription Plugin for Collecting Recurring Revenue, Sell Membership Subscription Services and products
 ![Subscriptions For WooCommerce](https://ps.w.org/subscriptions-for-woocommerce/assets/banner-772x250.png?rev=2672125)
 * Contributors: WP Swings
@@ -12,11 +12,13 @@
 The WooCommerce Subscriptions plugin empowers merchants to establish subscription plans, allowing them to offer services or products regularly. This functionality aids in the seamless collection of regular revenue for your online store
 The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-github-page&utm_campaign=subscription-pro) plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, and online courses to eCommerce stores, revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business. 
 
+Our Subscription and Membership plugins are among the top-rated plugins, when combined together they can create a complete subscription model that gives your users a variety of specialized content and digital resources such as digital guides, eBooks, and audiobooks, and all of it only reserved for your members and restricted for non-members.
+
 [**How to Set up Subscriptions on WooCommerce and Boost Recurring Revenue for Free?**](https://www.youtube.com/watch?v=QZO0Q_DT0ik)
 
 ## WITH THE SUBSCRIPTIONS FOR WOOCOMMERCE PLUGIN YOU CAN:
 
-* Generate trouble-free recurring revenue with recurring payments from users.
+* Generate trouble-free recurring revenue with WordPress Subscription plugin
 * Sell subscription-based products and recurring services for a set period.
 * Compatible with PayPal Standard payment gateway. 
 * Convert your online store to a WooCommerce subscription-based store.
@@ -25,8 +27,7 @@ The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscri
 * Get updated order notes with reasons for failed recurring payments (Stripe & PayPal). 
 * Subscription status will be on hold when order status fails.
 * Subscriptions will automatically be canceled when the order is canceled.
-* Multistep setup for auto configurations of the Subscriptions WooCommerce plugin and its requirements.
-* Set up WooCommerce Subscription plugin flow through the multistep form
+* Multistep setup for auto configurations of memberships and subscriptions plugin and its requirements
 * Show Recurring Frequency in the subscription List Table. 
 * Automatically generate subscription error logs based on specific logging parameters.
 * Support Stripe and PayPal payment Gateway with subscriptions for WooCommerce
@@ -77,8 +78,7 @@ Checkout [**Subscriptions for WooCommerce Knowledge Base**](https://support.wpsw
 1) Compatible With PayPal Standard: The Subscriptions plugin works flawlessly with PayPal Standard to receive WooCommerce recurring payments. You can add it as one of the payment methods by entering your PayPal merchant account API keys
 
 2) [**Membership for WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-subs-membership-pro&utm_medium=subs-github-page&utm_campaign=membership-pro)
-Offer subscription membership plans on your store with the Membership for WooCommerce WordPress plugin. With a single system, you can create multiple WooCommerce subscription and membership plans and allow limited access to paid users only. Set membership subscription expiry period from days, weeks, months, and years.
-
+Our WooCommerce Subscriptions plugin works seamlessly with the Membership for WooCommerce plugin. This integration allows you to sell subscription services and products as part of your membership plans. With our WordPress subscription plugin, you can easily create membership plans and offer exclusive discounts to your members.
 3) [**Wallet System For WooCommerce**](https://wordpress.org/plugins/wallet-system-for-woocommerce/) and [**Wallet System For WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-github-page&utm_campaign=wallet-pro/)
 The Wallet system enables a digital wallet on your eCommerce store for users. Its compatibility allows users to pay for their recurring services and products via a digital wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on the wallet amount.
 

@@ -198,7 +198,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 							do_action( 'wc_gateway_stripe_process_payment', $response, $renewal_order );
 
 							// Use the last charge within the intent or the full response body in case of SEPA.
-							$this->process_response( isset( $response->charges ) ? end( $response->charges->data ) : $response, $renewal_order );
+							$latest_charge = $this->get_latest_charge_from_intent( $response );
+							$this->process_response( ( ! empty( $latest_charge ) ) ? $latest_charge : $response, $renewal_order );
 						}
 					} catch ( WC_Stripe_Exception $e ) {
 						WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() );
