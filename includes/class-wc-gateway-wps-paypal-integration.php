@@ -68,6 +68,7 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
+		$this->enabled       = $this->get_option( 'enabled' );
 		$this->title         = $this->get_option( 'title' );
 		$this->description   = $this->get_option( 'description' );
 		self::$testmode      = $this->get_option( 'testmode' );
@@ -77,10 +78,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 		if ( 'no' == self::$testmode ) {
 			self::$testmode = false;
 		}
-		if ( ! $this->is_valid_for_use() ) {
-			$this->enabled = 'no';
-		}
-
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_thankyou', array( $this, 'wps_sfw_capture_payment' ), 5 );
 	}

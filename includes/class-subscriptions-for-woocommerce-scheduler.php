@@ -317,6 +317,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								$wps_new_order->update_status( 'completed' );
 							}
 						}
+						do_action( 'wps_sfw_after_renewal_payment', $wps_new_order, $subscription_id, $payment_method );
+
 
 						// hook for par plugin compatible .
 						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );
@@ -886,6 +888,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								$wps_new_order->update_status( 'completed' );
 							}
 						}
+						do_action( 'wps_sfw_after_renewal_payment', $wps_new_order, $subscription_id, $payment_method );
+
 
 						// hook for par plugin compatible .
 						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );

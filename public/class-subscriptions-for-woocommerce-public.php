@@ -1664,20 +1664,6 @@ class Subscriptions_For_Woocommerce_Public {
 	}
 
 	/**
-	 * Change the failed order subject for recurring order
-	 *
-	 * @param string $subject .
-	 * @param object $order .
-	 * @return $subject .
-	 */
-	public function wps_sfw_customizing_failed_email_subject( $subject, $order ) {
-		if ( 'yes' === wps_sfw_get_meta_data( $order->get_id(), 'wps_sfw_renewal_order', true ) ) {
-			$subject = str_replace( 'Order', 'Recurring Order', $subject );
-		}
-		return $subject;
-	}
-
-	/**
 	 * Calculating correct recurring price.
 	 *
 	 * @param array() $cart_item .
@@ -2070,5 +2056,52 @@ class Subscriptions_For_Woocommerce_Public {
 				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 			}
 		}
+	}
+
+	/**
+	 * Add custom_failed_order_section
+	 * @param mixed $order
+	 * @param mixed $sent_to_admin
+	 * @param mixed $plain_text
+	 * @param mixed $email
+	 * @return void
+	 */
+	public function wps_sfw_add_custom_failed_order_section( $order, $sent_to_admin, $plain_text, $email ) {
+
+		if ( $email->id == 'failed_order' && 'yes' === $order->get_meta( 'wps_sfw_renewal_order' ) ) {
+			$subscription_id = $order->get_meta( 'wps_sfw_subscription' );
+	
+			$notice = sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), $subscription_id );
+			?>
+			<h2><?php esc_attr_e( 'Important Information', 'subscriptions-for-woocommerce' )  ?></h2>
+			<p><?php echo esc_html( $notice ); ?></p>
+			<?php
+		}
+	}
+	/**
+	 * Add custom_woocommerce_email_subject_failed_order
+	 * @param mixed $subject
+	 * @param mixed $order
+	 * @return mixed
+	 */
+	public function wps_sfw_custom_woocommerce_email_subject_failed_order( $subject, $order ) {
+		if ( 'yes' === $order->get_meta( 'wps_sfw_renewal_order' ) ) {
+			$subject = str_replace( 'Order', esc_attr__( 'Renewal Order', 'subscriptions-for-woocommerce' ), $subject );
+			return $subject;
+		}
+		return $subject;
+	}
+	/**
+	 * Add custom_woocommerce_email_heading_failed_order
+	 * @param mixed $heading
+	 * @param mixed $order
+	 * @return mixed
+	 */
+	public function wps_sfw_custom_woocommerce_email_heading_failed_order( $heading, $order ) {
+		if ( 'yes' === $order->get_meta( 'wps_sfw_renewal_order' ) ) {
+			$heading = str_replace( 'Order', esc_attr__( 'Renewal Order', 'subscriptions-for-woocommerce' ), $heading );
+			return $heading;
+		}
+		return $heading;
 	}
 }

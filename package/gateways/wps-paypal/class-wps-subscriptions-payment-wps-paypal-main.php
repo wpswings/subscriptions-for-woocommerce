@@ -71,11 +71,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 		 * @since    1.6.4
 		 */
 		public function wps_pifw_paypal_payment_gateway_for_woocommerce( $supported_payment_method, $payment_method ) {
-
 			if ( 'wps_paypal' === $payment_method ) {
 				$supported_payment_method[] = $payment_method;
 			}
-
 			return $supported_payment_method;
 		}
 
