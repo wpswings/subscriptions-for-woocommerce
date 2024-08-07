@@ -86,13 +86,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-next-reccuring-days">
 								<?php
 								if ( $wps_next_payment_date ) {
-									$timeDifference =  (int) $wps_next_payment_date - time();
-	
-									// Convert the difference from seconds to days
-									$daysLeft = ceil($timeDifference / (60 * 60 * 24));
-									if ( $daysLeft > 1 ) {
+									$time_difference = (int) $wps_next_payment_date - time();
+
+									// Convert the difference from seconds to days.
+									$days_left = ceil( $time_difference / ( 60 * 60 * 24 ) );
+									if ( $days_left > 1 ) {
 										$day_text = esc_attr__( 'Days', 'subscriptions-for-woocommerce' );
-										echo $daysLeft . ' ' . $day_text;
+										echo esc_attr( $days_left . ' ' . $day_text );
 									} else {
 										echo esc_attr__( 'Tomorrow', 'subscriptions-for-woocommerce' );
 									}

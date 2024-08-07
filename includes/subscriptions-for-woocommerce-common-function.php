@@ -796,7 +796,7 @@ if ( ! function_exists( 'wps_sfw_get_subscription_supported_payment_method' ) ) 
 					'url' => 'https://wordpress.org/plugins/woocommerce-gateway-stripe/',
 					'slug' => 'woocommerce-gateway-stripe',
 					'is_activated' => ! empty( is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) ? true : false,
-				)
+				),
 			);
 
 		$gateway = apply_filters( 'wps_sfw_supported_data_payment_for_configuration', $gateway );

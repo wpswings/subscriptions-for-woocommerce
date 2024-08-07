@@ -117,7 +117,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 				<?php
 			}
 
-			
+
 			if ( 'cancel' !== $wps_status ) {
 				?>
 				<tr>
@@ -126,20 +126,20 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 						<?php
 						$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_next_payment_date', true );
 						if ( $wps_next_payment_date ) {
-							$timeDifference =  (int) $wps_next_payment_date - time();
+							$time_difference = (int) $wps_next_payment_date - time();
 
-							// Convert the difference from seconds to days
-							$daysLeft = ceil($timeDifference / (60 * 60 * 24));
-							if ( $daysLeft > 1 ) {
+							// Convert the difference from seconds to days.
+							$days_left = ceil( $time_difference / ( 60 * 60 * 24 ) );
+							if ( $days_left > 1 ) {
 								$day_text = esc_attr__( 'Days', 'subscriptions-for-woocommerce' );
-								echo $daysLeft . ' ' . $day_text;
+								echo esc_attr( $days_left . ' ' . $day_text );
 							} else {
 								echo esc_attr__( 'Tomorrow', 'subscriptions-for-woocommerce' );
 							}
 						} else {
 							echo esc_attr( '---' );
 						}
-					?>
+						?>
 					</td>
 				</tr>
 				<?php

@@ -41,7 +41,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 			$this->template_plain = 'plain/wps-sfw-cancel-subscription-email-template.php';
 			$this->template_base  = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'emails/templates/';
 
-			
 			parent::__construct();
 			$this->recipient = $this->get_option( 'recipient', get_option( 'admin_email' ) );
 		}
@@ -75,7 +74,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 		 * @return void
 		 */
 		public function trigger( $wps_subscription ) {
-			
+
 			$user_email = '';
 
 			if ( $wps_subscription ) {
@@ -85,7 +84,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 				$wps_parent_order = wc_get_order( $wps_parent_order_id );
 				if ( ! empty( $wps_parent_order ) ) {
 					$user_email = $wps_parent_order->get_billing_email();
-					
 
 				}
 			}
@@ -191,7 +189,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' )
 				),
 			);
 		}
-
 	}
 
 }

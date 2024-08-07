@@ -332,11 +332,11 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'wps_sfw_subscription_cancel', $sfw_plugin_public, 'wps_sfw_cancel_manual_subscription', 10, 2 );
 
-			// change the subject, heading and content for the failed renewal order
+			// Change the subject, heading and content for the failed renewal order.
 			$this->loader->add_action( 'woocommerce_email_before_order_table', $sfw_plugin_public, 'wps_sfw_add_custom_failed_order_section', 10, 4 );
 			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_subject_failed_order', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_email_heading_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_heading_failed_order', 10, 2 );
-			
+
 		}
 	}
 

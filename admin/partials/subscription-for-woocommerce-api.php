@@ -54,7 +54,7 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 	<!-- To get user points -->
 	<h4><?php esc_html_e( 'To Retrive All Subscription', 'subscriptions-for-woocommerce' ); ?></h4>
 	<div class="wps_sfw_rest_api_response">
-		<p><strong><?php esc_html_e( 'Base Url to get all subscription  : ', 'subscriptions-for-woocommerce' ) ?></strong>{site_url}/wp-json/wsp-route/v1/wsp-view-subscription</p>
+		<p><strong><?php esc_html_e( 'Base Url to get all subscription  : ', 'subscriptions-for-woocommerce' ); ?></strong>{site_url}/wp-json/wsp-route/v1/wsp-view-subscription</p>
 		<p>
 			<strong>
 			<?php

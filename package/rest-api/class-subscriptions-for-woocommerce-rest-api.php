@@ -59,7 +59,6 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 

@@ -341,11 +341,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				),
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// logic to fetch subscription using subscription id or parent id
+				// Logic to fetch subscription using subscription id or parent id.
 				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 
 				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if( $sub_id ) {
+				if ( $sub_id ) {
 					$maybe_subscription_or_parent_id = $sub_id;
 				}
 				if ( $maybe_subscription_or_parent_id ) {
@@ -358,13 +358,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					);
 				} else {
 					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// logic to fetch subscription using username or email
+					// Logic to fetch subscription using username or email.
 
-					$user = get_user_by('email', $username_or_email );
-    
-					// If no user is found by email, try to get by username
-					if (! $user ) {
-						$user = get_user_by('login', $username_or_email );
+					$user = get_user_by( 'email', $username_or_email );
+
+					// If no user is found by email, try to get by username.
+					if ( ! $user ) {
+						$user = get_user_by( 'login', $username_or_email );
 					}
 					$customer_id = $user ? $user->ID : false;
 
@@ -395,11 +395,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			);
 
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// logic to fetch subscription using subscription id or parent id
+				// Logic to fetch subscription using subscription id or parent id.
 				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 
 				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if( $sub_id ) {
+				if ( $sub_id ) {
 					$maybe_subscription_or_parent_id = $sub_id;
 				}
 				if ( $maybe_subscription_or_parent_id ) {
@@ -412,13 +412,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					);
 				} else {
 					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// logic to fetch subscription using username or email
+					// Logic to fetch subscription using username or email.
 
-					$user = get_user_by('email', $username_or_email );
-    
-					// If no user is found by email, try to get by username
-					if (! $user ) {
-						$user = get_user_by('login', $username_or_email );
+					$user = get_user_by( 'email', $username_or_email );
+
+					// If no user is found by email, try to get by username.
+					if ( ! $user ) {
+						$user = get_user_by( 'login', $username_or_email );
 					}
 					$customer_id = $user ? $user->ID : false;
 
@@ -434,7 +434,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$wps_subscriptions = get_posts( $args );
 		}
 
-		// code to get the total item count.
+		// Code to get the total item count.
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args2 = array(
 				'type'   => 'wps_subscriptions',
@@ -448,11 +448,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				'return' => 'ids',
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// logic to fetch subscription using subscription id or parent id
+				// Logic to fetch subscription using subscription id or parent id.
 				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 
 				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if( $sub_id ) {
+				if ( $sub_id ) {
 					$maybe_subscription_or_parent_id = $sub_id;
 				}
 				if ( $maybe_subscription_or_parent_id ) {
@@ -465,16 +465,15 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					);
 				} else {
 					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// logic to fetch subscription using username or email
+					// Logic to fetch subscription using username or email.
 
-					$user = get_user_by('email', $username_or_email );
-    
-					// If no user is found by email, try to get by username
-					if (! $user ) {
-						$user = get_user_by('login', $username_or_email );
+					$user = get_user_by( 'email', $username_or_email );
+
+					// If no user is found by email, try to get by username.
+					if ( ! $user ) {
+						$user = get_user_by( 'login', $username_or_email );
 					}
 					$customer_id = $user ? $user->ID : false;
-
 
 					$args2['meta_query'] = array(
 						array(
@@ -501,11 +500,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				'fields' => 'ids',
 			);
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// logic to fetch subscription using subscription id or parent id
+				// Logic to fetch subscription using subscription id or parent id.
 				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 
 				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if( $sub_id ) {
+				if ( $sub_id ) {
 					$maybe_subscription_or_parent_id = $sub_id;
 				}
 				if ( $maybe_subscription_or_parent_id ) {
@@ -518,16 +517,15 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					);
 				} else {
 					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// logic to fetch subscription using username or email
+					// Logic to fetch subscription using username or email.
 
-					$user = get_user_by('email', $username_or_email );
-    
-					// If no user is found by email, try to get by username
-					if (! $user ) {
-						$user = get_user_by('login', $username_or_email );
+					$user = get_user_by( 'email', $username_or_email );
+
+					// If no user is found by email, try to get by username.
+					if ( ! $user ) {
+						$user = get_user_by( 'login', $username_or_email );
 					}
 					$customer_id = $user ? $user->ID : false;
-
 
 					$args2['meta_query'] = array(
 						array(
@@ -568,7 +566,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 				$parent_order_id   = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
 				if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
-					$total_count = --$total_count;	
+					$total_count = --$total_count;
 					continue;
 				}
 				$wps_subscription_status = wps_sfw_get_meta_data( $id, 'wps_subscription_status', true );

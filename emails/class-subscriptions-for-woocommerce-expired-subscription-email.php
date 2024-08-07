@@ -174,7 +174,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' 
 				),
 			);
 		}
-
 	}
 
 }
