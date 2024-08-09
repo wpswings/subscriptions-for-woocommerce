@@ -6,12 +6,10 @@ Requires at least: 5.1.0
 Tested up to: 6.6.1
 WC requires at least: 5.1.0
 WC tested up to: 9.1.4
-Stable tag: 1.6.9
+Stable tag: 1.7.0
 Requires PHP: 7.3.5 
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
-
-
 
 
 With Subscriptions for WooCommerce, turn your physical or online store into a WooCommerce product subscription store and avail recurring revenue.
@@ -68,7 +66,7 @@ Our Subscription and Membership plugins are among the top-rated plugins, when co
 **2)  Recurring Subscriptions Info on Cart and Checkout Page:** Customers will receive details regarding their recurring subscriptions on both the cart and checkout pages. This will enhance transparency and provide clarity regarding the total amount, tax details, and renewal period, making management easier for recurring subscriptions during the checkout process.
 
 
-**3) Create Products as Subscription Products With Subscriptions for WooCommerce:** With WordPress subscriptions plugin you can assign a subscription label to simple products by checking a box. The selected product will then be available as a WooCommerce subscription simple product, without creating a specific subscription-type product.
+**3) Create Products as Subscription Products With Subscriptions for WooCommerce:** With the WordPress subscriptions plugin you can assign a subscription label to simple products by checking a box. The selected product will then be available as a WooCommerce subscription simple product, without creating a specific subscription-type product.
  
 **4) Set Subscription Frequency for Subscription-Based Products:** WP subscription plugin allows you to set the recurring frequency option on subscribed products. Payment plans for these subscription-based products can be configured monthly, weekly, or yearly. Additionally, you can manage the frequency of Subscription free trials.
 
@@ -114,7 +112,7 @@ For previous users, the WPS PayPal Payment option will appear in the payment sec
 == SUBSCRIPTIONS PLUGIN COMPATIBILITIES ==
 
 
-* **WooCommerce Payment Gateway Compatible**: Our Subscription WordPress plugin is compatible with the [**WooCommerce Stripe Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-stripe/)(support for the credit card, debit card, Stripe SEPA Direct Debit),[**WooCommerce PayPal Checkout Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/) and WPS PayPal Payment.
+* **WooCommerce Payment Gateway Compatible**: Our Subscription WordPress plugin is compatible with the [**WooCommerce Stripe Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-stripe/)(support for the credit card, debit card, Stripe SEPA Direct Debit) and WPS PayPal Payment.
 
 
 * **Compatible With PayPal Standard**: The Subscriptions plugin works flawlessly with PayPal Standard to receive WooCommerce recurring payments. You can add it as one of the payment methods by entering your PayPal merchant account API keys
@@ -124,7 +122,6 @@ For previous users, the WPS PayPal Payment option will appear in the payment sec
 
 
 * [**Membership for WooCommerce Free**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-subs-membership-pro&utm_medium=subs-org-page&utm_campaign=membership-pro): Our WooCommerce Subscriptions plugin works seamlessly with the Membership for WooCommerce plugin. This integration allows you to sell subscription services and products as part of your membership plans. With our WordPress subscription plugin, you can easily create membership plans and offer exclusive discounts to your members.
-
 
 * [**Wallet System for WooCommerce Free**](https://wordpress.org/plugins/wallet-system-for-woocommerce/) and [**Wallet System for WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-org-page&utm_campaign=wallet-pro/).
 The Wallet system compatibility allows users to pay for their recurring services and products via a WooCommerce wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on the wallet amount.
@@ -148,7 +145,7 @@ The Wallet system compatibility allows users to pay for their recurring services
 * With WooCommerce subscription plugin you can show the related subscription table to users on the Thank You page post-order placement.
 * With subscription premium plugin you can upgrade or downgrade plans of variable products.
 * Designation of WooCommerce subscription start date and expiration date by user or admin.
-* Compatibility with the [**Product Bundles plugin**](https://woocommerce.com/products/product-bundles/) allows you to offer subscription bundles on your store. 
+* Compatibility with the [**Product Bundles plugin**](https://woocommerce.com/products/product-bundles/) allows you to offer subscription bundles in your store. 
 * Automatic retrying for failed payments and automated WooCommerce subscription cancellation.          
 * Create exclusive WooCommerce subscription coupon types with Subscriptions for WooCommerce.
 * Ability to handle WooCommerce subscription proration.
@@ -318,6 +315,10 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 
 == Changelog ==
+
+= 1.7.0 - Released on 09 August 2024 =
+* Override existing mail template to customer when renewal get failed
+* Add number of days left for the next renewal
 
 = 1.6.9 - Released on 29 July 2024 =
 * New : Latest WP(6.6.1) and WC(9.1.4) compatibility
@@ -698,13 +699,8 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * First version
 
 
-
-
 == Upgrade Notice ==
 
-= 1.6.9 - Released on 29 July 2024 =
-* New : Latest WP(6.6.1) and WC(9.1.4) compatibility
-* New : Searching of Subscriptions using username or user email
-* Fix : Translation issue
-* Fix : i tag closing issue
-* Fix : Singular and Plural string issue in the subscription price
+= 1.7.0 - Released on 09 August 2024 =
+* Override existing mail template to customer when renewal get failed
+* Add number of days left for the next renewal
