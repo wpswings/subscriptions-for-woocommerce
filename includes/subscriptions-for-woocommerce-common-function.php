@@ -160,12 +160,16 @@ if ( ! function_exists( 'wps_sfw_get_timestamp' ) ) {
 	 * @param int $wps_years wps_years.
 	 */
 	function wps_sfw_get_timestamp( $wps_curr_time, $wps_days = 0, $wps_months = 0, $wps_years = 0 ) {
-
-		$wps_curr_time = strtotime( '+' . $wps_days . ' days', $wps_curr_time );
-		$wps_curr_time = strtotime( '+' . $wps_months . ' month', $wps_curr_time );
-		$wps_curr_time = strtotime( '+' . $wps_years . ' year', $wps_curr_time );
-		return $wps_curr_time;
-	}
+		
+        if ( $wps_days ) {
+            $wps_curr_time = strtotime( '+' . (int) $wps_days . ' days', $wps_curr_time );
+        } elseif( $wps_months ) {
+            $wps_curr_time = strtotime( '+' . (int) $wps_months . ' month', $wps_curr_time );
+        } elseif( $wps_years ) {
+            $wps_curr_time = strtotime( '+' . (int) $wps_years . ' year', $wps_curr_time );
+        }
+        return $wps_curr_time;
+    }
 }
 
 if ( ! function_exists( 'wps_sfw_check_valid_subscription' ) ) {
