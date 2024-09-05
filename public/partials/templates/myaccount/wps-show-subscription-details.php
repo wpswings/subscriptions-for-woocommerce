@@ -116,6 +116,34 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 				</tr>
 				<?php
 			}
+
+
+			if ( 'cancel' !== $wps_status ) {
+				?>
+				<tr>
+					<td><?php esc_html_e( 'Next Recurring', 'subscriptions-for-woocommerce' ); ?></td>
+					<td>
+						<?php
+						$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_next_payment_date', true );
+						if ( $wps_next_payment_date ) {
+							$time_difference = (int) $wps_next_payment_date - time();
+
+							// Convert the difference from seconds to days.
+							$days_left = ceil( $time_difference / ( 60 * 60 * 24 ) );
+							if ( $days_left > 1 ) {
+								$day_text = esc_attr__( 'Days', 'subscriptions-for-woocommerce' );
+								echo esc_attr( $days_left . ' ' . $day_text );
+							} else {
+								echo esc_attr__( 'Tomorrow', 'subscriptions-for-woocommerce' );
+							}
+						} else {
+							echo esc_attr( '---' );
+						}
+						?>
+					</td>
+				</tr>
+				<?php
+			}
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$subscription = new WPS_Subscription( $wps_subscription_id );
 			} else {

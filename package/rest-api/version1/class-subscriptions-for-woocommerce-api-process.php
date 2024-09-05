@@ -34,7 +34,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Api_Process' ) ) {
 		 * @since    1.0.0
 		 */
 		public function __construct() {
-
 		}
 
 		/**

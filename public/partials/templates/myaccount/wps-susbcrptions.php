@@ -24,8 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<tr>
 							<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><span class="nobr"><?php esc_html_e( 'ID', 'subscriptions-for-woocommerce' ); ?></span></th>
 							<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status"><span class="nobr"><?php esc_html_e( 'Status', 'subscriptions-for-woocommerce' ); ?></span></th>
-							<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr"><?php echo esc_html_e( 'Next payment date', 'subscriptions-for-woocommerce' ); ?></span></th>
+							<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr"><?php echo esc_html_e( 'Next Payment Date', 'subscriptions-for-woocommerce' ); ?></span></th>
 							<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total"><span class="nobr"><?php echo esc_html_e( 'Recurring Total', 'subscriptions-for-woocommerce' ); ?></span></th>
+							<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions"><?php esc_html_e( 'Next Recurring', 'subscriptions-for-woocommerce' ); ?></th>
 							<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions"><?php esc_html_e( 'Action', 'subscriptions-for-woocommerce' ); ?></th>
 						</tr>
 					</thead>
@@ -81,6 +82,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<?php
 							do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $subcription_id );
 							?>
+							</td>
+							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-next-reccuring-days">
+								<?php
+								if ( $wps_next_payment_date ) {
+									$time_difference = (int) $wps_next_payment_date - time();
+
+									// Convert the difference from seconds to days.
+									$days_left = ceil( $time_difference / ( 60 * 60 * 24 ) );
+									if ( $days_left > 1 ) {
+										$day_text = esc_attr__( 'Days', 'subscriptions-for-woocommerce' );
+										echo esc_attr( $days_left . ' ' . $day_text );
+									} else {
+										echo esc_attr__( 'Tomorrow', 'subscriptions-for-woocommerce' );
+									}
+								} else {
+									echo esc_attr( '---' );
+								}
+								?>
+							</td>
 							</td>
 							<td class="wps_sfw_account_col woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions">
 								<span class="wps_sfw_account_show_subscription">
