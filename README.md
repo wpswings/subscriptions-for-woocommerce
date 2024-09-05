@@ -1,5 +1,5 @@
-[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-10000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.6.1-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-9.1.4-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
-# Subscriptions For WooCommerce – Subscription Plugin for Collecting Recurring Revenue, Sell Membership Subscription Services and products
+[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-10,000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.6.1-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-9.2.3-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.4-blue)
+# Subscriptions For WooCommerce – Subscription Plugin for Collecting Recurring Revenue, Offer Subscription Box, Sell Subscription Services & Products
 ![Subscriptions For WooCommerce](https://ps.w.org/subscriptions-for-woocommerce/assets/banner-772x250.png?rev=2672125)
 * Contributors: WP Swings
 * Author URI: [**WP Swings**](https://wpswings.com/?utm_source=wpswings-official&utm_medium=subs-github-page&utm_campaign=official)
@@ -75,6 +75,8 @@ Checkout [**Subscriptions for WooCommerce Knowledge Base**](https://support.wpsw
 
 ## SUBSCRIPTIONS PLUGIN COMPATIBILITIES
 
+2) WooCommerce Payment Gateway Compatible: Our Subscription WordPress plugin is compatible with the [**WooCommerce Stripe Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-stripe/)(support for the credit card, debit card, Stripe SEPA Direct Debit) and WPS PayPal Payment.
+
 1) Compatible With PayPal Standard: The Subscriptions plugin works flawlessly with PayPal Standard to receive WooCommerce recurring payments. You can add it as one of the payment methods by entering your PayPal merchant account API keys
 
 2) [**Membership for WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-subs-membership-pro&utm_medium=subs-github-page&utm_campaign=membership-pro)
@@ -87,7 +89,7 @@ The Wallet system enables a digital wallet on your eCommerce store for users. It
 5) Subscriptions for WooCommerce WPML compatibility enable the admin to create text in different languages. It allows simple language translation in your store. 
 
 6) WooCommerce Subscription Payment Gateway Compatible
-Our Subscription WordPress plugin is compatible with the [**WooCommerce Stripe Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-stripe/), and. We will try to add more official payment gateways with different updates. However, you can [**Contact us**](https://wpswings.com/contact-us/?utm_source=wpswings-subs-contact-us&utm_medium=subs-github-page&utm_campaign=contact-us) for customized payment compatibility.
+Our Subscription WordPress plugin is compatible with the [**WooCommerce Stripe Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-stripe/), and [**WooCommerce PayPal Checkout Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-paypal-express-checkout/). We will try to add more official payment gateways with different updates. However, you can [**Contact us**](https://wpswings.com/contact-us/?utm_source=wpswings-subs-contact-us&utm_medium=subs-github-page&utm_campaign=contact-us) for customized payment compatibility.
 
 7) Subscription for WooCommerce is fully compatible with WooCommerce High-Performance Order Storage (HPOS) is an easy-to-understand solid database structure that uses WooCommerce CRUD design, allowing you to store order data in custom order tables to easily handle bulk orders and ensure the smooth workflow of your WooCommerce store.
 
@@ -122,10 +124,6 @@ Our Subscription WordPress plugin is perfect for converting your regular online 
 
 Subscriptions for WooCommerce Pro plugin is an amazing and cost-effective solution to the WordPress limitation of Subscriptions. I love the support team that is always ready to resolve issues. I strongly believe that it will be the basis of the future progress of Urdu With Annie.
 [**See Subscriptions Case Study**](https://wpswings.com/case-studies/urduwithannie/?utm_source=wpswings-subs-case-study&utm_medium=subs-github-page&utm_campaign=subs-case-study)
-
-## DOCUMENTATION OF PREMIUM VERSION
-
-* [**Subscriptions for WooCommerce Pro Documentation**](https://docs.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-doc&utm_medium=subs-github-page&utm_campaign=subs-doc)
 
 * [**WooCommerce Manual Subscription Orders**](https://docs.wpswings.com/add-manual-woocommerce-subscription-orders/?utm_source=wpswings-manual-subs-doc&utm_medium=subs-github-page&utm_campaign=manual-subs-doc)
 
