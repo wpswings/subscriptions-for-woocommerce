@@ -1,8 +1,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriptions For WooCommerce 1.7.0\n"
-"POT-Creation-Date: 2024-08-08 16:06+0530\n"
+"Project-Id-Version: Subscriptions For WooCommerce 1.7.1\n"
+"POT-Creation-Date: 2024-09-05 14:57+0530\n"
 "PO-Revision-Date: 2023-10-03 13:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: Wp Swings\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.3\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
@@ -26,8 +26,8 @@ msgid "Make Sure, You have filled the Client ID and Client secret keys"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:197
-#: includes/subscriptions-for-woocommerce-common-function.php:448
-#: includes/subscriptions-for-woocommerce-common-function.php:469
+#: includes/subscriptions-for-woocommerce-common-function.php:452
+#: includes/subscriptions-for-woocommerce-common-function.php:473
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:134
 #: public/partials/templates/myaccount/wps-susbcrptions.php:94
 #: src/component/SecondStep.js:73
@@ -35,22 +35,22 @@ msgid "Days"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:198
-#: includes/subscriptions-for-woocommerce-common-function.php:449
-#: includes/subscriptions-for-woocommerce-common-function.php:470
+#: includes/subscriptions-for-woocommerce-common-function.php:453
+#: includes/subscriptions-for-woocommerce-common-function.php:474
 #: src/component/SecondStep.js:74
 msgid "Weeks"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:199
-#: includes/subscriptions-for-woocommerce-common-function.php:450
-#: includes/subscriptions-for-woocommerce-common-function.php:471
+#: includes/subscriptions-for-woocommerce-common-function.php:454
+#: includes/subscriptions-for-woocommerce-common-function.php:475
 #: src/component/SecondStep.js:75
 msgid "Months"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:200
-#: includes/subscriptions-for-woocommerce-common-function.php:451
-#: includes/subscriptions-for-woocommerce-common-function.php:472
+#: includes/subscriptions-for-woocommerce-common-function.php:455
+#: includes/subscriptions-for-woocommerce-common-function.php:476
 #: src/component/SecondStep.js:76
 msgid "Years"
 msgstr ""
@@ -918,21 +918,21 @@ msgstr ""
 
 #: emails/templates/plain/wps-sfw-cancel-subscription-email-template.php:29
 #: emails/templates/plain/wps-sfw-expired-subscription-email-template.php:27
-#: includes/subscriptions-for-woocommerce-common-function.php:287
+#: includes/subscriptions-for-woocommerce-common-function.php:291
 #: public/partials/templates/myaccount/wps-add-new-payment-details.php:21
 msgid "Product"
 msgstr ""
 
 #: emails/templates/plain/wps-sfw-cancel-subscription-email-template.php:33
 #: emails/templates/plain/wps-sfw-expired-subscription-email-template.php:31
-#: includes/subscriptions-for-woocommerce-common-function.php:288
+#: includes/subscriptions-for-woocommerce-common-function.php:292
 #: public/partials/templates/myaccount/wps-add-new-payment-details.php:22
 msgid "Quantity"
 msgstr ""
 
 #: emails/templates/plain/wps-sfw-cancel-subscription-email-template.php:37
 #: emails/templates/plain/wps-sfw-expired-subscription-email-template.php:35
-#: includes/subscriptions-for-woocommerce-common-function.php:289
+#: includes/subscriptions-for-woocommerce-common-function.php:293
 msgid "Price"
 msgstr ""
 
@@ -1106,7 +1106,7 @@ msgstr ""
 
 #: includes/class-subscriptions-for-woocommerce-scheduler.php:278
 #: includes/class-subscriptions-for-woocommerce-scheduler.php:849
-#: public/class-subscriptions-for-woocommerce-public.php:2075
+#: public/class-subscriptions-for-woocommerce-public.php:2066
 #, php-format
 msgid "This renewal order belongs to Subscription #%s"
 msgstr ""
@@ -1408,61 +1408,61 @@ msgstr ""
 msgid "WPS PayPal"
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:365
+#: includes/subscriptions-for-woocommerce-common-function.php:369
 msgid "There was an error with your request."
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:368
+#: includes/subscriptions-for-woocommerce-common-function.php:372
 msgid "Invalid Subscription."
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:371
+#: includes/subscriptions-for-woocommerce-common-function.php:375
 msgid "Invalid subscription order."
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:514
-#: includes/subscriptions-for-woocommerce-common-function.php:551
+#: includes/subscriptions-for-woocommerce-common-function.php:518
+#: includes/subscriptions-for-woocommerce-common-function.php:555
 #, php-format
 msgid "%s Day"
 msgid_plural "%s Days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:518
-#: includes/subscriptions-for-woocommerce-common-function.php:555
+#: includes/subscriptions-for-woocommerce-common-function.php:522
+#: includes/subscriptions-for-woocommerce-common-function.php:559
 #, php-format
 msgid "%s Week"
 msgid_plural "%s Weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:522
-#: includes/subscriptions-for-woocommerce-common-function.php:559
+#: includes/subscriptions-for-woocommerce-common-function.php:526
+#: includes/subscriptions-for-woocommerce-common-function.php:563
 #, php-format
 msgid "%s Month"
 msgid_plural "%s Months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:526
-#: includes/subscriptions-for-woocommerce-common-function.php:563
+#: includes/subscriptions-for-woocommerce-common-function.php:530
+#: includes/subscriptions-for-woocommerce-common-function.php:567
 #, php-format
 msgid "%s Year"
 msgid_plural "%s Years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:739
+#: includes/subscriptions-for-woocommerce-common-function.php:743
 #: public/class-subscriptions-for-woocommerce-public.php:141
 #: public/class-subscriptions-for-woocommerce-public.php:157
 #: public/class-subscriptions-for-woocommerce-public.php:1036
-#: public/class-subscriptions-for-woocommerce-public.php:1873
-#: public/class-subscriptions-for-woocommerce-public.php:1893
+#: public/class-subscriptions-for-woocommerce-public.php:1861
+#: public/class-subscriptions-for-woocommerce-public.php:1881
 #, php-format
 msgid " / %s "
 msgstr ""
 
-#: includes/subscriptions-for-woocommerce-common-function.php:795
+#: includes/subscriptions-for-woocommerce-common-function.php:799
 msgid "WooCommerce Stripe Gateway"
 msgstr ""
 
@@ -1620,14 +1620,14 @@ msgid "Data not found"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:146
-#: public/class-subscriptions-for-woocommerce-public.php:1878
+#: public/class-subscriptions-for-woocommerce-public.php:1866
 #, php-format
 msgid " For %s "
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:199
-#: public/class-subscriptions-for-woocommerce-public.php:1884
-#: public/class-subscriptions-for-woocommerce-public.php:1903
+#: public/class-subscriptions-for-woocommerce-public.php:1872
+#: public/class-subscriptions-for-woocommerce-public.php:1891
 #, php-format
 msgid " and %s  Sign up fee"
 msgstr ""
@@ -1669,52 +1669,52 @@ msgstr ""
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1292
+#: public/class-subscriptions-for-woocommerce-public.php:1280
 msgid "You can not add multiple subscription products in cart"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1618
+#: public/class-subscriptions-for-woocommerce-public.php:1606
 msgid "Only the Card is supported for the recurring payment"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1646
-#: public/class-subscriptions-for-woocommerce-public.php:1817
+#: public/class-subscriptions-for-woocommerce-public.php:1634
+#: public/class-subscriptions-for-woocommerce-public.php:1805
 msgid "Renewal For"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1649
-#: public/class-subscriptions-for-woocommerce-public.php:1820
+#: public/class-subscriptions-for-woocommerce-public.php:1637
+#: public/class-subscriptions-for-woocommerce-public.php:1808
 msgid "Subtotal"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1651
-#: public/class-subscriptions-for-woocommerce-public.php:1822
+#: public/class-subscriptions-for-woocommerce-public.php:1639
+#: public/class-subscriptions-for-woocommerce-public.php:1810
 msgid "Tax"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1654
-#: public/class-subscriptions-for-woocommerce-public.php:1825
+#: public/class-subscriptions-for-woocommerce-public.php:1642
+#: public/class-subscriptions-for-woocommerce-public.php:1813
 msgid "Shipping"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1656
-#: public/class-subscriptions-for-woocommerce-public.php:1827
+#: public/class-subscriptions-for-woocommerce-public.php:1644
+#: public/class-subscriptions-for-woocommerce-public.php:1815
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:176
 msgid "Total"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1951
+#: public/class-subscriptions-for-woocommerce-public.php:1942
 msgid ""
 "Please check <strong>\"Save payment information to my account for future "
 "purchases\"</strong> to proceed further "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2077
+#: public/class-subscriptions-for-woocommerce-public.php:2068
 msgid "Important Information"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2091
-#: public/class-subscriptions-for-woocommerce-public.php:2105
+#: public/class-subscriptions-for-woocommerce-public.php:2082
+#: public/class-subscriptions-for-woocommerce-public.php:2096
 msgid "Renewal Order"
 msgstr ""
 

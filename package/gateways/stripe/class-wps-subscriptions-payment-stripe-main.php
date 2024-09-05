@@ -37,14 +37,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_add_stripe_order_statuses_for_payment_complete' ), 10, 2 );
 
-			$woocommerce_stripe_settings = get_option( 'woocommerce_stripe_settings' );
-			$upe_checkout_experience_enabled = isset( $woocommerce_stripe_settings['upe_checkout_experience_enabled'] ) ? $woocommerce_stripe_settings['upe_checkout_experience_enabled'] : '';
+			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback' ) );
 
-			if ( 'disabled' != $upe_checkout_experience_enabled ) {
-				add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback' ) );
-			} else {
-				add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback_old' ), 10, 2 );
-			}
+			add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback_old' ), 10, 2 );
+			
 		}
 
 		/**
@@ -122,7 +118,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		 * @param bool  $force_save_source Should we force save payment source.
 		 * @param array $customer as customer.
 		 */
-		public function wps_sfw_wc_stripe_force_save_source_callback_old( $force_save_source, $customer ) {
+		public function wps_sfw_wc_stripe_force_save_source_callback_old( $force_save_source, $customer = null ) {
 			if ( wps_sfw_is_cart_has_subscription_product() ) {
 				return true;
 			}

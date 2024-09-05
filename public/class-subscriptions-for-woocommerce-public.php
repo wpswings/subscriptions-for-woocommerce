@@ -1205,18 +1205,6 @@ class Subscriptions_For_Woocommerce_Public {
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription_activated', 'yes' );
 					}
 				}
-				// Renewal order handling.
-				$renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-				$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
-				if ( $subscription_id && 'yes' == $renewal_order ) {
-					$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
-					$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $subscription_id, $current_time );
-					$wps_next_payment_date = wps_sfw_next_payment_date( $subscription_id, $current_time, $wps_susbcription_trial_end );
-
-					$wps_next_payment_date = apply_filters( 'wps_sfw_next_payment_date', $wps_next_payment_date, $subscription_id );
-
-					wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
-				}
 			} elseif ( 'failed' == $new_status || 'pending' == $new_status || 'wps_renewal' == $new_status ) {
 				// Renewal order handling.
 				$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
@@ -1934,6 +1922,9 @@ class Subscriptions_For_Woocommerce_Public {
 			$request_body = file_get_contents( 'php://input' );
 			$data = json_decode( $request_body );
 
+			$woocommerce_stripe_settings = get_option( 'woocommerce_stripe_settings' );
+			$upe_checkout_experience_enabled = isset( $woocommerce_stripe_settings['upe_checkout_experience_enabled'] ) ? $woocommerce_stripe_settings['upe_checkout_experience_enabled'] : '';
+
 			if ( ! empty( $data ) && isset( $data->payment_data ) && ! empty( $data->payment_data ) ) {
 
 				$payment_object = $data->payment_data;
@@ -1946,7 +1937,7 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 
-				if ( 'no' == $save_payment_method ) {
+				if ( 'no' == $save_payment_method && 'disabled' != $upe_checkout_experience_enabled ) {
 
 					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'subscriptions-for-woocommerce' ) );
 				}
