@@ -1,13 +1,13 @@
-=== Subscriptions for WooCommerce - WooCommerce Subscription Plugin for Collecting Recurring Revenue, Offer Subscription Box, Sell Subscription Services & Products ===
+﻿=== Subscriptions for WooCommerce - WooCommerce Subscription Plugin for Collecting Recurring Revenue, Offer Subscription Box, Sell Subscription Services & Products ===
 Contributors: wpswings
 Donate link:  https://wpswings.com/
-Tags: subscriptions,subscription billing, paypal subscriptions, subscription, woocommerce subscriptions
+Tags: subscriptions,subscription billing, subscription box, subscription, woocommerce subscriptions
 Requires at least: 5.1.0
 Tested up to: 6.6.1
 WC requires at least: 5.1.0
-WC tested up to: 9.1.4
-Stable tag: 1.7.0
-Requires PHP: 7.3.5 
+WC tested up to: 9.2.3
+Stable tag: 1.7.1
+Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
 
@@ -25,6 +25,7 @@ The WooCommerce Subscriptions plugin empowers merchants to establish subscriptio
 
 
 The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro) plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, and online courses to eCommerce stores revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business.
+
 
 Our Subscription and Membership plugins are among the top-rated plugins, when combined together they can create a complete subscription model that gives your users a variety of specialized content and digital resources such as digital guides, eBooks, and audiobooks, and all of it only reserved for your members and restricted for non-members.
 
@@ -95,8 +96,6 @@ Our Subscription and Membership plugins are among the top-rated plugins, when co
 > Note: This payment method will only work for US-based PayPal merchant accounts. 
 
 
-
-
 For previous users, the WPS PayPal Payment option will appear in the payment section of WooCommerce or go to WooCommerce→Settings→ Payments→ WPS PayPal. On enabling this option and entering the Client ID and Secret ID, it will start working as a payment method for purchasing recurring services & products.
 
 
@@ -122,6 +121,7 @@ For previous users, the WPS PayPal Payment option will appear in the payment sec
 
 
 * [**Membership for WooCommerce Free**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-subs-membership-pro&utm_medium=subs-org-page&utm_campaign=membership-pro): Our WooCommerce Subscriptions plugin works seamlessly with the Membership for WooCommerce plugin. This integration allows you to sell subscription services and products as part of your membership plans. With our WordPress subscription plugin, you can easily create membership plans and offer exclusive discounts to your members.
+
 
 * [**Wallet System for WooCommerce Free**](https://wordpress.org/plugins/wallet-system-for-woocommerce/) and [**Wallet System for WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-org-page&utm_campaign=wallet-pro/).
 The Wallet system compatibility allows users to pay for their recurring services and products via a WooCommerce wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on the wallet amount.
@@ -164,8 +164,6 @@ The Wallet system compatibility allows users to pay for their recurring services
 Our Subscription WordPress plugin is perfect for converting your regular online store into a top-notch subscription store. It allows you to create & sell simple and variable subscription products for physical & downloadable goods.
 
 
-
-
 > Note [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro)
 
 
@@ -175,17 +173,7 @@ Our Subscription WordPress plugin is perfect for converting your regular online 
 Subscriptions for WooCommerce Pro plugin is an amazing and cost-effective solution to the WordPress limitation of Subscriptions. I love the support team that is always ready to resolve issues. I strongly believe that it will be the basis of the future progress of Urdu With Annie. [**See Subscriptions Case Study**](https://wpswings.com/case-studies/urduwithannie/?utm_source=wpswings-subs-case-study&utm_medium=subs-org-page&utm_campaign=subs-pro-case-study)
 
 
-== DOCUMENTATION OF PREMIUM VERSION ==
-
-
-
-
-* [**WooCommerce Subscriptions Pro Documentation**](https://docs.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-doc&utm_medium=subs-org-page&utm_campaign=subs-doc)
-
-
 * [**WooCommerce Manual Subscription Orders**](https://docs.wpswings.com/add-manual-woocommerce-subscription-orders/?utm_source=wpswings-manual-subs-doc&utm_medium=subs-org-page&utm_campaign=manual-subs-doc)
-
-
 
 
 == SUPPORT ==
@@ -209,11 +197,7 @@ If you need support or have any questions then kindly use our online chat window
 Automatic installation is the easiest option as WordPress handles the file transfer itself and you don't need to leave your web browser. To do an automatic install of Subscriptions for WooCommerce, log in to your WordPress dashboard, navigate to the Plugins menu, and click Add New.
 
 
-
-
 In the search field type "Subscriptions for WooCommerce" and click Search Plugins. Once you've found our plugin you can view details about it such as the point release, rating, and description. Most importantly, of course, you can install it by simply clicking "Install Now".
-
-
 
 
 = Manual installation =
@@ -285,7 +269,7 @@ Yes, our free WooCommerce Subscriptions plugin has different mail options for di
 If you are seeing this message, it means that you still need to set up some basic WooCommerce settings. To fix this, go to WooCommerce > Settings > Accounts & Privacy and enable the Allow users to create an account on the checkout option. This will ensure that all users who purchase subscriptions have an account, which is necessary for future subscription renewals.
 
 
-= If an order is failed automatic retry attempts happen after how many hours or days? =
+= If an order fails, automatic retry attempts happen after how many hours or days? =
 If the order fails, you can enable the "Enable Automatic Retry Subscription On Failed Attempts" feature. The next attempt will be made in 24 hours.
 
 
@@ -293,6 +277,8 @@ If the order fails, you can enable the "Enable Automatic Retry Subscription On F
 
 
 Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wpswings.com/wordpress-plugins-knowledge-base/category/subscriptions-for-woocommerce/?utm_source=wpswings-subs-kb&utm_medium=subs-org-page&utm_campaign=subs-kb)
+
+
 
 
 == Screenshots ==
@@ -312,13 +298,21 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 12. Subscription Renewal
 
 
-
-
 == Changelog ==
+
+
+= 1.7.1 - Released on 05 September 2024 =
+* New : Latest WP(6.6.1) and WC(9.2.3) compatibility
+* Fix: Fix the issue related to calculating next payment date incase of trial period for subscription.
+* Fix: Stripe saved card issue in case of new checkout experience
+
+
+
 
 = 1.7.0 - Released on 09 August 2024 =
 * Override existing mail template to customer when renewal get failed
 * Add number of days left for the next renewal
+
 
 = 1.6.9 - Released on 29 July 2024 =
 * New : Latest WP(6.6.1) and WC(9.1.4) compatibility
@@ -326,6 +320,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Fix : Translation issue
 * Fix : i tag closing issue
 * Fix : Singular and Plural string issue in the subscription price
+
 
 = 1.6.8 - Released on 12 July 2024 =
 * New: Compatibility with latest WC(9.1.1)
@@ -348,8 +343,6 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Fix : Refund of renewal order through stripe payment gateway
 
 
-
-
 = 1.6.4 - Released on 03 April 2024 =
 * New : Latest WP(6.5.0) and WC(8.7.0)compatibility
 * New : Added the subscription relationship order note for the parent and renewal order
@@ -360,21 +353,13 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 
 
-
-
-
-
 = 1.6.3 - Released on 06 March 2024 =
 * fix : fix normal product purchase from stripe during checkout .
-
-
 
 
 = 1.6.2 - Released on 29 February 2024 =
 * New: Latest WC( 8.6.1 ) Compatibility
 * Fix: Renewal Order goes into the pending status through Stripe Payment
-
-
 
 
 = 1.6.1 - Released on 19 February 2024 =
@@ -386,24 +371,14 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Fix : Compatibility Issue with WooCommerce Stripe Gateway
 
 
-
-
 = 1.6.0 - Released on 23 January 2024 =
 * New : Latest WC( 8.5.1 ) Compatibility
 * Fix : Missing payment method issue during the renewal payment
 
 
-
-
 = 1.5.9 - Released on 14 December 2023 =
 * New: WC(8.4.0) compatibility
 * Fix: Undefined value issue
-
-
-
-
-
-
 
 
 = 1.5.8 - Released on 12 December 2023 =
@@ -412,21 +387,9 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Plugin Code Enhancement and Bug Fixes
 
 
-
-
-
-
-
-
 = 1.5.7 - Released on 16 November 2023 =
 * New: Latest WP( 6.4.1 ) and WC( 8.2.2 )
 * Fix: Subscription Cancel Issue
-
-
-
-
-
-
 
 
 = 1.5.6 - Released on 02 November 2023 =
@@ -435,32 +398,18 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: Added new section for Free vs Pro comparison table
 
 
-
-
-
-
-
-
 = 1.5.5 - Released on 03 October 2023 =
 * Latest WP( 6.3.1 ) and WC( 8.1.1 )
 * New: Added for a promotional banner
 * Enhancement: Subscription information on the cart page and checkout page.
 
 
-
-
 = 1.5.4 - Released on 18 August 2023 =
-
-
 * Latest WP( 6.3.0 ) and WC( 8.0.2 )
 * Enhancement of renewal info on checkout
 
 
-
-
 = 1.5.3 - Released on 27 July 2023 =
-
-
 * New: WP(6.3.0) and WC(8.0.0) latest update
 
 
@@ -474,11 +423,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: Compatibility with [**Points and Rewards for WooCommerce Free**](https://wordpress.org/plugins/points-and-rewards-for-woocommerce/) and [**Points and Rewards for WooCommerce Pro**](https://wpswings.com/product/points-and-rewards-for-woocommerce-pro/?utm_source=wpswings-subs-par-pro&utm_medium=subs-org-page&utm_campaign=par-pro)
 
 
-
-
 = 1.5.1 - Released on 12 June 2023 =
-
-
 
 
 * New: WP (6.2.2) and WC (7.7.2) latest update
@@ -495,18 +440,12 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 = 1.4.9 - Released on 13 April 2023 =
 
 
-
-
 * New: WP(6.2) and WC(7.5.1) latest update
 * New: Stripe Sepa Direct Debit Card payment method added or enabled for the subscription.
 * Bug fix: Taxes different or extra class with work for subscription and its renewal order 
 
 
-
-
 = 1.4.8 - Released on 17 February 2023 =
-
-
 
 
 * New: Latest WP and WC compatibility
@@ -516,11 +455,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Enhancement: search with subscription ID subscription table
 
 
-
-
 = 1.4.7 - Released on 22 December 2022 =
-
-
 
 
 * New: Latest WC and WP compatibility 
@@ -530,11 +465,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Fix: Multi-Step form issue
 
 
-
-
 = 1.4.6 - Released on 11 November 2022 =
-
-
 
 
 * New: Latest WC compatibility
@@ -543,11 +474,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Fix: WP Swings Paypal fixes
 
 
-
-
 = 1.4.5 - Released on 20 October  2022 =
-
-
 
 
 * Bug Fix: WPS-Paypal concern for live mode resolved
@@ -555,22 +482,14 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: Compatible with the latest WP and WC
 
 
-
-
 = 1.4.4 - Released on 09 September  2022 =
-
-
 
 
 * New: Minor Bug Fixes
 * New: Compatible with the latest WP and WC
 
 
-
-
 = 1.4.3 - Released on 02 September  2022 =
-
-
 
 
 * New: Major Bug Fixes
@@ -583,8 +502,6 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: Bug Fix Refund of Subscription Renewal order Through its Payment Method 
 * New: WooCommerce Paypal Payment Support
 * New: Compatible with the latest WP and WC
-
-
 
 
 = 1.4.1 - Released on 13 May 2022 =
@@ -603,11 +520,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New:  Inclusive Tax Problem Fixed
 
 
-
-
 = 1.3.1 - Released on 3 February 2022 =
-
-
 
 
 * New: Change author from MakeWebBetter to WP Swings
@@ -619,19 +532,13 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 = 1.3.0 – Released on 07 January 2022 =
 
 
-
-
 * Fix: Prevent guest users from placing an order if it has a subscription product.
 * Fix: WooEpay payment gateway compatibility
 * Fix: Compatibility with the latest WP and WC
 * Fix: Other minor bugs in the plug-in
 
 
-
-
 = 1.2.0 - Released on 30 November 2021 =
-
-
 
 
 * Fix: Minor bugs and issues.
@@ -640,11 +547,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: On-hold subscription status added when order status is failed.
 
 
-
-
 = 1.1.0 - Released on 1 October 2021 =
-
-
 
 
 * New: Compatibility with [**Wallet System for WooCommerce**](https://wordpress.org/plugins/wallet-system-for-woocommerce/)
@@ -654,11 +557,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: Show renewal
 
 
-
-
 = 1.0.3 - Released on 31 August 2021 =
-
-
 
 
 * Fix: Renewal Order Scheduler issue.
@@ -666,22 +565,14 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: Compatibility with WooCommerce 5.6
 
 
-
-
 = 1.0.2 - Released on 05 August 2021 =
-
-
 
 
 * New: Compatibility with WordPress 5.8
 * New: Compatibility with WooCommerce 5.5
 
 
-
-
 = 1.0.1 - Released on 20 July 2021 =
-
-
 
 
 * New: Added WooCommerce PayPal Standard Payment Gateway for Subscription.
@@ -692,15 +583,16 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Fix: Guest Checkout issue for subscription products
 
 
-
-
 = 1.0.0 - Released on 9 April 2021 =
+
 
 * First version
 
 
 == Upgrade Notice ==
 
-= 1.7.0 - Released on 09 August 2024 =
-* Override existing mail template to customer when renewal get failed
-* Add number of days left for the next renewal
+
+= 1.7.1 - Released on 05 September 2024 =
+* New : Latest WP(6.6.1) and WC(9.2.3) compatibility
+* Fix: Fix the issue related to calculating next payment date incase of trial period for subscription.
+* Fix: Stripe saved card issue in case of new checkout experience
