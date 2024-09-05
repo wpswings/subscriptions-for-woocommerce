@@ -1922,6 +1922,9 @@ class Subscriptions_For_Woocommerce_Public {
 			$request_body = file_get_contents( 'php://input' );
 			$data = json_decode( $request_body );
 
+			$woocommerce_stripe_settings = get_option( 'woocommerce_stripe_settings' );
+			$upe_checkout_experience_enabled = isset( $woocommerce_stripe_settings['upe_checkout_experience_enabled'] ) ? $woocommerce_stripe_settings['upe_checkout_experience_enabled'] : '';
+
 			if ( ! empty( $data ) && isset( $data->payment_data ) && ! empty( $data->payment_data ) ) {
 
 				$payment_object = $data->payment_data;
@@ -1934,7 +1937,7 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 
-				if ( 'no' == $save_payment_method ) {
+				if ( 'no' == $save_payment_method && 'disabled' != $upe_checkout_experience_enabled ) {
 
 					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'subscriptions-for-woocommerce' ) );
 				}
