@@ -130,16 +130,16 @@ if ( ! function_exists( 'wps_sfw_susbcription_calculate_time' ) ) {
 		$wps_next_date = 0;
 		switch ( $wps_interval ) {
 			case 'day':
-				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, intval( $wps_interval_count ) );
+				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, $wps_interval_count  );
 				break;
 			case 'week':
-				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, intval( $wps_interval_count ) * 7 );
+				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, $wps_interval_count * 7 );
 				break;
 			case 'month':
-				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, 0, intval( $wps_interval_count ) );
+				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, 0,  $wps_interval_count  );
 				break;
 			case 'year':
-				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, 0, 0, intval( $wps_interval_count ) );
+				$wps_next_date = wps_sfw_get_timestamp( $wps_curr_time, 0, 0, $wps_interval_count );
 				break;
 			default:
 		}
