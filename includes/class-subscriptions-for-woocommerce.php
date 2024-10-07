@@ -336,7 +336,10 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'woocommerce_email_before_order_table', $sfw_plugin_public, 'wps_sfw_add_custom_failed_order_section', 10, 4 );
 			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_subject_failed_order', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_email_heading_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_heading_failed_order', 10, 2 );
-
+			
+			//learnpress
+			$this->loader->add_action( 'woocommerce_single_product_summary',  $sfw_plugin_public, 'wps_sfw_course_description', 20 );
+			$this->loader->add_action( 'learn-press/single-course-summary',  $sfw_plugin_public, 'wps_sfw_override_template_content' );
 		}
 	}
 
