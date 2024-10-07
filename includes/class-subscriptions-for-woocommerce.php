@@ -240,7 +240,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
 
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription' );
+			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription', 99 );
 
 			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'wps_sfw_register_new_order_statuses' );
 
@@ -301,7 +301,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'woocommerce_account_show-subscription_endpoint', $sfw_plugin_public, 'wps_sfw_shwo_subscription_details' );
 
-			$this->loader->add_action( 'init', $sfw_plugin_public, 'wps_sfw_cancel_susbcription' );
+			$this->loader->add_action( 'init', $sfw_plugin_public, 'wps_sfw_cancel_susbcription', 99 );
 
 			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'wps_sfw_woocommerce_order_status_changed', 99, 3 );
 

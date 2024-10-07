@@ -148,7 +148,7 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( ! is_checkout() ) {
 					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
 				}
-				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id );
+				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id, $cart_item );
 
 			} elseif ( isset( $wps_sfw_subscription_number ) && ! empty( $wps_sfw_subscription_number ) ) {
 				$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
@@ -164,7 +164,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$price = $this->wps_sfw_get_initial_signup_fee_html( $product_id, $price );
 				}
 
-					$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id );
+					$price = apply_filters( 'wps_sfw_show_one_time_subscription_price', $price, $product_id, $cart_item );
 
 			}
 		}
@@ -1875,7 +1875,7 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 				// return correct price format.
-				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id );
+				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id, $cart_item );
 
 			} elseif ( isset( $wps_sfw_subscription_number ) && ! empty( $wps_sfw_subscription_number ) ) {
 				$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
@@ -1894,10 +1894,10 @@ class Subscriptions_For_Woocommerce_Public {
 					}
 				}
 				// return correct price format.
-				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id );
+				$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id, $cart_item );
 			}
 			// Do not allow subscription price for the one-time product.
-			if ( apply_filters( 'wps_sfw_check_one_time_product', true, $price, $product_id ) && $price ) {
+			if ( $price ) {
 				$data[] = apply_filters(
 					'wps_sfw_block_cart_price',
 					array(
