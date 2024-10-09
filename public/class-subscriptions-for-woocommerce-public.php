@@ -1620,7 +1620,9 @@ class Subscriptions_For_Woocommerce_Public {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$product_id = $cart_item['data']->get_id();
-					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
+
+					$wps_skip_creating_subscription = apply_filters( 'wps_skip_creating_subscription', true, $cart_item );
+					if ( ! $wps_skip_creating_subscription ) {
 						continue;
 					}
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
@@ -1790,7 +1792,9 @@ class Subscriptions_For_Woocommerce_Public {
 			foreach ( WC()->cart->cart_contents as $cart_item ) {
 				if ( wps_sfw_check_product_is_subscription( $cart_item['data'] ) ) {
 					$product_id = $cart_item['data']->get_id();
-					if ( function_exists( 'wps_sfw_if_product_onetime' ) && wps_sfw_if_product_onetime( $product_id ) ) {
+
+					$wps_skip_creating_subscription = apply_filters( 'wps_skip_creating_subscription', true, $cart_item );
+					if ( ! $wps_skip_creating_subscription ) {
 						continue;
 					}
 					$line_data = $this->wps_sfw_calculate_recurring_price( $cart_item, true );
