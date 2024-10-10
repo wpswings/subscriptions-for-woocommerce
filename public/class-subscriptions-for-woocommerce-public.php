@@ -2126,7 +2126,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$course        = learn_press_get_course( $course_id );
 					$course_name[] = $course->get_title();
 				}
-				echo '<div class="wps-product-notice">' . esc_attr__( 'You will be Subscribing to', 'subscription-for-woocommerce' ) . ' ' . implode( ', ', $course_name ) . '</div>';
+				echo '<div class="wps-product-notice">' . esc_attr__( 'You will be subscribing to', 'subscription-for-woocommerce' ) . ' ' . implode( ', ', $course_name ) . '</div>';
 			}
 		}
 		do_action( 'wps_sfw_product_summary', $product );
@@ -2136,14 +2136,18 @@ class Subscriptions_For_Woocommerce_Public {
 	 * Override the default learnpress template
 	 *
 	 */
-	public function wps_sfw_override_template_content(){
+	public function wps_sfw_override_template_content( $located, $template_name, $args, $template_path, $default_path ){
+		
+		if ( current_user_can( 'manage_options' ) || is_admin() ) {
+			return $located;
+		}
+		
+		if ( 'content-single-course.php' !== $template_name ) {
+			return $located;
+		}
 		$user = learn_press_get_current_user();
 		$course = learn_press_get_the_course();
 		$current_course_id = $course->get_id();
-
-		if ( current_user_can( 'manage_options' ) || is_admin() ) {
-			return;
-		}
 
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args = array(
@@ -2184,13 +2188,14 @@ class Subscriptions_For_Woocommerce_Public {
 				$status  = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
 				if ( in_array( $current_course_id, $courses ) && 'active' !== $status ) {
 					echo '<div class="wps-sfw-learnpress-message">' . esc_attr__( 'There is no active subscription', 'subscription-for-woocommerce' ) . '</div>';
-				} else {
-					return;
+					// blank template return;
+					return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 				}
 			}
 		} else {
 			echo '<div class="wps-sfw-learnpress-message">' . esc_attr__( 'You have not purchase the subscription yet', 'subscription-for-woocommerce' ) . '</div>';
+			// blank template return;
+			return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 		}
-		remove_action( 'learn-press/single-course-summary' );
 	}
 }
