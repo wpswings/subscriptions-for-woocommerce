@@ -227,15 +227,15 @@ class Subscriptions_For_Woocommerce_Admin {
 		$is_home = false;
 		if ( empty( $GLOBALS['admin_page_hooks']['wps-plugins'] ) ) {
 
-			add_menu_page( 'WP Swings', 'WP Swings', 'manage_options', 'wps-plugins', array( $this, 'wps_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/wpswings_logo.png', 15 );
+			add_menu_page( 'WP Swings', 'WP Swings', 'manage_woocommerce', 'wps-plugins', array( $this, 'wps_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/wpswings_logo.png', 15 );
 			// Add menus.
 			if ( wps_sfw_check_multistep() ) {
-				add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'wps_sfw_welcome_callback_function' ) );
+				add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_woocommerce', 'home', array( $this, 'wps_sfw_welcome_callback_function' ) );
 			}
 			$sfw_menus = apply_filters( 'wps_add_plugins_menus_array', array() );
 			if ( is_array( $sfw_menus ) && ! empty( $sfw_menus ) ) {
 				foreach ( $sfw_menus as $sfw_key => $sfw_value ) {
-					add_submenu_page( 'wps-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_options', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
+					add_submenu_page( 'wps-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_woocommerce', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
 				}
 				$is_home = false;
 			}
@@ -247,11 +247,11 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 			if ( ! $is_home ) {
 				if ( wps_sfw_check_multistep() ) {
-					add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'wps_sfw_welcome_callback_function' ), 1 );
+					add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_woocommerce', 'home', array( $this, 'wps_sfw_welcome_callback_function' ), 1 );
 				}
 			}
 		}
-		add_submenu_page( 'woocommerce', __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), 'manage_options', 'subscriptions-for-woocommerce', array( $this, 'wps_sfw_addsubmenu_woocommerce' ) );
+		add_submenu_page( 'woocommerce', __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), 'manage_woocommerce', 'subscriptions-for-woocommerce', array( $this, 'wps_sfw_addsubmenu_woocommerce' ) );
 	}
 
 	/**
