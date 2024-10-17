@@ -129,7 +129,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 				// Js for the multistep from.
 				$script_path       = '../../build/index.js';
-				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index.asset.php';
+				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index-asset.php';
 				$script_asset      = file_exists( $script_asset_path )
 				? require $script_asset_path
 				: array(

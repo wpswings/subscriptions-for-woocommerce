@@ -498,7 +498,9 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to get ruccuring data.
 	 *
 	 * @name wps_sfw_get_subscription_recurring_data
-	 * @param int $product_id product_id.
+	 * @param int   $product_id product_id.
+	 * @param array $cart_item  cart_item.
+	 *
 	 * @since    1.0.0
 	 */
 	public function wps_sfw_get_subscription_recurring_data( $product_id, $cart_item ) {
@@ -1857,11 +1859,11 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price ) . '</span>';
 			$price = apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
 
-			if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
-				/* translators: %s: signup fee */
+			if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) { 
 
 				$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price; 
 
+				/* translators: %s: signup fee,%s: renewal amount */
 				$price = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee, renewal will be %s', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ), wc_price( $product_price ) ) . '</span>';
 			}
 			
@@ -1871,17 +1873,16 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_sfw_subscription_free_trial_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_interval', true );
 				if ( isset( $wps_sfw_subscription_free_trial_number ) && ! empty( $wps_sfw_subscription_free_trial_number ) ) {
 					$wps_price_html = wps_sfw_get_time_interval( $wps_sfw_subscription_free_trial_number, $wps_sfw_subscription_free_trial_interval );
-					/* translators: %s: free trial number */
 
 					$signup_fee = null;
 					if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
-						/* translators: %s: signup fee */
 		
 						$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price; 
 		
+						/* translators: %s: signup fee,%s: renewal amount */
 						$signup_fee = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
-					
+					/* translators: %s: free trial,%s: renewal amount */
 					$price = $signup_fee . '<span class="wps_sfw_free_trial"> ' . sprintf( esc_html__( 'and %s free trial, renewal will be %s', 'subscriptions-for-woocommerce' ), $wps_price_html, wc_price( wc_get_product( $product_id )->get_price() ) ) . '</span>';
 				}
 			}
@@ -2119,10 +2120,10 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		global $product;
 	
-		// Get the product ID
+		// Get the product ID.
 		$product_id = $product->get_id();
 	
-		// Check if product is simple
+		// Check if product is simple.
 		if ( $product->is_type( 'simple' ) ) {
 
 			$saved_courses = get_post_meta( $product_id, 'wps_learnpress_course', true ) ? get_post_meta( $product_id, 'wps_learnpress_course', true ) : array();
@@ -2133,7 +2134,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$course        = learn_press_get_course( $course_id );
 					$course_name[] = $course->get_title();
 				}
-				echo '<div class="wps-product-notice">' . esc_attr__( 'You will be subscribing to', 'subscription-for-woocommerce' ) . ' ' . implode( ', ', $course_name ) . '</div>';
+				?><div class="wps-product-notice"><?php esc_attr_e( 'You will be subscribing to', 'subscription-for-woocommerce' ) ?> <?php echo esc_attr( implode( ', ', $course_name ) ); ?></div><?php
 			}
 		}
 		do_action( 'wps_sfw_product_summary', $product );
@@ -2200,13 +2201,17 @@ class Subscriptions_For_Woocommerce_Public {
 				$courses = wps_sfw_get_meta_data( $subcription_id, 'wps_learnpress_course', true );
 				$status  = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
 				if ( in_array( $current_course_id, $courses ) && 'active' !== $status ) {
-					echo '<div class="wps-sfw-learnpress-message">' . esc_attr__( 'There is no active subscription', 'subscription-for-woocommerce' ) . '</div>';
+					?>
+						<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'There is no active subscription', 'subscription-for-woocommerce' ) ?></div>
+					<?php
 					// blank template return;
 					return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 				}
 			}
 		} else {
-			echo '<div class="wps-sfw-learnpress-message">' . esc_attr__( 'You have not purchase the subscription yet', 'subscription-for-woocommerce' ) . '</div>';
+			?>
+				<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'You have not purchase the subscription yet', 'subscription-for-woocommerce' ) ?></div>
+			<?php
 			// blank template return;
 			return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 		}
