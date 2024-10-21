@@ -1,12 +1,12 @@
-﻿=== Subscriptions for WooCommerce - WooCommerce Subscription Plugin for Collecting Recurring Revenue, Offer Subscription Box, Sell Subscription Services & Products ===
+=== Subscriptions for WooCommerce - WooCommerce Subscription Plugin for Collecting Recurring Revenue, Offer Subscription Box, Sell Subscription Services & Products ===
 Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions,subscription billing, subscription box, subscription, woocommerce subscriptions
 Requires at least: 5.1.0
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 WC requires at least: 5.1.0
-WC tested up to: 9.2.3
-Stable tag: 1.7.1
+WC tested up to: 9.3.3
+Stable tag: 1.7.2
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -111,6 +111,8 @@ For previous users, the WPS PayPal Payment option will appear in the payment sec
 == SUBSCRIPTIONS PLUGIN COMPATIBILITIES ==
 
 
+* **Compatible With LearnPress**: Subscription for WooCommerce is compatible with [**LearnPress**](https://wordpress.org/plugins/learnpress/), allowing courses to be assigned to a subscription product. When a customer purchases a subscription product, they are automatically enrolled in the course, while non-subscribers cannot access it. This setup ensures easy enrollment and recurring revenue.
+
 * **WooCommerce Payment Gateway Compatible**: Our Subscription WordPress plugin is compatible with the [**WooCommerce Stripe Payment Gateway**](https://wordpress.org/plugins/woocommerce-gateway-stripe/)(support for the credit card, debit card, Stripe SEPA Direct Debit) and WPS PayPal Payment.
 
 
@@ -120,7 +122,7 @@ For previous users, the WPS PayPal Payment option will appear in the payment sec
 * Subscriptions plugin is compatible with [**Points and Rewards for WooCommerce Free**](https://wordpress.org/plugins/points-and-rewards-for-woocommerce/) and [**Points and Rewards for WooCommerce Pro**](https://wpswings.com/product/points-and-rewards-for-woocommerce-pro/?utm_source=wpswings-subs-par-pro&utm_medium=subs-org-page&utm_campaign=par-pro). You can allow your users to use their earned points to purchase subscription products & services and reward users with points when they place recurring orders.
 
 
-* [**Membership for WooCommerce Free**](https://wordpress.org/plugins/membership-for-woocommerce/) and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-subs-membership-pro&utm_medium=subs-org-page&utm_campaign=membership-pro): Our WooCommerce Subscriptions plugin works seamlessly with the Membership for WooCommerce plugin. This integration allows you to sell subscription services and products as part of your membership plans. With our WordPress subscription plugin, you can easily create membership plans and offer exclusive discounts to your members.
+* [**Membership for WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/) Free and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-subs-membership-pro&utm_medium=subs-org-page&utm_campaign=membership-pro): Our WooCommerce Subscriptions plugin works seamlessly with the Membership for WooCommerce plugin. This integration allows you to sell subscription services and products as part of your membership plans. With our WordPress subscription plugin, you can easily create membership plans and offer exclusive discounts to your members.
 
 
 * [**Wallet System for WooCommerce Free**](https://wordpress.org/plugins/wallet-system-for-woocommerce/) and [**Wallet System for WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-org-page&utm_campaign=wallet-pro/).
@@ -300,13 +302,14 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.7.2 - Released on 21 October 2024 =
+* New: Latest WP(6.6.2) and WC(9.3.3) Compatibility
+* New: Allow LearnPress Courses by ThimPress to be available if the user has an active subscription. the simple product must be configured as a subscription
 
 = 1.7.1 - Released on 05 September 2024 =
 * New : Latest WP(6.6.1) and WC(9.2.3) compatibility
 * Fix: Fix the issue related to calculating next payment date incase of trial period for subscription.
 * Fix: Stripe saved card issue in case of new checkout experience
-
-
 
 
 = 1.7.0 - Released on 09 August 2024 =
@@ -591,8 +594,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
+= 1.7.2 - Released on 21 October 2024 =
+* New: Latest WP(6.6.2) and WC(9.3.3) Compatibility
+* New: Allow LearnPress Courses by ThimPress to be available if the user has an active subscription. the simple product must be configured as a subscription
 
-= 1.7.1 - Released on 05 September 2024 =
-* New : Latest WP(6.6.1) and WC(9.2.3) compatibility
-* Fix: Fix the issue related to calculating next payment date incase of trial period for subscription.
-* Fix: Stripe saved card issue in case of new checkout experience
