@@ -129,7 +129,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 				// Js for the multistep from.
 				$script_path       = '../../build/index.js';
-				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index.asset.php';
+				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index-asset.php';
 				$script_asset      = file_exists( $script_asset_path )
 				? require $script_asset_path
 				: array(
@@ -227,15 +227,15 @@ class Subscriptions_For_Woocommerce_Admin {
 		$is_home = false;
 		if ( empty( $GLOBALS['admin_page_hooks']['wps-plugins'] ) ) {
 
-			add_menu_page( 'WP Swings', 'WP Swings', 'manage_options', 'wps-plugins', array( $this, 'wps_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/wpswings_logo.png', 15 );
+			add_menu_page( 'WP Swings', 'WP Swings', 'manage_woocommerce', 'wps-plugins', array( $this, 'wps_plugins_listing_page' ), SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/wpswings_logo.png', 15 );
 			// Add menus.
 			if ( wps_sfw_check_multistep() ) {
-				add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'wps_sfw_welcome_callback_function' ) );
+				add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_woocommerce', 'home', array( $this, 'wps_sfw_welcome_callback_function' ) );
 			}
 			$sfw_menus = apply_filters( 'wps_add_plugins_menus_array', array() );
 			if ( is_array( $sfw_menus ) && ! empty( $sfw_menus ) ) {
 				foreach ( $sfw_menus as $sfw_key => $sfw_value ) {
-					add_submenu_page( 'wps-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_options', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
+					add_submenu_page( 'wps-plugins', $sfw_value['name'], $sfw_value['name'], 'manage_woocommerce', $sfw_value['menu_link'], array( $sfw_value['instance'], $sfw_value['function'] ) );
 				}
 				$is_home = false;
 			}
@@ -247,11 +247,11 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 			if ( ! $is_home ) {
 				if ( wps_sfw_check_multistep() ) {
-					add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_options', 'home', array( $this, 'wps_sfw_welcome_callback_function' ), 1 );
+					add_submenu_page( 'wps-plugins', 'Home', 'Home', 'manage_woocommerce', 'home', array( $this, 'wps_sfw_welcome_callback_function' ), 1 );
 				}
 			}
 		}
-		add_submenu_page( 'woocommerce', __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), 'manage_options', 'subscriptions-for-woocommerce', array( $this, 'wps_sfw_addsubmenu_woocommerce' ) );
+		add_submenu_page( 'woocommerce', __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), __( 'Wps Subscriptions', 'subscriptions-for-woocommerce' ), 'manage_woocommerce', 'subscriptions-for-woocommerce', array( $this, 'wps_sfw_addsubmenu_woocommerce' ) );
 	}
 
 	/**
@@ -633,70 +633,97 @@ class Subscriptions_For_Woocommerce_Admin {
 		?>
 		<div id="wps_sfw_product_target_section" class="panel woocommerce_options_panel hidden">
 
-		<p class="form-field wps_sfw_subscription_number_field ">
-			<label for="wps_sfw_subscription_number">
-			<?php esc_html_e( 'Subscriptions Per Interval', 'subscriptions-for-woocommerce' ); ?>
-			</label>
-			<input type="number" class="short wc_input_number"  min="1" required name="wps_sfw_subscription_number" id="wps_sfw_subscription_number" value="<?php echo esc_attr( $wps_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
-			<select id="wps_sfw_subscription_interval" name="wps_sfw_subscription_interval" class="wps_sfw_subscription_interval" >
-				<?php foreach ( wps_sfw_subscription_period() as $value => $label ) { ?>
-					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
-				<?php } ?>
-				</select>
-		 <?php
-			$description_text = __( 'Choose the subscriptions time interval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
-			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-			?>
-		</p>
-		<p class="form-field wps_sfw_subscription_expiry_field ">
-			<label for="wps_sfw_subscription_expiry_number">
-			<?php esc_html_e( 'Subscriptions Expiry Interval', 'subscriptions-for-woocommerce' ); ?>
-			</label>
-			<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_subscription_expiry_number" id="wps_sfw_subscription_expiry_number" value="<?php echo esc_attr( $wps_sfw_subscription_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
-			<select id="wps_sfw_subscription_expiry_interval" name="wps_sfw_subscription_expiry_interval" class="wps_sfw_subscription_expiry_interval" >
-				<?php foreach ( wps_sfw_subscription_expiry_period( $wps_sfw_subscription_interval ) as $value => $label ) { ?>
-					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
-				<?php } ?>
-				</select>
-		 <?php
-			$description_text = __( 'Choose the subscriptions expiry time interval for the product "leave empty for unlimited"', 'subscriptions-for-woocommerce' );
-			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-			?>
-		</p>
-		<p class="form-field wps_sfw_subscription_initial_signup_field ">
-			<label for="wps_sfw_subscription_initial_signup_price">
+			<p class="form-field wps_sfw_subscription_number_field ">
+				<label for="wps_sfw_subscription_number">
+				<?php esc_html_e( 'Subscriptions Per Interval', 'subscriptions-for-woocommerce' ); ?>
+				</label>
+				<input type="number" class="short wc_input_number"  min="1" required name="wps_sfw_subscription_number" id="wps_sfw_subscription_number" value="<?php echo esc_attr( $wps_sfw_subscription_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
+				<select id="wps_sfw_subscription_interval" name="wps_sfw_subscription_interval" class="wps_sfw_subscription_interval" >
+					<?php foreach ( wps_sfw_subscription_period() as $value => $label ) { ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php } ?>
+					</select>
 			<?php
-			esc_html_e( 'Initial Signup fee', 'subscriptions-for-woocommerce' );
-			echo esc_html( '(' . get_woocommerce_currency_symbol() . ')' );
-			?>
-			</label>
-			<input type="number" class="short wc_input_price"  min="0" step="any" name="wps_sfw_subscription_initial_signup_price" id="wps_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $wps_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e( 'Enter signup fee', 'subscriptions-for-woocommerce' ); ?>"> 
-			
-		 <?php
-			$description_text = __( 'Choose the subscriptions initial fee for the product "leave empty for no initial fee"', 'subscriptions-for-woocommerce' );
-			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-			?>
-		</p>
-		<p class="form-field wps_sfw_subscription_free_trial_field ">
-			<label for="wps_sfw_subscription_free_trial_number">
-			<?php esc_html_e( 'Free trial interval', 'subscriptions-for-woocommerce' ); ?>
-			</label>
-			<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_subscription_free_trial_number" id="wps_sfw_subscription_free_trial_number" value="<?php echo esc_attr( $wps_sfw_subscription_free_trial_number ); ?>" placeholder="<?php esc_html_e( 'Enter free trial interval', 'subscriptions-for-woocommerce' ); ?>"> 
-			<select id="wps_sfw_subscription_free_trial_interval" name="wps_sfw_subscription_free_trial_interval" class="wps_sfw_subscription_free_trial_interval" >
-				<?php foreach ( wps_sfw_subscription_period() as $value => $label ) { ?>
-					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_free_trial_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
-				<?php } ?>
-				</select>
-		 <?php
-			$description_text = __( 'Choose the trial period for subscription "leave empty for no trial period"', 'subscriptions-for-woocommerce' );
-			echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-			?>
-		</p>
-		<?php
+				$description_text = __( 'Choose the subscriptions time interval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
+				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
+				?>
+			</p>
+			<p class="form-field wps_sfw_subscription_expiry_field ">
+				<label for="wps_sfw_subscription_expiry_number">
+				<?php esc_html_e( 'Subscriptions Expiry Interval', 'subscriptions-for-woocommerce' ); ?>
+				</label>
+				<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_subscription_expiry_number" id="wps_sfw_subscription_expiry_number" value="<?php echo esc_attr( $wps_sfw_subscription_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
+				<select id="wps_sfw_subscription_expiry_interval" name="wps_sfw_subscription_expiry_interval" class="wps_sfw_subscription_expiry_interval" >
+					<?php foreach ( wps_sfw_subscription_expiry_period( $wps_sfw_subscription_interval ) as $value => $label ) { ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php } ?>
+					</select>
+			<?php
+				$description_text = __( 'Choose the subscriptions expiry time interval for the product "leave empty for unlimited"', 'subscriptions-for-woocommerce' );
+				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
+				?>
+			</p>
+			<p class="form-field wps_sfw_subscription_initial_signup_field ">
+				<label for="wps_sfw_subscription_initial_signup_price">
+				<?php
+				esc_html_e( 'Initial Signup fee', 'subscriptions-for-woocommerce' );
+				echo esc_html( '(' . get_woocommerce_currency_symbol() . ')' );
+				?>
+				</label>
+				<input type="number" class="short wc_input_price"  min="0" step="any" name="wps_sfw_subscription_initial_signup_price" id="wps_sfw_subscription_initial_signup_price" value="<?php echo esc_attr( $wps_sfw_subscription_initial_signup_price ); ?>" placeholder="<?php esc_html_e( 'Enter signup fee', 'subscriptions-for-woocommerce' ); ?>"> 
+				
+			<?php
+				$description_text = __( 'Choose the subscriptions initial fee for the product "leave empty for no initial fee"', 'subscriptions-for-woocommerce' );
+				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
+				?>
+			</p>
+			<p class="form-field wps_sfw_subscription_free_trial_field">
+				<label for="wps_sfw_subscription_free_trial_number">
+				<?php esc_html_e( 'Free trial interval', 'subscriptions-for-woocommerce' ); ?>
+				</label>
+				<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_subscription_free_trial_number" id="wps_sfw_subscription_free_trial_number" value="<?php echo esc_attr( $wps_sfw_subscription_free_trial_number ); ?>" placeholder="<?php esc_html_e( 'Enter free trial interval', 'subscriptions-for-woocommerce' ); ?>"> 
+				<select id="wps_sfw_subscription_free_trial_interval" name="wps_sfw_subscription_free_trial_interval" class="wps_sfw_subscription_free_trial_interval" >
+					<?php foreach ( wps_sfw_subscription_period() as $value => $label ) { ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_free_trial_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php } ?>
+					</select>
+			<?php
+				$description_text = __( 'Choose the trial period for subscription "leave empty for no trial period"', 'subscriptions-for-woocommerce' );
+				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
+				?>
+			</p>
+			<?php
 			wp_nonce_field( 'wps_sfw_edit_nonce', 'wps_sfw_edit_nonce_filed' );
 			// Add filed on product edit page.
 			do_action( 'wps_sfw_product_edit_field', $post_id );
-		?>
+			if ( function_exists( 'learn_press_get_all_courses' ) ) {
+				$courses       = learn_press_get_all_courses();
+				$saved_courses = get_post_meta( $post_id, 'wps_learnpress_course', true ) ? get_post_meta( $post_id, 'wps_learnpress_course', true ) : array();
+				?>
+				<p class="form-field wps_learnpress_course_field">
+					<?php
+					if ( ! empty( $courses ) && is_array( $courses ) ) {
+						?>
+						<label for="wps_learnpress_course">
+							<?php esc_html_e( 'Attach LearnPress Courses', 'subscriptions-for-woocommerce' ); ?>
+						</label>
+						<select id="wps_learnpress_course" class="wps_learnpress_course" name="wps_learnpress_course[]" multiple>
+						<?php
+						foreach( $courses as $course_id ) {
+							$course = learn_press_get_course( $course_id );
+							?>
+							<option value="<?php echo esc_attr( $course_id ); ?>" <?php selected( true, in_array( $course_id, $saved_courses ) ); ?> ><?php echo esc_attr( $course->get_title() ); ?></option>
+							<?php
+						}
+						?>
+						</select>
+					<?php
+					}
+					?>
+				</p>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 	}
@@ -726,7 +753,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			$wps_sfw_subscription_initial_signup_price = isset( $_POST['wps_sfw_subscription_initial_signup_price'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_initial_signup_price'] ) ) : '';
 			$wps_sfw_subscription_free_trial_number = isset( $_POST['wps_sfw_subscription_free_trial_number'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_free_trial_number'] ) ) : '';
 			$wps_sfw_subscription_free_trial_interval = isset( $_POST['wps_sfw_subscription_free_trial_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_free_trial_interval'] ) ) : '';
-
+			
+			
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_number', $wps_sfw_subscription_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_interval', $wps_sfw_subscription_interval );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_expiry_number );
@@ -734,6 +762,15 @@ class Subscriptions_For_Woocommerce_Admin {
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_initial_signup_price', $wps_sfw_subscription_initial_signup_price );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_number', $wps_sfw_subscription_free_trial_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_interval', $wps_sfw_subscription_free_trial_interval );
+
+			$learnpress_courses = isset( $_POST['wps_learnpress_course'] ) ? wp_unslash( $_POST['wps_learnpress_course'] ) : '';
+			if ( is_array( $learnpress_courses ) ) {
+				$learnpress_courses = array_map( 'sanitize_text_field', $learnpress_courses );
+			} else {
+				$learnpress_courses = sanitize_text_field( $learnpress_courses );
+			}
+			wps_sfw_update_meta_data( $post_id, 'wps_learnpress_course', $learnpress_courses );
+
 
 			do_action( 'wps_sfw_save_simple_subscription_field', $post_id, $_POST );
 		}

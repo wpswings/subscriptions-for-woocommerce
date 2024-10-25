@@ -240,7 +240,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
 
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription' );
+			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription', 99 );
 
 			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'wps_sfw_register_new_order_statuses' );
 
@@ -301,7 +301,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'woocommerce_account_show-subscription_endpoint', $sfw_plugin_public, 'wps_sfw_shwo_subscription_details' );
 
-			$this->loader->add_action( 'init', $sfw_plugin_public, 'wps_sfw_cancel_susbcription' );
+			$this->loader->add_action( 'init', $sfw_plugin_public, 'wps_sfw_cancel_susbcription', 99 );
 
 			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'wps_sfw_woocommerce_order_status_changed', 99, 3 );
 
@@ -336,7 +336,13 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'woocommerce_email_before_order_table', $sfw_plugin_public, 'wps_sfw_add_custom_failed_order_section', 10, 4 );
 			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_subject_failed_order', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_email_heading_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_heading_failed_order', 10, 2 );
+			
+			// Learnpress .
+			$this->loader->add_action( 'woocommerce_single_product_summary', $sfw_plugin_public, 'wps_sfw_course_description', 20 );
+			$this->loader->add_action( 'learn_press_get_template', $sfw_plugin_public, 'wps_sfw_override_template_content', 10, 5 );
 
+			// Manage the zero checkout for the stripe .
+			$this->loader->add_filter( 'woocommerce_order_needs_payment', $sfw_plugin_public, 'wps_sfw_woocommerce_order_needs_payment', 10, 3 );
 		}
 	}
 

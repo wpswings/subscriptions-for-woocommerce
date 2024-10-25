@@ -162,5 +162,9 @@
                 wps_sfw_show_subscription_settings_tab();
             }
         });
+        // add select2 for multiselect.
+        if( $('.wps_learnpress_course').length > 0 ) {
+            $('.wps_learnpress_course').select2();
+        }
     });
 })( jQuery );

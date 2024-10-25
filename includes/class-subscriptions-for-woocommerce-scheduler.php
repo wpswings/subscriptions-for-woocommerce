@@ -189,27 +189,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
-						if ( $_product->is_type( 'variation' ) ) {
-							$variation_attributes = $_product->get_variation_attributes();
-
-							if ( ! empty( $variation_attributes ) ) {
-								$meta_array = array();
-								// Output attribute name and value.
-								foreach ( $variation_attributes as $attribute_name => $attribute_value ) {
-									// Get attribute label.
-									$attribute_label = wc_attribute_label( $attribute_name );
-
-									$attribute_label = wc_attribute_label( strtolower( str_replace( 'pa_', '', $attribute_label ) ) );
-									$attribute_label = wc_attribute_label( strtolower( str_replace( 'attribute_', '', $attribute_label ) ) );
-
-									// Output attribute label and value.
-									$meta_array[ ucfirst( $attribute_label ) ] = ucfirst( $attribute_value );
-								}
-								$wps_pro_args['variation_id'] = $product_id;
-								$wps_pro_args['variation'] = $meta_array;
-							}
-						}
-
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
 							// hook to add product for renewal manual subscription order.
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
@@ -758,27 +737,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							}
 						}
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
-
-						if ( $_product->is_type( 'variation' ) ) {
-							$variation_attributes = $_product->get_variation_attributes();
-
-							if ( ! empty( $variation_attributes ) ) {
-								$meta_array = array();
-								// Output attribute name and value.
-								foreach ( $variation_attributes as $attribute_name => $attribute_value ) {
-									// Get attribute label.
-									$attribute_label = wc_attribute_label( $attribute_name );
-
-									$attribute_label = wc_attribute_label( strtolower( str_replace( 'pa_', '', $attribute_label ) ) );
-									$attribute_label = wc_attribute_label( strtolower( str_replace( 'attribute_', '', $attribute_label ) ) );
-
-									// Output attribute label and value.
-									$meta_array[ ucfirst( $attribute_label ) ] = ucfirst( $attribute_value );
-								}
-								$wps_pro_args['variation_id'] = $product_id;
-								$wps_pro_args['variation'] = $meta_array;
-							}
-						}
 
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
 							// hook to add product for renewal manual subscription order.
