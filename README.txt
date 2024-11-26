@@ -3,10 +3,10 @@ Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions,subscription billing, subscription box, subscription, woocommerce subscriptions
 Requires at least: 5.1.0
-Tested up to: 6.6.2
+Tested up to: 6.7.2
 WC requires at least: 5.1.0
-WC tested up to: 9.3.3
-Stable tag: 1.7.2
+WC tested up to: 9.4.2
+Stable tag: 1.7.3
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -24,13 +24,19 @@ With Subscriptions for WooCommerce, turn your physical or online store into a Wo
 The WooCommerce Subscriptions plugin empowers merchants to establish subscription plans, allowing them to offer services or products on a recurring basis. This functionality aids in the seamless collection of regular revenue for your online store.
 
 
-The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro) plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, and online courses to eCommerce stores revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business.
+The Subscriptions for WooCommerce Pro plugin is a solution for a variety of businesses. From OTT platform, gym services, monthly allowance dealer, milk services, and online courses to eCommerce stores revamp your WooCommerce store to sell your recurring services. Capture and keep users engaged with your business.
 
 
 Our Subscription and Membership plugins are among the top-rated plugins, when combined together they can create a complete subscription model that gives your users a variety of specialized content and digital resources such as digital guides, eBooks, and audiobooks, and all of it only reserved for your members and restricted for non-members.
 
 
 [**Subscriptions Demo**](https://demo.wpswings.com/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-demo&utm_medium=subs-org-page&utm_campaign=frontend-demo) | [**Woo Subscriptions Documentation**](https://docs.wpswings.com/subscriptions-for-woocommerce/?utm_source=wpswings-subs-doc&utm_medium=subs-org-page&utm_campaign=subscription-doc)  | [**Contact Us**](https://wpswings.com/contact-us/?utm_source=wpswings-subs-contactus&utm_medium=subs-org-page&utm_campaign=contactus)
+
+== Why Choose Our Subscription for WooCommerce Plugin? 📦 == 
+
+The Subscription for WooCommerce plugin by WP Swings simplifies recurring payments, allowing customers to easily start, pause, and manage their subscriptions with flexible payment options! ✨ 
+
+Don’t miss our Halloween Sale—grab the [**Subscription for WooCommerce PRO**](https://wpswings.com/product/subscriptions-for-woocommerce-pro/?utm_source=wpswings-subs-pro&utm_medium=subs-org-page&utm_campaign=subscription-pro) today at 25% Off! 🎉👻
 
 
 == WITH THE SUBSCRIPTIONS FOR WOOCOMMERCE PLUGIN YOU CAN: ==
@@ -301,6 +307,9 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 
 == Changelog ==
+
+= 1.7.3 - Released on 22 November 2024 =
+* New: Latest WP(6.7.2) and WC(9.4.2) Compatibility
 
 = 1.7.2 - Released on 21 October 2024 =
 * New: Latest WP(6.6.2) and WC(9.3.3) Compatibility
@@ -594,7 +603,5 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.7.2 - Released on 21 October 2024 =
-* New: Latest WP(6.6.2) and WC(9.3.3) Compatibility
-* New: Allow LearnPress Courses by ThimPress to be available if the user has an active subscription. the simple product must be configured as a subscription
-
+= 1.7.3 - Released on 22 November 2024 =
+* New: Latest WP(6.7.2) and WC(9.4.2) Compatibility
