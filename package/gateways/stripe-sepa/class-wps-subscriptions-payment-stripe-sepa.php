@@ -160,7 +160,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 							return false;
 						}
 
-						if ( 'stripe_sepa' === $this->id ) {
+						if ( 'stripe_sepa' === $this->id || 'stripe_sepa_debit' === $this->id ) {
 							$request            = $this->generate_payment_request( $renewal_order, $prepared_source );
 							$request['capture'] = 'true';
 							$request['amount']  = WC_Stripe_Helper::get_stripe_amount( $amount, $request['currency'] );
