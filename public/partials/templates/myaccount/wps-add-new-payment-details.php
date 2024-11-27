@@ -55,7 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				}
 
 				foreach ( $available_gateways as $key => $gateway ) :
-					$wps_supported_method = array( 'stripe', 'stripe_sepa' );
+					$wps_supported_method = array( 'stripe', 'stripe_sepa', 'stripe_sepa_debit' );
 					$wps_payment_method = apply_filters( 'wps_sfw_supported_add_payment_gateway', $wps_supported_method, $key );
 
 					if ( ! in_array( $key, $wps_payment_method ) ) {

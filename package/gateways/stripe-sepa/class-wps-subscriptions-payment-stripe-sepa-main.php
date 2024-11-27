@@ -69,7 +69,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
 			} else {
 				$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
 			}
-			if ( 'stripe_sepa' == $wps_payment_method && 'Cancel' == $status ) {
+			if ( ( 'stripe_sepa' == $wps_payment_method || 'stripe_sepa_debit' == $wps_payment_method ) && 'Cancel' == $status ) {
 				wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
 				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 			}
@@ -89,7 +89,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
 				$payment_method = $order->get_payment_method();
 
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-				if ( 'stripe_sepa' == $payment_method && 'yes' == $wps_sfw_renewal_order ) {
+				if ( ( 'stripe_sepa' == $payment_method || 'stripe_sepa_debit' == $payment_method ) && 'yes' == $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';
 
 				}

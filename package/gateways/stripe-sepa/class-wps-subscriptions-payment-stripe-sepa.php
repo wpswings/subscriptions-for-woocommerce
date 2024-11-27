@@ -98,7 +98,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 		  */
 		public function wps_sfw_process_stripe_sepa_renewal_payment( $renewal_order, $subscription_id, $payment_method ) {
 
-			if ( $renewal_order && is_object( $renewal_order ) && 'stripe_sepa' === $payment_method ) {
+			if ( $renewal_order && is_object( $renewal_order ) && ( 'stripe_sepa' === $payment_method || 'stripe_sepa_debit' === $payment_method ) ) {
 				$previous_error        = false;
 				$order_id              = $renewal_order->get_id();
 				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
