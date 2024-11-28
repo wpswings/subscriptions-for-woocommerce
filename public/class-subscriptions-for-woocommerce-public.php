@@ -1720,8 +1720,13 @@ class Subscriptions_For_Woocommerce_Public {
 		// Get the item price from product object if free trial valid.
 		$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
 		if ( ! empty( $wps_sfw_subscription_free_trial_number ) && ! $is_recurring_coupon_applied ) {
-			$product = wc_get_product( $product_id );
-			$price = $product->get_price() * $cart_item['quantity'];
+			$product             = wc_get_product( $product_id );
+			$price               = $product->get_price() * $cart_item['quantity'];
+			$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
+			if ( ! empty( $get_membershipprice ) ) {
+				$line_subtotal = $get_membershipprice * $cart_item['quantity'];
+				$line_total = $get_membershipprice * $cart_item['quantity'];
+			}
 			$line_subtotal = $price;
 			$line_total = $price;
 		}
@@ -1881,14 +1886,18 @@ class Subscriptions_For_Woocommerce_Public {
 
 					$signup_fee = null;
 					if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
-		
 						$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price; 
 		
 						/* translators: %s: signup fee,%s: renewal amount */
 						$signup_fee = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
+					$product_price = wc_get_product( $product_id )->get_price();
+					$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
+					if ( ! empty( $get_membershipprice ) ) {
+						$product_price = $get_membershipprice;
+					}
 					/* translators: %s: free trial,%s: renewal amount */
-					$price = $signup_fee . '<span class="wps_sfw_free_trial"> ' . sprintf( esc_html__( 'and %s free trial, renewal will be %s', 'subscriptions-for-woocommerce' ), $wps_price_html, wc_price( wc_get_product( $product_id )->get_price() ) ) . '</span>';
+					$price = $signup_fee . '<span class="wps_sfw_free_trial"> ' . sprintf( esc_html__( 'and %s free trial, renewal will be %s', 'subscriptions-for-woocommerce' ), $wps_price_html, wc_price( $product_price  ) ) . '</span>';
 				}
 			}
 
