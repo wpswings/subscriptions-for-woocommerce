@@ -51,8 +51,8 @@ if ( ! function_exists( 'wps_sfw_next_payment_date' ) ) {
 	function wps_sfw_next_payment_date( $subscription_id, $current_time, $wps_susbcription_trial_end ) {
 
 		$wps_sfw_next_pay_date = 0;
-		$wps_recurring_number = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_number', true );
-		$wps_recurring_interval = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_interval', true );
+		$wps_recurring_number = (int) wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_number', true );
+		$wps_recurring_interval = (string) wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_interval', true );
 
 		if ( 0 != $wps_susbcription_trial_end ) {
 
@@ -77,8 +77,8 @@ if ( ! function_exists( 'wps_sfw_susbcription_expiry_date' ) ) {
 	 */
 	function wps_sfw_susbcription_expiry_date( $subscription_id, $current_time, $trial_end = 0 ) {
 		$wps_sfw_expiry_date = 0;
-		$expiry_number = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_expiry_number', true );
-		$expiry_interval = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_expiry_interval', true );
+		$expiry_number = (int) wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_expiry_number', true );
+		$expiry_interval = (string) wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_expiry_interval', true );
 		if ( isset( $expiry_number ) && ! empty( $expiry_number ) ) {
 			if ( 0 != $trial_end ) {
 				$wps_sfw_expiry_date = wps_sfw_susbcription_calculate_time( $trial_end, $expiry_number, $expiry_interval );
@@ -102,8 +102,8 @@ if ( ! function_exists( 'wps_sfw_susbcription_trial_date' ) ) {
 	 */
 	function wps_sfw_susbcription_trial_date( $subscription_id, $current_time ) {
 		$wps_sfw_trial_date = 0;
-		$trial_number = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_free_trial_number', true );
-		$trial_interval = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_free_trial_interval', true );
+		$trial_number = (int) wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_free_trial_number', true );
+		$trial_interval = (string) wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_subscription_free_trial_interval', true );
 
 		if ( isset( $trial_number ) && ! empty( $trial_number ) ) {
 			$wps_sfw_trial_date = wps_sfw_susbcription_calculate_time( $current_time, $trial_number, $trial_interval );

@@ -816,4 +816,3 @@ function wps_create_subscription( $args = array() ) {
 
 	return $subscription;
 }
-

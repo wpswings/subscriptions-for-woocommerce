@@ -1720,20 +1720,22 @@ class Subscriptions_For_Woocommerce_Public {
 		// Get the item price from product object if free trial valid.
 		$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
 		if ( ! empty( $wps_sfw_subscription_free_trial_number ) && ! $is_recurring_coupon_applied ) {
-			$product             = wc_get_product( $product_id );
-			$price               = $product->get_price() * $cart_item['quantity'];
+			$product       = wc_get_product( $product_id );
+			$price         = $product->get_price() * $cart_item['quantity'];
+			$line_subtotal = $price;
+			$line_total    = $price;
+
 			$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
 			if ( ! empty( $get_membershipprice ) ) {
 				$line_subtotal = $get_membershipprice * $cart_item['quantity'];
 				$line_total = $get_membershipprice * $cart_item['quantity'];
 			}
-			$line_subtotal = $price;
-			$line_total = $price;
 		}
 
 		// Manage the line item during the upgrade/downgrade process.
 		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item, $bool );
 		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item, $bool );
+
 
 		// Calculate the taxes for the line item total and subtotal.
 		$wc_tax = new WC_Tax();

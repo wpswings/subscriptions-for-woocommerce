@@ -128,7 +128,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			if ( ! wps_sfw_check_multistep() ) {
 
 				// Js for the multistep from.
-				$script_path       = '../../build/index.js';
 				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index-asset.php';
 				$script_asset      = file_exists( $script_asset_path )
 				? require $script_asset_path
@@ -139,7 +138,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						'wp-i18n',
 						'wc-components',
 					),
-					'version'      => filemtime( $script_path ),
+					'version'      => 'c18eb6767e641a7522507a86d9c71475',
 				);
 				$script_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/index.js';
 				wp_register_script(
