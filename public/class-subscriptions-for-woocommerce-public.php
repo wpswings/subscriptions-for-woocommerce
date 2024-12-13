@@ -1736,7 +1736,6 @@ class Subscriptions_For_Woocommerce_Public {
 		$line_total    = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_total, $cart_item, $bool );
 		$line_subtotal = apply_filters( 'wps_sfw_manage_line_total_for_plan_switch', $line_subtotal, $cart_item, $bool );
 
-
 		// Calculate the taxes for the line item total and subtotal.
 		$wc_tax = new WC_Tax();
 		$billing_country = WC()->customer->get_billing_country();
@@ -2220,7 +2219,7 @@ class Subscriptions_For_Woocommerce_Public {
 					?>
 						<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'There is no active subscription', 'subscription-for-woocommerce' ) ?></div>
 					<?php
-					// blank template return;
+					// Blank template return.
 					return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 				}
 			}
@@ -2228,7 +2227,7 @@ class Subscriptions_For_Woocommerce_Public {
 			?>
 				<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'You have not purchase the subscription yet', 'subscription-for-woocommerce' ) ?></div>
 			<?php
-			// blank template return;
+			// Blank template return.
 			return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 		}
 	}

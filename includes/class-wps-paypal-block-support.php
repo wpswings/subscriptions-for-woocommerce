@@ -57,7 +57,7 @@ final class WPS_Paypal_Block_Support extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_script_handles() {
 		$script_path       = 'wc-block/wps-sfw-wc-blocks.js';
-		$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'wc-block/wps-sfw-wc-blocks.asset.php';
+		$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'wc-block/wps-sfw-wc-blocks-asset.php';
 
 		$script_asset      = file_exists( $script_asset_path )
 		? require $script_asset_path

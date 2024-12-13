@@ -762,7 +762,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_number', $wps_sfw_subscription_free_trial_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_interval', $wps_sfw_subscription_free_trial_interval );
 
-			$learnpress_courses = isset( $_POST['wps_learnpress_course'] ) ? wp_unslash( $_POST['wps_learnpress_course'] ) : '';
+			$learnpress_courses = isset( $_POST['wps_learnpress_course'] ) ? wp_unslash( $_POST['wps_learnpress_course'] ) : ''; //phpcs:ignore
 			if ( is_array( $learnpress_courses ) ) {
 				$learnpress_courses = array_map( 'sanitize_text_field', $learnpress_courses );
 			} else {
