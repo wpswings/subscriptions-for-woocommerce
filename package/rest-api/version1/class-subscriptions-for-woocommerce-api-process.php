@@ -50,6 +50,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Api_Process' ) ) {
 				$args = array(
 					'return' => 'ids',
 					'post_type'   => 'wps_subscriptions',
+					'limit' => -1,
 					'meta_query' => array(
 						array(
 							'key'   => 'wps_customer_id',
