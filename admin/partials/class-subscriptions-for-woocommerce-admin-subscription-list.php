@@ -180,6 +180,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 						$all_id = map_deep( wp_unslash( $_POST['wps_sfw_subscriptions_ids'] ), 'sanitize_text_field' );
 						foreach ( $all_id as $key => $value ) {
 							do_action( 'wps_sfw_subscription_cancel', $value, 'Cancel' );
+							wps_wsp_update_meta_data( $value, 'wps_subscription_cancelled_by', 'by_admin_bulk_action' );
+							wps_wsp_update_meta_data( $value, 'wps_subscription_cancelled_date', time() );
 						}
 						?>
 							<div class="notice notice-success is-dismissible"> 

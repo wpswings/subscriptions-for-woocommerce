@@ -128,7 +128,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			if ( ! wps_sfw_check_multistep() ) {
 
 				// Js for the multistep from.
-				$script_path       = '../../build/index.js';
 				$script_asset_path = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'build/index-asset.php';
 				$script_asset      = file_exists( $script_asset_path )
 				? require $script_asset_path
@@ -139,7 +138,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						'wp-i18n',
 						'wc-components',
 					),
-					'version'      => filemtime( $script_path ),
+					'version'      => 'c18eb6767e641a7522507a86d9c71475',
 				);
 				$script_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/index.js';
 				wp_register_script(
@@ -763,7 +762,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_number', $wps_sfw_subscription_free_trial_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_interval', $wps_sfw_subscription_free_trial_interval );
 
-			$learnpress_courses = isset( $_POST['wps_learnpress_course'] ) ? wp_unslash( $_POST['wps_learnpress_course'] ) : '';
+			$learnpress_courses = isset( $_POST['wps_learnpress_course'] ) ? wp_unslash( $_POST['wps_learnpress_course'] ) : ''; //phpcs:ignore
 			if ( is_array( $learnpress_courses ) ) {
 				$learnpress_courses = array_map( 'sanitize_text_field', $learnpress_courses );
 			} else {
@@ -792,9 +791,14 @@ class Subscriptions_For_Woocommerce_Admin {
 				$wps_wsp_payment_type = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_wsp_payment_type', true );
 				if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
 					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+					wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_admin' );
+					wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
+
 				} else {
 
 					do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+					wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_admin' );
+					wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 				}
 				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );

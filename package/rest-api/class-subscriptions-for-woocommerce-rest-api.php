@@ -76,7 +76,7 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 			'wsp-route/v1',
 			'/wsp-view-subscription/',
 			array(
-				'methods'  => WP_REST_Server::CREATABLE,
+				'methods'  => 'GET',
 				'callback' => array( $this, 'wps_wsp_view_susbcription_callback' ),
 				'permission_callback' => array( $this, 'wps_wsp_subscription_permission_check' ),
 			)

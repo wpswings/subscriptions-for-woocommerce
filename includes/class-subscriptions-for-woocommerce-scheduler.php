@@ -483,7 +483,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$args = array(
-					'return'    => 'ids',
+					'return' => 'ids',
+					'limit' => -1,
 					'type'   => 'wps_subscriptions',
 					'meta_query' => array(
 						array(
@@ -492,7 +493,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						),
 					),
 				);
-				$wps_subscriptions = get_posts( $args );
+				$wps_subscriptions = wc_get_orders( $args );
 			} else {
 				$args = array(
 					'numberposts' => -1,

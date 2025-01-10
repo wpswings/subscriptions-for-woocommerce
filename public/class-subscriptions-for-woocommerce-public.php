@@ -876,7 +876,7 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( $wps_has_subscription ) {
 			if ( isset( $available_gateways ) && ! empty( $available_gateways ) && is_array( $available_gateways ) ) {
 				foreach ( $available_gateways as $key => $gateways ) {
-					$wps_supported_method = array( 'stripe', 'stripe_sepa' );
+					$wps_supported_method = array( 'stripe', 'stripe_sepa', 'stripe_sepa_debit' );
 					// Supported paymnet gateway.
 					$wps_payment_method = apply_filters( 'wps_sfw_supported_payment_gateway_for_woocommerce', $wps_supported_method, $key );
 
@@ -1100,12 +1100,17 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
 				wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
 				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_user' );
+				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 
 			} else {
 
 				do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
 
 				do_action( 'wps_sfw_cancel_susbcription', $wps_subscription_id, $user_id );
+
+				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_user' );
+				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 			}
 
 			wc_add_notice( __( 'Subscription Cancelled Successfully', 'subscriptions-for-woocommerce' ), 'success' );
@@ -1715,10 +1720,16 @@ class Subscriptions_For_Woocommerce_Public {
 		// Get the item price from product object if free trial valid.
 		$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
 		if ( ! empty( $wps_sfw_subscription_free_trial_number ) && ! $is_recurring_coupon_applied ) {
-			$product = wc_get_product( $product_id );
-			$price = $product->get_price() * $cart_item['quantity'];
+			$product       = wc_get_product( $product_id );
+			$price         = $product->get_price() * $cart_item['quantity'];
 			$line_subtotal = $price;
-			$line_total = $price;
+			$line_total    = $price;
+
+			$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
+			if ( ! empty( $get_membershipprice ) ) {
+				$line_subtotal = $get_membershipprice * $cart_item['quantity'];
+				$line_total = $get_membershipprice * $cart_item['quantity'];
+			}
 		}
 
 		// Manage the line item during the upgrade/downgrade process.
@@ -1876,14 +1887,18 @@ class Subscriptions_For_Woocommerce_Public {
 
 					$signup_fee = null;
 					if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
-		
 						$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price; 
 		
 						/* translators: %s: signup fee,%s: renewal amount */
 						$signup_fee = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
+					$product_price = wc_get_product( $product_id )->get_price();
+					$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
+					if ( ! empty( $get_membershipprice ) ) {
+						$product_price = $get_membershipprice;
+					}
 					/* translators: %s: free trial,%s: renewal amount */
-					$price = $signup_fee . '<span class="wps_sfw_free_trial"> ' . sprintf( esc_html__( 'and %s free trial, renewal will be %s', 'subscriptions-for-woocommerce' ), $wps_price_html, wc_price( wc_get_product( $product_id )->get_price() ) ) . '</span>';
+					$price = $signup_fee . '<span class="wps_sfw_free_trial"> ' . sprintf( esc_html__( 'and %s free trial, renewal will be %s', 'subscriptions-for-woocommerce' ), $wps_price_html, wc_price( $product_price  ) ) . '</span>';
 				}
 			}
 
@@ -2204,7 +2219,7 @@ class Subscriptions_For_Woocommerce_Public {
 					?>
 						<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'There is no active subscription', 'subscription-for-woocommerce' ) ?></div>
 					<?php
-					// blank template return;
+					// Blank template return.
 					return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 				}
 			}
@@ -2212,7 +2227,7 @@ class Subscriptions_For_Woocommerce_Public {
 			?>
 				<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'You have not purchase the subscription yet', 'subscription-for-woocommerce' ) ?></div>
 			<?php
-			// blank template return;
+			// Blank template return.
 			return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
 		}
 	}
