@@ -1100,8 +1100,8 @@ class Subscriptions_For_Woocommerce_Public {
 			if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
 				wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
 				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
-				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_user' );
-				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_user' );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 
 			} else {
 
@@ -1109,8 +1109,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 				do_action( 'wps_sfw_cancel_susbcription', $wps_subscription_id, $user_id );
 
-				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_user' );
-				wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_user' );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 			}
 
 			wc_add_notice( __( 'Subscription Cancelled Successfully', 'subscriptions-for-woocommerce' ), 'success' );
