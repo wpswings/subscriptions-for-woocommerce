@@ -975,7 +975,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_num_pages = ceil( count( $wps_subscriptions ) / $wps_per_page );
 		$subscriptions = array_slice( $wps_subscriptions, ( $wps_current_page - 1 ) * $wps_per_page, $wps_per_page );
 		wc_get_template(
-			'myaccount/wps-susbcrptions.php',
+			'myaccount/wps-subscriptions.php',
 			array(
 				'wps_subscriptions' => $subscriptions,
 				'wps_current_page'  => $wps_current_page,
@@ -1402,119 +1402,8 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( isset( $mailer['WC_Email_Failed_Order'] ) ) {
 					$mailer['WC_Email_Failed_Order']->trigger( $order_id );
 				}
-				$this->wps_sfw_hold_subscription( $order_id );
 			} elseif ( 'completed' == $new_status || 'processing' == $new_status ) {
 				$this->wps_sfw_active_after_on_hold( $order_id );
-			}
-		}
-	}
-
-	/**
-	 * This function is used to hold the subscription when order failed.
-	 *
-	 * @param int $order_id order_id.
-	 * @return void
-	 */
-	public function wps_sfw_hold_subscription( $order_id ) {
-
-		$wps_has_susbcription = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-		if ( 'yes' == $wps_has_susbcription ) {
-			$parent_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_parent_order_id', true );
-
-			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				$args = array(
-					'return' => 'ids',
-					'type'   => 'wps_subscriptions',
-					'meta_query' => array(
-						'relation' => 'AND',
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $parent_order,
-						),
-						array(
-							'key'   => 'wps_subscription_status',
-							'value' => array( 'active', 'pending' ),
-						),
-					),
-				);
-				$wps_subscriptions = wc_get_orders( $args );
-			} else {
-				$args = array(
-					'numberposts' => -1,
-					'post_type'   => 'wps_subscriptions',
-					'post_status'   => 'wc-wps_renewal',
-					'meta_query' => array(
-						'relation' => 'AND',
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $parent_order,
-						),
-						array(
-							'key'   => 'wps_subscription_status',
-							'value' => array( 'active', 'pending' ),
-						),
-					),
-				);
-				$wps_subscriptions = get_posts( $args );
-			}
-			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
-				foreach ( $wps_subscriptions as $key => $subscription ) {
-					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-						wps_sfw_update_meta_data( $subscription, 'wps_subscription_status', 'on-hold' );
-						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription );
-					} else {
-						wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'on-hold' );
-						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription->ID );
-					}
-				}
-			}
-		} else {
-			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				$args = array(
-					'return' => 'ids',
-					'post_type'   => 'wps_subscriptions',
-					'meta_query' => array(
-						'relation' => 'AND',
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $order_id,
-						),
-						array(
-							'key'   => 'wps_subscription_status',
-							'value' => array( 'active', 'pending' ),
-						),
-					),
-				);
-				$wps_subscriptions = wc_get_orders( $args );
-			} else {
-				$args = array(
-					'numberposts' => -1,
-					'post_type'   => 'wps_subscriptions',
-					'post_status'   => 'wc-wps_renewal',
-					'meta_query' => array(
-						'relation' => 'AND',
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $order_id,
-						),
-						array(
-							'key'   => 'wps_subscription_status',
-							'value' => array( 'active', 'pending' ),
-						),
-					),
-				);
-				$wps_subscriptions = get_posts( $args );
-			}
-			if ( isset( $wps_subscriptions ) && ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
-				foreach ( $wps_subscriptions as $key => $subscription ) {
-					if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-						wps_sfw_update_meta_data( $subscription, 'wps_subscription_status', 'on-hold' );
-						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription );
-					} else {
-						wps_sfw_update_meta_data( $subscription->ID, 'wps_subscription_status', 'on-hold' );
-						do_action( 'wps_sfw_subscription_on_hold_renewal', $subscription->ID );
-					}
-				}
 			}
 		}
 	}

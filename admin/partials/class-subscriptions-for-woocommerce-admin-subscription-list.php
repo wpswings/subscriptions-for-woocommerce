@@ -637,6 +637,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_subscription_status = esc_html__( 'paused', 'subscriptions-for-woocommerce' );
 				} elseif ( 'pending' === $wps_subscription_status ) {
 					$wps_subscription_status = esc_html__( 'pending', 'subscriptions-for-woocommerce' );
+				} elseif ( 'expired' === $wps_subscription_status ) {
+					$wps_subscription_status = esc_html__( 'expired', 'subscriptions-for-woocommerce' );
 				}
 				$wps_subscriptions_data[] = apply_filters(
 					'wps_sfw_subs_table_data',
