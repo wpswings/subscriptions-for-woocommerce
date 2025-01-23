@@ -1758,10 +1758,21 @@ class Subscriptions_For_Woocommerce_Public {
 			/* translators: %s: susbcription interval */
 			$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price ) . '</span>';
 			$price = apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
-
+			
 			if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) { 
+				
+				//special case of prorate settings.
+				$wps_wsp_enbale_certain_month = wps_sfw_get_meta_data( $product_id , 'wps_wsp_enbale_certain_month', true );
+				$wps_wsp_week_sync = wps_sfw_get_meta_data( $product_id , 'wps_wsp_week_sync', true );
+				$wps_wsp_month_sync = wps_sfw_get_meta_data( $product_id , 'wps_wsp_month_sync', true );
+				$wps_wsp_year_sync = wps_sfw_get_meta_data( $product_id , 'wps_wsp_year_sync', true );
 
-				$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price; 
+				if( 'yes' == $wps_wsp_enbale_certain_month && ( $wps_wsp_week_sync || $wps_wsp_month_sync || $wps_wsp_year_sync ) ){
+					$product_price = $product->get_regular_price();
+				} else {
+					// normal case without prorate settings.
+					$product_price = $product->get_regular_price() - (float) $wps_sfw_subscription_initial_signup_price; 
+				}
 
 				/* translators: %s: signup fee,%s: renewal amount */
 				$price = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee, renewal will be %s', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ), wc_price( $product_price ) ) . '</span>';
@@ -1808,7 +1819,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			// return correct price format.
 			$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id, $cart_item );
-
+			
 			// Do not allow subscription price for the one-time product.
 			if ( $price ) {
 				$data[] = apply_filters(
