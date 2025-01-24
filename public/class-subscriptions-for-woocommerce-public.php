@@ -1770,6 +1770,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_obj = wc_get_product( $product_id );
 					$product_price = $product_obj->get_price();
 				} else {
+
 					// normal case without prorate settings.
 					$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price;
 				}
