@@ -5,8 +5,8 @@ Tags: subscriptions,subscription billing, subscription box, subscription, woocom
 Requires at least: 5.1.0
 Tested up to: 6.7.1
 WC requires at least: 5.1.0
-WC tested up to: 9.5.1
-Stable tag: 1.7.4
+WC tested up to: 9.6.0
+Stable tag: 1.7.5
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -293,7 +293,10 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
-= 1.7.4 - Released on 01 January 2025 =
+= 1.7.5 - Released on 24 January 2025 =
+* New : Latest WP(6.7.1) and WC(9.6.0) Compatibility
+
+= 1.7.4 - Released on 02 January 2025 =
 * New : Latest WP(6.7.1) and WC(9.5.1) Compatibility
 * Fix : API Request method issue
 
@@ -593,7 +596,5 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.7.4 - Released on 01 January 2025 =
-* New : Latest WP(6.7.1) and WC(9.5.1) Compatibility
-* Fix : API Request method issue
-
+= 1.7.5 - Released on 24 January 2025 =
+* New : Latest WP(6.7.1) and WC(9.6.0) Compatibility
