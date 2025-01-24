@@ -1753,34 +1753,33 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
 
-
 			$wps_price = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
 			/* translators: %s: susbcription interval */
 			$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price ) . '</span>';
 			$price = apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
-			
-			if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) { 
-				
-				//special case of prorate settings.
-				$wps_wsp_enbale_certain_month = wps_sfw_get_meta_data( $product_id , 'wps_wsp_enbale_certain_month', true );
-				$wps_wsp_week_sync = wps_sfw_get_meta_data( $product_id , 'wps_wsp_week_sync', true );
-				$wps_wsp_month_sync = wps_sfw_get_meta_data( $product_id , 'wps_wsp_month_sync', true );
-				$wps_wsp_year_sync = wps_sfw_get_meta_data( $product_id , 'wps_wsp_year_sync', true );
 
-				if( 'yes' == $wps_wsp_enbale_certain_month && ( $wps_wsp_week_sync || $wps_wsp_month_sync || $wps_wsp_year_sync ) ){
+			if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
+
+				// special case of prorate settings.
+				$wps_wsp_enbale_certain_month = wps_sfw_get_meta_data( $product_id, 'wps_wsp_enbale_certain_month', true );
+				$wps_wsp_week_sync = wps_sfw_get_meta_data( $product_id, 'wps_wsp_week_sync', true );
+				$wps_wsp_month_sync = wps_sfw_get_meta_data( $product_id, 'wps_wsp_month_sync', true );
+				$wps_wsp_year_sync = wps_sfw_get_meta_data( $product_id, 'wps_wsp_year_sync', true );
+
+				if ( 'yes' == $wps_wsp_enbale_certain_month && ( $wps_wsp_week_sync || $wps_wsp_month_sync || $wps_wsp_year_sync ) ) {
 					$product_obj = wc_get_product( $product_id );
 					$product_price = $product_obj->get_price();
 				} else {
 					// normal case without prorate settings.
-					$product_price = $cart_item['data']->get_price()- (float) $wps_sfw_subscription_initial_signup_price; 
+					$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price;
 				}
-				
+
 				/* translators: %s: signup fee,%s: renewal amount */
-				$price = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee, renewal will be %s', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ), wc_price( $product_price ) ) . '</span>';
+				$price = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %1$s Sign up fee, renewal will be %2$s', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ), wc_price( $product_price ) ) . '</span>';
 			}
-			
+
 			if ( $wps_sfw_subscription_free_trial_number ) {
-				
+
 				$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
 				$wps_sfw_subscription_free_trial_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_interval', true );
 				if ( isset( $wps_sfw_subscription_free_trial_number ) && ! empty( $wps_sfw_subscription_free_trial_number ) ) {
@@ -1788,20 +1787,20 @@ class Subscriptions_For_Woocommerce_Public {
 
 					$signup_fee = null;
 					if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
-						
-						$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price; 
-		
+
+						$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price;
+
 						/* translators: %s: signup fee,%s: renewal amount */
 						$signup_fee = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
 					$product_price = wc_get_product( $product_id )->get_price();
-					
+
 					$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
 					if ( ! empty( $get_membershipprice ) ) {
 						$product_price = $get_membershipprice;
 					}
 					/* translators: %s: free trial,%s: renewal amount */
-					$price = $signup_fee . '<span class="wps_sfw_free_trial"> ' . sprintf( esc_html__( 'and %s free trial, renewal will be %s', 'subscriptions-for-woocommerce' ), $wps_price_html, wc_price( $product_price  ) ) . '</span>';
+					$price = $signup_fee . '<span class="wps_sfw_free_trial"> ' . sprintf( esc_html__( 'and %1$s free trial, renewal will be %2$s', 'subscriptions-for-woocommerce' ), $wps_price_html, wc_price( $product_price ) ) . '</span>';
 				}
 			}
 
@@ -1811,9 +1810,9 @@ class Subscriptions_For_Woocommerce_Public {
 
 				$wps_price_expiry_html = wps_sfw_get_time_interval( $wps_sfw_subscription_expiry_number, $wps_sfw_subscription_expiry_interval );
 				// Show interval html.
-				
+
 				$wps_price_expiry_html = apply_filters( 'wps_sfw_show_time_interval', $wps_price_expiry_html, $product_id, $cart_item );
-				
+
 				/* translators: %s: susbcription interval */
 				$wps_price_expiry_html = '<span class="wps_sfw_expiry_interval">' . sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $wps_price_expiry_html ) . '</span>';
 
@@ -1822,7 +1821,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 			// return correct price format.
 			$price = apply_filters( 'wps_sfw_show_one_time_subscription_price_block', $price, $product_id, $cart_item );
-			
+
 			// Do not allow subscription price for the one-time product.
 			if ( $price ) {
 				$data[] = apply_filters(
@@ -1917,7 +1916,7 @@ class Subscriptions_For_Woocommerce_Public {
 					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, array(), $cart_item ) ) {
 						return;
 					}
-				
+
 					$subscription = $this->wps_sfw_create_subscription( $order, array(), $wps_recurring_data, $cart_item );
 					if ( is_wp_error( $subscription ) ) {
 						throw new Exception( esc_html( $subscription->get_error_message() ) );
@@ -2031,17 +2030,16 @@ class Subscriptions_For_Woocommerce_Public {
 
 	/**
 	 * Show the product course description for the simple product.
-	 *
 	 */
 	public function wps_sfw_course_description() {
 		if ( ! function_exists( 'learn_press_get_course' ) ) {
 			return;
 		}
 		global $product;
-	
+
 		// Get the product ID.
 		$product_id = $product->get_id();
-	
+
 		// Check if product is simple.
 		if ( $product->is_type( 'simple' ) ) {
 
@@ -2049,11 +2047,13 @@ class Subscriptions_For_Woocommerce_Public {
 
 			$course_name = null;
 			if ( ! empty( $saved_courses ) ) {
-				foreach( $saved_courses as $course_id ) {
+				foreach ( $saved_courses as $course_id ) {
 					$course        = learn_press_get_course( $course_id );
 					$course_name[] = $course->get_title();
 				}
-				?><div class="wps-product-notice"><?php esc_attr_e( 'You will be subscribing to', 'subscription-for-woocommerce' ) ?> <?php echo esc_attr( implode( ', ', $course_name ) ); ?></div><?php
+				?>
+				<div class="wps-product-notice"><?php esc_attr_e( 'You will be subscribing to', 'subscriptions-for-woocommerce' ); ?> <?php echo esc_attr( implode( ', ', $course_name ) ); ?></div>
+				<?php
 			}
 		}
 		do_action( 'wps_sfw_product_summary', $product );
@@ -2070,8 +2070,8 @@ class Subscriptions_For_Woocommerce_Public {
 	 *
 	 * @return mixed
 	 */
-	public function wps_sfw_override_template_content( $located, $template_name, $args, $template_path, $default_path ){
-		
+	public function wps_sfw_override_template_content( $located, $template_name, $args, $template_path, $default_path ) {
+
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'manage_woocommerce' ) || is_admin() ) {
 			return $located;
 		}
@@ -2111,7 +2111,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_subscriptions = get_posts( $args );
 		}
 		if ( ! empty( $wps_subscriptions ) ) {
-			foreach( $wps_subscriptions as $wps_subscription ) {
+			foreach ( $wps_subscriptions as $wps_subscription ) {
 				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 					$subcription_id = $wps_subscription;
 				} else {
@@ -2121,7 +2121,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$status  = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
 				if ( in_array( $current_course_id, $courses ) && 'active' !== $status ) {
 					?>
-						<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'There is no active subscription', 'subscription-for-woocommerce' ) ?></div>
+						<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'There is no active subscription', 'subscriptions-for-woocommerce' ); ?></div>
 					<?php
 					// Blank template return.
 					return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
@@ -2129,7 +2129,7 @@ class Subscriptions_For_Woocommerce_Public {
 			}
 		} else {
 			?>
-				<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'You have not purchase the subscription yet', 'subscription-for-woocommerce' ) ?></div>
+				<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'You have not purchase the subscription yet', 'subscriptions-for-woocommerce' ); ?></div>
 			<?php
 			// Blank template return.
 			return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
@@ -2145,7 +2145,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 *
 	 * @return mixed
 	 */
-	public function wps_sfw_woocommerce_order_needs_payment( $needs_payment, $order, $valid_order_statuses ){
+	public function wps_sfw_woocommerce_order_needs_payment( $needs_payment, $order, $valid_order_statuses ) {
 		// Skips checks if the order already needs payment.
 		if ( $needs_payment ) {
 			return $needs_payment;

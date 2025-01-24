@@ -144,7 +144,7 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 			$wps_wsp_resultsdata = array(
 				'status' => 'error',
 				'code'   => 404,
-				'message' => __( 'Data not found', 'woocommerce-subscriptions-pro' ),
+				'message' => __( 'Data not found', 'subscriptions-for-woocommerce' ),
 
 			);
 			$wps_wsp_response = new WP_REST_Response( $wps_wsp_resultsdata );

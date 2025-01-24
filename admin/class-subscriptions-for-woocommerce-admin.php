@@ -645,7 +645,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<?php
 				$description_text = __( 'Choose the subscriptions time interval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
 				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-				?>
+			?>
 			</p>
 			<p class="form-field wps_sfw_subscription_expiry_field ">
 				<label for="wps_sfw_subscription_expiry_number">
@@ -660,7 +660,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<?php
 				$description_text = __( 'Choose the subscriptions expiry time interval for the product "leave empty for unlimited"', 'subscriptions-for-woocommerce' );
 				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-				?>
+			?>
 			</p>
 			<p class="form-field wps_sfw_subscription_initial_signup_field ">
 				<label for="wps_sfw_subscription_initial_signup_price">
@@ -674,7 +674,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<?php
 				$description_text = __( 'Choose the subscriptions initial fee for the product "leave empty for no initial fee"', 'subscriptions-for-woocommerce' );
 				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-				?>
+			?>
 			</p>
 			<p class="form-field wps_sfw_subscription_free_trial_field">
 				<label for="wps_sfw_subscription_free_trial_number">
@@ -689,7 +689,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			<?php
 				$description_text = __( 'Choose the trial period for subscription "leave empty for no trial period"', 'subscriptions-for-woocommerce' );
 				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-				?>
+			?>
 			</p>
 			<?php
 			wp_nonce_field( 'wps_sfw_edit_nonce', 'wps_sfw_edit_nonce_filed' );
@@ -708,7 +708,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						</label>
 						<select id="wps_learnpress_course" class="wps_learnpress_course" name="wps_learnpress_course[]" multiple>
 						<?php
-						foreach( $courses as $course_id ) {
+						foreach ( $courses as $course_id ) {
 							$course = learn_press_get_course( $course_id );
 							?>
 							<option value="<?php echo esc_attr( $course_id ); ?>" <?php selected( true, in_array( $course_id, $saved_courses ) ); ?> ><?php echo esc_attr( $course->get_title() ); ?></option>
@@ -716,7 +716,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						}
 						?>
 						</select>
-					<?php
+						<?php
 					}
 					?>
 				</p>
@@ -752,8 +752,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			$wps_sfw_subscription_initial_signup_price = isset( $_POST['wps_sfw_subscription_initial_signup_price'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_initial_signup_price'] ) ) : '';
 			$wps_sfw_subscription_free_trial_number = isset( $_POST['wps_sfw_subscription_free_trial_number'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_free_trial_number'] ) ) : '';
 			$wps_sfw_subscription_free_trial_interval = isset( $_POST['wps_sfw_subscription_free_trial_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_free_trial_interval'] ) ) : '';
-			
-			
+
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_number', $wps_sfw_subscription_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_interval', $wps_sfw_subscription_interval );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_expiry_number );
@@ -769,7 +768,6 @@ class Subscriptions_For_Woocommerce_Admin {
 				$learnpress_courses = sanitize_text_field( $learnpress_courses );
 			}
 			wps_sfw_update_meta_data( $post_id, 'wps_learnpress_course', $learnpress_courses );
-
 
 			do_action( 'wps_sfw_save_simple_subscription_field', $post_id, $_POST );
 		}

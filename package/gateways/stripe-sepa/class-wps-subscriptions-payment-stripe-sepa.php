@@ -159,11 +159,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 							return false;
 						}
 
-						
 						$this->lock_order_payment( $renewal_order );
 						$response                   = $this->create_and_confirm_intent_for_off_session( $renewal_order, $prepared_source, $amount );
 						$is_authentication_required = $this->is_authentication_required_for_payment( $response );
-						
 
 						if ( ! empty( $response->error ) && ! $is_authentication_required ) {
 
