@@ -1768,12 +1768,13 @@ class Subscriptions_For_Woocommerce_Public {
 				$wps_wsp_year_sync = wps_sfw_get_meta_data( $product_id , 'wps_wsp_year_sync', true );
 
 				if( 'yes' == $wps_wsp_enbale_certain_month && ( $wps_wsp_week_sync || $wps_wsp_month_sync || $wps_wsp_year_sync ) ){
-					$product_price = $product->get_regular_price();
+					$product_obj = wc_get_product( $product_id );
+					$product_price = $product_obj->get_price();
 				} else {
 					// normal case without prorate settings.
-					$product_price = $product->get_regular_price() - (float) $wps_sfw_subscription_initial_signup_price; 
+					$product_price = $cart_item['data']->get_price()- (float) $wps_sfw_subscription_initial_signup_price; 
 				}
-
+				
 				/* translators: %s: signup fee,%s: renewal amount */
 				$price = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee, renewal will be %s', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ), wc_price( $product_price ) ) . '</span>';
 			}
@@ -1787,12 +1788,14 @@ class Subscriptions_For_Woocommerce_Public {
 
 					$signup_fee = null;
 					if ( ! is_checkout() && isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
+						
 						$product_price = $cart_item['data']->get_price() - (float) $wps_sfw_subscription_initial_signup_price; 
 		
 						/* translators: %s: signup fee,%s: renewal amount */
 						$signup_fee = '<span class="wps_sfw_signup_fee">' . sprintf( esc_html__( 'including %s Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) ) . '</span>';
 					}
 					$product_price = wc_get_product( $product_id )->get_price();
+					
 					$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
 					if ( ! empty( $get_membershipprice ) ) {
 						$product_price = $get_membershipprice;
@@ -1914,6 +1917,7 @@ class Subscriptions_For_Woocommerce_Public {
 					if ( apply_filters( 'wps_sfw_is_upgrade_downgrade_order', false, $wps_recurring_data, $order, array(), $cart_item ) ) {
 						return;
 					}
+				
 					$subscription = $this->wps_sfw_create_subscription( $order, array(), $wps_recurring_data, $cart_item );
 					if ( is_wp_error( $subscription ) ) {
 						throw new Exception( esc_html( $subscription->get_error_message() ) );
