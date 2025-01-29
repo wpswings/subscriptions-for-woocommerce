@@ -117,8 +117,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 
 						if ( $amount * 100 < WC_Stripe_Helper::get_minimum_amount() ) {
 							/* translators: minimum amount */
-							$message = sprintf( __( 'Sorry, the minimum allowed order total is %1$s to use this payment method.', 'woocommerce-gateway-stripe' ), wc_price( WC_Stripe_Helper::get_minimum_amount() / 100 ) );
-							ywsbs_register_failed_payment( $renewal_order, $message );
+							$message = sprintf( __( 'Sorry, the minimum allowed order total is %1$s to use this payment method.', 'subscriptions-for-woocommerce' ), wc_price( WC_Stripe_Helper::get_minimum_amount() / 100 ) );
 
 							return new WP_Error( 'stripe_error', $message );
 						}
@@ -137,7 +136,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 						if ( ! $prepared_source->customer ) {
 							throw new WC_Stripe_Exception(
 								'Failed to process renewal for order ' . $renewal_order->get_id() . '. Stripe customer id is missing in the order',
-								__( 'Customer not found', 'woocommerce-gateway-stripe' )
+								__( 'Customer not found', 'subscriptions-for-woocommerce' )
 							);
 						}
 
@@ -160,24 +159,14 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 							return false;
 						}
 
-						if ( 'stripe_sepa' === $this->id || 'stripe_sepa_debit' === $this->id ) {
-							$request            = $this->generate_payment_request( $renewal_order, $prepared_source );
-							$request['capture'] = 'true';
-							$request['amount']  = WC_Stripe_Helper::get_stripe_amount( $amount, $request['currency'] );
-							$response           = WC_Stripe_API::request( $request );
-
-							$is_authentication_required = false;
-						} else {
-							$this->lock_order_payment( $renewal_order );
-							$response                   = $this->create_and_confirm_intent_for_off_session( $renewal_order, $prepared_source, $amount );
-							$is_authentication_required = $this->is_authentication_required_for_payment( $response );
-						}
+						$this->lock_order_payment( $renewal_order );
+						$response                   = $this->create_and_confirm_intent_for_off_session( $renewal_order, $prepared_source, $amount );
+						$is_authentication_required = $this->is_authentication_required_for_payment( $response );
 
 						if ( ! empty( $response->error ) && ! $is_authentication_required ) {
 
-							$localized_message = __( 'Sorry, we are unable to process your payment at this time. Please retry later.', 'woocommerce-gateway-stripe' );
+							$localized_message = __( 'Sorry, we are unable to process your payment at this time. Please retry later.', 'subscriptions-for-woocommerce' );
 							$renewal_order->add_order_note( $localized_message );
-							ywsbs_register_failed_payment( $renewal_order, $localized_message );
 
 							throw new WC_Stripe_Exception( print_r( $response, true ), $localized_message );
 						}
@@ -185,14 +174,14 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 						if ( $is_authentication_required ) {
 							do_action( 'wc_gateway_stripe_process_payment_authentication_required', $renewal_order, $response );
 
-							$error_message = __( 'This transaction requires authentication.', 'woocommerce-gateway-stripe' );
+							$error_message = __( 'This transaction requires authentication.', 'subscriptions-for-woocommerce' );
 							$renewal_order->add_order_note( $error_message );
 
 							$charge = end( $response->error->payment_intent->charges->data );
 							$id     = $charge->id;
 							$renewal_order->set_transaction_id( $id );
 							/* translators: %s is the charge Id */
-							$renewal_order->update_status( 'failed', sprintf( __( 'Stripe charge awaiting authentication by user: %s.', 'woocommerce-gateway-stripe' ), $id ) );
+							$renewal_order->update_status( 'failed', sprintf( __( 'Stripe charge awaiting authentication by user: %s.', 'subscriptions-for-woocommerce' ), $id ) );
 							$renewal_order->save();
 						} else {
 							do_action( 'wc_gateway_stripe_process_payment', $response, $renewal_order );
@@ -203,7 +192,6 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 						}
 					} catch ( WC_Stripe_Exception $e ) {
 						WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() );
-						ywsbs_register_failed_payment( $renewal_order, 'Error: ' . $e->getMessage() );
 						do_action( 'wc_gateway_stripe_process_payment_error', $e, $renewal_order );
 					}
 				}
