@@ -84,6 +84,47 @@ $wps_sfw_pro_name = apply_filters( 'wps_sfw_dashboard_plugin_title', esc_attr( s
 	</nav>
 
 	<section class="wps-section">
+		<!-- pro popup -->
+		<div class="wps_sfw_lite_go_pro_popup_wrap ">
+		<!-- Go pro popup main start. -->
+		<div class="wps_wsfw_popup_shadow"></div>
+		<div class="wps_sfw_lite_go_pro_popup">
+			<!-- Main heading. -->
+			<div class="wps_sfw_lite_go_pro_popup_head">
+				<h2><?php esc_html_e( 'Upgrade To Subscription For WooCommerce Pro', 'subscriptions-for-woocommerce' ); ?></h2>
+				<!-- Close button. -->
+				<a href="javascript:void(0)" class="wps_sfw_lite_go_pro_popup_close">
+					<span>×</span>
+				</a>
+			</div>  
+
+			<!-- Notice icon. -->
+			<div class="wps_sfw_lite_go_pro_popup_head"><img class="wps_go_pro_images" src="<?php echo esc_attr( SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/go-pro.png' ); ?>">
+			</div>
+			
+				
+			<!-- Notice. -->
+			<div class="wps_sfw_lite_go_pro_popup_content">
+				<p class="wps_sfw_lite_go_pro_popup_text">
+				<?php
+				esc_html_e(
+					'Subscriptions for WooCommerce Pro plugin add a recurring business model to your online store, allowing you to provide subscription-based products & services with simple and variable options',
+					'subscriptions-for-woocommerce'
+				)
+				?>
+							</p>
+					
+				</div>
+
+			<!-- Go pro button. -->
+			<div class="wps_sfw_lite_go_pro_popup_button">
+				<a class="button wps_ubo_lite_overview_go_pro_button" target="_blank" href="https://wpswings.com/product/subscriptions-for-woocommerce-pro?utm_source=wpswings-subs-pro&utm_medium=subs-org-backend&utm_campaign=go-pro">	<?php esc_html_e( 'Upgrade', 'subscriptions-for-woocommerce' ); ?> 
+			<span class="dashicons dashicons-arrow-right-alt"></span></a>
+			</div>
+		</div>
+		<!-- Go pro popup main end. -->
+	</div>
+		<!-- pro popup -->
 		<div>
 			<?php
 			do_action( 'wps_sfw_before_general_settings_form' );

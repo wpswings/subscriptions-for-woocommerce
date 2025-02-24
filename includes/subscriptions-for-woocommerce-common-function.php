@@ -431,6 +431,11 @@ if ( ! function_exists( 'wps_sfw_check_product_is_subscription' ) ) {
 			$wps_subscription_product = wps_sfw_get_meta_data( $product_id, '_wps_sfw_product', true );
 			if ( 'yes' === $wps_subscription_product ) {
 				$wps_is_subscription = true;
+			}else if( $product->get_type() == 'subscription_box' ){
+				//subscription box.
+				$wps_is_subscription = true;
+				
+				//subscription box.
 			}
 		}
 

@@ -57,6 +57,51 @@
             }
         });
 
+        //subscription box.
+        $('#wps_sfw_subscription_box_interval').on('change', function() {
+            var current_selection = $(this).val();
+            var expiry_interval = $('#wps_sfw_subscription_box_expiry_interval');
+            if ( current_selection == 'day' ) {
+                 expiry_interval.empty();
+                 expiry_interval.append($('<option></option>').attr('value','day').text( sfw_product_param.day ) );
+    
+            }
+            else if ( current_selection == 'week' ) {
+                 expiry_interval.empty();
+                 expiry_interval.append($('<option></option>').attr('value','week').text( sfw_product_param.week ) );
+               
+            }
+            else if( current_selection == 'month' ) {
+                expiry_interval.empty();
+                expiry_interval.append($('<option></option>').attr('value','month').text( sfw_product_param.month ) );
+                
+            }
+            else if( current_selection == 'year' ) {
+                expiry_interval.empty();
+                expiry_interval.append($('<option></option>').attr('value','year').text( sfw_product_param.year ) );
+            }
+        });
+
+        function toggleSubscriptionBoxFields() {
+            var setupValue = $('#wps_sfw_subscription_box_setup').val();
+            $('.wps_sfw_subscription_box_products_field').toggle(setupValue === 'specific_products');
+            $('.wps_sfw_subscription_box_categories_field').toggle(setupValue === 'specific_categories');
+        }
+        $('#wps_sfw_subscription_box_setup').change(toggleSubscriptionBoxFields);
+        toggleSubscriptionBoxFields();
+
+        $(document).on( 'click', '.wps_sfw_subscription_box_price_field_pro.wps_pro_settings', function(e) {
+            // if (wsfw_admin_param.is_pro_plugin != 1){
+            // $(this).prop("checked", false);
+            e.preventDefault();
+            $('.wps_sfw_lite_go_pro_popup_wrap').addClass('wps_sfw_lite_go_pro_popup_show');
+            // }
+        });
+
+        $(document).on( 'click', '.wps_sfw_lite_go_pro_popup_close', function() {
+            $('.wps_sfw_lite_go_pro_popup_wrap').removeClass('wps_sfw_lite_go_pro_popup_show');
+        });
+        //subscription box.
         
         /*Expiry interval validation*/
         $(document).on('submit','#post', function(e) {

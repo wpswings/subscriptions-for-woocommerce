@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.7.5
+ * Version:           1.8.0
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -176,7 +176,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.7.5' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.0' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -626,6 +626,20 @@ if ( $activated ) {
 			<?php
 		}
 	);
+
+	function wps_sfw_remove_custom_woocommerce_menu() {
+		global $submenu, $pagenow;
+	
+		// Allow direct access
+		if (isset($_GET['page']) && $_GET['page'] === 'wc-orders--wps_subscriptions' && isset($_GET['action']) && $_GET['action'] === 'new' ) {
+			return;
+		}
+	
+		// Remove the submenu from WooCommerce
+		remove_submenu_page('woocommerce', 'wc-orders--wps_subscriptions');
+	}
+	add_action('admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999);
+
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );
@@ -816,3 +830,61 @@ function wps_create_subscription( $args = array() ) {
 
 	return $subscription;
 }
+//code to register subscription product type.
+add_action( 'init', 'register_subscription_box_product_type' );
+function register_subscription_box_product_type() {
+    class WC_Product_Subscription_Box extends WC_Product {
+        public function __construct( $product ) {
+            $this->product_type = 'subscription_box';
+            parent::__construct( $product );
+        }
+    }
+}
+
+
+
+
+// Prevent removing attached subscription items directly
+// 1️⃣ Prevent removing attached subscription items directly
+// function wps_disable_remove_link_for_attached_subscription_items( $link, $cart_item_key ) {
+//     $cart = WC()->cart->get_cart();
+
+//     if ( isset( $cart[$cart_item_key]['wps_sfw_subscription_box_attached_product'] ) && $cart[$cart_item_key]['wps_sfw_subscription_box_attached_product'] ) {
+//         return ''; // Remove the remove link
+//     }
+
+//     return $link;
+// }
+// add_filter( 'woocommerce_cart_item_remove_link', 'wps_disable_remove_link_for_attached_subscription_items', 10, 2 );
+
+// // 2️⃣ Disable quantity change for attached subscription items
+// function wps_disable_quantity_change_for_attached_subscription_items( $product_quantity, $cart_item_key, $cart_item ) {
+//     if ( isset( $cart_item['wps_sfw_subscription_box_attached_product'] ) && $cart_item['wps_sfw_subscription_box_attached_product'] ) {
+//         return '<span class="qty">' . esc_html( $cart_item['quantity'] ) . '</span>'; // Display quantity without allowing changes
+//     }
+
+//     return $product_quantity;
+// }
+// add_filter( 'woocommerce_cart_item_quantity', 'wps_disable_quantity_change_for_attached_subscription_items', 10, 3 );
+
+// // 3️⃣ Remove all attached subscription products when the main product is removed
+// function wps_remove_attached_subscription_items( $cart_item_key ) {
+//     $cart = WC()->cart->get_cart();
+
+//     if ( isset( $cart[$cart_item_key]['is_subscription_main'] ) && $cart[$cart_item_key]['is_subscription_main'] ) {
+//         // Loop through cart to find attached items
+//         foreach ( $cart as $key => $item ) {
+//             if ( isset( $item['wps_sfw_subscription_box_attached_product'] ) && $item['wps_sfw_subscription_box_attached_product'] == $cart_item_key ) {
+//                 WC()->cart->remove_cart_item( $key ); // Remove attached product
+//             }
+//         }
+//     }
+// }
+// add_action( 'woocommerce_remove_cart_item', 'wps_remove_attached_subscription_items', 10, 1 );
+
+// function wps_add_subscription_box_to_stripe_payment_request( $supported_types ) {
+//     $supported_types[] = 'subscription_box'; // Add custom product type
+//     return $supported_types;
+// }
+// add_filter( 'wc_stripe_payment_request_supported_types', 'wps_add_subscription_box_to_stripe_payment_request' );
+

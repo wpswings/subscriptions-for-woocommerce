@@ -258,6 +258,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
+						do_action( 'wps_sfw_subscription_subscription_box_addtion', $order_id, $subscription_id, $_product );
+
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
 						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
@@ -808,6 +810,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_new_order->add_order_note( sprintf( __( 'This renewal order belongs to Subscription #%s', 'subscriptions-for-woocommerce' ), '<a href="' . $wps_link . '">' . $subscription_id . '</a>' ) );
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
+
+						do_action( 'wps_sfw_subscription_subscription_box_addtion', $order_id, $subscription_id, $_product );
 
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );

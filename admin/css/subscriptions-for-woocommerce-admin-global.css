@@ -258,6 +258,7 @@ select {
     display: flex;
     flex-wrap: wrap;
     margin: 0 -15px 35px;
+    align-items: center;
 }
 
 .wps-form-group__label {
@@ -277,8 +278,12 @@ select {
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
-    line-height: 24px;
+    line-height: 1.25;
     letter-spacing: 0.3px;
+}
+
+.wps-form-group__control .mdc-text-field-helper-line {
+    padding: 5px 0 0;
 }
 
 .wps-form-select:hover select {
