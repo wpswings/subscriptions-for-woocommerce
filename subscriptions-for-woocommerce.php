@@ -638,7 +638,7 @@ if ( $activated ) {
 		}
 	
 		// Remove the submenu from WooCommerce
-		// remove_submenu_page('woocommerce', 'wc-orders--wps_subscriptions');
+		remove_submenu_page('woocommerce', 'wc-orders--wps_subscriptions');
 	}
 	add_action('admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999);
 
