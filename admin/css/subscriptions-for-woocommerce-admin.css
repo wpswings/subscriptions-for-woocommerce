@@ -545,4 +545,11 @@ img.wps_go_pro_images {
 .wps_pro_settings_tag>.wps-form-group__label {
     padding-bottom: 10px;
 }
+#wsp_enable_subscription_box_muti_features {
+	display: none;
+}
+#wsp_enable_subscription_box_muti_features.wps_pro_settings_tag{
+    margin-bottom: 30px;
+	display: block;
+}
   /* pro popup end  */

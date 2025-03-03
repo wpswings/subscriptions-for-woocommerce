@@ -437,6 +437,78 @@ a.button.wps_sfw_subs_box-button {
     height: calc(100vh - 275px);
 }
 
+/* Cart popup start */
+
+a.wps_show_customer_subscription_box_popup {
+    display: block;
+    font-size: 14px;
+    color: #000;
+}
+
+.wps-attached-products-popup {
+    z-index: -999;
+    opacity: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transform: translate(-50%, -50%);
+    max-width: 400px;
+    max-height: 400px;
+    width: 100%;
+    transition: opacity 0.3s linear;
+}
+
+.wps-attached-products-popup.active_customer_popup {
+    z-index: 99999999999;
+    opacity: 1;
+}
+
+.wps-attached-products-popup ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.wps-attached-products-popup strong {
+    font-size: 18px;
+    color: #000;
+    line-height: 1.25;
+    margin: 0 0 15px;
+    display: inline-block;
+}
+
+.wps-attached-products-popup .wps_sfw_customer_close_popup {
+    font-size: 24px;
+    line-height: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.wps-attached-products-popup ul li {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    font-size: 14px;
+}
+
+/* Cart popup end */
+
 @media only screen and (max-width: 1200px) {
     .wps_sfw_sub_box_prod_container {
         grid-template-columns: 1fr 1fr 1fr 1fr;

@@ -195,6 +195,7 @@
         $( 'select#product-type' ).change( function() {
 
             var select_val = $( this ).val();
+            console.log(select_val);
            
             if ( 'variable' === select_val ) {
                 $( 'input#_wps_sfw_product' ).prop( 'checked', false );
@@ -207,9 +208,36 @@
                 wps_sfw_show_subscription_settings_tab();
             }
         });
+        $(document).on('change', '#product-type', function(){
+            wps_sfw_show_subscription_box_settings_tab();
+        });
+        wps_sfw_show_subscription_box_settings_tab();
+        
+        function wps_sfw_show_subscription_box_settings_tab() {
+            if( $( 'select#product-type' ).length && 'subscription_box' === $( 'select#product-type option:selected' ).val() ) {
+                $(document).find('.wps_sfw_subscription_box_product_options').show();
+                $(document).find('.wps_sfw_subscription_box_product_options').addClass('active');
+                $(document).find('.wps_subscription_box_product_target_section').show();
+                $(document).find('.wps_subscription_box_product_target_section').addClass('active');
+            } else {
+                $(document).find('.wps_sfw_subscription_box_product_options').hide();
+                $(document).find('#wps_sfw_subscription_box_product_options').removeClass('active');
+                $(document).find('.wps_subscription_box_product_target_section').hide();
+                $(document).find('.wps_subscription_box_product_target_section').removeClass('active');
+            }
+        }
         // add select2 for multiselect.
         if( $('.wps_learnpress_course').length > 0 ) {
             $('.wps_learnpress_course').select2();
+        }
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var post_id = urlParams.get('post'); 
+        
+        if ( ! sfw_product_param.is_pro_active && post_id != sfw_product_param.fist_subscription_box_id ) {
+            if ( $('#product-type').length && $('select option[value="subscription_box"]') ) {
+                $('select option[value="subscription_box"]').prop( 'disabled', true );
+            }
         }
     });
 })( jQuery );

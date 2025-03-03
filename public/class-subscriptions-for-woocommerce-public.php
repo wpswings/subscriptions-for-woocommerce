@@ -609,6 +609,10 @@ class Subscriptions_For_Woocommerce_Public {
 			$order_id = $order->get_id();
 			$current_date  = current_time( 'timestamp' );
 
+			//subscription box.
+			wps_sfw_add_attached_product_for_subscription_box( $order_id );
+			//subscription box.
+
 			$wps_default_args = array(
 				'wps_parent_order'   => $order_id,
 				'wps_customer_id'    => $order->get_user_id(),
@@ -1309,7 +1313,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since 1.0.0
 	 */
 	public function wps_sfw_hide_quantity_fields_for_subscription( $return, $product ) {
-
+	
 		if ( wps_sfw_check_plugin_enable() && wps_sfw_check_product_is_subscription( $product ) ) {
 			$return = true;
 		}
@@ -2355,6 +2359,7 @@ class Subscriptions_For_Woocommerce_Public {
 								<h2>Customize Your Subscription Box</h2>
 								<h3><?php echo esc_html( $wps_sfw_subscription_box_step_label ); ?></h3>
 								<p>Choose which product to add to your box</p>
+								<p class="wps_sfw_subscription_box_error_notice" style="display: none; color: red;"></p>
 							</div>
 						
 							<?php 
@@ -2445,44 +2450,6 @@ class Subscriptions_For_Woocommerce_Public {
 	
 	}
 	
-	public function wps_sfw_price_html_subscription_box( $price, $product ) {
-
-		if ( is_object( $product ) ) {
-			$product_id = $product->get_id();
-			$product_type = $product->get_type();
-		
-			$wps_sfw_subscription_box_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_interval', true );
-			$wps_sfw_subscription_box_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_number', true );
-			$wps_sfw_subscription_box_expiry_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_expiry_number', true );
-			$wps_sfw_subscription_box_expiry_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_expiry_interval', true );
-
-			$wps_sfw_subscription_box_setup = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_box_setup', true );
-			
-			if ( $product_type === 'subscription_box' && ( 'specific_products' == $wps_sfw_subscription_box_setup || 'specific_categories' == $wps_sfw_subscription_box_setup  ) ) {
-
-				if ( isset( $wps_sfw_subscription_box_expiry_number ) && ! empty( $wps_sfw_subscription_box_expiry_interval ) ) {
-
-					$wps_price_html = wps_sfw_get_time_interval( $wps_sfw_subscription_box_expiry_number, $wps_sfw_subscription_box_expiry_interval );
-					$wps_price = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_box_number, $wps_sfw_subscription_box_interval );
-					$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price ) . '</span>';
-					$price .= apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, $product_id );
-
-				/* translators: %s: susbcription interval */
-				$price .= '<span class="wps_sfw_expiry_interval">' . sprintf( esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ), $wps_price_html ) . '</span>';
-
-				}elseif( isset( $wps_sfw_subscription_box_number ) && ! empty( $wps_sfw_subscription_box_interval )  ){
-					
-					$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_box_number, $wps_sfw_subscription_box_interval );
-					$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price_html ) . '</span>';
-					$price .= $wps_sfw_price_html;
-				}
-			}
-			
-		}
-	
-		return $price;
-		// return apply_filters( 'wps_sfw_price_html', $price, $wps_price_html, $product_id, $cart_item );
-	}
 
 	public function wps_sfw_subscription_subscription_box_addtion_callback( $new_order_id, $wps_old_id, $product ) {
 		$order = wc_get_order( $wps_old_id );
@@ -2518,68 +2485,168 @@ class Subscriptions_For_Woocommerce_Public {
 		
 	}
 
-	public function wps_sfw_handle_subscription_box() {
-		if ( isset( $_POST['subscription_data'] ) ) {
-			// Decode the JSON data.
-			$subscription_data = json_decode( stripslashes( $_POST['subscription_data'] ), true );
-			if ( ! $subscription_data ) {
-				// wp_send_json_error('Invalid JSON data');
-			}
+	// public function wps_sfw_handle_subscription_box() {
+	// 	if ( isset( $_POST['subscription_data'] ) ) {
+	// 		// Decode the JSON data.
+	// 		$subscription_data = json_decode( stripslashes( $_POST['subscription_data'] ), true );
+	// 		if ( ! $subscription_data ) {
+	// 			// wp_send_json_error('Invalid JSON data');
+	// 		}
 			
-			// Extract total, subscription product id, and additional products.
-			$total = isset( $subscription_data['total'] ) ? floatval( sanitize_text_field( $subscription_data['total'] ) ) : 0;
+	// 		// Extract total, subscription product id, and additional products.
+	// 		$total = isset( $subscription_data['total'] ) ? floatval( sanitize_text_field( $subscription_data['total'] ) ) : 0;
 			
-			$subscription_product_id = isset( $subscription_data['wps_sfw_subscription_product_id'] ) ? intval( $subscription_data['wps_sfw_subscription_product_id'] ) : 0;
-			$products = isset( $subscription_data['products'] ) ? $subscription_data['products'] : [];
+	// 		$subscription_product_id = isset( $subscription_data['wps_sfw_subscription_product_id'] ) ? intval( $subscription_data['wps_sfw_subscription_product_id'] ) : 0;
+	// 		$products = isset( $subscription_data['products'] ) ? $subscription_data['products'] : [];
 			
-			// If there are no additional products and no subscription product, return an error.
-			if ( ! $subscription_product_id && empty( $products ) ) {
-				wp_send_json_error('No products found');
-			}
+	// 		// If there are no additional products and no subscription product, return an error.
+	// 		if ( ! $subscription_product_id && empty( $products ) ) {
+	// 			wp_send_json_error('No products found');
+	// 		}
 			
-			// --- Add the main subscription product with quantity 1 and its price set to the submitted total.
-			if ( $subscription_product_id ) {
-				// Pass the total as a custom price.
-				$cart_item_data['wps_sfw_subscription_box_price'] =  $total;
-				$cart_item_data['is_subscription_main'] = true ;
-	
-				$wps_sfw_subscription_box_number = wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_number', true );
-				$wps_sfw_subscription_box_interval = wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_interval', true );
-				$wps_sfw_subscription_box_expiry_number = wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_expiry_number', true );
-				$wps_sfw_subscription_box_expiry_interval = wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_expiry_interval', true );
-				$cart_item_data['wps_sfw_subscription_number'] =  $wps_sfw_subscription_box_number;
-				$cart_item_data['wps_sfw_subscription_interval'] =  $wps_sfw_subscription_box_interval;
-				$cart_item_data['wps_sfw_subscription_expiry_number'] =  $wps_sfw_subscription_box_expiry_number;
-				$cart_item_data['wps_sfw_subscription_expiry_interval'] =  $wps_sfw_subscription_box_expiry_interval;
-				WC()->cart->add_to_cart( $subscription_product_id, 1, 0, array(), $cart_item_data );
-			}
+	// 		// --- Add the main subscription product with quantity 1 and its price set to the submitted total.
+	// 		if ( $subscription_product_id ) {
+	// 			$cart_item_data['wps_sfw_subscription_box_price'] =  $total;
+	// 			$cart_item_data['is_subscription_main'] = true;
 			
-			// --- Add additional products with their submitted quantity and override their price to 0.
-			if ( ! empty( $products ) && is_array( $products ) ) {
-				foreach ( $products as $product ) {
-					$product_id = isset( $product['product_id'] ) ? intval( $product['product_id'] ) : 0;
-					$quantity   = isset( $product['quantity'] ) ? intval( $product['quantity'] ) : 1;
-					
-					if ( $product_id > 0 && $quantity > 0 ) {
-						$cart_item_data['wps_sfw_subscription_box_id'] = $subscription_product_id ;
-						$cart_item_data['wps_sfw_subscription_box_attached_product_id'] = $product['product_id'];
-						$cart_item_data['wps_sfw_subscription_box_attached_product'] = true;
-						WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $cart_item_data );
-					}
-				}
-			}
+	// 			// Fetch subscription metadata
+	// 			$wps_sfw_subscription_box_number = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_number', true);
+	// 			$wps_sfw_subscription_box_interval = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_interval', true);
+	// 			$wps_sfw_subscription_box_expiry_number = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_expiry_number', true);
+	// 			$wps_sfw_subscription_box_expiry_interval = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_expiry_interval', true);
 			
-			wp_send_json([
-				'message'  => 'Subscription added to cart!',
-				'total'    => $total,
-				'products' => $products
-			]);
+	// 			$cart_item_data['wps_sfw_subscription_number'] = $wps_sfw_subscription_box_number;
+	// 			$cart_item_data['wps_sfw_subscription_interval'] = $wps_sfw_subscription_box_interval;
+	// 			$cart_item_data['wps_sfw_subscription_expiry_number'] = $wps_sfw_subscription_box_expiry_number;
+	// 			$cart_item_data['wps_sfw_subscription_expiry_interval'] = $wps_sfw_subscription_box_expiry_interval;
 			
-		}
+	// 			// Store attached products as metadata
+	// 			if (!empty($products) && is_array($products)) {
+	// 				$attached_products = [];
+	// 				foreach ($products as $product) {
+	// 					$product_id = isset($product['product_id']) ? intval($product['product_id']) : 0;
+	// 					$quantity = isset($product['quantity']) ? intval($product['quantity']) : 1;
+			
+	// 					if ($product_id > 0 && $quantity > 0) {
+	// 						$product_obj = wc_get_product($product_id);
+	// 						if ($product_obj) {
+	// 							$attached_products[] = [
+	// 								'product_id' => $product_id,
+	// 								'name' => $product_obj->get_name(),
+	// 								'image' => wp_get_attachment_image_url($product_obj->get_image_id(), 'thumbnail'),
+	// 								'quantity' => $quantity
+	// 							];
+	// 						}
+	// 					}
+	// 				}
+	// 				$cart_item_data['wps_sfw_attached_products'] = $attached_products;
+	// 			}
+			
+	// 			WC()->cart->add_to_cart($subscription_product_id, 1, 0, [], $cart_item_data);
+	// 		}
+			
+			
+	// 		wp_send_json([
+	// 			'message'  => 'Subscription added to cart!',
+	// 			'total'    => $total,
+	// 			'products' => $products
+	// 		]);
+			
+	// 	}
 		
 	   
+	// }
+
+	public function wps_sfw_handle_subscription_box() {
+		if (isset($_POST['subscription_data'])) {
+			// Decode JSON data
+			$subscription_data = json_decode(stripslashes($_POST['subscription_data']), true);
+			if (!$subscription_data) {
+				wp_send_json_error('Invalid JSON data');
+			}
+	
+			$cart = WC()->cart->get_cart();
+			$cart_has_subscription_box = false;
+			$cart_has_other_products = false;
+	
+			// Check if the cart already contains a subscription box or other products
+			foreach ($cart as $cart_item) {
+				if (isset($cart_item['is_subscription_main']) && $cart_item['is_subscription_main']) {
+					$cart_has_subscription_box = true;
+				} else {
+					$cart_has_other_products = true;
+				}
+			}
+	
+			// If the cart is not empty, prevent adding the subscription box
+			if (!empty($cart) && $cart_has_other_products) {
+				wp_send_json_error('You cannot add a subscription box when other products are in the cart.');
+			}
+	
+			// If a subscription box exists, prevent adding other products
+			if ($cart_has_subscription_box) {
+				wp_send_json_error('A subscription box is already in the cart. Remove it first to add a new one.');
+			}
+	
+			// Extract total, subscription product ID, and attached products
+			$total = isset($subscription_data['total']) ? floatval(sanitize_text_field($subscription_data['total'])) : 0;
+			$subscription_product_id = isset($subscription_data['wps_sfw_subscription_product_id']) ? intval($subscription_data['wps_sfw_subscription_product_id']) : 0;
+			$products = isset($subscription_data['products']) ? $subscription_data['products'] : [];
+	
+			// If no products are selected for the subscription box, return an error
+			if (empty($products)) {
+				wp_send_json_error('Please select at least one product to add to the subscription box.');
+			}
+	
+			// If there are no subscription products or products in the request, return an error
+			if (!$subscription_product_id) {
+				wp_send_json_error('No subscription product found.');
+			}
+	
+			// --- Proceed to add the subscription product to the cart ---
+			$cart_item_data['wps_sfw_subscription_box_price'] = $total;
+			$cart_item_data['is_subscription_main'] = true;
+	
+			// Fetch subscription metadata
+			$cart_item_data['wps_sfw_subscription_number'] = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_number', true);
+			$cart_item_data['wps_sfw_subscription_interval'] = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_interval', true);
+			$cart_item_data['wps_sfw_subscription_expiry_number'] = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_expiry_number', true);
+			$cart_item_data['wps_sfw_subscription_expiry_interval'] = wps_sfw_get_meta_data($subscription_product_id, 'wps_sfw_subscription_expiry_interval', true);
+	
+			// Store attached products as metadata
+			if (!empty($products) && is_array($products)) {
+				$attached_products = [];
+				foreach ($products as $product) {
+					$product_id = isset($product['product_id']) ? intval($product['product_id']) : 0;
+					$quantity = isset($product['quantity']) ? intval($product['quantity']) : 1;
+	
+					if ($product_id > 0 && $quantity > 0) {
+						$product_obj = wc_get_product($product_id);
+						if ($product_obj) {
+							$attached_products[] = [
+								'product_id' => $product_id,
+								'name' => $product_obj->get_name(),
+								'image' => wp_get_attachment_image_url($product_obj->get_image_id(), 'thumbnail'),
+								'quantity' => $quantity
+							];
+						}
+					}
+				}
+				$cart_item_data['wps_sfw_attached_products'] = $attached_products;
+			}
+	
+			// Add subscription box to cart
+			WC()->cart->add_to_cart($subscription_product_id, 1, 0, [], $cart_item_data);
+	
+			wp_send_json([
+				'message' => 'Subscription added to cart!',
+				'total' => $total,
+				'products' => $products
+			]);
+		}
 	}
 
+	
 	public function wps_sfw_update_subscription_box_prices( $cart ) {
 		// Only run on frontend/AJAX
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
@@ -2694,5 +2761,134 @@ class Subscriptions_For_Woocommerce_Public {
 	
 		return $data;
 	}
+
+	public function wps_sfw_add_order_line_item_for_subscription_box( $item, $cart_item_key, $values, $order ){
+		if (!empty($values['wps_sfw_attached_products'])) {
+			$item->add_meta_data('wps_sfw_attached_products', $values['wps_sfw_attached_products'], true);
+		}
+	}
+
+	public function wps_get_cart_item() {
+		if (!isset($_POST['cart_key'])) {
+			wp_send_json_error(['message' => 'Missing cart key']);
+		}
 	
+		$cart_key = sanitize_text_field($_POST['cart_key']);
+		$cart = WC()->cart->get_cart();
+		
+		if (!isset($cart[$cart_key])) {
+			wp_send_json_error(['message' => 'Cart item not found']);
+		}
+	
+		$cart_item = $cart[$cart_key];
+		$attached_products = isset($cart_item['wps_sfw_attached_products']) ? $cart_item['wps_sfw_attached_products'] : [];
+	
+		wp_send_json_success(['cart_item' => $cart_item, 'attached_products' => $attached_products]);
+	}
+
+	public function wps_sfw_add_item_data_cart_block_subscription_box( $cart_item_data, $cart_item ){
+		if (!WC()->cart || empty(WC()->cart->get_cart())) {
+			return $cart_item_data;
+		}
+	
+		$cart = WC()->cart->get_cart();
+	
+		// Ensure cart item has a valid key
+		if (!isset($cart_item['key'])) {
+			return $cart_item_data;
+		}
+	
+		$array_keys = array_keys($cart);
+		
+		$index = array_search($cart_item['key'], $array_keys, true);
+	
+		if ($index !== false) {
+			$cart_item_data[] = [
+				'name'   => 'wps_sfw_subscription_box_cart_index',
+				'hidden' => true,
+				'value'  => $index,
+			];
+		}
+	
+		if (isset($cart_item['wps_sfw_attached_products']) && !empty($cart_item['wps_sfw_attached_products'])) {
+			$cart_item_data[] = [
+				'name'   => 'wps_sfw_subscription_box_cart_key',
+				'hidden' => true,
+				'value'  => $cart_item['key'],
+			];
+		}
+	
+		return $cart_item_data;
+	}
+
+	public function wps_sfw_show_attached_product_html_subscription_box( $name, $cart_item, $cart_item_key ){
+		if (isset($cart_item['wps_sfw_attached_products']) && !empty($cart_item['wps_sfw_attached_products'])) {
+			$attached_products_html = '<div class="wps-attached-products-popup"><strong>Attached Products:</strong><ul>';
+			foreach ($cart_item['wps_sfw_attached_products'] as $attached_product) {
+				$attached_products_html .= '<li>
+					<img src="' . esc_url($attached_product['image']) . '" width="40" height="40" />
+					' . esc_html($attached_product['name']) . ' x ' . esc_html($attached_product['quantity']) . '
+				</li>';
+			}
+			$attached_products_html .= '</ul><span class="wps_sfw_customer_close_popup">&times;</span></div>';
+			
+			// Append the popup trigger
+			$name .= '<a href="#" class="wps_show_customer_subscription_box_popup">View Attached Products</a>' . $attached_products_html;
+		}
+		return $name;
+	}
+	
+
+	public function wps_sfw_subscription_box_woocommerce_add_to_cart_validation( $valid, $product_id, $quantity, $variation_id = 0, $variations = [] ){
+		$product = wc_get_product($product_id);
+		if (!$product) {
+			return $valid;
+		}
+	
+		// Define the subscription box product type (Modify this as per your setup)
+		$subscription_box_type = 'subscription_box'; // Example: If it's a custom type
+		$is_subscription_box = $product->get_type() === $subscription_box_type;
+	
+		$cart = WC()->cart->get_cart();
+		$cart_has_subscription_box = false;
+		$cart_has_other_products = false;
+	
+		// Check existing cart items
+		foreach ($cart as $cart_item) {
+			$cart_product = wc_get_product($cart_item['product_id']);
+	
+			if (!$cart_product) {
+				continue;
+			}
+	
+			if ($cart_product->get_type() === $subscription_box_type) {
+				$cart_has_subscription_box = true;
+			} else {
+				$cart_has_other_products = true;
+			}
+		}
+	
+		// Prevent adding different product types together
+		if ($cart_has_subscription_box && !$is_subscription_box) {
+			wc_add_notice(__('You cannot add other products while a Subscription Box is in the cart. Please remove it first.', 'woocommerce'), 'error');
+			return false;
+		}
+	
+		if ($cart_has_other_products && $is_subscription_box) {
+			wc_add_notice(__('You cannot add a Subscription Box when other products are in the cart. Please remove them first.', 'woocommerce'), 'error');
+			return false;
+		}
+	
+		return $valid;
+	}
+
+	public function wps_sfw_hide_quantity_fields_for_subscription_box( $return, $product ){
+		
+		$is_subscription_box = $product->get_type();
+
+		if( 'subscription_box' == $is_subscription_box ){
+			$return = true;
+		}
+		return $return;
+	}
 }

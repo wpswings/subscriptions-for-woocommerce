@@ -288,9 +288,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							foreach ( $wps_new_order->get_items() as $item ) {
 								$product = $item->get_product();
 								if ( $product->is_virtual() || $product->is_downloadable() ) {
-									$virtual_order = true;
-									break;
+									if( 'mwb_booking' === $product->get_type() ){
+										$virtual_order = false;
+										break;
+									}else{
+										$virtual_order = true;
+										break;
+									}
 								}
+								
 							}
 
 							// If the order only contains virtual or downloadable products, mark it as complete.
@@ -840,8 +846,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							foreach ( $wps_new_order->get_items() as $item ) {
 								$product = $item->get_product();
 								if ( $product->is_virtual() || $product->is_downloadable() ) {
-									$virtual_order = true;
-									break;
+									if( 'mwb_booking' === $product->get_type() ){
+										$virtual_order = false;
+										break;
+									}else{
+										$virtual_order = true;
+										break;
+									}
 								}
 							}
 

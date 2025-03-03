@@ -52,23 +52,21 @@
                 $('.wps-form__password').attr('type', 'text');
             }
         });
-		// wsfw_admin_action_param.is_action = 'Action';
+		
 		// PRO popup start
-		// if (wsfw_admin_action_param.is_pro_plugin != 1){
+		
 			$(document).on( 'click', '.wps_pro_settings_tag', function(e) {
-				// if (wsfw_admin_param.is_pro_plugin != 1){
-				// $(this).prop("checked", false);
-				// console.log('gggg');
+				
 				e.preventDefault();
 				$('.wps_sfw_lite_go_pro_popup_wrap').addClass('wps_sfw_lite_go_pro_popup_show');
-				// }
+				
 			});
 	
 			$(document).on( 'click', '.wps_sfw_lite_go_pro_popup_close', function() {
 				$('.wps_sfw_lite_go_pro_popup_wrap').removeClass('wps_sfw_lite_go_pro_popup_show');
 			});
 				
-			// }
+		
 		// PRO popup end
 
 	});

@@ -208,6 +208,8 @@ class Subscriptions_For_Woocommerce_Admin {
 				'trial_week_notice' => __( 'Trial period must not be greater than 52 Weeks', 'subscriptions-for-woocommerce' ),
 				'trial_month_notice' => __( 'Trial period must not be greater than 24 Months', 'subscriptions-for-woocommerce' ),
 				'trial_year_notice' => __( 'Trial period must not be greater than 5 Years', 'subscriptions-for-woocommerce' ),
+				'is_pro_active'     => apply_filters( 'wsp_sfw_check_pro_plugin', false ),
+				'fist_subscription_box_id' =>  get_option( 'wps_sfw_first_subscription_box_id', false ),
 			);
 			wp_localize_script(
 				'wps-sfw-admin-single-product-js',
@@ -616,7 +618,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function wps_sfw_create_subscription_product_type( $products_type ) {
 		$products_type['wps_sfw_product'] = array(
 			'id'            => '_wps_sfw_product',
-			'wrapper_class' => 'show_if_simple',
+			'wrapper_class' => 'show_if_simple show_if_mwb_booking',
 			'label'         => __( 'Subscription', 'subscriptions-for-woocommerce' ),
 			'description'   => __( 'This is the Subscriptions type product.', 'subscriptions-for-woocommerce' ),
 			'default'       => 'no',
@@ -1278,7 +1280,12 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_subscription_box_settings_fields( $wsp_subscription_box_settings ) {
 
-		
+		$is_pro = false;
+		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
+		$pro_group_tag = '';
+		if ( ! $is_pro ) {
+				$pro_group_tag = 'wps_pro_settings_tag';	
+		}
 		$wsp_subscription_box_settings = array(
 			array(
 				'title' => __( 'Enable Subscription Box Feature', 'subscriptions-for-woocommerce' ),
@@ -1313,16 +1320,11 @@ class Subscriptions_For_Woocommerce_Admin {
 			),
 
 			array(
-				'title' => __( 'Enable To Create Multiple Subscription Box Feature', 'subscriptions-for-woocommerce' ),
-				'type'  => 'radio-switch',
-				'description'  => __( 'Enable this to Create Multiple and Sell Subscription Box', 'subscriptions-for-woocommerce' ),
+				'name' => __( 'To Create Multiple Subscription Box Feature Need Use Pro Version', 'subscriptions-for-woocommerce' ),
+				'type'  => 'information',
 				'id'    => 'wsp_enable_subscription_box_muti_features',
-				'value' => get_option( 'wsp_enable_subscription_box_muti_features' ),
-				'class' => 'wsp-radio-switch-class wps_pro_settings',
-				'options' => array(
-					'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
-					'no' => __( 'NO', 'subscriptions-for-woocommerce' ),
-				),
+				'class' => 'wsp-sfw_information-class '. $pro_group_tag,
+				
 			),
 			
 			array(
@@ -1339,55 +1341,9 @@ class Subscriptions_For_Woocommerce_Admin {
 
 	public function wsp_register_subscription_box_product_type( $types ) {
 		$enable_subscription_box = get_option('wsp_enable_subscription_box_features');
-		$is_pro = false;
-		$is_pro = apply_filters('wsp_sfw_check_pro_plugin', $is_pro);
-	
-		// Get the current post ID (Product ID)
-		$current_post_id = isset($_GET['post']) ? intval($_GET['post']) : 0;
-		$is_editing_subscription_box = false;
-	
-		// Check if the current product is a 'subscription_box'
-		if ($current_post_id) {
-			$product = wc_get_product($current_post_id);
-			if ($product && $product->get_type() === 'subscription_box') {
-				$is_editing_subscription_box = true;
-			}
+		if ($enable_subscription_box === 'on') {		
+				$types['subscription_box'] = __('Subscription Box', 'woocommerce');
 		}
-	
-		if ($enable_subscription_box === 'on') {
-			// Check if any product with 'subscription_box' type exists
-			$args = array(
-				'post_type'      => 'product',
-				'post_status'    => 'publish',
-				'tax_query'      => array(
-					array(
-						'taxonomy' => 'product_type',
-						'field'    => 'slug',
-						'terms'    => 'subscription_box',
-					),
-				),
-				'fields'         => 'ids', // Only get IDs for efficiency
-				'posts_per_page' => 1, // Check if at least one exists
-			);
-	
-			$query = new WP_Query($args);
-			$has_subscription_box = $query->have_posts();
-	
-			// Always allow if Pro version is active OR editing an existing 'subscription_box' product
-			if ($is_pro || $is_editing_subscription_box) {
-				if (!array_key_exists('subscription_box', $types)) {
-					$types['subscription_box'] = __('Subscription Box', 'woocommerce');
-				}
-			} 
-			// If Pro version is NOT active, allow only if no subscription box product exists
-			elseif (!$has_subscription_box) {
-				if (!array_key_exists('subscription_box', $types)) {
-					$types['subscription_box'] = __('Subscription Box', 'woocommerce');
-				}
-			}
-			
-		}
-	
 		return $types;
 	}
 	
@@ -1403,10 +1359,11 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * @return   Array  $tabs
 	 */
 	public function wps_sfw_custom_product_tab_for_subscription_box( $tabs ) {
+	
 		$tabs['wps_sfw_subscription_box_product'] = array(
 			'label'    => __( 'Subscription Box Settings', 'subscriptions-for-woocommerce' ),
 			'target'   => 'wps_subscription_box_product_target_section',
-			'class'    => apply_filters( 'wps_subscription_box_settings_tabs_class', 'show_if_subscription_box' ),
+			'class'    => '',
 			'priority' => 80,
 		);
 	
@@ -1469,7 +1426,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		?>
 		<div id="wps_subscription_box_product_target_section" class="panel woocommerce_options_panel hidden">
 
-		<strong><?php esc_html_e( 'Subscriptions Setting For Box', 'subscriptions-for-woocommerce' ); ?></strong>
+			<strong><?php esc_html_e( 'Subscriptions Setting For Box', 'subscriptions-for-woocommerce' ); ?></strong>
 
 			<p class="form-field wps_sfw_subscription_box_price_field ">
 					<label for="wps_sfw_subscription_box_price">
@@ -1626,7 +1583,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		$product = wc_get_product( $post_id );
 		$product_type = $_POST['product-type'];
 
-		
+
 		if( 'subscription_box' == $product_type ){
 		
 			$wps_sfw_subscription_box_price = isset( $_POST['wps_sfw_subscription_box_price'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_box_price'] ) ) : '';
@@ -1674,10 +1631,11 @@ class Subscriptions_For_Woocommerce_Admin {
 			} else {
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', '' );
 			}
-			
+			wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
 
-				wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
-		
+			if ( ! get_option( 'wps_sfw_first_subscription_box_id', false ) ) {
+				update_option( 'wps_sfw_first_subscription_box_id', $post_id );
+			}
 		}
 	}
 	
