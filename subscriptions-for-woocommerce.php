@@ -46,33 +46,35 @@ if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.p
 	}
 }
 add_action( 'after_plugin_row_woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', 'wps_sfw_old_upgrade_notice', 0, 3 );
-/**
- * Migration to ofl pro plugin.
- *
- * @param string $plugin_file Path to the plugin file relative to the plugins directory.
- * @param array  $plugin_data An array of plugin data.
- * @param string $status Status filter currently applied to the plugin list.
- */
-function wps_sfw_old_upgrade_notice( $plugin_file, $plugin_data, $status ) {
-	global $old_pro_exists;
-	if ( $old_pro_exists ) {
-		?>
-	<tr class="plugin-update-tr active notice-warning notice-alt">
-		<td colspan="4" class="plugin-update colspanchange">
-			<div class="notice notice-error inline update-message notice-alt">
-				<p class='wps-notice-title wps-notice-section'>
-					<strong><?php esc_html_e( 'This plugin will not work anymore correctly.', 'subscriptions-for-woocommerce' ); ?></strong><br>
-					<?php esc_html_e( 'We highly recommend to update to latest pro version.', 'subscriptions-for-woocommerce' ); ?>
-				</p>
-			</div>
-		</td>
-	</tr>
-	<style>
-		.wps-notice-section > p:before {
-			content: none;
+if( ! function_exists( 'wps_sfw_old_upgrade_notice ')){
+	/**
+	 * Migration to ofl pro plugin.
+	 *
+	 * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+	 * @param array  $plugin_data An array of plugin data.
+	 * @param string $status Status filter currently applied to the plugin list.
+	 */
+	function wps_sfw_old_upgrade_notice( $plugin_file, $plugin_data, $status ) {
+		global $old_pro_exists;
+		if ( $old_pro_exists ) {
+			?>
+		<tr class="plugin-update-tr active notice-warning notice-alt">
+			<td colspan="4" class="plugin-update colspanchange">
+				<div class="notice notice-error inline update-message notice-alt">
+					<p class='wps-notice-title wps-notice-section'>
+						<strong><?php esc_html_e( 'This plugin will not work anymore correctly.', 'subscriptions-for-woocommerce' ); ?></strong><br>
+						<?php esc_html_e( 'We highly recommend to update to latest pro version.', 'subscriptions-for-woocommerce' ); ?>
+					</p>
+				</div>
+			</td>
+		</tr>
+		<style>
+			.wps-notice-section > p:before {
+				content: none;
+			}
+		</style>
+			<?php
 		}
-	</style>
-		<?php
 	}
 }
 $old_sfw_pro_present   = false;
@@ -832,12 +834,17 @@ function wps_create_subscription( $args = array() ) {
 }
 //code to register subscription product type.
 add_action( 'init', 'register_subscription_box_product_type' );
+
 function register_subscription_box_product_type() {
     class WC_Product_Subscription_Box extends WC_Product {
         public function __construct( $product ) {
-            $this->product_type = 'subscription_box';
             parent::__construct( $product );
+        }
+
+        public function get_type() {
+            return 'subscription_box';
         }
     }
 }
+
 

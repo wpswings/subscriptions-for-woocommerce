@@ -5,8 +5,8 @@
  * @link       https://wpswings.com
  * @since      2.0.0
  *
- * @package     Woocommerce_Subscriptions_Pro
- * @subpackage  Woocommerce_Subscriptions_Pro/package
+ * @package     subscriptions-for-woocommerce
+ * @subpackage  subscriptions-for-woocommerce/package
  */
 
 use Automattic\WooCommerce\Utilities\OrderUtil;
@@ -14,8 +14,8 @@ use Automattic\WooCommerce\Utilities\OrderUtil;
 /**
  * The Payment-specific functionality of the plugin admin side.
  *
- * @package     Woocommerce_Subscriptions_Pro
- * @subpackage  Woocommerce_Subscriptions_Pro/package
+ * @package     subscriptions-for-woocommerce
+ * @subpackage  subscriptions-for-woocommerce/package
  * @author      WP Swings <webmaster@wpswings.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,10 +36,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 			add_filter( 'wps_sfw_supported_payment_gateway_for_woocommerce', array( $this, 'wps_amazon_pay_payment_integration_gateway' ), 10, 2 );
 			add_action( 'wps_sfw_subscription_cancel', array( $this, 'wps_sfw_cancel_amazon_pay_subscription' ), 10, 2 );
 			add_action( 'wps_sfw_other_payment_gateway_renewal', array( $this, 'wps_sfw_process_amazonpay_payment_renewal' ), 10, 3 );
-			add_filter( 'woocommerce_amazon_pa_processed_order', array( $this, 'copy_meta_to_sub' ), 10, 2 );
+			add_filter( 'woocommerce_amazon_pa_processed_order', array( $this, 'wps_sfw_copy_meta_to_sub' ), 10, 2 );
 			add_filter( 'woocommerce_amazon_pa_update_checkout_session_payload', array( $this, 'wps_recurring_checkout_session_update' ), 10, 4 );
-			add_action( 'woocommerce_amazon_pa_refresh_cached_charge_permission_status', array( $this, 'wps_wsp_propagate_status_update_to_related_callback' ), 1, 3 );
-			add_action( 'woocommerce_after_checkout_validation', array( $this, 'wps_wsp_validation_for_amazon_on_checkout' ), 10, 1 );
+			add_action( 'woocommerce_amazon_pa_refresh_cached_charge_permission_status', array( $this, 'wps_sfw_propagate_status_update_to_related_callback' ), 1, 3 );
+			add_action( 'woocommerce_after_checkout_validation', array( $this, 'wps_sfw_validation_for_amazon_on_checkout' ), 10, 1 );
 		}
 
 		/**
@@ -47,7 +47,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 		 *
 		 * @param array $posted as posted value.
 		 */
-		public function wps_wsp_validation_for_amazon_on_checkout( $posted ) {
+		public function wps_sfw_validation_for_amazon_on_checkout( $posted ) {
 
 			$error = false;
 			if ( 'amazon_payments_advanced' == $posted['payment_method'] ) {
@@ -60,11 +60,11 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 
 					foreach ( WC()->cart->get_cart() as $cart_item ) {
 						$product_id = $cart_item['product_id'];
-						$_wps_sfw_product = wps_wsp_get_meta_data( $product_id, '_wps_sfw_product', true );
+						$_wps_sfw_product = wps_sfw_get_meta_data( $product_id, '_wps_sfw_product', true );
 
 						if ( 'yes' == $_wps_sfw_product ) {
-							$wps_sfw_subscription_initial_signup_price = wps_wsp_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
-							$wps_sfw_subscription_free_trial_number = wps_wsp_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
+							$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
+							$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
 							if ( 0 == $wps_recurring_total && empty( $wps_sfw_subscription_initial_signup_price ) && $wps_sfw_subscription_free_trial_number > 0 ) {
 								$error = true;
 							}
@@ -79,18 +79,18 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 		}
 
 		/**
-		 * Wps_wsp_propagate_status_update_to_related_callback function
+		 * wps_sfw_propagate_status_update_to_related_callback function
 		 *
 		 * @param array $_order as order.
 		 * @param array $charge_permission_id as charge permision id.
 		 * @param array $charge_permission_status as status.
 		 * @return void
 		 */
-		public function wps_wsp_propagate_status_update_to_related_callback( $_order, $charge_permission_id, $charge_permission_status ) {
+		public function wps_sfw_propagate_status_update_to_related_callback( $_order, $charge_permission_id, $charge_permission_status ) {
 			$order = $_order;
 			$order_id = $order->get_id();
 			$parent_order = $order;
-			$wps_subscription_id = wps_wsp_get_meta_data( $order_id, 'wps_subscription_id', true );
+			$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 
 				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
@@ -98,20 +98,20 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 				} else {
 					$wps_subscription_order = wc_get_order( $wps_subscription_id );
 				}
-				$this->wps_wsp_handle_order_propagation( $order_id, $charge_permission_id, $charge_permission_status );
-				$this->wps_wsp_handle_order_propagation( $wps_subscription_order, $charge_permission_id, $charge_permission_status );
+				$this->wps_sfw_handle_order_propagation( $order_id, $charge_permission_id, $charge_permission_status );
+				$this->wps_sfw_handle_order_propagation( $wps_subscription_order, $charge_permission_id, $charge_permission_status );
 			}
 		}
 
 		/**
-		 * Wps_wsp_handle_order_propagation function
+		 * wps_sfw_handle_order_propagation function
 		 *
 		 * @param array $wps_subscription_id as subscription id.
 		 * @param array $charge_permission_id as permission id.
 		 * @param array $charge_permission_status as status.
 		 * @return void
 		 */
-		public function wps_wsp_handle_order_propagation( $wps_subscription_id, $charge_permission_id, $charge_permission_status ) {
+		public function wps_sfw_handle_order_propagation( $wps_subscription_id, $charge_permission_id, $charge_permission_status ) {
 			$current_charge_permission_id = WC_Amazon_Payments_Advanced::get_order_charge_permission( $wps_subscription_id );
 			if ( $current_charge_permission_id !== $charge_permission_id ) {
 				return;
@@ -124,7 +124,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 			$old_status = wc_apa()->get_gateway()->get_cached_charge_permission_status( $rel_order, true )->status;
 			$new_status = $charge_permission_status->status; // phpcs:ignore WordPress.NamingConventions
 
-			wps_wsp_update_meta_data( $wps_subscription_id, 'amazon_charge_permission_status', wp_json_encode( $charge_permission_status ) );
+			wps_sfw_update_meta_data( $wps_subscription_id, 'amazon_charge_permission_status', wp_json_encode( $charge_permission_status ) );
 			$rel_order->save();
 		}
 
@@ -140,7 +140,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 		public function wps_recurring_checkout_session_update( $payload, $checkout_session_id, $order, $doing_classic_payment ) {
 
 			$order_id = $order->get_id();
-			$wps_subscription_id = wps_wsp_get_meta_data( $order_id, 'wps_subscription_id', true );
+			$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 
 				if ( isset( $_POST['_wcsnonce'] ) && isset( $_POST['woocommerce_change_payment'] ) && $order->get_id() === absint( $_POST['woocommerce_change_payment'] ) ) {
@@ -154,8 +154,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 						return $payload;
 				}
 
-				$wps_sfw_subscription_interval = wps_wsp_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_interval', true );
-				$wps_sfw_subscription_number = wps_wsp_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_number', true );
+				$wps_sfw_subscription_interval = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_interval', true );
+				$wps_sfw_subscription_number = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_sfw_subscription_number', true );
 
 				$wps_sfw_subscription_interval = ucfirst( $wps_sfw_subscription_interval );
 
@@ -180,10 +180,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 				}
 				$check_shipping = get_option( 'wsp_allow_shipping_subscription', '' );
 				$wps_shipping_charge = 0;
-				if ( 'on' === $check_shipping ) {
-
-						$order_shipping = $order->get_items( 'shipping' );
-
+				if ( 'on' === $check_shipping && apply_filters( 'wsp_sfw_check_pro_plugin', false ) ) {
+					$order_shipping = $order->get_items( 'shipping' );
 					foreach ( $order_shipping as $item_id => $item ) {
 						$item_data = $item->get_data();
 
@@ -251,9 +249,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 		 * @param WC_Order $order Order object.
 		 * @param object   $response Response from the API.
 		 */
-		public function copy_meta_to_sub( $order, $response ) {
+		public function wps_sfw_copy_meta_to_sub( $order, $response ) {
 			$order_id = $order->get_id();
-			$wps_subscription_id = wps_wsp_get_meta_data( $order_id, 'wps_subscription_id', true );
+			$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 
 				$perm_status = wc_apa()->get_gateway()->get_cached_charge_permission_status( $order, true );
@@ -271,7 +269,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 					if ( empty( $value ) ) {
 						continue;
 					}
-					wps_wsp_update_meta_data( $wps_subscription_id, $key, $value );
+					wps_sfw_update_meta_data( $wps_subscription_id, $key, $value );
 				}
 			}
 		}
@@ -312,7 +310,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 			if ( strpos( $wps_payment_method, 'amazon_payments_advanced' ) !== false ) {
 				if ( 'Cancel' == $status ) {
 					wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
-					wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 				}
 			}
 		}
@@ -337,7 +335,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 				$order_id        = $renewal_order->get_id();
 				$can_do_async         = ( 'async' === WC_Amazon_Payments_Advanced_API::get_settings( 'authorization_mode' ) );
 
-				$charge_permission_id = wps_wsp_get_meta_data( $subscription_id, 'amazon_charge_permission_id', true );
+				$charge_permission_id = wps_sfw_get_meta_data( $subscription_id, 'amazon_charge_permission_id', true );
 
 				$response = WC_Amazon_Payments_Advanced_API::create_charge(
 					$charge_permission_id,

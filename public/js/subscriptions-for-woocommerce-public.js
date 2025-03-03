@@ -72,7 +72,7 @@
 			
 			// console.log(wps_sfw_sub_box_total);
 			// if (count < 1) {
-				count = 1;
+				count = count + 1;
 				$input.val(count).show(); // Update and show input
 				$minusBtn.show(); // Show minus button
 				// $btn.hide();

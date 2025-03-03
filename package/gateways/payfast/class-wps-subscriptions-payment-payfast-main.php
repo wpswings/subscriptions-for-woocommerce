@@ -5,15 +5,15 @@
  * @link       https://wpswings.com
  * @since      2.2.6
  *
- * @package     Subscriptions_For_Woocommerce
- * @subpackage  Subscriptions_For_Woocommerce/package
+ * @package     subscriptions-for-woocommerce
+ * @subpackage  subscriptions-for-woocommerce/package
  */
 
 /**
  * The Payment-specific functionality of the plugin admin side.
  *
- * @package     Subscriptions_For_Woocommerce
- * @subpackage  Subscriptions_For_Woocommerce/package
+ * @package     subscriptions-for-woocommerce
+ * @subpackage  subscriptions-for-woocommerce/package
  * @author      wpswings <webmaster@wpswings.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,10 +34,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 
 			if ( $this->wps_sfw_check_woo_payfast_enable() && wps_sfw_check_plugin_enable() ) {
 
-				add_action( 'wps_sfw_subscription_cancel', array( $this, 'wps_wsp_cancel_payfast_subscription' ), 10, 2 );
-				add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_wsp_payfast_payment_order_statuses_for_payment_complete' ), 10, 2 );
+				add_action( 'wps_sfw_subscription_cancel', array( $this, 'wps_sfw_cancel_payfast_subscription' ), 10, 2 );
+				add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_payfast_payment_order_statuses_for_payment_complete' ), 10, 2 );
 
-				add_filter( 'wps_sfw_supported_payment_gateway_for_woocommerce', array( $this, 'wps_wsp_payfast_payment_gateway_for_woocommerce' ), 10, 2 );
+				add_filter( 'wps_sfw_supported_payment_gateway_for_woocommerce', array( $this, 'wps_sfw_payfast_payment_gateway_for_woocommerce' ), 10, 2 );
 				add_action( 'wps_sfw_other_payment_gateway_renewal', array( $this, 'wps_sfw_woo_payfast_process_subscription_payment' ), 10, 3 );
 
 				add_action( 'woocommerce_api_wc_gateway_payfast', array( $this, 'wps_sfw_save_payfast_token' ) );
@@ -49,46 +49,46 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 		/**
 		 * This function is add subscription order status.
 		 *
-		 * @name wps_wsp_payfast_payment_order_statuses_for_payment_complete
+		 * @name wps_sfw_payfast_payment_order_statuses_for_payment_complete
 		 * @param array  $order_status order_status.
 		 * @param object $order order.
 		 * @return mixed
 		 */
-		public function wps_wsp_payfast_payment_order_statuses_for_payment_complete( $order_status, $order ) {
+		public function wps_sfw_payfast_payment_order_statuses_for_payment_complete( $order_status, $order ) {
 			if ( $order && is_object( $order ) ) {
 				$order_id = $order->get_id();
 
 				$payment_method = $order->get_payment_method();
-				$wps_sfw_renewal_order = wps_wsp_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-				if ( $this->wps_wsp_check_supported_payment_options( $payment_method ) && 'yes' == $wps_sfw_renewal_order ) {
+				$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
+				if ( $this->wps_sfw_check_supported_payment_options( $payment_method ) && 'yes' == $wps_sfw_renewal_order ) {
 					$order_status[] = 'wps_renewal';
 				}
 			}
-			return apply_filters( 'wps_wsp_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
+			return apply_filters( 'wps_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
 		}
 		/**
 		 * Allow payment method.
 		 *
-		 * @name wps_wsp_payfast_payment_gateway_for_woocommerce.
+		 * @name wps_sfw_payfast_payment_gateway_for_woocommerce.
 		 * @param array  $supported_payment_method supported_payment_method.
 		 * @param string $payment_method payment_method.
 		 * @return array
 		 */
-		public function wps_wsp_payfast_payment_gateway_for_woocommerce( $supported_payment_method, $payment_method ) {
-			if ( $this->wps_wsp_check_supported_payment_options( $payment_method ) ) {
+		public function wps_sfw_payfast_payment_gateway_for_woocommerce( $supported_payment_method, $payment_method ) {
+			if ( $this->wps_sfw_check_supported_payment_options( $payment_method ) ) {
 				$supported_payment_method[] = $payment_method;
 			}
-			return apply_filters( 'wps_wsp_supported_payment_payfast', $supported_payment_method, $payment_method );
+			return apply_filters( 'wps_sfw_supported_payment_payfast', $supported_payment_method, $payment_method );
 		}
 
 		/**
 		 * Check supported payment method.
 		 *
-		 * @name wps_wsp_check_supported_payment_options
+		 * @name wps_sfw_check_supported_payment_options
 		 * @param string $payment_method payment_method.
 		 * @return boolean
 		 */
-		public function wps_wsp_check_supported_payment_options( $payment_method ) {
+		public function wps_sfw_check_supported_payment_options( $payment_method ) {
 			$result = false;
 			if ( 'payfast' == $payment_method ) {
 				$result = true;
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 		/**
 		 * Process subscription payment.
 		 *
-		 * @name wps_wsp_woo_cybs_process_subscription_payment.
+		 * @name wps_sfw_woo_cybs_process_subscription_payment.
 		 * @param object $order order.
 		 * @param int    $subscription_id subscription_id.
 		 * @param string $payment_method payment_method.
@@ -134,8 +134,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 				}
 				if ( class_exists( 'WC_Gateway_PayFast' ) ) {
 					$payfast_gateway_object = new WC_Gateway_PayFast();
-					$parent_id = wps_wsp_get_meta_data( $subscription_id, 'wps_parent_order', true );
-					$token     = wps_wsp_get_meta_data( $parent_id, 'wps_sfw_user_token', true );
+					$parent_id = wps_sfw_get_meta_data( $subscription_id, 'wps_parent_order', true );
+					$token     = wps_sfw_get_meta_data( $parent_id, 'wps_sfw_user_token', true );
 					$items     = $order->get_items();
 					if ( empty( $items ) ) {
 						return get_bloginfo( 'name' );
@@ -147,10 +147,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 
 					if ( is_wp_error( $response ) ) {
 						/* translators: 1: error code 2: error message */
-						$order->update_status( 'failed', sprintf( __( 'PayFast Subscription renewal transaction failed (%1$s:%2$s)', 'woocommerce-subscriptions-pro' ), $response->get_error_code(), $response->get_error_message() ) );
+						$order->update_status( 'failed', sprintf( __( 'PayFast Subscription renewal transaction failed (%1$s:%2$s)', 'subscriptions-for-woocommerce' ), $response->get_error_code(), $response->get_error_message() ) );
 					} else {
 						// Payment will be completion will be capture only when the ITN callback is sent to $this->handle_itn_request().
-						$order->add_order_note( __( 'PayFast Subscription renewal transaction submitted.', 'woocommerce-subscriptions-pro' ) );
+						$order->add_order_note( __( 'PayFast Subscription renewal transaction submitted.', 'subscriptions-for-woocommerce' ) );
 						$order->update_status( 'processing' );
 					}
 				}
@@ -181,12 +181,12 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 		/**
 		 * This function is used to cancel subscriptions status.
 		 *
-		 * @name wps_wsp_cancel_payfast_subscription
+		 * @name wps_sfw_cancel_payfast_subscription
 		 * @param int    $wps_subscription_id wps_subscription_id.
 		 * @param string $status status.
 		 * @return void
 		 */
-		public function wps_wsp_cancel_payfast_subscription( $wps_subscription_id, $status ) {
+		public function wps_sfw_cancel_payfast_subscription( $wps_subscription_id, $status ) {
 
 			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$subscription = new WPS_Subscription( $wps_subscription_id );
@@ -194,15 +194,15 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 			} else {
 				$wps_payment_method = get_post_meta( $wps_subscription_id, '_payment_method', true );
 			}
-			if ( $this->wps_wsp_check_supported_payment_options( $wps_payment_method ) ) {
+			if ( $this->wps_sfw_check_supported_payment_options( $wps_payment_method ) ) {
 				if ( class_exists( 'WC_Gateway_PayFast' ) ) {
 					$payfast_gateway_object = new WC_Gateway_PayFast();
-					$parent_id              = wps_wsp_get_meta_data( $wps_subscription_id, 'wps_parent_order', true );
-					$token                  = wps_wsp_get_meta_data( $parent_id, 'wps_sfw_user_token', true );
+					$parent_id              = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_parent_order', true );
+					$token                  = wps_sfw_get_meta_data( $parent_id, 'wps_sfw_user_token', true );
 					$payfast_gateway_object->api_request( 'cancel', $token, array(), 'PUT' );
 					if ( 'Cancel' == $status ) {
 						wps_sfw_send_email_for_cancel_susbcription( $wps_subscription_id );
-						wps_wsp_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+						wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
 					}
 				}
 			}
@@ -216,9 +216,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 				$data      = $_POST;
 				$token     = sanitize_text_field( $data['token'] );
 				$parent_id = sanitize_text_field( $data['custom_str3'] );
-				$subscription_id    = wps_wsp_get_meta_data( $parent_id, 'wps_subscription_id', true );
+				$subscription_id    = wps_sfw_get_meta_data( $parent_id, 'wps_subscription_id', true );
 				if ( ! empty( $subscription_id ) ) {
-					wps_wsp_update_meta_data( $parent_id, 'wps_sfw_user_token', $token );
+					wps_sfw_update_meta_data( $parent_id, 'wps_sfw_user_token', $token );
 					Subscriptions_For_Woocommerce_Log::log( 'WPS Payfast Webhook Data Order #' . $parent_id . ' Data :-' . wc_print_r( $data, true ) );
 				}
 			}
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 		 */
 		public function wps_sfw_payfast_payment_data_to_send_modify( $args, $order_id ) {
 			$order = wc_get_order( $order_id );
-			if ( function_exists( 'wps_wsp_check_is_order_subscription' ) && wps_wsp_check_is_order_subscription( $order ) ) {
+			if ( function_exists( 'wps_sfw_order_has_subscription' ) && wps_sfw_order_has_subscription( $order ) ) {
 				$args['subscription_type'] = '2';
 			}
 			return $args;

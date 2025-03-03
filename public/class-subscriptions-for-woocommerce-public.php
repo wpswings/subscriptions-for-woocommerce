@@ -2379,7 +2379,12 @@ class Subscriptions_For_Woocommerce_Public {
 											echo '<div class="wps_sfw_sub_box_prod_image">' . $product_image . '</div>';
 											echo '<div class="wps_sfw_sub_box_prod_name">' . esc_html($product_name) . '</div>';
 											echo '<div class="wps_sfw_sub_box_prod_qty"><button class="wps_sfw_sub_box_prod_minus_btn" style="display:none;" data-product-id="' . esc_attr($sub_product_id) . '">-</button>';
-											echo '<input type="number" class="wps_sfw_sub_box_prod_count" data-wps_sfw_sub_box_price="' . esc_attr($wps_sfw_sub_box_price) . '"value="0" min="0" max="1" style="display:none; width: 40px; text-align: center;">';
+											if( $is_pro ){
+												echo '<input type="number" class="wps_sfw_sub_box_prod_count" data-wps_sfw_sub_box_price="' . esc_attr($wps_sfw_sub_box_price) . '"value="0" style="display:none; width: 40px; text-align: center;">';
+											} else {
+
+												echo '<input type="number" class="wps_sfw_sub_box_prod_count" data-wps_sfw_sub_box_price="' . esc_attr($wps_sfw_sub_box_price) . '"value="0" min="0" max="1" style="display:none; width: 40px; text-align: center;">';
+											}
 											echo '<button class="wps_sfw_sub_box_prod_add_btn" data-product-id="' . esc_attr($sub_product_id) . '">+</button></div>';
 											echo '</div>';
 										}
@@ -2419,7 +2424,12 @@ class Subscriptions_For_Woocommerce_Public {
 												
 												echo '<div class="wps_sfw_sub_box_prod_name">' . esc_html($product_name) . '</div>';
 												echo '<div class="wps_sfw_sub_box_prod_qty"><button class="wps_sfw_sub_box_prod_minus_btn" style="display:none;" data-product-id="' . esc_attr($product->get_id()) . '">-</button>';
-												echo '<input type="number" class="wps_sfw_sub_box_prod_count" data-wps_sfw_sub_box_price="' . esc_attr($wps_sfw_sub_box_price) . '" value="0" min="0" max="1" style="display:none; width: 40px; text-align: center;" data-product-id="' . esc_attr($product->get_id()) . '">';
+												if( $is_pro ){
+													echo '<input type="number" class="wps_sfw_sub_box_prod_count" data-wps_sfw_sub_box_price="' . esc_attr($wps_sfw_sub_box_price) . '" value="0" style="display:none; width: 40px; text-align: center;" data-product-id="' . esc_attr($product->get_id()) . '">';
+												} else {
+
+													echo '<input type="number" class="wps_sfw_sub_box_prod_count" data-wps_sfw_sub_box_price="' . esc_attr($wps_sfw_sub_box_price) . '" value="0" min="0" max="1" style="display:none; width: 40px; text-align: center;" data-product-id="' . esc_attr($product->get_id()) . '">';
+												}
 												echo '<button class="wps_sfw_sub_box_prod_add_btn" data-product-id="' . esc_attr($product->get_id()) . '">+</button></div>';
 												echo '</div>';
 											}
