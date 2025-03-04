@@ -247,7 +247,7 @@
         var urlParams = new URLSearchParams(window.location.search);
         var post_id = urlParams.get('post'); 
         
-        if ( ! sfw_product_param.is_pro_active && post_id != sfw_product_param.fist_subscription_box_id ) {
+        if ( ! sfw_product_param.is_pro_active && sfw_product_param.fist_subscription_box_id && post_id != sfw_product_param.fist_subscription_box_id ) {
             if ( $('#product-type').length && $('select option[value="subscription_box"]') ) {
                 $('select option[value="subscription_box"]').prop( 'disabled', true );
             }
