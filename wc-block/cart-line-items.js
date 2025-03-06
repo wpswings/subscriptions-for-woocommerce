@@ -48,45 +48,11 @@ jQuery(function(){
 		}
 
 		// subscription box.
+		if ( ! cartItem ) {
+			return defaultValue;
+		}
 		const cartkey = cartItem.find( item => item.name === 'wps_sfw_subscription_box_cart_key' );
 		const cartIndex = cartItem.find( item => item.name === 'wps_sfw_subscription_box_cart_index' );
-		// if( cartkey ){
-		// 	let cartKey = cartkey.value;
-		// 	jQuery.ajax({
-		// 		url: sfw_public_block.ajaxurl,
-		// 		type: "POST",
-		// 		data: {
-		// 			action: "wps_get_cart_item",
-		// 			cart_key: cartKey,
-		// 		},
-		// 		success: function (response) {
-		// 			if (response.success) {
-		// 				// console.log("Cart Item Data:", response.data);
-	
-		// 				let attachedProducts = response.data.attached_products;
-		// 				if (attachedProducts.length > 0) {
-		// 					let attachedProductsHtml = `<div class="wps-attached-products-popup"><strong>Attached Products:</strong><ul>`;
-	
-		// 					attachedProducts.forEach(product => {
-		// 						attachedProductsHtml += `<li>
-		// 							<img src="${product.image}" width="40" height="40" />
-		// 							${product.name} x ${product.quantity}
-		// 						</li>`;
-		// 					});
-	
-		// 					attachedProductsHtml += `</ul><span class="wps_sfw_customer_close_popup">&times;</span></div>`;
-	
-		// 					// Inject into an existing element
-		// 					jQuery(".wc-block-cart-item__title:contains('" + defaultValue + "')").after(attachedProductsHtml);
-		// 				}
-		// 			}
-		// 		},
-		// 		error: function (error) {
-		// 			console.error("Error fetching cart item:", error);
-		// 		},
-		// 	});
-		// 	return defaultValue + `<a href="#" class="wps_show_customer_subscription_box_popup">View Attached Products</a>`;
-		// }
 
 		if (cartkey) {
 			let cartKey = cartkey.value;
@@ -96,8 +62,10 @@ jQuery(function(){
 				data: {
 					action: "wps_get_cart_item",
 					cart_key: cartKey,
+					nonce: sfw_public_param.sfw_public_nonce,
 				},
 				success: function (response) {
+					console.log(response);
 					const cartBoxIndex = parseInt(cartIndex.value);
 					if (response.success) {
 						let attachedProducts = response.data.attached_products;

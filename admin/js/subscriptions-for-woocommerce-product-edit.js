@@ -232,6 +232,8 @@
                 $(document).find('.wps_sfw_subscription_box_product_options').addClass('active');
                 $(document).find('.wps_subscription_box_product_target_section').show();
                 $(document).find('.wps_subscription_box_product_target_section').addClass('active');
+                $(document).find('.wps_sfw_product_options').hide();
+             $(document).find('#wps_sfw_product_target_section').hide();
             } else {
                 $(document).find('.wps_sfw_subscription_box_product_options').hide();
                 $(document).find('#wps_sfw_subscription_box_product_options').removeClass('active');

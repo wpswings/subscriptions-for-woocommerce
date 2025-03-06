@@ -23,9 +23,9 @@
  * Requires Plugins:  woocommerce
  *
  * Requires at least:        5.1.0
- * Tested up to:             6.7.1
+ * Tested up to:             6.7.2
  * WC requires at least:     5.1.0
- * WC tested up to:          9.6.0
+ * WC tested up to:          9.7.1
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -46,7 +46,7 @@ if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.p
 	}
 }
 add_action( 'after_plugin_row_woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', 'wps_sfw_old_upgrade_notice', 0, 3 );
-if( ! function_exists( 'wps_sfw_old_upgrade_notice ')){
+if ( ! function_exists( 'wps_sfw_old_upgrade_notice ' ) ) {
 	/**
 	 * Migration to ofl pro plugin.
 	 *
@@ -629,18 +629,23 @@ if ( $activated ) {
 		}
 	);
 
+	/**
+	 * Function to Remove subscription menu.
+	 *
+	 * @return void
+	 */
 	function wps_sfw_remove_custom_woocommerce_menu() {
 		global $submenu, $pagenow;
-	
-		// Allow direct access
-		if (isset($_GET['page']) && $_GET['page'] === 'wc-orders--wps_subscriptions' && isset($_GET['action']) && $_GET['action'] === 'new' ) {
+
+		// Allow direct access.
+		if ( isset( $_GET['page'] ) && 'wc-orders--wps_subscriptions' == $_GET['page'] && isset( $_GET['action'] ) && 'new' == $_GET['action'] ) {
 			return;
 		}
-	
-		// Remove the submenu from WooCommerce
-		remove_submenu_page('woocommerce', 'wc-orders--wps_subscriptions');
+
+		// Remove the submenu from WooCommerce.
+		remove_submenu_page( 'woocommerce', 'wc-orders--wps_subscriptions' );
 	}
-	add_action('admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999);
+	add_action( 'admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999 );
 
 } else {
 	// WooCommerce is not active so deactivate this plugin.
@@ -832,19 +837,32 @@ function wps_create_subscription( $args = array() ) {
 
 	return $subscription;
 }
-//code to register subscription product type.
+// code to register subscription product type.
 add_action( 'init', 'register_subscription_box_product_type' );
-
+/**
+ * Function to Regsiter Subscription box type.
+ *
+ * @return string
+ */
 function register_subscription_box_product_type() {
-    class WC_Product_Subscription_Box extends WC_Product {
-        public function __construct( $product ) {
-            parent::__construct( $product );
-        }
+	/**
+	 * Extend Product class.
+	 */
+	class WC_Product_Subscription_Box extends WC_Product {
+		/**
+		 * Construct.
+		 *
+		 * @param object $product as product.
+		 */
+		public function __construct( $product ) {
+			parent::__construct( $product );
+		}
 
-        public function get_type() {
-            return 'subscription_box';
-        }
-    }
+		/**
+		 * Get type function
+		 */
+		public function get_type() {
+			return 'subscription_box';
+		}
+	}
 }
-
-

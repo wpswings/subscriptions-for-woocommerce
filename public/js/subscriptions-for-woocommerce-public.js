@@ -57,7 +57,7 @@
 			var wps_sfw_sub_box_price = $btn.prev('.wps_sfw_sub_box_prod_count').data('wps_sfw_sub_box_price'); 
 
 			var wps_sfw_subscription_box_price = $('.wps_sfw-sb-cta-total').data('wps_sfw_subscription_box_price');
-			console.log(wps_sfw_subscription_box_price); 
+			
 			// Get the existing price from the span and convert it to a number
 			if( wps_sfw_subscription_box_price == 0 ){
 
@@ -70,13 +70,11 @@
 				$('.wps_sfw-sb-cta-total span').text(wps_sfw_sub_box_total.toFixed(2));
 			}
 			
-			// console.log(wps_sfw_sub_box_total);
-			// if (count < 1) {
+			
 				count = count + 1;
 				$input.val(count).show(); // Update and show input
 				$minusBtn.show(); // Show minus button
-				// $btn.hide();
-			// }
+			
 		});
 
 		$('.wps_sfw_sub_box_prod_minus_btn').on('click', function(e) {
@@ -86,19 +84,33 @@
 			let count = parseInt($input.val()) || 0;
 			let $plusbtn = $('.wps_sfw_sub_box_prod_add_btn');
 			$plusbtn.show(); 
-			// if (count > 0) {
-				count = 0;
-				$input.val(count).hide(); // Hide input when 0
-				$btn.hide(); // Hide minus button
-			// }
+
+			var wps_sfw_sub_box_price = $btn.next('.wps_sfw_sub_box_prod_count').data('wps_sfw_sub_box_price'); 
+
+			var wps_sfw_subscription_box_price = $('.wps_sfw-sb-cta-total').data('wps_sfw_subscription_box_price');
+			
+			// Get the existing price from the span and convert it to a number
+			if( wps_sfw_subscription_box_price == 0 ){
+
+				var existing_price = parseFloat($('.wps_sfw-sb-cta-total span').text()) || 0;
+				
+				// Calculate the new total price
+				var wps_sfw_sub_box_total = existing_price - wps_sfw_sub_box_price;
+				
+				// Update the span with the new total
+				$('.wps_sfw-sb-cta-total span').text(wps_sfw_sub_box_total.toFixed(2));
+			}
+			
+				count = count - 1;
+				$input.val(count) // Hide input when 0
+				if( count == 0 ){
+					$input.val(count).hide(); 
+					$btn.hide(); // Hide minus button
+				}
+			
 		});
 
-		// Ensure manual input stays within range
-		// $('.wps_sfw_sub_box_prod_count').on('input', function() {
-		// 	let value = parseInt($(this).val());
-		// 	if (value > 1) $(this).val(1);
-		// 	if (value < 0) $(this).val(0);
-		// });
+		
 
 		//new code.
 		$('#wps_sfw_subs_box-form').on('submit', function (e) {
@@ -135,7 +147,8 @@
 				type: 'POST',
 				data: {
 					action: 'wps_sfw_handle_subscription_box',
-					subscription_data: JSON.stringify(formData)
+					subscription_data: JSON.stringify(formData),
+					nonce: sfw_public_param.sfw_public_nonce,
 				},
 				success: function (response) {
 					console.log('Server Response:', response);

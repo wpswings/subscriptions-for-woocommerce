@@ -215,6 +215,13 @@ a.button.wps_sfw_subs_box-button {
     padding: 10px;
     border: 1px solid;
 }
+
+.wps_sfw_subscription_box_info{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 .wps_sfw_subs_box-overlay {
     display: none;
     position: fixed;
@@ -365,6 +372,15 @@ a.button.wps_sfw_subs_box-button {
     border: 1px solid #e2e2e2;
     background: transparent;
     box-shadow: none;
+    -moz-appearance: textfield;
+    pointer-events: none;
+
+}
+
+#wps_sfw_subs_box-form .wps_sfw_sub_box_prod_item .wps_sfw_sub_box_prod_qty input[type="number"]::-webkit-inner-spin-button,
+#wps_sfw_subs_box-form .wps_sfw_sub_box_prod_item .wps_sfw_sub_box_prod_qty input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 #wps_sfw_subs_box-form .wps_sfw_sub_box_prod_item .wps_sfw_sub_box_prod_qty button {
