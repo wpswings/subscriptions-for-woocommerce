@@ -845,24 +845,28 @@ add_action( 'init', 'register_subscription_box_product_type' );
  * @return string
  */
 function register_subscription_box_product_type() {
-	/**
-	 * Extend Product class.
-	 */
-	class WC_Product_Subscription_Box extends WC_Product {
+	$wsp_enable_subscription_box_features = get_option( 'wsp_enable_subscription_box_features' );
+	if ( 'on' == $wsp_enable_subscription_box_features ) {
 		/**
-		 * Construct.
-		 *
-		 * @param object $product as product.
+		 * Extend Product class.
 		 */
-		public function __construct( $product ) {
-			parent::__construct( $product );
+		class WC_Product_Subscription_Box extends WC_Product {
+			/**
+			 * Construct.
+			 *
+			 * @param object $product as product.
+			 */
+			public function __construct( $product ) {
+				parent::__construct( $product );
+			}
+
+			/**
+			 * Get type function
+			 */
+			public function get_type() {
+				return 'subscription_box';
+			}
 		}
 
-		/**
-		 * Get type function
-		 */
-		public function get_type() {
-			return 'subscription_box';
-		}
 	}
 }
