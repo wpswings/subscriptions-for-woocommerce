@@ -52,6 +52,22 @@
                 $('.wps-form__password').attr('type', 'text');
             }
         });
+		
+		// PRO popup start
+		
+			$(document).on( 'click', '.wps_pro_settings_tag', function(e) {
+				
+				e.preventDefault();
+				$('.wps_sfw_lite_go_pro_popup_wrap').addClass('wps_sfw_lite_go_pro_popup_show');
+				
+			});
+	
+			$(document).on( 'click', '.wps_sfw_lite_go_pro_popup_close', function() {
+				$('.wps_sfw_lite_go_pro_popup_wrap').removeClass('wps_sfw_lite_go_pro_popup_show');
+			});
+				
+		
+		// PRO popup end
 
 	});
 

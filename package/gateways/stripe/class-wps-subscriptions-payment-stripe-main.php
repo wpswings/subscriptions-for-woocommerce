@@ -40,6 +40,8 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback' ) );
 
 			add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback_old' ), 10, 2 );
+
+			add_filter( 'wc_stripe_generate_create_intent_request', array( $this, 'wps_sfw_wc_stripe_generate_create_intent_request' ), 10, 3 );
 		}
 
 		/**
@@ -122,6 +124,39 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 				return true;
 			}
 			return $force_save_source;
+		}
+
+		/**
+		 * Function to generate intent request.
+		 *
+		 * @param array  $request as request.
+		 * @param object $order as order.
+		 * @param object $prepared_source as prepared source.
+		 * @return array
+		 */
+		public function wps_sfw_wc_stripe_generate_create_intent_request( $request, $order, $prepared_source ) {
+			// Ensure $order is a valid WooCommerce order instance.
+			if ( ! is_a( $order, 'WC_Order' ) ) {
+				return $request;
+			}
+
+			// Check if order has a subscription (based on custom meta key).
+			if ( 'yes' !== $order->get_meta( 'wps_sfw_order_has_subscription' ) ) {
+				return $request;
+			}
+
+			// Get payment method used in the order.
+			$payment_method = $order->get_payment_method();
+
+			// Define payment methods that support `setup_future_usage`.
+			$supported_methods = array( 'stripe', 'stripe_cc', 'stripe_sepa' ); // Add more if needed.
+
+			// Apply only if the payment method is supported.
+			if ( in_array( $payment_method, $supported_methods, true ) ) {
+				$request['setup_future_usage'] = 'off_session';
+			}
+
+			return $request;
 		}
 	}
 }

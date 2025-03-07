@@ -424,3 +424,132 @@
 .wps_sfw_api_details_main_wrapper strong {
     color: #2196f3;
 }
+
+
+/*  Pro  start */
+
+img.wps_go_pro_images {
+    max-height: 100px;
+}
+.wps_pro_settings_tag {
+  position: relative;
+}
+
+.wps_pro_settings_tag:before{
+  background-color: #008000;
+  position: absolute;
+  content: '';
+  left: 0;
+  bottom: 0;
+  width: 32px;
+  aspect-ratio: 1;
+  z-index: 99;
+  clip-path: polygon(0 0, 0% 100%, 100% 100%);
+}
+.wps_pro_settings_tag:after {
+  position: absolute;
+  content: 'pro';
+  left: 0px;
+  padding: 0px 2px;
+  transform: rotate(45deg);
+  z-index: 999;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+  bottom: 0;
+  color: #fff;
+}
+.wps_sfw_lite_go_pro_popup_wrap {
+  align-items: center;
+  background-color: rgb(0 0 0 / 24%);
+  bottom: 0;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: 0.3s linear all;
+  visibility: hidden;
+  width: 100%;
+  z-index: 99999;
+}
+.wps_sfw_lite_go_pro_popup_wrap.wps_sfw_lite_go_pro_popup_show {
+  opacity: 1;
+  visibility: visible;
+  transition: 0.3s linear all;
+}
+.wps_sfw_lite_go_pro_popup {
+  background-color: #ffffff;
+  max-width: 800px;
+  border-radius: 4px;
+  padding: 0;
+  text-align: center;
+  position: relative;
+  margin-left: 160px;
+}
+.wps_sfw_lite_go_pro_popup_head h2 {
+  background-color: #7979f6;
+  border-radius: 5px 5px 0 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0;
+  padding: 20px 10px;
+  max-width: 400px;
+}
+.wps_sfw_lite_go_pro_popup_close {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  opacity: 0.8;
+  width: 25px;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 22px;
+  border: 1px solid rgba(255,255,255,0.6);
+  height: 25px;
+  line-height: 21px;
+  border-radius: 50%;
+}
+.wps_sfw_lite_go_pro_popup_button .wps_ubo_lite_overview_go_pro_button, .button.wps_ubo_lite_overview_go_pro_button {
+  background-color: #78c900;
+  color: #ffffff;
+
+  height: auto;
+  border: none;
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+  box-shadow: none;
+}
+.wps_sfw_lite_go_pro_popup_button .wps_ubo_lite_overview_go_pro_button span, .button.wps_ubo_lite_overview_go_pro_button span {
+  vertical-align: middle;
+  margin-left: 5px;
+}
+.wps_sfw_lite_go_pro_popup_text {
+	font-size: 16px;
+	text-align: center;
+	max-width: 400px;
+	margin: 0 auto 10px;
+	padding: 0 20px;
+}
+.wps_sfw_lite_go_pro_popup_head{
+  margin-bottom: 10px;
+}
+
+.wps_pro_settings_tag>.wps-form-group__label {
+    padding-bottom: 10px;
+}
+#wsp_enable_subscription_box_muti_features {
+	display: none;
+}
+#wsp_enable_subscription_box_muti_features.wps_pro_settings_tag{
+    margin-bottom: 30px;
+	display: block;
+}
+  /* pro popup end  */

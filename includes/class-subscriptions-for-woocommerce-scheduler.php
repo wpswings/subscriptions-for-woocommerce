@@ -205,8 +205,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$order_id = $wps_new_order->get_id();
 
 						Subscriptions_For_Woocommerce_Log::log( 'WPS Renewal Order ID: ' . wc_print_r( $order_id, true ) );
-						wps_sfw_update_meta_data( $order_id, '_payment_method', $payment_method );
-						wps_sfw_update_meta_data( $order_id, '_payment_method_title', $payment_method_title );
+
+						$wps_new_order->set_payment_method( $payment_method );
+						$wps_new_order->set_payment_method_title( $payment_method_title );
 
 						$wps_new_order->set_address( $billing_details, 'billing' );
 						$wps_new_order->set_address( $shipping_details, 'shipping' );
@@ -258,6 +259,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
+						do_action( 'wps_sfw_subscription_subscription_box_addtion', $order_id, $subscription_id, $_product );
+
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
 						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
@@ -286,8 +289,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							foreach ( $wps_new_order->get_items() as $item ) {
 								$product = $item->get_product();
 								if ( $product->is_virtual() || $product->is_downloadable() ) {
-									$virtual_order = true;
-									break;
+									if ( 'mwb_booking' === $product->get_type() ) {
+										$virtual_order = false;
+										break;
+									} else {
+										$virtual_order = true;
+										break;
+									}
 								}
 							}
 
@@ -809,6 +817,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						do_action( 'wps_sfw_subscription_bundle_addition', $order_id, $subscription_id, $_product );
 
+						do_action( 'wps_sfw_subscription_subscription_box_addtion', $order_id, $subscription_id, $_product );
+
 						// custom hook for addon.
 						do_action( 'wps_sfw_renewal_bundle_addition', $order_id, $subscription_id, $_product );
 						do_action( 'wps_sfw_add_addon_for_renewal', $order_id, $subscription_id );
@@ -836,8 +846,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							foreach ( $wps_new_order->get_items() as $item ) {
 								$product = $item->get_product();
 								if ( $product->is_virtual() || $product->is_downloadable() ) {
-									$virtual_order = true;
-									break;
+									if ( 'mwb_booking' === $product->get_type() ) {
+										$virtual_order = false;
+										break;
+									} else {
+										$virtual_order = true;
+										break;
+									}
 								}
 							}
 

@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.7.5';
+			$this->version = '1.8.0';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -231,6 +231,9 @@ class Subscriptions_For_Woocommerce {
 
 		$this->loader->add_filter( 'wps_sfw_api_settings_array', $sfw_plugin_admin, 'wps_sfw_admin_api_settings_fields', 10 );
 
+		// subscritpion box listing.
+		$this->loader->add_filter( 'wps_sfw_subscription_box_settings_array', $sfw_plugin_admin, 'wps_sfw_subscription_box_settings_fields', 10 );
+
 		if ( wps_sfw_check_plugin_enable() ) {
 			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'wps_sfw_create_subscription_product_type' );
 
@@ -250,6 +253,12 @@ class Subscriptions_For_Woocommerce {
 
 			// paypal Keys Validation.
 			$this->loader->add_filter( 'wp_ajax_wps_sfw_paypal_keys_validation', $sfw_plugin_admin, 'wps_sfw_paypal_keys_validation_callack' );
+
+			// subscription box working.
+			$this->loader->add_filter( 'product_type_selector', $sfw_plugin_admin, 'wsp_register_subscription_box_product_type', 10, 1 );
+			$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'wps_sfw_custom_product_tab_for_subscription_box' );
+			$this->loader->add_action( 'woocommerce_product_data_panels', $sfw_plugin_admin, 'wps_sfw_custom_product_fields_for_subscription_box' );
+			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_subscription_box_data_for_subscription', 10, 2 );
 		}
 
 		/*cron for notification*/
@@ -343,6 +352,24 @@ class Subscriptions_For_Woocommerce {
 
 			// Manage the zero checkout for the stripe .
 			$this->loader->add_filter( 'woocommerce_order_needs_payment', $sfw_plugin_public, 'wps_sfw_woocommerce_order_needs_payment', 10, 3 );
+
+			// subscription box.
+			$this->loader->add_action( 'woocommerce_single_product_summary', $sfw_plugin_public, 'wps_sfw_subscription_box_info_above_add_to_cart', 20 );
+			$this->loader->add_action( 'woocommerce_subscription_box_add_to_cart', $sfw_plugin_public, 'wps_sfw_subscription_box_create_button', 20 );
+			$this->loader->add_action( 'wps_sfw_subscription_subscription_box_addtion', $sfw_plugin_public, 'wps_sfw_subscription_subscription_box_addtion_callback', 10, 3 );
+			$this->loader->add_action( 'wp_ajax_wps_sfw_handle_subscription_box', $sfw_plugin_public, 'wps_sfw_handle_subscription_box' );
+			$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_handle_subscription_box', $sfw_plugin_public, 'wps_sfw_handle_subscription_box' );
+			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_update_subscription_box_prices', 99 );
+			$this->loader->add_filter( 'woocommerce_get_item_data', $sfw_plugin_public, 'wps_subscription_box_meta_on_cart', 10, 2 );
+			$this->loader->add_action( 'woocommerce_checkout_create_order_line_item', $sfw_plugin_public, 'wps_sfw_add_order_line_item_for_subscription_box', 10, 4 );
+			$this->loader->add_action( 'wp_ajax_wps_get_cart_item', $sfw_plugin_public, 'wps_get_cart_item' );
+			$this->loader->add_action( 'wp_ajax_nopriv_wps_get_cart_item', $sfw_plugin_public, 'wps_get_cart_item' );
+			$this->loader->add_filter( 'woocommerce_get_item_data', $sfw_plugin_public, 'wps_sfw_add_item_data_cart_block_subscription_box', 10, 2 );
+			$this->loader->add_filter( 'woocommerce_cart_item_name', $sfw_plugin_public, 'wps_sfw_show_attached_product_html_subscription_box', 10, 3 );
+			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'wps_sfw_subscription_box_woocommerce_add_to_cart_validation', 10, 5 );
+			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'wps_sfw_hide_quantity_fields_for_subscription_box', 10, 2 );
+			// subscription box.
+
 		}
 	}
 
@@ -456,6 +483,14 @@ class Subscriptions_For_Woocommerce {
 			'name'        => 'subscription-for-woocommerce-api',
 			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
+
+		// subscription box.
+		$sfw_default_tabs['subscription-for-woocommerce-subscription-box'] = array(
+			'title'       => esc_html__( 'Subscription Box', 'subscriptions-for-woocommerce' ),
+			'name'        => 'subscription-for-woocommerce-subscription-box',
+			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+		);
+		// subscription box.
 
 		if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-free-vs-pro'] = array(
@@ -652,6 +687,17 @@ class Subscriptions_For_Woocommerce {
 		if ( is_array( $sfw_components ) && ! empty( $sfw_components ) ) {
 			foreach ( $sfw_components as $sfw_component ) {
 				$wps_sfw_name = array_key_exists( 'name', $sfw_component ) ? $sfw_component['name'] : $sfw_component['id'];
+
+				$pro_group_tag = '';
+				$is_pro = false;
+				$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
+				if ( ! $is_pro ) {
+
+					if ( preg_match( "/\wps_pro_settings\b/", $sfw_component['class'] ) ) :
+						$pro_group_tag = 'wps_pro_settings_tag';
+					endif;
+				}
+
 				switch ( $sfw_component['type'] ) {
 
 					case 'hidden':
@@ -864,7 +910,7 @@ class Subscriptions_For_Woocommerce {
 					case 'radio-switch':
 						?>
 
-					<div class="wps-form-group">
+					<div class="wps-form-group <?php echo esc_attr( $pro_group_tag ); ?>">
 						<div class="wps-form-group__label">
 							<label for="" class="wps-form-label"><?php echo esc_html( $sfw_component['title'] ); ?></label>
 						</div>
@@ -921,8 +967,16 @@ class Subscriptions_For_Woocommerce {
 					</tr>
 						<?php
 						break;
+					case 'information':
+						?>
+						<p id="<?php echo esc_attr( $sfw_component['id'] ); ?>" class="<?php echo esc_attr( $sfw_component['class'] ); ?>" >
+						<?php echo esc_attr( $wps_sfw_name ); ?>
+						</p>
+						<?php
+						break;
 					default:
 						break;
+
 				}
 			}
 		}

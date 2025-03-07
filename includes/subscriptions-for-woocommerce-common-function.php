@@ -431,6 +431,11 @@ if ( ! function_exists( 'wps_sfw_check_product_is_subscription' ) ) {
 			$wps_subscription_product = wps_sfw_get_meta_data( $product_id, '_wps_sfw_product', true );
 			if ( 'yes' === $wps_subscription_product ) {
 				$wps_is_subscription = true;
+			} else if ( $product->get_type() == 'subscription_box' ) {
+				// subscription box.
+				$wps_is_subscription = true;
+
+				// subscription box.
 			}
 		}
 
@@ -927,5 +932,50 @@ if ( ! function_exists( 'wps_wsp_api_get_secret_key' ) ) {
 
 		$wsp_api_secret_key = get_option( 'wsp_api_secret_key', '' );
 		return $wsp_api_secret_key;
+	}
+}
+if ( ! function_exists( 'wps_sfw_add_attached_product_for_subscription_box' ) ) {
+
+	/**
+	 * Function to attached product into subscrpition order.
+	 *
+	 * @param object $order_id as order id.
+	 * @return void
+	 */
+	function wps_sfw_add_attached_product_for_subscription_box( $order_id ) {
+
+		if ( ! $order_id ) {
+			return;
+		}
+
+		$order = wc_get_order( $order_id );
+
+		foreach ( $order->get_items() as $item_id => $item ) {
+			$attached_products = wc_get_order_item_meta( $item_id, 'wps_sfw_attached_products', true );
+
+			if ( ! empty( $attached_products ) ) {
+				foreach ( $attached_products as $attached_product ) {
+					$product_id = $attached_product['product_id'];
+					$product = wc_get_product( $product_id );
+
+					// Add attached product as a new order item with WooCommerce functions.
+					$attached_item = new WC_Order_Item_Product();
+					$attached_item->set_product_id( $product_id );
+					$attached_item->set_name( $product->get_name() );
+					$attached_item->set_quantity( $attached_product['quantity'] );
+					$attached_item->set_subtotal( 0 );
+					$attached_item->set_total( 0 );
+
+					// Add custom meta.
+					$attached_item->add_meta_data( '_is_attached_product', 'yes', true );
+
+					// Add the item to the order.
+					$order->add_item( $attached_item );
+				}
+			}
+		}
+
+		// Save the order to update all items properly.
+		$order->save();
 	}
 }
