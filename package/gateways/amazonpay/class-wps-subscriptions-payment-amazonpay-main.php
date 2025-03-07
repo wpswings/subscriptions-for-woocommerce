@@ -79,7 +79,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 		}
 
 		/**
-		 * wps_sfw_propagate_status_update_to_related_callback function
+		 * Wps_sfw_propagate_status_update_to_related_callback function
 		 *
 		 * @param array $_order as order.
 		 * @param array $charge_permission_id as charge permision id.
@@ -104,7 +104,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 		}
 
 		/**
-		 * wps_sfw_handle_order_propagation function
+		 * Wps_sfw_handle_order_propagation function
 		 *
 		 * @param array $wps_subscription_id as subscription id.
 		 * @param array $charge_permission_id as permission id.
@@ -360,7 +360,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 				} else {
 					$renewal_order->update_status( 'processing' );
 					$renewal_order->set_transaction_id( $response->chargeId );
-					// Save the order to apply changes
+					// Save the order to apply changes.
 					$renewal_order->save();
 				}
 
