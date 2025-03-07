@@ -134,6 +134,11 @@
                     e.preventDefault();
                 }
                 var subscription_interval = $('#wps_sfw_subscription_expiry_interval').val();
+                var wps_sfw_subscription_box_expiry_interval = $('#wps_sfw_subscription_box_expiry_interval').val();
+                if( wps_sfw_subscription_box_expiry_interval ){
+                    subscription_interval = wps_sfw_subscription_box_expiry_interval;
+                }
+                wps_sfw_subscription_box_expiry_interval
                 if ( subscription_interval == 'day' ) {
                     if ( subscription_expiry > 90 ) {
                         alert( sfw_product_param.expiry_days_notice );
