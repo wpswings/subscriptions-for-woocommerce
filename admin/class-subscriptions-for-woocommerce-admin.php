@@ -1446,7 +1446,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				
 			</p>
 			<p class="form-field wps_sfw_manage_subscription_box_price_field wps_sfw_subscription_box_price_field_pro <?php echo esc_attr( $pro_group_tag ); ?>">
-				<label for="wps_sfw_manage_subscription_box_price"><?php esc_html_e( 'Manage subscription box Price through all selected products', 'your-text-domain' ); ?></label>
+				<label for="wps_sfw_manage_subscription_box_price"><?php esc_html_e( 'Manage subscription box Price through all selected products', 'subscriptions-for-woocommerce' ); ?></label>
 				<input type="checkbox" id="wps_sfw_manage_subscription_box_price" name="wps_sfw_manage_subscription_box_price" value="on"  <?php echo esc_attr( ( 'on' === $wps_sfw_manage_subscription_box_price ) ? 'checked' : null ); ?> />
 			</p>
 			<p class="form-field wps_sfw_subscription_box_number_field ">
