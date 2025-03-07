@@ -301,7 +301,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New: Subscription Box Feature
 * New: AmazonPay Payment Gateway.
 * New: PayFast Payment Gateway
-* Fix - Stripe Renewal Issue solved in case renewal failed related to try again issue
+* Fix: Stripe Renewal Issue solved in case renewal failed related to try again issue
 
 = 1.7.5 - Released on 27 January 2025 =
 * New : Latest WP(6.7.1) and WC(9.6.0) Compatibility
