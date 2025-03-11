@@ -346,9 +346,9 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_email_subject_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_subject_failed_order', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_email_heading_failed_order', $sfw_plugin_public, 'wps_sfw_custom_woocommerce_email_heading_failed_order', 10, 2 );
 
-			// Learnpress .
+			// Learnpress Compatibility.
 			$this->loader->add_action( 'woocommerce_single_product_summary', $sfw_plugin_public, 'wps_sfw_course_description', 20 );
-			$this->loader->add_action( 'learn_press_get_template', $sfw_plugin_public, 'wps_sfw_override_template_content', 10, 5 );
+			$this->loader->add_filter( 'learnpress/course/item/can-view', $sfw_plugin_public, 'wps_sfw_course_can_view', 10, 3 );
 
 			// Manage the zero checkout for the stripe .
 			$this->loader->add_filter( 'woocommerce_order_needs_payment', $sfw_plugin_public, 'wps_sfw_woocommerce_order_needs_payment', 10, 3 );

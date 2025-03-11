@@ -809,6 +809,9 @@ class Subscriptions_For_Woocommerce_Admin {
 			} else {
 				$learnpress_courses = sanitize_text_field( $learnpress_courses );
 			}
+			$all_attached_courses = get_option( 'wps_learnpress_course', array() );
+			$all_attached_courses[$post_id] = $learnpress_courses;
+			update_option( 'wps_learnpress_course', $all_attached_courses );
 			wps_sfw_update_meta_data( $post_id, 'wps_learnpress_course', $learnpress_courses );
 
 			do_action( 'wps_sfw_save_simple_subscription_field', $post_id, $_POST );
