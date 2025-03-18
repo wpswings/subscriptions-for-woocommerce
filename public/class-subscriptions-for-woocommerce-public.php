@@ -2186,83 +2186,6 @@ class Subscriptions_For_Woocommerce_Public {
 	}
 
 	/**
-	 * Override the default learnpress template
-	 *
-	 * @param mixed $located .
-	 * @param mixed $template_name .
-	 * @param mixed $args .
-	 * @param mixed $template_path .
-	 * @param mixed $default_path .
-	 *
-	 * @return mixed
-	 */
-	public function wps_sfw_override_template_content( $located, $template_name, $args, $template_path, $default_path ) {
-		
-		if ( current_user_can( 'manage_options' ) || current_user_can( 'manage_woocommerce' ) || is_admin() ) {
-			return $located;
-		}
-		if ( 'content-single-course.php' !== $template_name ) {
-			return $located;
-		}
-		$user = learn_press_get_current_user();
-		$course = learn_press_get_the_course();
-		$current_course_id = $course->get_id();
-
-		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-			$args = array(
-				'type'   => 'wps_subscriptions',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => 'wps_customer_id',
-						'value' => $user->get_id(),
-					),
-				),
-				'return' => 'ids',
-			);
-			$wps_subscriptions = wc_get_orders( $args );
-		} else {
-			$args = array(
-				'numberposts' => -1,
-				'post_type'   => 'wps_subscriptions',
-				'post_status' => 'wc-wps_renewal',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'   => 'wps_customer_id',
-						'value' => $user->get_id(),
-					),
-				),
-			);
-			$wps_subscriptions = get_posts( $args );
-		}
-		if ( ! empty( $wps_subscriptions ) ) {
-			foreach ( $wps_subscriptions as $wps_subscription ) {
-				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-					$subcription_id = $wps_subscription;
-				} else {
-					$subcription_id = $wps_subscription->ID;
-				}
-				$courses = wps_sfw_get_meta_data( $subcription_id, 'wps_learnpress_course', true );
-				$status  = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
-				if ( in_array( $current_course_id, $courses ) && 'active' !== $status ) {
-					?>
-						<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'There is no active subscription', 'subscriptions-for-woocommerce' ); ?></div>
-					<?php
-					// Blank template return.
-					return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
-				}
-			}
-		} else {
-			?>
-				<div class="wps-sfw-learnpress-message"><?php esc_attr_e( 'You have not purchase the subscription yet', 'subscriptions-for-woocommerce' ); ?></div>
-			<?php
-			// Blank template return.
-			return SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/subscriptions-for-woocommerce-public-display.php';
-		}
-	}
-
-	/**
 	 * Override the default learnpress courses's lessions and quiz view
 	 * 
 	 * @param mixed $view .
@@ -2319,25 +2242,28 @@ class Subscriptions_For_Woocommerce_Public {
 				if ( in_array( $current_course_id, $courses ) && 'active' !== $status ) {
 					$message = '<div class="lp-warning" style="padding: 10px; background: #ffcccc; border-left: 5px solid red; margin-bottom: 15px;">';
 					$message .= '<strong>' . esc_attr__( 'Your subscription is not active', 'subscriptions-for-woocommerce' ) .'.</strong> ' . esc_attr__( 'Please renew or purchase a subscription to access this course', 'subscriptions-for-woocommerce' ) . ':<br>';
-			
 					$subscription_link = home_url( "/my-account/show-subscription/$subcription_id/" );
-			
 					$message .= ' <a target="__blank" href="' . esc_url( $subscription_link ) . '" style="display: block; margin-top: 5px; font-weight: bold;">' . esc_html( '#' . $subcription_id ) . '</a>';
-			
+					$message .= '</div>';
+				} elseif ( ! in_array( $current_course_id, $courses ) ) {
+					$message = '<div class="lp-warning wps-sfw-learnpress-message" style="padding: 10px; background: #ffcccc; border-left: 5px solid red; margin-bottom: 15px;">';
+					$message .= '<strong>' . esc_attr__( 'You have not purchased the attached course subscription yet', 'subscriptions-for-woocommerce' ) . '.</strong> ' . esc_attr__( 'Please purchase one of the following subscriptions to access this course', 'subscriptions-for-woocommerce' ) . ':<br>';
+					foreach ( $attached_product_ids as $product_id ) {
+						$product_link = get_permalink( $product_id );
+						$product_name = get_the_title( $product_id );
+						$message .= ' <a target="__blank" href="' . esc_url( $product_link ) . '" style="display: block; margin-top: 5px; font-weight: bold;">' . esc_html( $product_name ) . '</a>';
+					}
 					$message .= '</div>';
 				}
 			}
 		} else {
 			$message = '<div class="lp-warning wps-sfw-learnpress-message" style="padding: 10px; background: #ffcccc; border-left: 5px solid red; margin-bottom: 15px;">';
 			$message .= '<strong>' . esc_attr__( 'You have not purchased the subscription yet', 'subscriptions-for-woocommerce' ) . '.</strong> ' . esc_attr__( 'Please purchase one of the following subscriptions to access this course', 'subscriptions-for-woocommerce' ) . ':<br>';
-	
 			foreach ( $attached_product_ids as $product_id ) {
 				$product_link = get_permalink( $product_id );
 				$product_name = get_the_title( $product_id );
-
 				$message .= ' <a target="__blank" href="' . esc_url( $product_link ) . '" style="display: block; margin-top: 5px; font-weight: bold;">' . esc_html( $product_name ) . '</a>';
 			}
-	
 			$message .= '</div>';
 		}
 		if ( $message ) {
@@ -2348,7 +2274,6 @@ class Subscriptions_For_Woocommerce_Public {
 			$view->key = '';
 			$view->message = $message;
 		}
-	
 		return $view;
 	}
 
