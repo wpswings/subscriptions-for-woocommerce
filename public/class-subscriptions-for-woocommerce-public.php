@@ -2238,17 +2238,17 @@ class Subscriptions_For_Woocommerce_Public {
 					$subcription_id = $wps_subscription->ID;
 				}
 				$courses = wps_sfw_get_meta_data( $subcription_id, 'wps_learnpress_course', true );
-				if ( empty( $course ) ) {
-					$course = array();
+				if ( empty( $courses ) ) {
+					$courses = array();
 				}
 				$status  = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
-				if ( in_array( $current_course_id, $courses ) && 'active' !== $status ) {
+				if ( is_array( $courses ) && in_array( $current_course_id, $courses ) && 'active' !== $status ) {
 					$message = '<div class="lp-warning" style="padding: 10px; background: #ffcccc; border-left: 5px solid red; margin-bottom: 15px;">';
 					$message .= '<strong>' . esc_attr__( 'Your subscription is not active', 'subscriptions-for-woocommerce' ) .'.</strong> ' . esc_attr__( 'Please renew or purchase a subscription to access this course', 'subscriptions-for-woocommerce' ) . ':<br>';
 					$subscription_link = home_url( "/my-account/show-subscription/$subcription_id/" );
 					$message .= ' <a target="__blank" href="' . esc_url( $subscription_link ) . '" style="display: block; margin-top: 5px; font-weight: bold;">' . esc_html( '#' . $subcription_id ) . '</a>';
 					$message .= '</div>';
-				} elseif ( ! in_array( $current_course_id, $courses ) ) {
+				} elseif ( is_array( $courses ) && ! in_array( $current_course_id, $courses ) ) {
 					$message = '<div class="lp-warning wps-sfw-learnpress-message" style="padding: 10px; background: #ffcccc; border-left: 5px solid red; margin-bottom: 15px;">';
 					$message .= '<strong>' . esc_attr__( 'You have not purchased the attached course subscription yet', 'subscriptions-for-woocommerce' ) . '.</strong> ' . esc_attr__( 'Please purchase one of the following subscriptions to access this course', 'subscriptions-for-woocommerce' ) . ':<br>';
 					foreach ( $attached_product_ids as $product_id ) {
@@ -2257,6 +2257,8 @@ class Subscriptions_For_Woocommerce_Public {
 						$message .= ' <a target="__blank" href="' . esc_url( $product_link ) . '" style="display: block; margin-top: 5px; font-weight: bold;">' . esc_html( $product_name ) . '</a>';
 					}
 					$message .= '</div>';
+				} else {
+					break;
 				}
 			}
 		} else {

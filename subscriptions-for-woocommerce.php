@@ -767,29 +767,32 @@ if ( $activated ) {
 	}
 }
 add_action( 'admin_notices', 'wps_subscripition_plugin_updation_notice' );
-/**
- * Migration Notice.
- *
- * @return void
- */
-function wps_subscripition_plugin_updation_notice() {
-	$sfw_plugins = get_plugins();
-	if ( function_exists( 'get_current_screen' ) ) {
-		$screen = get_current_screen();
-		if ( ! empty( $screen->id ) && 'plugins' === $screen->id ) {
-			$old_pro_plugin = false;
-			$plug           = get_plugins();
-			if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
-				if ( version_compare( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'], '2.1.0', '<' ) ) {
-					$old_pro_plugin = true;
+
+if ( ! function_exists( 'wps_subscripition_plugin_updation_notice' ) ) {
+	/**
+	 * Migration Notice.
+	 *
+	 * @return void
+	 */
+	function wps_subscripition_plugin_updation_notice() {
+		$sfw_plugins = get_plugins();
+		if ( function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( ! empty( $screen->id ) && 'plugins' === $screen->id ) {
+				$old_pro_plugin = false;
+				$plug           = get_plugins();
+				if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
+					if ( version_compare( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'], '2.1.0', '<' ) ) {
+						$old_pro_plugin = true;
+					}
 				}
-			}
-			if ( $old_pro_plugin ) {
-				?>
-				<div class="notice notice-error is-dismissible">
-					<p><strong><?php esc_html_e( 'Version 2.1.0 of Subscriptions For WooCommerce Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>
-				</div>
-				<?php
+				if ( $old_pro_plugin ) {
+					?>
+					<div class="notice notice-error is-dismissible">
+						<p><strong><?php esc_html_e( 'Version 2.1.0 of Subscriptions For WooCommerce Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>
+					</div>
+					<?php
+				}
 			}
 		}
 	}
