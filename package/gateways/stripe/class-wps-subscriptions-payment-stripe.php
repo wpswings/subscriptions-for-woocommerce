@@ -207,7 +207,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 						if ( ! empty( $response->error ) && ! $is_authentication_required ) {
 							$localized_message = __( 'Sorry, we are unable to process your payment at this time. Please retry later.', 'subscriptions-for-woocommerce' );
 							$renewal_order->add_order_note( $localized_message );
-							throw new WC_Stripe_Exception( print_r( $response, true ), $localized_message );
+							throw new WC_Stripe_Exception( wc_print_r( $response, true ), $localized_message );
 						}
 
 						if ( $is_authentication_required ) {
