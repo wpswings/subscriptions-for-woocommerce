@@ -2272,9 +2272,9 @@ class Subscriptions_For_Woocommerce_Public {
 			$message .= '</div>';
 		}
 		if ( $message ) {
-			// Assuming you have the object
+			// Assuming you have the object.
 			$view = new LP_Model_User_Can_View_Course_Item();
-			// Override properties
+			// Override properties.
 			$view->flag = null;
 			$view->key = '';
 			$view->message = $message;
@@ -2513,7 +2513,6 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( isset( $_POST['subscription_data'] ) ) {
 			// Decode JSON data.
 			$subscription_data = json_decode( stripslashes( $_POST['subscription_data'] ), true );
-			// $subscription_data = array_map( 'sanitize_text_field', $subscription_data );
 
 			if ( ! $subscription_data ) {
 				wp_send_json_error( 'Invalid JSON data' );

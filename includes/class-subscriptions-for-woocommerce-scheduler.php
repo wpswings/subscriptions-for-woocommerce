@@ -142,14 +142,14 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$_product = wc_get_product( $product_id );
 
-						// check for manual subscription.
+						// Check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 
 						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
 						$variation_data = array();
-						// Handle variation products separately
+						// Handle variation products separately.
 						if ($_product && $_product->is_type('variable') && $product_id) {
 							$variation_data = wc_get_product_variation_attributes($product_id);
 						}
@@ -210,8 +210,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							foreach ( $subscription->get_items() as $item_id => $item ) {
 								$get_product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
 								if ( $get_product_id == $product_id ) {
-									 // Fetch all item meta data correctly
-									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta
+									 // Fetch all item meta data correctly.
+									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta.
 
 									if (!empty($item_meta)) {
 										foreach ($item_meta as $meta_key => $meta_values) {
@@ -734,10 +734,10 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
-						// Initialize variation array
+						// Initialize variation array.
 						$variation_data = [];
 
-						// Handle variation products separately
+						// Handle variation products separately.
 						if ($_product && $_product->is_type('variable') && $product_id) {
 							$variation_data = wc_get_product_variation_attributes($product_id);
 						}
@@ -783,7 +783,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
-							// hook to add product for renewal manual subscription order.
+							// Hook to add product for renewal manual subscription order.
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
 
 						} else {
@@ -792,11 +792,11 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								$product_qty,
 								$wps_pro_args
 							);
-							// Fetch all item meta data correctly
+							// Fetch all item meta data correctly.
 							foreach ( $subscription->get_items() as $item_id => $item ) {
 								$get_product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
 								if ( $get_product_id == $product_id ) {
-									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta
+									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta.
 
 									if (!empty($item_meta)) {
 										foreach ($item_meta as $meta_key => $meta_values) {
