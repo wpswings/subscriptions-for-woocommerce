@@ -2200,11 +2200,11 @@ class Subscriptions_For_Woocommerce_Public {
 		$current_course_id = $course->get_id();
 		$all_attached_courses = get_option( 'wps_learnpress_course', array() );
 		$attached_product_ids = array();
-		if ( empty( array_filter( $all_attached_courses, fn( $values ) => in_array( $current_course_id, $values ) ) ) ) {
+		if ( empty( array_filter( $all_attached_courses, fn( $values ) => is_array( $values ) && in_array( $current_course_id, $values ) ) ) ) {
 			return $view;
 		} else {
 			// Make only attached courses to be checked.
-			$all_attached_courses = array_filter( $all_attached_courses, fn( $values ) => in_array( $current_course_id, $values ) );
+			$all_attached_courses = array_filter( $all_attached_courses, fn( $values ) => is_array( $values ) && in_array( $current_course_id, $values ) );
 			$attached_product_ids = array_keys($all_attached_courses);
 		}
 		$user_id = $user->get_id();
@@ -2238,6 +2238,9 @@ class Subscriptions_For_Woocommerce_Public {
 					$subcription_id = $wps_subscription->ID;
 				}
 				$courses = wps_sfw_get_meta_data( $subcription_id, 'wps_learnpress_course', true );
+				if ( empty( $course ) ) {
+					$course = array();
+				}
 				$status  = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
 				if ( in_array( $current_course_id, $courses ) && 'active' !== $status ) {
 					$message = '<div class="lp-warning" style="padding: 10px; background: #ffcccc; border-left: 5px solid red; margin-bottom: 15px;">';
