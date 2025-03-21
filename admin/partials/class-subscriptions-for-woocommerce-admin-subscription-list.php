@@ -616,14 +616,12 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					}
 				}
 
-				$payment_type = wps_sfw_get_meta_data( $id, 'wps_wsp_payment_type', true );
-				if ( empty( $payment_type ) ) {
-					$parent_order = wc_get_order( $parent_order_id );
-					$payment_type = $parent_order->get_payment_method_title();
-					$payment_type = 'Via ' . $payment_type;
-
-				} else {
-					$payment_type = 'Via Manual Method';
+				$is_payment_manual = wps_sfw_get_meta_data( $id, 'wps_wsp_payment_type', true );
+				
+				$parent_order = wc_get_order( $parent_order_id );
+				$payment_type = $parent_order ? $parent_order->get_payment_method_title() : null;
+				if ( $is_payment_manual ) {
+					$payment_type = $payment_type . ' Via Manual Method';
 				}
 				$user_nicename = isset( $user->user_login ) ? $user->user_login : '';
 

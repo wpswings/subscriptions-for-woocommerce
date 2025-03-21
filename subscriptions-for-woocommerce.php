@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.8.0
+ * Version:           1.8.1
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -178,7 +178,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.0' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.1' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -552,7 +552,6 @@ if ( $activated ) {
 	}
 	add_action( 'init', 'wps_sfw_enable_paypal_standard' );
 
-
 	/**
 	 *
 	 * Get the data from the order table if hpos enabled otherwise default working.
@@ -646,6 +645,91 @@ if ( $activated ) {
 		remove_submenu_page( 'woocommerce', 'wc-orders--wps_subscriptions' );
 	}
 	add_action( 'admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999 );
+	// HPOS Compatibility for Custom Order type i.e. WPS_Subscription.
+	add_action(
+		'woocommerce_init',
+		function () {
+			require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscription.php';
+		}
+	);
+
+	/**
+	 * Create a new subscription
+	 *
+	 * @param array() $args .
+	 */
+	function wps_create_subscription( $args = array() ) {
+		$now   = gmdate( 'Y-m-d H:i:s' );
+		$order = ( isset( $args['order_id'] ) ) ? wc_get_order( $args['order_id'] ) : null;
+
+		$default_args = array(
+			'status'             => 'wc-wps_renewal',
+			'order_id'           => 0,
+			'customer_note'      => null,
+			'customer_id'        => null,
+			'date_created'       => $now,
+			'created_via'        => '',
+			'currency'           => get_woocommerce_currency(),
+			'prices_include_tax' => get_option( 'woocommerce_prices_include_tax' ),
+		);
+
+		if ( $order instanceof \WC_Order ) {
+			$default_args['customer_id']        = $order->get_user_id();
+			$default_args['created_via']        = $order->get_created_via( 'edit' );
+			$default_args['currency']           = $order->get_currency( 'edit' );
+			$default_args['prices_include_tax'] = $order->get_prices_include_tax( 'edit' ) ? 'yes' : 'no';
+			$default_args['date_created']       = $order->get_date_created( 'edit' );
+		}
+
+		$args = wp_parse_args( $args, $default_args );
+
+		$subscription = new \WPS_Subscription();
+
+		if ( $args['status'] ) {
+			$subscription->set_status( $args['status'] );
+		}
+
+		$subscription->set_customer_id( $args['customer_id'] );
+		$subscription->set_date_created( $args['date_created'] );
+		$subscription->set_created_via( $args['created_via'] );
+		$subscription->set_currency( $args['currency'] );
+		$subscription->set_prices_include_tax( 'no' !== $args['prices_include_tax'] );
+
+		$subscription->save();
+
+		return $subscription;
+	}
+	// code to register subscription product type.
+	add_action( 'init', 'register_subscription_box_product_type' );
+	/**
+	 * Function to Regsiter Subscription box type.
+	 *
+	 * @return string
+	 */
+	function register_subscription_box_product_type() {
+		if ( 'on' == get_option( 'wsp_enable_subscription_box_features' ) && class_exists( 'WC_Product' ) ) {
+			/**
+			 * Extend Product class.
+			 */
+			class WC_Product_Subscription_Box extends WC_Product {
+				/**
+				 * Construct.
+				 *
+				 * @param object $product as product.
+				 */
+				public function __construct( $product ) {
+					parent::__construct( $product );
+				}
+
+				/**
+				 * Get type function
+				 */
+				public function get_type() {
+					return 'subscription_box';
+				}
+			}
+		}
+	}
 
 } else {
 	// WooCommerce is not active so deactivate this plugin.
@@ -683,29 +767,32 @@ if ( $activated ) {
 	}
 }
 add_action( 'admin_notices', 'wps_subscripition_plugin_updation_notice' );
-/**
- * Migration Notice.
- *
- * @return void
- */
-function wps_subscripition_plugin_updation_notice() {
-	$sfw_plugins = get_plugins();
-	if ( function_exists( 'get_current_screen' ) ) {
-		$screen = get_current_screen();
-		if ( ! empty( $screen->id ) && 'plugins' === $screen->id ) {
-			$old_pro_plugin = false;
-			$plug           = get_plugins();
-			if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
-				if ( version_compare( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'], '2.1.0', '<' ) ) {
-					$old_pro_plugin = true;
+
+if ( ! function_exists( 'wps_subscripition_plugin_updation_notice' ) ) {
+	/**
+	 * Migration Notice.
+	 *
+	 * @return void
+	 */
+	function wps_subscripition_plugin_updation_notice() {
+		$sfw_plugins = get_plugins();
+		if ( function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( ! empty( $screen->id ) && 'plugins' === $screen->id ) {
+				$old_pro_plugin = false;
+				$plug           = get_plugins();
+				if ( isset( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php'] ) ) {
+					if ( version_compare( $plug['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'], '2.1.0', '<' ) ) {
+						$old_pro_plugin = true;
+					}
 				}
-			}
-			if ( true === $old_pro_plugin ) {
-				?>
-				<div class="notice notice-error is-dismissible">
-					<p><strong><?php esc_html_e( 'Version 2.1.0 of Subscriptions For WooCommerce Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>
-				</div>
-				<?php
+				if ( $old_pro_plugin ) {
+					?>
+					<div class="notice notice-error is-dismissible">
+						<p><strong><?php esc_html_e( 'Version 2.1.0 of Subscriptions For WooCommerce Pro ', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( ' is not available on your system! Please Update ', 'subscriptions-for-woocommerce' ); ?><strong><?php esc_html_e( 'WooCommerce Subscripiton Pro', 'subscriptions-for-woocommerce' ); ?></strong><?php esc_html_e( '.', 'subscriptions-for-woocommerce' ); ?></p>
+					</div>
+					<?php
+				}
 			}
 		}
 	}
@@ -783,90 +870,4 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
-// HPOS Compatibility for Custom Order type i.e. WPS_Subscription.
-add_action(
-	'woocommerce_init',
-	function () {
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/class-wps-subscription.php';
-	}
-);
 
-/**
- * Create a new subscription
- *
- * @param array() $args .
- */
-function wps_create_subscription( $args = array() ) {
-	$now   = gmdate( 'Y-m-d H:i:s' );
-	$order = ( isset( $args['order_id'] ) ) ? wc_get_order( $args['order_id'] ) : null;
-
-	$default_args = array(
-		'status'             => 'wc-wps_renewal',
-		'order_id'           => 0,
-		'customer_note'      => null,
-		'customer_id'        => null,
-		'date_created'       => $now,
-		'created_via'        => '',
-		'currency'           => get_woocommerce_currency(),
-		'prices_include_tax' => get_option( 'woocommerce_prices_include_tax' ),
-	);
-
-	if ( $order instanceof \WC_Order ) {
-		$default_args['customer_id']        = $order->get_user_id();
-		$default_args['created_via']        = $order->get_created_via( 'edit' );
-		$default_args['currency']           = $order->get_currency( 'edit' );
-		$default_args['prices_include_tax'] = $order->get_prices_include_tax( 'edit' ) ? 'yes' : 'no';
-		$default_args['date_created']       = $order->get_date_created( 'edit' );
-	}
-
-	$args = wp_parse_args( $args, $default_args );
-
-	$subscription = new \WPS_Subscription();
-
-	if ( $args['status'] ) {
-		$subscription->set_status( $args['status'] );
-	}
-
-	$subscription->set_customer_id( $args['customer_id'] );
-	$subscription->set_date_created( $args['date_created'] );
-	$subscription->set_created_via( $args['created_via'] );
-	$subscription->set_currency( $args['currency'] );
-	$subscription->set_prices_include_tax( 'no' !== $args['prices_include_tax'] );
-
-	$subscription->save();
-
-	return $subscription;
-}
-// code to register subscription product type.
-add_action( 'init', 'register_subscription_box_product_type' );
-/**
- * Function to Regsiter Subscription box type.
- *
- * @return string
- */
-function register_subscription_box_product_type() {
-	$wsp_enable_subscription_box_features = get_option( 'wsp_enable_subscription_box_features' );
-	if ( 'on' == $wsp_enable_subscription_box_features ) {
-		/**
-		 * Extend Product class.
-		 */
-		class WC_Product_Subscription_Box extends WC_Product {
-			/**
-			 * Construct.
-			 *
-			 * @param object $product as product.
-			 */
-			public function __construct( $product ) {
-				parent::__construct( $product );
-			}
-
-			/**
-			 * Get type function
-			 */
-			public function get_type() {
-				return 'subscription_box';
-			}
-		}
-
-	}
-}

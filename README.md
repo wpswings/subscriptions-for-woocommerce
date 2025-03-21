@@ -18,19 +18,15 @@ The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscri
 
 * Generate trouble-free recurring revenue with recurring payments from users.
 * Sell subscription-based products and recurring services for a set period.
-* Compatible with PayPal Standard payment gateway. 
+* Supported Payment PayPal Standard payment gateway, Payfast, Amazon Pay Payment, WooCommerce Stripe Payment Gateway and WPS Paypal Payment Gateway
 * Convert your online store to a WooCommerce subscription-based store.
 * Provide free trials of subscription-based products & services to your customers.
 * Cancel WooCommerce subscriptions anytime.
-* Get updated order notes with reasons for failed recurring payments (Stripe & PayPal). 
-* Subscription status will be on hold when order status fails.
+* Allows users to cancel WooCommerce subscriptions anytime.
+* Create a Subscription Box and Allow your customers to choose and shop their favorite products
 * Subscriptions will automatically be canceled when the order is canceled.
-* Multistep setup for auto configurations of the Subscriptions WooCommerce plugin and its requirements.
-* Set up WooCommerce Subscription plugin flow through the multistep form
-* Show Recurring Frequency in the subscription List Table. 
-* Automatically generate subscription error logs based on specific logging parameters.
-* Support Stripe and PayPal payment Gateway with subscriptions for WooCommerce
-* Email notifications for subscription renewal orders. 
+* Streamlined multi-step setup for easy configuration.
+* Receive automated email notifications for subscription cancellations, expirations, and renewal orders
 
 ### Kickstart Your Subscription Business, SO 
 [**Download Now !!**](https://downloads.wordpress.org/plugin/subscriptions-for-woocommerce.zip) 
@@ -38,6 +34,7 @@ The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscri
 ## WHAT IS INCLUDED IN OUR FREE SUBSCRIPTIONS FOR WOOCOMMERCE PLUGIN
 
 **1) Subscription Box Features**: With our new subscription box feature, you can easily create a custom subscription box filled with multiple products. Your customers get the freedom to pick their favorite items, tailoring the box just the way they like it. Once they’ve made their choices, they can enjoy hassle-free deliveries on a schedule that suits them, whether it’s daily, weekly, or monthly. It’s a simple, flexible way to keep your customers happy and coming back for more!
+Refer to the [**Subscription Box Documentation**](https://docs.wpswings.com/manage-subscription-box/?utm_source=wpswings-subscription-box-doc&utm_medium=subs-org-backend&utm_campaign=subscription-box-doc)
 
 **2) Rest API to Get the Subscription Details:** Our WooCommerce Subscription plugin includes a REST API feature that allows you to access detailed information about subscriptions assigned to specific users, making it easy to manage and retrieve subscription details programmatically.
 
@@ -141,3 +138,4 @@ If you need support or have any questions then kindly use our online chat window
 * [**Tweet us on @wpswings**](https://twitter.com/wpswings)
 * [**Visit our LinkedIn Account**](https://www.linkedin.com/company/wpswings)
 * [**Subscribe To Our YouTube Channel**](https://www.youtube.com/channel/UC7nYNf0JETOwW3GOD_EW2Ag)
+

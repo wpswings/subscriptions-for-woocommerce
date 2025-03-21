@@ -142,15 +142,21 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$_product = wc_get_product( $product_id );
 
-						// check for manual subscription.
+						// Check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
 
 						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
+						$variation_data = array();
+						// Handle variation products separately.
+						if ($_product && $_product->is_type('variable') && $product_id) {
+							$variation_data = wc_get_product_variation_attributes($product_id);
+						}
+
 						if ( 'yes' === $new_sub ) {
 							$wps_args = array(
-								'variation' => array(),
+								'variation' => $variation_data,
 								'totals'    => array(
 									'subtotal'     => $line_subtotal,
 									'subtotal_tax' => $subscription->line_subtotal_tax,
@@ -165,7 +171,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							// check for manual subscription.
 							if ( 'yes' == $include && empty( $payment_type ) ) {
 								$wps_args = array(
-									'variation' => array(),
+									'variation' => $variation_data,
 									'totals'    => array(
 										'subtotal'     => $line_subtotal - $subscription->line_subtotal_tax,
 										'subtotal_tax' => $subscription->line_subtotal_tax,
@@ -176,7 +182,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								);
 							} else {
 								$wps_args = array(
-									'variation' => array(),
+									'variation' => $variation_data,
 									'totals'    => array(
 										'subtotal'     => $line_subtotal,
 										'subtotal_tax' => $subscription->line_subtotal_tax,
@@ -195,12 +201,33 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						} else {
 
-							$item_id = $wps_new_order->add_product(
+							$new_item_id = $wps_new_order->add_product(
 								$_product,
 								$product_qty,
 								$wps_pro_args
 							);
+							// Fetch all item meta data correctly.
+							foreach ( $subscription->get_items() as $item_id => $item ) {
+								$get_product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
+								if ( $get_product_id == $product_id ) {
+									 // Fetch all item meta data correctly.
+									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta.
+
+									if (!empty($item_meta)) {
+										foreach ($item_meta as $meta_key => $meta_values) {
+											if (is_array($meta_values)) {
+												foreach ($meta_values as $meta_value) {
+													wc_add_order_item_meta($new_item_id, $meta_key, $meta_value);
+												}
+											} else {
+												wc_add_order_item_meta($new_item_id, $meta_key, $meta_values);
+											}
+										}
+									}
+								}
+							}
 						}
+
 
 						$order_id = $wps_new_order->get_id();
 
@@ -707,9 +734,17 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
 
+						// Initialize variation array.
+						$variation_data = [];
+
+						// Handle variation products separately.
+						if ($_product && $_product->is_type('variable') && $product_id) {
+							$variation_data = wc_get_product_variation_attributes($product_id);
+						}
+
 						if ( 'yes' === $new_sub ) {
 							$wps_args = array(
-								'variation' => array(),
+								'variation' => $variation_data,
 								'totals'    => array(
 									'subtotal'     => $line_subtotal,
 									'subtotal_tax' => $line_subtotal_tax,
@@ -723,7 +758,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 							if ( 'yes' == $include && empty( $payment_type ) ) {
 								$wps_args = array(
-									'variation' => array(),
+									'variation' => $variation_data,
 									'totals'    => array(
 										'subtotal'     => $line_subtotal - $line_subtotal_tax,
 										'subtotal_tax' => $line_subtotal_tax,
@@ -734,7 +769,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								);
 							} else {
 								$wps_args = array(
-									'variation' => array(),
+									'variation' => $variation_data,
 									'totals'    => array(
 										'subtotal'     => $line_subtotal,
 										'subtotal_tax' => $line_subtotal_tax,
@@ -748,15 +783,34 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
-							// hook to add product for renewal manual subscription order.
+							// Hook to add product for renewal manual subscription order.
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
 
 						} else {
-							$item_id = $wps_new_order->add_product(
+							$new_item_id = $wps_new_order->add_product(
 								$_product,
 								$product_qty,
 								$wps_pro_args
 							);
+							// Fetch all item meta data correctly.
+							foreach ( $subscription->get_items() as $item_id => $item ) {
+								$get_product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
+								if ( $get_product_id == $product_id ) {
+									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta.
+
+									if (!empty($item_meta)) {
+										foreach ($item_meta as $meta_key => $meta_values) {
+											if (is_array($meta_values)) {
+												foreach ($meta_values as $meta_value) {
+													wc_add_order_item_meta($new_item_id, $meta_key, $meta_value);
+												}
+											} else {
+												wc_add_order_item_meta($new_item_id, $meta_key, $meta_values);
+											}
+										}
+									}
+								}
+							}
 						}
 
 						$order_id = $wps_new_order->get_id();

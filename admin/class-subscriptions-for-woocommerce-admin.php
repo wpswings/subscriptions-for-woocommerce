@@ -179,7 +179,7 @@ class Subscriptions_For_Woocommerce_Admin {
 					'reloadurl' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ),
 					'sfw_gen_tab_enable' => get_option( 'sfw_radio_switch_demo' ),
 					'sfw_auth_nonce'    => wp_create_nonce( 'wps_sfw_admin_nonce' ),
-					'empty_fields'    => esc_html__( 'Make Sure, You have filled the Client ID and Client secret keys' ),
+					'empty_fields'    => esc_html__( 'Make Sure, You have filled the Client ID and Client secret keys', 'subscriptions-for-woocommerce' ),
 				)
 			);
 
@@ -809,6 +809,9 @@ class Subscriptions_For_Woocommerce_Admin {
 			} else {
 				$learnpress_courses = sanitize_text_field( $learnpress_courses );
 			}
+			$all_attached_courses = get_option( 'wps_learnpress_course', array() );
+			$all_attached_courses[$post_id] = $learnpress_courses;
+			update_option( 'wps_learnpress_course', $all_attached_courses );
 			wps_sfw_update_meta_data( $post_id, 'wps_learnpress_course', $learnpress_courses );
 
 			do_action( 'wps_sfw_save_simple_subscription_field', $post_id, $_POST );
@@ -1327,7 +1330,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			array(
 				'type'  => 'button',
 				'id'    => 'wps_sfw_save_subscription_box_settings',
-				'button_text' => __( 'Save Settings', 'subscriptions-for-woocommerce' ),
+				'button_text' => esc_html__( 'Save Settings', 'subscriptions-for-woocommerce' ),
 				'class' => 'sfw-button-class',
 			),
 		);
@@ -1345,7 +1348,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function wsp_register_subscription_box_product_type( $types ) {
 		$enable_subscription_box = get_option( 'wsp_enable_subscription_box_features' );
 		if ( 'on' == $enable_subscription_box ) {
-				$types['subscription_box'] = __( 'Subscription Box', 'woocommerce' );
+			$types['subscription_box'] = esc_html__( 'Subscription Box', 'subscriptions-for-woocommerce' );
 		}
 		return $types;
 	}
@@ -1523,7 +1526,7 @@ class Subscriptions_For_Woocommerce_Admin {
 								if ( in_array( $category->name, $selected_category_ids ) ) {
 
 									$selected = in_array( (int) $category->name, $selected_category_ids ) ? 'selected="selected"' : '';
-									echo '<option value="' . esc_attr( $category->name ) . '" ' . $selected . '>' . esc_html( $category->name ) . '</option>';
+									echo '<option value="' . esc_attr( $category->name ) . '" ' . esc_html( $selected ) . '>' . esc_html( $category->name ) . '</option>';
 								}
 							}
 						}
@@ -1619,17 +1622,17 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			$wps_sfw_subscription_box_step_label = isset( $_POST['wps_sfw_subscription_box_step_label'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_box_step_label'] ) ) : '';
 
-			$wps_sfw_subscription_box_products = $_POST['wps_sfw_subscription_box_products'];
+			$wps_sfw_subscription_box_products = isset( $_POST['wps_sfw_subscription_box_products'] ) ? $_POST['wps_sfw_subscription_box_products'] : array();
 
 			$wps_sfw_manage_subscription_box_price = isset( $_POST['wps_sfw_manage_subscription_box_price'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_manage_subscription_box_price'] ) ) : '';
 
 			if ( $wps_sfw_subscription_box_products ) {
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_products', $wps_sfw_subscription_box_products );
 			}
-
-			$selected_categories = $_POST['wps_sfw_subscription_box_categories'];
-
-			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_categories', $selected_categories );
+			$selected_categories = isset( $_POST['wps_sfw_subscription_box_categories'] ) ? $_POST['wps_sfw_subscription_box_categories'] : array();
+			if ( $selected_categories ) {
+				wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_categories', $selected_categories );
+			}
 
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_price', $wps_sfw_subscription_box_price );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_number', $wps_sfw_subscription_box_number );
@@ -1641,7 +1644,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_products', $wps_sfw_subscription_box_products );
 
 			if ( 'on' == $wps_sfw_manage_subscription_box_price ) {
-
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', $wps_sfw_manage_subscription_box_price );
 			} else {
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', '' );
