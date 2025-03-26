@@ -206,26 +206,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								$product_qty,
 								$wps_pro_args
 							);
-							// Fetch all item meta data correctly.
-							foreach ( $subscription->get_items() as $item_id => $item ) {
-								$get_product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
-								if ( $get_product_id == $product_id ) {
-									 // Fetch all item meta data correctly.
-									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta.
-
-									if (!empty($item_meta)) {
-										foreach ($item_meta as $meta_key => $meta_values) {
-											if (is_array($meta_values)) {
-												foreach ($meta_values as $meta_value) {
-													wc_add_order_item_meta($new_item_id, $meta_key, $meta_value);
-												}
-											} else {
-												wc_add_order_item_meta($new_item_id, $meta_key, $meta_values);
-											}
-										}
-									}
-								}
-							}
 						}
 
 
@@ -792,25 +772,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								$product_qty,
 								$wps_pro_args
 							);
-							// Fetch all item meta data correctly.
-							foreach ( $subscription->get_items() as $item_id => $item ) {
-								$get_product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
-								if ( $get_product_id == $product_id ) {
-									$item_meta = wc_get_order_item_meta($item_id, '', false); // Correct way to get all meta.
-
-									if (!empty($item_meta)) {
-										foreach ($item_meta as $meta_key => $meta_values) {
-											if (is_array($meta_values)) {
-												foreach ($meta_values as $meta_value) {
-													wc_add_order_item_meta($new_item_id, $meta_key, $meta_value);
-												}
-											} else {
-												wc_add_order_item_meta($new_item_id, $meta_key, $meta_values);
-											}
-										}
-									}
-								}
-							}
 						}
 
 						$order_id = $wps_new_order->get_id();
