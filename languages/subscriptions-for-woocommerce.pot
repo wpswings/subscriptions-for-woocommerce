@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Subscriptions For WooCommerce 1.8.1\n"
-"POT-Creation-Date: 2025-03-20 14:42+0530\n"
+"POT-Creation-Date: 2025-03-26 10:27+0530\n"
 "PO-Revision-Date: 2023-10-03 13:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: Wp Swings\n"
@@ -1247,8 +1247,8 @@ msgstr ""
 msgid "Unexpected Error Occured"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce-scheduler.php:285
-#: includes/class-subscriptions-for-woocommerce-scheduler.php:870
+#: includes/class-subscriptions-for-woocommerce-scheduler.php:265
+#: includes/class-subscriptions-for-woocommerce-scheduler.php:831
 #: public/class-subscriptions-for-woocommerce-public.php:2121
 #, php-format
 msgid "This renewal order belongs to Subscription #%s"
