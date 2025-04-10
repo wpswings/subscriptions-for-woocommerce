@@ -91,6 +91,22 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		);
 		return $actions;
 	}
+
+	public function wps_sfw_on_hold_url( $subscription_id, $status ){
+		$wps_link = add_query_arg(
+			array(
+				'wps_subscription_id'               => $subscription_id,
+				'wps_subscription_status_admin_reactivate'     => $status,
+			)
+		);
+
+		$wps_link = wp_nonce_url( $wps_link, $subscription_id . $status );
+		$actions = array(
+			'wps_sfw_reactivate' => '<a href="' . $wps_link . '">' . __( 'Reactivate', 'subscriptions-for-woocommerce' ) . '</a>',
+
+		);
+		return $actions;
+	}
 	/**
 	 * This show susbcriptions table list.
 	 *
@@ -108,11 +124,15 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			case 'subscription_id':
 				$actions = array();
 				$wps_sfw_status = array( 'active' );
+				$wps_sfw_status_on_hold = array( 'on-hold' );
 				$wps_sfw_status = apply_filters( 'wps_sfw_status_array', $wps_sfw_status );
 				if ( in_array( $item['status'], $wps_sfw_status ) ) {
 					$actions = $this->wps_sfw_cancel_url( $item['subscription_id'], $item['status'] );
 				}
 				$actions = apply_filters( 'wps_sfw_add_action_details', $actions, $item['subscription_id'] );
+				if ( in_array( $item['status'], $wps_sfw_status_on_hold ) ) {
+					$actions = $this->wps_sfw_on_hold_url( $item['subscription_id'], $item['status'] );
+				}
 				return $item[ $column_name ] . $this->row_actions( $actions );
 			case 'parent_order_id':
 				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {

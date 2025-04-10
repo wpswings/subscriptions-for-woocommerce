@@ -114,6 +114,10 @@ class Subscriptions_For_Woocommerce_Admin {
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
 
+		$recurring_payment_icon = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/recurring-payment.svg' ; 
+		$is_pro = false;
+		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
+
 		$wps_sfw_branner_notice = array(
 			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 			'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
@@ -180,6 +184,9 @@ class Subscriptions_For_Woocommerce_Admin {
 					'sfw_gen_tab_enable' => get_option( 'sfw_radio_switch_demo' ),
 					'sfw_auth_nonce'    => wp_create_nonce( 'wps_sfw_admin_nonce' ),
 					'empty_fields'    => esc_html__( 'Make Sure, You have filled the Client ID and Client secret keys', 'subscriptions-for-woocommerce' ),
+					'recurring_payment_icon' => $recurring_payment_icon,
+					'Supported_recurring_payment' => esc_html__( 'Supported Recurring Payment', 'subscriptions-for-woocommerce' ),
+					'is_pro' => $is_pro
 				)
 			);
 
@@ -1652,6 +1659,31 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			if ( ! get_option( 'wps_sfw_first_subscription_box_id', false ) ) {
 				update_option( 'wps_sfw_first_subscription_box_id', $post_id );
+			}
+		}
+	}
+
+	/**
+	 * This function is used to cancel susbcription.
+	 *
+	 * @name wps_sfw_admin_reactivate_onhold_susbcription
+	 * @since 1.0.0
+	 */
+	public function wps_sfw_admin_reactivate_onhold_susbcription() {
+
+		if ( isset( $_GET['wps_subscription_status_admin_reactivate'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+			$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin_reactivate'] ) );
+			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
+			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
+				// reactivate subscription.
+				
+				if ( 'on-hold' == $wps_status ) {
+					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'active' );
+					wps_sfw_send_email_for_active_susbcription( $wps_subscription_id );
+				} 
+				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
+				wp_safe_redirect( $redirect_url );
+				exit;
 			}
 		}
 	}

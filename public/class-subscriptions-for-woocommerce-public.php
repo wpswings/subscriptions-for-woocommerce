@@ -2451,8 +2451,8 @@ class Subscriptions_For_Woocommerce_Public {
 							?>
 							<div class="wps_sfw-sb-cta">
 								
-								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php echo esc_attr( $wps_sfw_subscription_box_price ); ?>"><strong><?php echo esc_attr( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php echo esc_attr( get_woocommerce_currency_symbol() ); ?><span><?php echo esc_attr( $wps_sfw_subscription_box_price ); ?></span></div>
-								<button type="submit" class="button wps_sfw_subscription_product_id" data-subscription-box-id="<?php echo esc_attr( $product_id ); ?>"><?php echo esc_attr( 'Add to Subscription', 'subscriptions-for-woocommerce' ); ?></button>
+								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php esc_attr_e( $wps_sfw_subscription_box_price ); ?>"><strong><?php  esc_attr_e( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php esc_attr_e( get_woocommerce_currency_symbol() ); ?><span><?php  esc_attr_e( $wps_sfw_subscription_box_price ); ?></span></div>
+								<button type="submit" class="button wps_sfw_subscription_product_id" data-subscription-box-id="<?php echo esc_attr( $product_id ); ?>"><?php  esc_attr_e( 'Add to Subscription', 'subscriptions-for-woocommerce' ); ?></button>
 							</div>
 						</form>
 					</div>

@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.8.0';
+			$this->version = '1.8.3';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -244,6 +244,7 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
 
 			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription', 99 );
+			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_reactivate_onhold_susbcription', 99 );
 
 			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'wps_sfw_register_new_order_statuses' );
 
@@ -383,6 +384,7 @@ class Subscriptions_For_Woocommerce {
 	public function wps_sfw_woocommerce_email_classes( $emails ) {
 		$emails['wps_sfw_cancel_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
 		$emails['wps_sfw_expired_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
+		$emails['wps_sfw_onhold_active_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-onhold-active-subscription-email.php';
 
 		return apply_filters( 'wps_sfw_email_classes', $emails );
 	}
