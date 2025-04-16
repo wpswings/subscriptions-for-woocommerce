@@ -1642,6 +1642,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_price', $wps_sfw_subscription_box_price );
+			wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
+			
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_number', $wps_sfw_subscription_box_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_interval', $wps_sfw_subscription_box_interval );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_box_expiry_number );
@@ -1655,7 +1657,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			} else {
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', '' );
 			}
-			wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
+			
 
 			if ( ! get_option( 'wps_sfw_first_subscription_box_id', false ) ) {
 				update_option( 'wps_sfw_first_subscription_box_id', $post_id );

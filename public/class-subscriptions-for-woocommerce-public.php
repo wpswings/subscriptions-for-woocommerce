@@ -2956,4 +2956,12 @@ class Subscriptions_For_Woocommerce_Public {
 			<?php
 		}
 	}
+
+	public function wps_sfw_woocommerce_email_preview_dummy_order_callback( $order, $email_type ){
+		if( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Onhold_Active_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Pause_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reactivate_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Plan_Going_To_Expire_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reminder_Email' == $email_type || 'Woocommerce_Subscription_Pro_Expired_Subscription_Email' == $email_type ) {
+
+			$order = wc_get_order( 12345 );
+		}
+		return $order;
+	}
 }
