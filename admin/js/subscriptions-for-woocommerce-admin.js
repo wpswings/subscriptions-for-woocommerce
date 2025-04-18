@@ -164,7 +164,7 @@
 	
 						let content = '';
 						if( sfw_admin_param.is_pro == 1 ){
-							if (gatewayId === 'stripe' || gatewayId === 'wps_paypal' || gatewayId === 'payfast' || gatewayId === 'amazon_payments_advanced' || gatewayId === 'woocommerce_payments' || gatewayId === 'ppcp-gateway' || gatewayId === 'authnet' || gatewayId === 'braintree_credit_card' || gatewayId === 'eway' || gatewayId === 'mollie_wc_gateway_' || gatewayId === 'mollie_stand_in' || gatewayId === 'multisafepay_' || gatewayId === 'payhere' || gatewayId === 'stripe_') {
+							if (gatewayId === 'stripe' || gatewayId === 'wps_paypal' || gatewayId === 'payfast' || gatewayId === 'amazon_payments_advanced' || gatewayId === 'woocommerce_payments' || gatewayId === 'ppcp-gateway' || gatewayId === 'authnet' || gatewayId === 'braintree_credit_card' || gatewayId === 'eway' || gatewayId === 'mollie_wc_gateway_' || gatewayId === 'mollie_stand_in' || gatewayId === 'multisafepay_' || gatewayId === 'payhere' || gatewayId === 'stripe_' || gatewayId === 'wps_paypal_subscription') {
 								// content = '<div class="custom-extra-info"> Supported Recurring Payment</div>';
 								content = '<div class="wps_sfw_recurring_support_symbol"><img src="' + sfw_admin_param.recurring_payment_icon + '" alt="Supported" > ' + sfw_admin_param.Supported_recurring_payment + '</div>';
 							}

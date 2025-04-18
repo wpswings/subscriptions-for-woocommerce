@@ -268,6 +268,11 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'wp_ajax_wps_sfw_dismiss_notice_banner', $sfw_plugin_admin, 'wps_sfw_dismiss_notice_banner_callback' );
 
 		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_remove_subscription_custom_menu' );
+
+		// Add 'Upsell Support' column on payment gateways page.
+		$this->loader->add_filter( 'woocommerce_payment_gateways_setting_columns', $sfw_plugin_admin, 'wps_sfw_subscription_support_in_payment_gateway' );
+		// 'Upsell Support' content on payment gateways page.
+		$this->loader->add_action( 'woocommerce_payment_gateways_setting_column_wps_sub_renewal', $sfw_plugin_admin, 'wps_sfw_subscription_content_in_payment_gateway' );
 	}
 
 	/**
