@@ -1985,7 +1985,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$save_payment_method = 'no';
 
 				foreach ( $payment_object as $data ) {
-					if ( ( 'save_payment_method' === $data->key && 'yes' == $data->value ) || ( 'wc-stripe-new-payment-method' == $data->key && 1 == $data->value ) || ( 'isSavedToken' == $data->key && 1 == $data->value ) || ( 'token' == $data->key && 2 == $data->value ) ) {
+					if ( ( 'save_payment_method' === $data->key && 'yes' == $data->value ) || ( 'wc-stripe-new-payment-method' == $data->key && 1 == $data->value ) || ( 'isSavedToken' == $data->key && 1 == $data->value ) || ( 'token' == $data->key && $data->value ) ) {
 						$save_payment_method = 'yes';
 						break;
 					}
