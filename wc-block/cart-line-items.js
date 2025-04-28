@@ -1,4 +1,4 @@
-jQuery(function(){
+jQuery(function($){
 	if ( ! window.wc ) {
 		return;
 	}
@@ -40,7 +40,7 @@ jQuery(function(){
 		if ( ! isCartContext ) {
 			return defaultValue;
 		}
-		// console.log(args?.cartItem);
+		
 	    const cartItem = args?.cartItem.item_data;
 		var wspData = '';
 		if(cartItem != '' && cartItem != undefined){
@@ -54,7 +54,7 @@ jQuery(function(){
 		const cartkey = cartItem.find( item => item.name === 'wps_sfw_subscription_box_cart_key' );
 		const cartIndex = cartItem.find( item => item.name === 'wps_sfw_subscription_box_cart_index' );
 
-		if (cartkey) {
+		if ( cartkey && cartIndex ) {
 			let cartKey = cartkey.value;
 			jQuery.ajax({
 				url: sfw_public_block.ajaxurl,
@@ -65,7 +65,6 @@ jQuery(function(){
 					nonce: sfw_public_param.sfw_public_nonce,
 				},
 				success: function (response) {
-					console.log(response);
 					const cartBoxIndex = parseInt(cartIndex.value);
 					if (response.success) {
 						let attachedProducts = response.data.attached_products;
@@ -84,15 +83,27 @@ jQuery(function(){
 								<span class="wps_sfw_customer_close_popup" style="cursor: pointer;">&times;</span>
 							</div>`;
 
-							const getElementRow = jQuery(".wc-block-cart-items__row").eq(cartBoxIndex).find( '.wc-block-cart-item__prices' );
-							const getElementRowCheckout = jQuery(".wc-block-components-order-summary-item").eq(cartBoxIndex).find( '.wc-block-components-product-name' );
+							const viewLabelClass = 'wps_sfw_view_product_label_' + cartBoxIndex;
+							const viewLabelSelector = '.' + viewLabelClass;
+							const viewLabelHTML = '<a href="#" class="wps_show_customer_subscription_box_popup">View Attached Products</a>' + attachedProductsHtml;
 
-							if ( getElementRowCheckout.length ) {
-								getElementRowCheckout.after( '<a href="#" class="wps_show_customer_subscription_box_popup">View Attached Products</a>' + attachedProductsHtml );
-							}
-							if ( getElementRow.length ) {
-								getElementRow.after( '<a href="#" class="wps_show_customer_subscription_box_popup">View Attached Products</a>' + attachedProductsHtml );
-							}
+							// Try both checkout and cart rows
+							const containers = [
+								$(".wc-block-components-order-summary-item").eq(cartBoxIndex).find('.wc-block-components-product-name'),
+								$(".wc-block-cart-items__row").eq(cartBoxIndex).find('.wc-block-cart-item__prices')
+							];
+
+							containers.forEach(container => {
+								if (!container.length) return;
+
+								let viewLabel = $(document).find(viewLabelSelector);
+
+								if (viewLabel.length) {
+									viewLabel.html(viewLabelHTML);
+								} else {
+									container.after(`<p class="${viewLabelClass}">${viewLabelHTML}</p>`);
+								}
+							});
 						}
 					}
 				},

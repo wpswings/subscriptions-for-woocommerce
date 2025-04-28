@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.8.0';
+			$this->version = '1.8.3';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -244,6 +244,7 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
 
 			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription', 99 );
+			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_reactivate_onhold_susbcription', 99 );
 
 			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'wps_sfw_register_new_order_statuses' );
 
@@ -258,7 +259,7 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'product_type_selector', $sfw_plugin_admin, 'wsp_register_subscription_box_product_type', 10, 1 );
 			$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'wps_sfw_custom_product_tab_for_subscription_box' );
 			$this->loader->add_action( 'woocommerce_product_data_panels', $sfw_plugin_admin, 'wps_sfw_custom_product_fields_for_subscription_box' );
-			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_subscription_box_data_for_subscription', 10, 2 );
+			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_subscription_box_data_for_subscription', 999, 2 );
 		}
 
 		/*cron for notification*/
@@ -267,6 +268,11 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'wp_ajax_wps_sfw_dismiss_notice_banner', $sfw_plugin_admin, 'wps_sfw_dismiss_notice_banner_callback' );
 
 		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_remove_subscription_custom_menu' );
+
+		// Add 'Upsell Support' column on payment gateways page.
+		$this->loader->add_filter( 'woocommerce_payment_gateways_setting_columns', $sfw_plugin_admin, 'wps_sfw_subscription_support_in_payment_gateway' );
+		// 'Upsell Support' content on payment gateways page.
+		$this->loader->add_action( 'woocommerce_payment_gateways_setting_column_wps_sub_renewal', $sfw_plugin_admin, 'wps_sfw_subscription_content_in_payment_gateway' );
 	}
 
 	/**
@@ -368,6 +374,9 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_cart_item_name', $sfw_plugin_public, 'wps_sfw_show_attached_product_html_subscription_box', 10, 3 );
 			$this->loader->add_filter( 'woocommerce_add_to_cart_validation', $sfw_plugin_public, 'wps_sfw_subscription_box_woocommerce_add_to_cart_validation', 10, 5 );
 			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'wps_sfw_hide_quantity_fields_for_subscription_box', 10, 2 );
+
+			$this->loader->add_filter( 'woocommerce_email_preview_dummy_order', $sfw_plugin_public, 'wps_sfw_woocommerce_email_preview_dummy_order_callback', 10, 2 );
+
 			// subscription box.
 
 		}
@@ -383,6 +392,7 @@ class Subscriptions_For_Woocommerce {
 	public function wps_sfw_woocommerce_email_classes( $emails ) {
 		$emails['wps_sfw_cancel_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
 		$emails['wps_sfw_expired_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
+		$emails['wps_sfw_onhold_active_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-onhold-active-subscription-email.php';
 
 		return apply_filters( 'wps_sfw_email_classes', $emails );
 	}

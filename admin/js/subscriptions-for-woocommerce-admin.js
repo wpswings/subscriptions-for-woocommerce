@@ -140,7 +140,49 @@
 		jQuery(this).next('.wps_sfw_rest_api_response').slideToggle(500);
 			jQuery(this).toggleClass('active');
 	})
+
 	})
+
+	//supported payment through js.
+	jQuery(document).ready(function ($) {
+		// Only run this on the WooCommerce > Settings > Payments tab
+		if (typeof window.location.href !== 'undefined' && window.location.href.includes('page=wc-settings') && window.location.href.includes('tab=checkout')) {
+			const interval = setInterval(function () {
+		
+				const $items = $('.woocommerce-item__payment-gateway');
+				
+				if ($items.length) {
+					clearInterval(interval);
+	
+				
+	
+					$items.each(function () {
+						
+						let gatewayId = jQuery(this).attr('id');
+	
+						
+	
+						let content = '';
+						if( sfw_admin_param.is_pro == 1 ){
+							if (gatewayId === 'stripe' || gatewayId === 'wps_paypal' || gatewayId === 'payfast' || gatewayId === 'amazon_payments_advanced' || gatewayId === 'woocommerce_payments' || gatewayId === 'ppcp-gateway' || gatewayId === 'authnet' || gatewayId === 'braintree_credit_card' || gatewayId === 'eway' || gatewayId === 'mollie_wc_gateway_' || gatewayId === 'mollie_stand_in' || gatewayId === 'multisafepay_' || gatewayId === 'payhere' || gatewayId === 'stripe_' || gatewayId === 'wps_paypal_subscription') {
+								// content = '<div class="custom-extra-info"> Supported Recurring Payment</div>';
+								content = '<div class="wps_sfw_recurring_support_symbol"><img src="' + sfw_admin_param.recurring_payment_icon + '" alt="Supported" > ' + sfw_admin_param.Supported_recurring_payment + '</div>';
+							}
+						}else{
+							if (gatewayId === 'stripe' || gatewayId === 'wps_paypal' || gatewayId === 'payfast' || gatewayId === 'amazon_payments_advanced') {
+								// content = '<div class="custom-extra-info"> Supported Recurring Payment</div>';
+								content = '<div class="wps_sfw_recurring_support_symbol"><img src="' + sfw_admin_param.recurring_payment_icon + '" alt="Supported" > ' + sfw_admin_param.Supported_recurring_payment + '</div>';
+							}
+						}
+	
+						$(this).find('.woocommerce-list__item-title').append(content);
+					});
+				}
+			}, 1000);
+		}
+	});
+
+	//supported payment through js.
 
 	})( jQuery );
 	var wps_subscripiton_migration_success = function() {

@@ -553,3 +553,8 @@ img.wps_go_pro_images {
 	display: block;
 }
   /* pro popup end  */
+
+  .wps_sfw_recurring_support_symbol img {
+    max-width: 20px;
+    vertical-align: middle;
+}

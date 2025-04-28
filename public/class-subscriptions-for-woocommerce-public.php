@@ -152,7 +152,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_sfw_subscription_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_number', true );
 			$wps_sfw_subscription_expiry_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_expiry_number', true );
 			$wps_sfw_subscription_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_interval', true );
-			
+
 			if ( isset( $wps_sfw_subscription_number ) && ! empty( $wps_sfw_subscription_number ) ) {
 				$wps_price_html = wps_sfw_get_time_interval_for_price( $wps_sfw_subscription_number, $wps_sfw_subscription_interval );
 
@@ -1985,7 +1985,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$save_payment_method = 'no';
 
 				foreach ( $payment_object as $data ) {
-					if ( ( 'save_payment_method' === $data->key && 'yes' == $data->value ) || ( 'wc-stripe-new-payment-method' == $data->key && 1 == $data->value ) || ( 'isSavedToken' == $data->key && 1 == $data->value ) ) {
+					if ( ( 'save_payment_method' === $data->key && 'yes' == $data->value ) || ( 'wc-stripe-new-payment-method' == $data->key && 1 == $data->value ) || ( 'isSavedToken' == $data->key && 1 == $data->value ) || ( 'token' == $data->key && $data->value ) ) {
 						$save_payment_method = 'yes';
 						break;
 					}
@@ -2187,7 +2187,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 	/**
 	 * Override the default learnpress courses's lessions and quiz view
-	 * 
+	 *
 	 * @param mixed $view .
 	 * @param mixed $item .
 	 * @param mixed $user .
@@ -2195,7 +2195,7 @@ class Subscriptions_For_Woocommerce_Public {
 	public function wps_sfw_course_can_view( $view, $item, $user ) {
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'manage_woocommerce' ) || is_admin() || ! class_exists( 'LP_Model_User_Can_View_Course_Item' ) ) {
 			return $view;
-		}		
+		}
 		$course = learn_press_get_the_course();
 		$current_course_id = $course->get_id();
 		$all_attached_courses = get_option( 'wps_learnpress_course', array() );
@@ -2205,7 +2205,7 @@ class Subscriptions_For_Woocommerce_Public {
 		} else {
 			// Make only attached courses to be checked.
 			$all_attached_courses = array_filter( $all_attached_courses, fn( $values ) => is_array( $values ) && in_array( $current_course_id, $values ) );
-			$attached_product_ids = array_keys($all_attached_courses);
+			$attached_product_ids = array_keys( $all_attached_courses );
 		}
 		$user_id = $user->get_id();
 		$hpos_enabled = OrderUtil::custom_orders_table_usage_is_enabled();
@@ -2244,7 +2244,7 @@ class Subscriptions_For_Woocommerce_Public {
 				$status  = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
 				if ( is_array( $courses ) && in_array( $current_course_id, $courses ) && 'active' !== $status ) {
 					$message = '<div class="lp-warning" style="padding: 10px; background: #ffcccc; border-left: 5px solid red; margin-bottom: 15px;">';
-					$message .= '<strong>' . esc_attr__( 'Your subscription is not active', 'subscriptions-for-woocommerce' ) .'.</strong> ' . esc_attr__( 'Please renew or purchase a subscription to access this course', 'subscriptions-for-woocommerce' ) . ':<br>';
+					$message .= '<strong>' . esc_attr__( 'Your subscription is not active', 'subscriptions-for-woocommerce' ) . '.</strong> ' . esc_attr__( 'Please renew or purchase a subscription to access this course', 'subscriptions-for-woocommerce' ) . ':<br>';
 					$subscription_link = home_url( "/my-account/show-subscription/$subcription_id/" );
 					$message .= ' <a target="__blank" href="' . esc_url( $subscription_link ) . '" style="display: block; margin-top: 5px; font-weight: bold;">' . esc_html( '#' . $subcription_id ) . '</a>';
 					$message .= '</div>';
@@ -2451,8 +2451,8 @@ class Subscriptions_For_Woocommerce_Public {
 							?>
 							<div class="wps_sfw-sb-cta">
 								
-								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php echo esc_attr( $wps_sfw_subscription_box_price ); ?>"><strong><?php echo esc_attr( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php echo esc_attr( get_woocommerce_currency_symbol() ); ?><span><?php echo esc_attr( $wps_sfw_subscription_box_price ); ?></span></div>
-								<button type="submit" class="button wps_sfw_subscription_product_id" data-subscription-box-id="<?php echo esc_attr( $product_id ); ?>"><?php echo esc_attr( 'Add to Subscription', 'subscriptions-for-woocommerce' ); ?></button>
+								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php esc_attr_e( $wps_sfw_subscription_box_price ); ?>"><strong><?php esc_attr_e( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php esc_attr_e( get_woocommerce_currency_symbol() ); ?><span><?php esc_attr_e( $wps_sfw_subscription_box_price ); ?></span></div>
+								<button type="submit" class="button wps_sfw_subscription_product_id" data-subscription-box-id="<?php echo esc_attr( $product_id ); ?>"><?php esc_attr_e( 'Add to Subscription', 'subscriptions-for-woocommerce' ); ?></button>
 							</div>
 						</form>
 					</div>
@@ -2955,5 +2955,20 @@ class Subscriptions_For_Woocommerce_Public {
 				</div>
 			<?php
 		}
+	}
+
+	/**
+	 * wps_sfw_woocommerce_email_preview_dummy_order_callback function
+	 *
+	 * @param object $order as order.
+	 * @param string $email_type as email type.
+	 * @return object
+	 */
+	public function wps_sfw_woocommerce_email_preview_dummy_order_callback( $order, $email_type ) {
+		if ( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Onhold_Active_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Pause_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reactivate_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Plan_Going_To_Expire_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reminder_Email' == $email_type || 'Woocommerce_Subscription_Pro_Expired_Subscription_Email' == $email_type ) {
+
+			$order = wc_get_order( 12345 );
+		}
+		return $order;
 	}
 }

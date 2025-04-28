@@ -979,3 +979,23 @@ if ( ! function_exists( 'wps_sfw_add_attached_product_for_subscription_box' ) ) 
 		$order->save();
 	}
 }
+
+if ( ! function_exists( 'wps_sfw_send_email_for_active_susbcription' ) ) {
+	/**
+	 * This function is used to send cancel email.
+	 *
+	 * @name wps_sfw_send_email_for_active_susbcription
+	 * @since 1.0.0
+	 * @param int $wps_subscription_id wps_subscription_id.
+	 */
+	function wps_sfw_send_email_for_active_susbcription( $wps_subscription_id ) {
+
+		if ( isset( $wps_subscription_id ) && ! empty( $wps_subscription_id ) ) {
+			$mailer = WC()->mailer()->get_emails();
+			// Send the "active" notification.
+			if ( isset( $mailer['wps_sfw_onhold_active_subscription'] ) ) {
+				 $mailer['wps_sfw_onhold_active_subscription']->trigger( $wps_subscription_id );
+			}
+		}
+	}
+}

@@ -114,6 +114,10 @@ class Subscriptions_For_Woocommerce_Admin {
 		$wps_sfw_screen_ids = wps_sfw_get_page_screen();
 		$screen = get_current_screen();
 
+		$recurring_payment_icon = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/recurring-payment.svg';
+		$is_pro = false;
+		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
+
 		$wps_sfw_branner_notice = array(
 			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 			'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
@@ -180,6 +184,9 @@ class Subscriptions_For_Woocommerce_Admin {
 					'sfw_gen_tab_enable' => get_option( 'sfw_radio_switch_demo' ),
 					'sfw_auth_nonce'    => wp_create_nonce( 'wps_sfw_admin_nonce' ),
 					'empty_fields'    => esc_html__( 'Make Sure, You have filled the Client ID and Client secret keys', 'subscriptions-for-woocommerce' ),
+					'recurring_payment_icon' => $recurring_payment_icon,
+					'Supported_recurring_payment' => esc_html__( 'Supported Recurring Payment', 'subscriptions-for-woocommerce' ),
+					'is_pro' => $is_pro,
 				)
 			);
 
@@ -810,7 +817,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				$learnpress_courses = sanitize_text_field( $learnpress_courses );
 			}
 			$all_attached_courses = get_option( 'wps_learnpress_course', array() );
-			$all_attached_courses[$post_id] = $learnpress_courses;
+			$all_attached_courses[ $post_id ] = $learnpress_courses;
 			update_option( 'wps_learnpress_course', $all_attached_courses );
 			wps_sfw_update_meta_data( $post_id, 'wps_learnpress_course', $learnpress_courses );
 
@@ -1635,6 +1642,8 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_price', $wps_sfw_subscription_box_price );
+			wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
+
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_number', $wps_sfw_subscription_box_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_interval', $wps_sfw_subscription_box_interval );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_box_expiry_number );
@@ -1648,12 +1657,77 @@ class Subscriptions_For_Woocommerce_Admin {
 			} else {
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', '' );
 			}
-			wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
 
 			if ( ! get_option( 'wps_sfw_first_subscription_box_id', false ) ) {
 				update_option( 'wps_sfw_first_subscription_box_id', $post_id );
 			}
 		}
+	}
+
+	/**
+	 * This function is used to cancel susbcription.
+	 *
+	 * @name wps_sfw_admin_reactivate_onhold_susbcription
+	 * @since 1.0.0
+	 */
+	public function wps_sfw_admin_reactivate_onhold_susbcription() {
+
+		if ( isset( $_GET['wps_subscription_status_admin_reactivate'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+			$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin_reactivate'] ) );
+			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
+			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
+				// reactivate subscription.
+
+				if ( 'on-hold' == $wps_status ) {
+					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'active' );
+					wps_sfw_send_email_for_active_susbcription( $wps_subscription_id );
+				}
+				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
+				wp_safe_redirect( $redirect_url );
+				exit;
+			}
+		}
+	}
+
+	/**
+	 * Add 'Subscription Support' column on payment gateways page.
+	 *
+	 * @param mixed $default_columns default_columns.
+	 * @since 3.5.0
+	 */
+	public function wps_sfw_subscription_support_in_payment_gateway( $default_columns ) {
+		$new_column['wps_sub_renewal'] = esc_html__( 'Subscription And Renewal Supported', 'subscriptions-for-woocommerce' );
+		// Place at second last position.
+		$position = count( $default_columns ) - 1;
+		$default_columns = array_slice( $default_columns, 0, $position, true ) + $new_column + array_slice( $default_columns, $position, count( $default_columns ) - $position, true );
+		return $default_columns;
+	}
+
+	/**
+	 * 'Subscription Support' content on payment gateways page.
+	 *
+	 * @param mixed $gateway gateway.
+	 * @since 3.5.0
+	 */
+	public function wps_sfw_subscription_content_in_payment_gateway( $gateway ) {
+
+		$is_pro = false;
+		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
+
+		echo '<td class="wps_subs_renewal_supported">';
+
+		if ( $is_pro ) {
+			if ( 'stripe' === $gateway->id || 'wps_paypal' === $gateway->id || 'payfast' === $gateway->id || 'amazon_payments_advanced' === $gateway->id || 'woocommerce_payments' === $gateway->id || 'ppcp-gateway' === $gateway->id || 'authnet' === $gateway->id || 'braintree_credit_card' === $gateway->id || 'eway' === $gateway->id || 'mollie_wc_gateway_' === $gateway->id || 'mollie_stand_in' === $gateway->id || 'multisafepay_' === $gateway->id || 'payhere' === $gateway->id || 'stripe_' === $gateway->id || 'wps_paypal_subscription' === $gateway->id ) {
+				echo '<span class="status-enabled">' . esc_html__( 'Yes', 'subscriptions-for-woocommerce' ) . '</span>';
+			} else {
+				echo '<span class="status-disabled">' . esc_html__( 'No', 'subscriptions-for-woocommerce' ) . '</span>';
+			}
+		} elseif ( 'stripe' === $gateway->id || 'wps_paypal' === $gateway->id || 'payfast' === $gateway->id || 'amazon_payments_advanced' === $gateway->id ) {
+				echo '<span class="status-enabled">' . esc_html__( 'Yes', 'subscriptions-for-woocommerce' ) . '</span>';
+		} else {
+			echo '<span class="status-disabled">' . esc_html__( 'No', 'subscriptions-for-woocommerce' ) . '</span>';
+		}
+		echo '</td>';
 	}
 }
 
