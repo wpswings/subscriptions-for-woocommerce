@@ -188,6 +188,7 @@ if ( ! function_exists( 'wps_sfw_check_valid_subscription' ) ) {
 				$wps_is_subscription = true;
 			}
 		}
+
 		return $wps_is_subscription;
 	}
 }
