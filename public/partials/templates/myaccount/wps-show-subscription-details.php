@@ -154,6 +154,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 					$subscription = wc_get_order( $wps_subscription_id );
 				}
 				$wps_next_payment_date = $subscription->get_payment_method();
+				$get_shipping_total =  $subscription->get_shipping_total();
 				if ( empty( $wps_next_payment_date ) ) {
 					$subscription = wc_get_order( $wps_subscription_id );
 					$wps_sfw_add_payment_url = wp_nonce_url( add_query_arg( array( 'wps_add_payment_method' => $wps_subscription_id ), $subscription->get_checkout_payment_url() ) );
@@ -219,30 +220,46 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 					</td>
 					<td>
 					<?php
-						do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $wps_subscription_id );
+						$price = wps_sfw_get_meta_data( $wps_subscription_id, 'line_subtotal', true );
+						echo wc_price( $price );
+						// do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $wps_subscription_id );
 					?>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<?php esc_html_e( 'Tax', 'subscriptions-for-woocommerce' ); ?>
-					</td>
-					<td>
+				<?php 
+				
+				$tax_total = $subscription->get_total_tax();
+				if( $tax_total > 0 ) {
+					?>
+					<tr>
+						<td>
+							<?php esc_html_e( 'Tax', 'subscriptions-for-woocommerce' ); ?>
+						</td>
+						<td>
+						<?php
+							echo wc_price( $tax_total );
+						?>
+						</td>
+					</tr>
 					<?php
-						do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $wps_subscription_id );
+					
+				}
+				if( $get_shipping_total ){
 					?>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<?php esc_html_e( 'Shipping Fee', 'subscriptions-for-woocommerce' ); ?>
-					</td>
-					<td>
+					<tr>
+						<td>
+							<?php esc_html_e( 'Shipping', 'subscriptions-for-woocommerce' ); ?>
+						</td>
+						<td>
+						<?php
+							echo wc_price( $get_shipping_total );
+						?>
+						</td>
+					</tr>
 					<?php
-						do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $wps_subscription_id );
-					?>
-					</td>
-				</tr>
+				}
+				?>
+
 				<tr>
 					<td>
 						<strong><?php esc_html_e( 'Total', 'subscriptions-for-woocommerce' ); ?></strong>

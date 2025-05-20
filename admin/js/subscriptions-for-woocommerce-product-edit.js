@@ -112,10 +112,10 @@
             var wps_sfw_subscription_box_number = $('#wps_sfw_subscription_box_number').val();
             var wps_sfw_subscription_box_expiry_number = $('#wps_sfw_subscription_box_expiry_number').val();
 
-            if( wps_sfw_subscription_box_expiry_number && wps_sfw_subscription_box_number ){
-                subscription_expiry = wps_sfw_subscription_box_expiry_number;
-                subscription_number = wps_sfw_subscription_box_number;
-            }
+            // if( wps_sfw_subscription_box_expiry_number && wps_sfw_subscription_box_number ){
+            //     subscription_expiry = wps_sfw_subscription_box_expiry_number;
+            //     subscription_number = wps_sfw_subscription_box_number;
+            // }
 
             if( wps_sfw_subscription_box_expiry_number != ''){
                 if ( Number( wps_sfw_subscription_box_expiry_number ) < Number( wps_sfw_subscription_box_number ) ) {
