@@ -870,16 +870,4 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
-function custom_add_body_class( $classes ) {
-    // Get current request URI
-    $current_uri = $_SERVER['REQUEST_URI'];
-
-    // Check if the URI matches the subscription page pattern
-    if ( strpos( $current_uri, '/my-account/show-subscription/' ) !== false ) {
-        $classes[] = 'wps_sfw_show-subscription-page';
-    }
-
-    return $classes;
-}
-add_filter( 'body_class', 'custom_add_body_class' );
 

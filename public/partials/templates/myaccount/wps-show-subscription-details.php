@@ -63,7 +63,8 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 						$wps_status = esc_html__( 'expired', 'subscriptions-for-woocommerce' );
 					}
 						echo esc_html( $wps_status );
-					?></span>
+					?>
+					</span>
 					</td>
 				</tr>
 				<tr>
@@ -154,7 +155,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 					$subscription = wc_get_order( $wps_subscription_id );
 				}
 				$wps_next_payment_date = $subscription->get_payment_method();
-				$get_shipping_total =  $subscription->get_shipping_total();
+				$get_shipping_total = $subscription->get_shipping_total();
 				if ( empty( $wps_next_payment_date ) ) {
 					$subscription = wc_get_order( $wps_subscription_id );
 					$wps_sfw_add_payment_url = wp_nonce_url( add_query_arg( array( 'wps_add_payment_method' => $wps_subscription_id ), $subscription->get_checkout_payment_url() ) );
@@ -226,10 +227,10 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 					?>
 					</td>
 				</tr>
-				<?php 
-				
+				<?php
+
 				$tax_total = $subscription->get_total_tax();
-				if( $tax_total > 0 ) {
+				if ( $tax_total > 0 ) {
 					?>
 					<tr>
 						<td>
@@ -242,9 +243,9 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 						</td>
 					</tr>
 					<?php
-					
+
 				}
-				if( $get_shipping_total ){
+				if ( $get_shipping_total ) {
 					?>
 					<tr>
 						<td>
@@ -274,16 +275,16 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 				</tr>
 				<?php
 				$wps_wsp_renewal_order_data = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_wsp_renewal_order_data', true );
-				if( $wps_wsp_renewal_order_data  ) {
-					$wps_sfw_points_earned = 0 ;
+				if ( $wps_wsp_renewal_order_data ) {
+					$wps_sfw_points_earned = 0;
 					if ( ! empty( $wps_wsp_renewal_order_data ) ) {
 						foreach ( $wps_wsp_renewal_order_data as $key => $value ) {
 							$wps_wpr_subscription_renewal_awarded_points = wps_sfw_get_meta_data( $value, 'wps_wpr_subscription_renewal_awarded_points', true );
-							if( $wps_wpr_subscription_renewal_awarded_points ) {
+							if ( $wps_wpr_subscription_renewal_awarded_points ) {
 								$wps_sfw_points_earned += $wps_wpr_subscription_renewal_awarded_points;
 							}
 						}
-						if( $wps_sfw_points_earned ) {
+						if ( $wps_sfw_points_earned ) {
 							?>
 							<tr>
 								<td>
@@ -295,7 +296,6 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 							</tr>
 							<?php
 						}
-					
 					}
 				}
 				?>

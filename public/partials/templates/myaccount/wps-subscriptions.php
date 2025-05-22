@@ -55,7 +55,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php
 									$parent_order_id   = wps_sfw_get_meta_data( $subcription_id, 'wps_parent_order', true );
 									$parent_order = wc_get_order( $parent_order_id );
-									?><a target="_blank" href="<?php echo esc_url( $parent_order->get_view_order_url() ); ?>">
+								?>
+									<a target="_blank" href="<?php echo esc_url( $parent_order->get_view_order_url() ); ?>">
 									<?php echo '#' . esc_html( $parent_order_id ); ?>
 									</a>
 							</td>
