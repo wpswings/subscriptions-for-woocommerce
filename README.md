@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-10,000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.8-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-9.8.1-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
+[![Build Status](https://img.shields.io/travis/twbs/bootstrap/v4-dev.svg)](https://travis-ci.org/twbs/bootstrap) ![Active installs](https://img.shields.io/badge/Active-10,000%2B-brightgreen)![License](https://img.shields.io/badge/License-GPLv3%20or%20later-yellowgreen) ![WP tested](https://img.shields.io/badge/WP%20tested-6.8-brightgreen)![WC tested](https://img.shields.io/badge/WC%20tested-9.8.5-brightgreen)![Requires PHP](https://img.shields.io/badge/Requires%20PHP-7.3.5-blue)
 # Subscriptions For WooCommerce
 ![Subscriptions For WooCommerce](https://ps.w.org/subscriptions-for-woocommerce/assets/banner-772x250.png?rev=2672125)
 * Contributors: WP Swings
@@ -33,33 +33,36 @@ The [**Subscriptions for WooCommerce Pro**](https://wpswings.com/product/subscri
 
 ## WHAT IS INCLUDED IN OUR FREE SUBSCRIPTIONS FOR WOOCOMMERCE PLUGIN
 
-**1) Reactivate Any On-Hold Subscription**
+**1) Minimal Layout For Subscription Tab**
+We’ve given the Subscription tab a fresh, minimal design to improve user experience. The new layout is clean and easy to navigate, helping users manage their subscriptions quickly and without confusion. 
+
+**2) Reactivate Any On-Hold Subscription**
 As a store admin, you can easily switch any on-hold subscription back to active in just a few steps. This helps with easy subscription management, improves customer retention, and reduces subscription churn rates.
 
-**2) Subscription Box Features**: With our new subscription box feature, you can easily create a custom subscription box filled with multiple products. Your customers get the freedom to pick their favorite items, tailoring the box just the way they like it. Once they’ve made their choices, they can enjoy hassle-free deliveries on a schedule that suits them, whether it’s daily, weekly, or monthly. It’s a simple, flexible way to keep your customers happy and coming back for more!
+**3) Subscription Box Features**: With our new subscription box feature, you can easily create a custom subscription box filled with multiple products. Your customers get the freedom to pick their favorite items, tailoring the box just the way they like it. Once they’ve made their choices, they can enjoy hassle-free deliveries on a schedule that suits them, whether it’s daily, weekly, or monthly. It’s a simple, flexible way to keep your customers happy and coming back for more!
 Refer to the [**Subscription Box Documentation**](https://docs.wpswings.com/manage-subscription-box/?utm_source=wpswings-subscription-box-doc&utm_medium=subs-org-backend&utm_campaign=subscription-box-doc)
 
-**3) Rest API to Get the Subscription Details:** Our WooCommerce Subscription plugin includes a REST API feature that allows you to access detailed information about subscriptions assigned to specific users, making it easy to manage and retrieve subscription details programmatically.
+**4) Rest API to Get the Subscription Details:** Our WooCommerce Subscription plugin includes a REST API feature that allows you to access detailed information about subscriptions assigned to specific users, making it easy to manage and retrieve subscription details programmatically.
 
-**4) Recurring Subscriptions Info on Cart and Checkout Page:** Customers will receive details regarding their recurring subscriptions on both the cart and checkout pages. This will enhance transparency and provide clarity regarding the total amount, tax details, and renewal period, making management easier for recurring subscriptions during the checkout process.
+**5) Recurring Subscriptions Info on Cart and Checkout Page:** Customers will receive details regarding their recurring subscriptions on both the cart and checkout pages. This will enhance transparency and provide clarity regarding the total amount, tax details, and renewal period, making management easier for recurring subscriptions during the checkout process.
 
-**5) Create Products as Subscription Products with Subscriptions for WooCommerce:** You can assign a subscription product label to simple products by simply ticking a checkbox. The selected product will then be available as a WooCommerce subscription product. No particular subscription-type product will be made here.
+**6) Create Products as Subscription Products with Subscriptions for WooCommerce:** You can assign a subscription product label to simple products by simply ticking a checkbox. The selected product will then be available as a WooCommerce subscription product. No particular subscription-type product will be made here.
 
-**6) Offer Subscription Frequency for Subscription-Based Products:** You can set recurring frequency options on subscribed products for the user. Regulating the WooCommerce recurring payments of these subscription-based products or services monthly, weekly, or yearly is also a feature for the admin. Admin can manage the frequency of free trials as well.
+**7) Offer Subscription Frequency for Subscription-Based Products:** You can set recurring frequency options on subscribed products for the user. Regulating the WooCommerce recurring payments of these subscription-based products or services monthly, weekly, or yearly is also a feature for the admin. Admin can manage the frequency of free trials as well.
 
-**7) Subscription Plan Expiry Choice:** You can set the expiration date of WooCommerce subscription plans, which determines the duration of the subscription. Recurring payments will follow the frequency plan, and the subscription can be renewed to extend the plan. 
+**8) Subscription Plan Expiry Choice:** You can set the expiration date of WooCommerce subscription plans, which determines the duration of the subscription. Recurring payments will follow the frequency plan, and the subscription can be renewed to extend the plan. 
 
-**8) Charge Initial Fee on Subscription-Based Products With WooCommerce Payment Integrations:** If you want to charge extra payment as an initial sign-up fee, you can do that too. The free subscriptions for the WooCommerce plugin support the Stripe payment integration of WooCommerce. This integration works seamlessly together.
+**9) Charge Initial Fee on Subscription-Based Products With WooCommerce Payment Integrations:** If you want to charge extra payment as an initial sign-up fee, you can do that too. The free subscriptions for the WooCommerce plugin support the Stripe payment integration of WooCommerce. This integration works seamlessly together.
 
-**9) Offer Free Trials To WooCommerce Subscription Users:** You can provide free trials to subscription users. Admin can also set the free trial frequency. Urge them to sign up by offering them a free trial of subscription-based products or services. Recurring Payments can be made by the user after the free trial is over, and later the WooCommerce subscription plan can be continued.
+**10) Offer Free Trials To WooCommerce Subscription Users:** You can provide free trials to subscription users. Admin can also set the free trial frequency. Urge them to sign up by offering them a free trial of subscription-based products or services. Recurring Payments can be made by the user after the free trial is over, and later the WooCommerce subscription plan can be continued.
 
-**10) Both User and Admin Can Stop WooCommerce Subscription Option:** There is the flexibility of ending the subscription by the admin or the user at any time. Both can stop subscriptions to products or services in easy steps. Thus, also halting future recurring payments.
+**11) Both User and Admin Can Stop WooCommerce Subscription Option:** There is the flexibility of ending the subscription by the admin or the user at any time. Both can stop subscriptions to products or services in easy steps. Thus, also halting future recurring payments.
 
-**11) Complete WooCommerce Subscription Reports for Admin:** With a clean WooCommerce subscription plan report module, you will get the complete subscription plan data of all users. Find essential details like active and inactive WooCommerce subscriptions, following recurring payment dates, subscription-based product names, subscription expiry dates, and the individual plans’ due dates along with the frequency of recurring payments.
+**12) Complete WooCommerce Subscription Reports for Admin:** With a clean WooCommerce subscription plan report module, you will get the complete subscription plan data of all users. Find essential details like active and inactive WooCommerce subscriptions, following recurring payment dates, subscription-based product names, subscription expiry dates, and the individual plans’ due dates along with the frequency of recurring payments.
 
-**12) Cancel WooCommerce Subscription Plan Anytime via User or Admin:** With the free Subscriptions for WooCommerce plugin, both users and admin can cancel the WooCommerce subscription plans anytime. This way, subscription management becomes flexible enough.  
+**13) Cancel WooCommerce Subscription Plan Anytime via User or Admin:** With the free Subscriptions for WooCommerce plugin, both users and admin can cancel the WooCommerce subscription plans anytime. This way, subscription management becomes flexible enough.  
 
-**13) Integrated with WooCommerce PayPal Payment Gateway:** Our plugin includes the WPS PayPal Payment Gateway, so customers don't need to install it separately. Upon installing our plugin, the WPS PayPal Payment option will automatically appear in the multi-step form, streamlining the payment process for users.
+**14) Integrated with WooCommerce PayPal Payment Gateway:** Our plugin includes the WPS PayPal Payment Gateway, so customers don't need to install it separately. Upon installing our plugin, the WPS PayPal Payment option will automatically appear in the multi-step form, streamlining the payment process for users.
 
 Note: This payment method will only work for US-based PayPal merchant accounts..
 
@@ -85,7 +88,7 @@ Offer subscription membership plans on your store with the Membership for WooCom
 4) [**Wallet System For WooCommerce**](https://wordpress.org/plugins/wallet-system-for-woocommerce/) and [**Wallet System For WooCommerce Pro**](https://wpswings.com/product/wallet-system-for-woocommerce-pro/?utm_source=wpswings-wallet-pro&utm_medium=subs-github-page&utm_campaign=wallet-pro/)
 The Wallet system enables a digital wallet on your eCommerce store for users. Its compatibility allows users to pay for their recurring services and products via a digital wallet. Customers can buy subscriptions using the Wallet amount as a discount (not a payment gateway). The renewal order will also be discounted based on the wallet amount.
 
-5) Points and Rewards for WooCommerce Compatibility: You can allow your users to use their earned points to purchase subscription products & services and reward users with points when they place recurring orders. This compatibility works with [**Points And Rewards for WooCommerce**](https://wordpress.org/plugins/points-and-rewards-for-woocommerce/) and [**Points and Rewards for WooCommerce Pro**](https://wpswings.com/product/points-and-rewards-for-woocommerce-pro/?utm_source=wpswings-par-pro&utm_medium=subs-github-page&utm_campaign=par-pro/). 
+5) Points and Rewards for WooCommerce Compatibility: You can allow your users to use their earned points to purchase subscription products & services and reward users with points when they place recurring orders. This compatibility works with [**Points And Rewards for WooCommerce**](https://wordpress.org/plugins/points-and-rewards-for-woocommerce/) and [**Points and Rewards for WooCommerce Pro**](https://wpswings.com/product/points-and-rewards-for-woocommerce-pro/?utm_source=wpswings-par-pro&utm_medium=subs-github-page&utm_campaign=par-pro/). Plus, the points your users have earned will be shown on their subscription table.
 
 6) Subscriptions for WooCommerce WPML compatibility enable the admin to create text in different languages. It allows simple language translation in your store. 
 
