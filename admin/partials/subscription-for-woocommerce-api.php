@@ -54,21 +54,21 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 	<!-- To get user points -->
 	<h4><?php esc_html_e( 'To Retrive All Subscription', 'subscriptions-for-woocommerce' ); ?></h4>
 	<div class="wps_sfw_rest_api_response">
-		<p><strong><?php esc_html_e( 'Base Url to get all subscription  : ', 'subscriptions-for-woocommerce' ); ?></strong>{site_url}/wp-json/wsp-route/v1/wsp-view-subscription</p>
 		<p>
 			<strong>
 			<?php
-			esc_html_e( 'Example : ', 'subscriptions-for-woocommerce' );
+			esc_html_e( 'Base Url : ', 'subscriptions-for-woocommerce' );
 			echo esc_html( site_url() );
 			esc_html_e( '/wp-json/wsp-route/v1/wsp-view-subscription', 'subscriptions-for-woocommerce' );
 			?>
 			</strong>
-		<p>
+		</p>
+		<p><strong><?php esc_html_e( 'Method Required as Get ', 'subscriptions-for-woocommerce' );?> </strong></p>
 		<?php
 		esc_html_e( 'Parameters Required : ', 'subscriptions-for-woocommerce' );
 		echo wp_kses_post( '<strong> {consumer_secret}</strong>' );
 		?>
-		</p>
+		
 		<p><?php esc_html_e( 'JSON response example:', 'subscriptions-for-woocommerce' ); ?></p>
 	<pre>
 	{
@@ -100,4 +100,5 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 	}
 	</pre>
 	</div>
+	<?php do_action( 'wps_sfw_subscription_api_html' ) ;  ?>
 </div>

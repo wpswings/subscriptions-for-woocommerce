@@ -105,14 +105,15 @@
         
         /*Expiry interval validation*/
         $(document).on('submit','#post', function(e) {
-       
+         
             var subscription_number = $('#wps_sfw_subscription_number').val();
             var subscription_expiry = $('#wps_sfw_subscription_expiry_number').val();
 
             var wps_sfw_subscription_box_number = $('#wps_sfw_subscription_box_number').val();
             var wps_sfw_subscription_box_expiry_number = $('#wps_sfw_subscription_box_expiry_number').val();
-
-            if( wps_sfw_subscription_box_expiry_number && wps_sfw_subscription_box_number ){
+            var select_val = $( 'select#product-type' ).val();
+            
+            if( wps_sfw_subscription_box_expiry_number && wps_sfw_subscription_box_number && select_val == 'subscription_box' ){
                 subscription_expiry = wps_sfw_subscription_box_expiry_number;
                 subscription_number = wps_sfw_subscription_box_number;
             }

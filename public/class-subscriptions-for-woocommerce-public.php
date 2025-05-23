@@ -2958,7 +2958,7 @@ class Subscriptions_For_Woocommerce_Public {
 	}
 
 	/**
-	 * wps_sfw_woocommerce_email_preview_dummy_order_callback function
+	 * Wps_sfw_woocommerce_email_preview_dummy_order_callback function
 	 *
 	 * @param object $order as order.
 	 * @param string $email_type as email type.
@@ -2970,5 +2970,23 @@ class Subscriptions_For_Woocommerce_Public {
 			$order = wc_get_order( 12345 );
 		}
 		return $order;
+	}
+
+	/**
+	 * Function to add custom body class for subscription page.
+	 *
+	 * @param array $classes as classes.
+	 *
+	 * @return array
+	 */
+	public function wps_sfw_subscription_custom_add_body_class( $classes ) {
+
+		$current_uri = $_SERVER['REQUEST_URI'];
+
+		if ( strpos( $current_uri, '/my-account/show-subscription/' ) !== false ) {
+			$classes[] = 'wps_sfw_show-subscription-page';
+		}
+
+		return $classes;
 	}
 }

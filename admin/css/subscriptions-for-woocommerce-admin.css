@@ -396,6 +396,7 @@
     position: relative;
     cursor: pointer;
     background-color: #2196f311;
+	margin: 0 0 15px;
 }
 
 .wps_sfw_api_details_main_wrapper h4:after {

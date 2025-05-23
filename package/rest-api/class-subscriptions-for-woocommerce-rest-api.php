@@ -77,8 +77,8 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 			'/wsp-view-subscription/',
 			array(
 				'methods'  => 'GET',
-				'callback' => array( $this, 'wps_wsp_view_susbcription_callback' ),
-				'permission_callback' => array( $this, 'wps_wsp_subscription_permission_check' ),
+				'callback' => array( $this, 'wps_sfw_view_susbcription_callback' ),
+				'permission_callback' => array( $this, 'wps_sfw_subscription_permission_check' ),
 			)
 		);
 	}
@@ -91,12 +91,12 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 	 * @return  Array   $result   return rest response to server from where the endpoint hits.
 	 * @since    1.0.0
 	 */
-	public function wps_wsp_subscription_permission_check( $request ) {
+	public function wps_sfw_subscription_permission_check( $request ) {
 
 		$request_params = $request->get_params();
 		$wps_secretkey = isset( $request_params['consumer_secret'] ) ? $request_params['consumer_secret'] : '';
 
-		$result = $this->wps_wsp_validate_secretkey( $wps_secretkey );
+		$result = $this->wps_sfw_validate_secretkey( $wps_secretkey );
 
 		return $result;
 	}
@@ -104,11 +104,11 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 	/**
 	 * Valiadte secret key.
 	 *
-	 * @name wps_wsp_validate_secretkey
+	 * @name wps_sfw_validate_secretkey
 	 * @param   string $wps_secretkey  wps_secretkey.
 	 * @since    1.0.0
 	 */
-	public function wps_wsp_validate_secretkey( $wps_secretkey ) {
+	public function wps_sfw_validate_secretkey( $wps_secretkey ) {
 		$wps_secret_code = '';
 
 		if ( wps_wsp_check_api_enable() ) {
@@ -132,7 +132,7 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 	 * @return  Array   $wps_sfw_response   return rest response to server from where the endpoint hits.
 	 * @since    1.0.0
 	 */
-	public function wps_wsp_view_susbcription_callback( $request ) {
+	public function wps_sfw_view_susbcription_callback( $request ) {
 
 		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/rest-api/version1/class-subscriptions-for-woocommerce-api-process.php';
 		$wps_sfw_api_obj = new Subscriptions_For_Woocommerce_Api_Process();

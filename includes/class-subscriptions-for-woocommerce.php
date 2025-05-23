@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.8.3';
+			$this->version = '1.8.4';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -234,6 +234,8 @@ class Subscriptions_For_Woocommerce {
 		// subscritpion box listing.
 		$this->loader->add_filter( 'wps_sfw_subscription_box_settings_array', $sfw_plugin_admin, 'wps_sfw_subscription_box_settings_fields', 10 );
 
+		$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'wps_sfw_subscription_box_product_data_tabs', 10, 1 );
+
 		if ( wps_sfw_check_plugin_enable() ) {
 			$this->loader->add_action( 'product_type_options', $sfw_plugin_admin, 'wps_sfw_create_subscription_product_type' );
 
@@ -376,6 +378,8 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_is_sold_individually', $sfw_plugin_public, 'wps_sfw_hide_quantity_fields_for_subscription_box', 10, 2 );
 
 			$this->loader->add_filter( 'woocommerce_email_preview_dummy_order', $sfw_plugin_public, 'wps_sfw_woocommerce_email_preview_dummy_order_callback', 10, 2 );
+
+			$this->loader->add_filter( 'body_class', $sfw_plugin_public, 'wps_sfw_subscription_custom_add_body_class', 10, 1 );
 
 			// subscription box.
 
