@@ -135,7 +135,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 				return $item[ $column_name ] . $this->row_actions( $actions );
 			case 'parent_order_id':
-				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				if ( 'manual' == $item[ $column_name ] ) {
+					$html = __( 'Manual', 'subscription-for-woocommerce' );
+				} elseif ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 					$html = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-orders&action=edit&id=' . $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
 				} else {
 					$html = '<a href="' . esc_url( get_edit_post_link( $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
@@ -587,7 +589,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			foreach ( $wps_subscriptions as $id ) {
 
 				$parent_order_id   = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
-				if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
+				if ( 'manual' != $parent_order_id && function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 					$total_count = --$total_count;
 					continue;
 				}
@@ -596,6 +598,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$wps_recurring_total     = wps_sfw_get_meta_data( $id, 'wps_recurring_total', true );
 				$wps_curr_args           = array();
 
+				if (  is_array( $product_name ) ) {
+					$product_name = implode( ', ', $product_name );
+				}
 				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 					$susbcription = new WPS_Subscription( $id );
 				} else {

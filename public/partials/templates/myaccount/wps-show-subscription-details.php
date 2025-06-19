@@ -209,6 +209,9 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 							$wps_product_name = wps_sfw_get_meta_data( $wps_subscription_id, 'product_name', true );
 							$product_qty = wps_sfw_get_meta_data( $wps_subscription_id, 'product_qty', true );
 
+							if (  is_array( $wps_product_name ) ) {
+								$product_name = implode( ', ', $product_name );
+							}
 							echo esc_html( $wps_product_name ) . ' x ' . esc_html( $product_qty );
 							do_action( 'wps_sfw_product_details_html', $wps_subscription_id );
 						?>

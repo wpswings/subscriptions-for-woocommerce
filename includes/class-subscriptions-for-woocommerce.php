@@ -506,6 +506,13 @@ class Subscriptions_For_Woocommerce {
 		);
 		// subscription box.
 
+		if ( ! defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION' ) ) {
+			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-pro-features'] = array(
+				'title'       => esc_html__( 'Advanced Settings', 'subscriptions-for-woocommerce' ),
+				'name'        => 'subscriptions-for-woocommerce-subscriptions-pro-features',
+				'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+			);
+		}
 		if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-free-vs-pro'] = array(
 				'title'       => esc_html__( 'Free Vs Pro', 'subscriptions-for-woocommerce' ),

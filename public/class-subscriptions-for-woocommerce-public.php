@@ -1231,9 +1231,11 @@ class Subscriptions_For_Woocommerce_Public {
 
 							$status = 'active';
 							$status = apply_filters( 'wps_sfw_set_subscription_status', $status, $subscription_id );
-							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
-
+							
+							do_action( 'wps_wsp_after_subscription_active', $status, $subscription_id );
+							
 							wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', $status );
+							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
 							wps_sfw_update_meta_data( $subscription_id, 'wps_schedule_start', $current_time );
 
 							$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $subscription_id, $current_time );
