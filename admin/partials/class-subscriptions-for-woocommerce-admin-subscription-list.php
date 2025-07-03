@@ -364,6 +364,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					'compare' => 'EXISTS',
 				),
 			);
+
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 				// Logic to fetch subscription using subscription id or parent id.
 				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
@@ -402,6 +403,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 			}
 			$wps_subscriptions = wc_get_orders( $args );
+
 		} else {
 
 			$args = array(

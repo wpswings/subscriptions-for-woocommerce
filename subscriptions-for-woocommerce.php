@@ -423,7 +423,7 @@ if ( $activated ) {
 		flush_rewrite_rules();
 	}
 
-	add_action( 'init', 'wps_sfw_register_custom_order_types' );
+	add_action( 'init', 'wps_sfw_register_custom_order_types', 5 );
 
 	/**
 	 * This function is used to create custom post type for subscription.
@@ -466,7 +466,7 @@ if ( $activated ) {
 						'show_in_nav_menus'                => true,
 						'rewrite'                          => false,
 						'query_var'                        => false,
-						'supports'                         => array( 'title', 'comments', 'custom-fields' ),
+						'supports'                         => array( 'title', 'comments', 'custom-fields', 'custom-statuses' ),
 						'has_archive'                      => false,
 						'exclude_from_orders_screen'       => true,
 						'add_order_meta_boxes'             => true,
@@ -871,4 +871,3 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
-

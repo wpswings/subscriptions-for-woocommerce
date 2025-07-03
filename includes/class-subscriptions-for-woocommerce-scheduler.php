@@ -287,13 +287,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 
 						// custom filter.
+						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+						
+						do_action( 'wps_sfw_handle_manual_renewal_status', $wps_new_order, $subscription_id, $parent_order ? 'manual' : 'normal' );
+						// custom filter.
 						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
 							return;
 						}
 						$wps_new_order = wc_get_order( $wps_new_order->get_id() ); // recalucate when shipping fee applied.
 
-						// custom filter.
-						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
 
 						if ( $wps_new_order->get_status() == 'processing' ) {
 							$virtual_order = false;
@@ -710,8 +712,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$variation_data = [];
 
 						// Handle variation products separately.
-						if ($_product && $_product->is_type('variable') && $product_id) {
-							$variation_data = wc_get_product_variation_attributes($product_id);
+						if ( $_product && $_product->is_type('variable') && $product_id ) {
+							$variation_data = wc_get_product_variation_attributes( $product_id );
 						}
 
 						if ( 'yes' === $new_sub ) {
@@ -764,7 +766,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
 							// Hook to add product for renewal manual subscription order.
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
-
+							$wps_new_order = wc_get_order( $wps_new_order->get_id() );
 						} else {
 							$new_item_id = $wps_new_order->add_product(
 								$_product,
@@ -779,7 +781,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						$wps_new_order->set_payment_method( $payment_method );
 						$wps_new_order->set_payment_method_title( $payment_method_title );
-
 
 						if ( $parent_order ) {
 							$billing_details = $parent_order->get_address( 'billing' );
@@ -857,14 +858,16 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 
-						// custom filter.
-						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
-							return;
-						}
 						$wps_new_order = wc_get_order( $wps_new_order->get_id() ); // recalucate when shipping fee applied
 						// custom filter.
 
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+
+						do_action( 'wps_sfw_handle_manual_renewal_status', $wps_new_order, $subscription_id, $parent_order ? 'normal' : 'manual' );
+						// custom filter.
+						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
+							return;
+						}
 
 						if ( $wps_new_order->get_status() == 'processing' ) {
 							$virtual_order = false;

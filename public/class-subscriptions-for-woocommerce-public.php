@@ -991,13 +991,14 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args = array(
 				'type'   => 'wps_subscriptions',
+				'return' => 'ids',
+				'number' => 20,
 				'meta_query' => array(
 					array(
 						'key'   => 'wps_customer_id',
 						'value' => $user_id,
 					),
 				),
-				'return' => 'ids',
 			);
 			$wps_subscriptions = wc_get_orders( $args );
 		} else {
@@ -1014,7 +1015,6 @@ class Subscriptions_For_Woocommerce_Public {
 			);
 			$wps_subscriptions = get_posts( $args );
 		}
-
 		$wps_per_page = get_option( 'posts_per_page', 10 );
 		$wps_current_page = empty( $wps_current_page ) ? 1 : absint( $wps_current_page );
 		$wps_num_pages = ceil( count( $wps_subscriptions ) / $wps_per_page );
@@ -2990,5 +2990,40 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * This function is used to custom order status for susbcription.
+	 *
+	 * @name wps_sfw_register_new_order_statuses
+	 * @param array $order_status order_status.
+	 * @since 1.0.0
+	 */
+	public function wps_sfw_register_new_order_statuses( $order_status ) {
+
+		$order_status['wc-wps_renewal'] = array(
+			'label'                     => _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
+			'public'                    => false,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			/* translators: %s: number of orders */
+			'label_count'               => _n_noop( 'Wps Renewal <span class="count">(%s)</span>', 'Wps Renewal <span class="count">(%s)</span>', 'subscriptions-for-woocommerce' ),
+		);
+		return $order_status;
+	}
+
+
+	/**
+	 * This function is used to custom order status for susbcription.
+	 *
+	 * @name wps_sfw_new_wc_order_statuses.
+	 * @since 1.0.0
+	 * @param array $order_statuses order_statuses.
+	 */
+	public function wps_sfw_new_wc_order_statuses( $order_statuses ) {
+		$order_statuses['wc-wps_renewal'] = _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' );
+
+		return $order_statuses;
 	}
 }
