@@ -1995,7 +1995,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 				if ( 'no' == $save_payment_method && 'disabled' != $upe_checkout_experience_enabled ) {
 
-					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'subscriptions-for-woocommerce' ) );
+					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'woocommerce-subscriptions-pro' ) );
 				}
 			}
 		}
@@ -2449,11 +2449,9 @@ class Subscriptions_For_Woocommerce_Public {
 									echo '</div>';
 								}
 							}
-
 							?>
 							<div class="wps_sfw-sb-cta">
-								
-								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php esc_attr_e( $wps_sfw_subscription_box_price ); ?>"><strong><?php esc_attr_e( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php esc_attr_e( get_woocommerce_currency_symbol() ); ?><span><?php esc_attr_e( $wps_sfw_subscription_box_price ); ?></span></div>
+								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php echo esc_attr( $wps_sfw_subscription_box_price ); ?>"><strong><?php esc_attr_e( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php echo esc_attr( get_woocommerce_currency_symbol() ); ?><span><?php echo esc_attr( $wps_sfw_subscription_box_price ); ?></span></div>
 								<button type="submit" class="button wps_sfw_subscription_product_id" data-subscription-box-id="<?php echo esc_attr( $product_id ); ?>"><?php esc_attr_e( 'Add to Subscription', 'subscriptions-for-woocommerce' ); ?></button>
 							</div>
 						</form>
@@ -2983,7 +2981,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_subscription_custom_add_body_class( $classes ) {
 
-		$current_uri = $_SERVER['REQUEST_URI'];
+		$current_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 		if ( strpos( $current_uri, '/my-account/show-subscription/' ) !== false ) {
 			$classes[] = 'wps_sfw_show-subscription-page';

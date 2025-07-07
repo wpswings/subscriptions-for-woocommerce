@@ -91,7 +91,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		);
 		return $actions;
 	}
-
+	/**
+	 * Get On-hold url.
+	 *
+	 * @name wps_sfw_on_hold_url.
+	 * @since      1.0.0
+	 * @param int    $subscription_id subscription_id.
+	 * @param String $status status.
+	 */
 	public function wps_sfw_on_hold_url( $subscription_id, $status ){
 		$wps_link = add_query_arg(
 			array(
@@ -136,7 +143,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				return $item[ $column_name ] . $this->row_actions( $actions );
 			case 'parent_order_id':
 				if ( 'manual' == $item[ $column_name ] ) {
-					$html = __( 'Manual', 'subscription-for-woocommerce' );
+					$html = __( 'Manual', 'subscriptions-for-woocommerce' );
 				} elseif ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 					$html = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-orders&action=edit&id=' . $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
 				} else {

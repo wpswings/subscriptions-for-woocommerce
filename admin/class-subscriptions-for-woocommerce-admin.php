@@ -1315,7 +1315,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * This function is used to add subscription box product type in inventory tab.
 	 *
 	 * @param array $tabs as tabs.
-	 * @return void
+	 * @return $tabs .
 	 */
 	public function wps_sfw_subscription_box_product_data_tabs( $tabs ) {
 		$tabs['inventory']['class'][] = 'show_if_subscription_box';
