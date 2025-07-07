@@ -700,7 +700,6 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 				)
 			);
 			$response_body = json_decode( $response['body'], true );
-			1
 			// Validate the structure of the response before accessing nested keys
 			if ( is_array( $response_body ) && isset( $response_body['payment_source']['paypal']['attributes']['vault']['id'] ) ) {
 
