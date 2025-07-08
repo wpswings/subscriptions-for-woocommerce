@@ -248,9 +248,6 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription', 99 );
 			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_reactivate_onhold_susbcription', 99 );
 
-			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_admin, 'wps_sfw_register_new_order_statuses' );
-
-			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_admin, 'wps_sfw_new_wc_order_statuses' );
 			// WPLM Translation.
 			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'wps_sfw_add_lock_custom_fields_ids' );
 
@@ -381,6 +378,10 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'body_class', $sfw_plugin_public, 'wps_sfw_subscription_custom_add_body_class', 10, 1 );
 
+			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_public, 'wps_sfw_register_new_order_statuses' );
+			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_public, 'wps_sfw_new_wc_order_statuses' );
+
+
 			// subscription box.
 
 		}
@@ -506,6 +507,13 @@ class Subscriptions_For_Woocommerce {
 		);
 		// subscription box.
 
+		if ( ! defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION' ) ) {
+			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-pro-features'] = array(
+				'title'       => esc_html__( 'Advanced Settings', 'subscriptions-for-woocommerce' ),
+				'name'        => 'subscriptions-for-woocommerce-subscriptions-pro-features',
+				'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+			);
+		}
 		if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php' ) ) {
 			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-free-vs-pro'] = array(
 				'title'       => esc_html__( 'Free Vs Pro', 'subscriptions-for-woocommerce' ),

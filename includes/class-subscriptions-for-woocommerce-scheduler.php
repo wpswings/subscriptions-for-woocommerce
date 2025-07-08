@@ -102,11 +102,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$subscription = get_post( $subscription_id );
 
 						$parent_order_id  = $subscription->wps_parent_order;
-						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
-							continue;
-						}
-
-						if ( apply_filters( 'wps_sfw_stop_creating_renewal_multisafepay', false, $subscription_id ) ) {
+						if ( 'manual' != $parent_order_id && function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
 						}
 
@@ -119,10 +115,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 
 						$parent_order = wc_get_order( $parent_order_id );
-						$billing_details = $parent_order->get_address( 'billing' );
-						$shipping_details = $parent_order->get_address( 'shipping' );
-						$parent_order_currency = $parent_order->get_currency();
-						$new_status = 'wc-wps_renewal';
+						$new_status = 'wc-pending';
 						$user_id = $subscription->wps_customer_id;
 						$product_id = $subscription->product_id;
 						$product_qty = $subscription->product_qty;
@@ -130,30 +123,24 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$payment_method_title = $subscription->_payment_method_title;
 
 						$wps_old_payment_method = wps_sfw_get_meta_data( $parent_order_id, '_payment_method', true );
-						$args = array(
-							'status'      => $new_status,
-							'customer_id' => $user_id,
-						);
-						$wps_new_order = wc_create_order( $args );
-						$wps_new_order->set_currency( $parent_order_currency );
-
+						
 						$line_subtotal = $subscription->line_subtotal;
 						$line_total = $subscription->line_total;
-
+						
 						$_product = wc_get_product( $product_id );
-
+						
 						// Check for manual subscription.
 						$payment_type = wps_sfw_get_meta_data( $subscription_id, 'wps_wsp_payment_type', true );
-
+						
 						// this code will run from the 1.5.8.
 						$new_sub = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_new_sub', true );
-
+						
 						$variation_data = array();
 						// Handle variation products separately.
 						if ($_product && $_product->is_type('variable') && $product_id) {
 							$variation_data = wc_get_product_variation_attributes($product_id);
 						}
-
+						
 						if ( 'yes' === $new_sub ) {
 							$wps_args = array(
 								'variation' => $variation_data,
@@ -167,7 +154,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							);
 						} else {
 							$include = get_option( 'woocommerce_prices_include_tax' );
-
+							
 							// check for manual subscription.
 							if ( 'yes' == $include && empty( $payment_type ) ) {
 								$wps_args = array(
@@ -193,8 +180,14 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								);
 							}
 						}
+						// Create Renewal Order.
+						$args = array(
+							'status'      => $new_status,
+							'customer_id' => $user_id,
+						);
+						$wps_new_order = wc_create_order( $args );
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
-
+						
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
 							// hook to add product for renewal manual subscription order.
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
@@ -216,8 +209,19 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_new_order->set_payment_method( $payment_method );
 						$wps_new_order->set_payment_method_title( $payment_method_title );
 
+						if ( $parent_order ) {
+							$billing_details = $parent_order->get_address( 'billing' );
+							$shipping_details = $parent_order->get_address( 'shipping' );
+							$currency = $parent_order->get_currency();
+						} else {
+							$subscription = wc_get_order( $subscription_id );
+							$billing_details = $subscription->get_address( 'billing' );
+							$shipping_details = $subscription->get_address( 'shipping' );
+							$currency = $parent_order->get_currency();
+						}
 						$wps_new_order->set_address( $billing_details, 'billing' );
 						$wps_new_order->set_address( $shipping_details, 'shipping' );
+						$wps_new_order->set_currency( $currency );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_renewal_order', 'yes' );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription', $subscription_id );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_parent_order_id', $parent_order_id );
@@ -283,13 +287,15 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 
 						// custom filter.
+						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+						
+						do_action( 'wps_sfw_handle_manual_renewal_status', $wps_new_order, $subscription_id, $parent_order ? 'manual' : 'normal' );
+						// custom filter.
 						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
 							return;
 						}
 						$wps_new_order = wc_get_order( $wps_new_order->get_id() ); // recalucate when shipping fee applied.
 
-						// custom filter.
-						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
 
 						if ( $wps_new_order->get_status() == 'processing' ) {
 							$virtual_order = false;
@@ -662,11 +668,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$subscription = new WPS_Subscription( $subscription_id );
 
 						$parent_order_id = wps_sfw_get_meta_data( $subscription_id, 'wps_parent_order', true );
-						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
-							continue;
-						}
-
-						if ( apply_filters( 'wps_sfw_stop_creating_renewal_multisafepay', false, $subscription_id ) ) {
+						if ( 'manual' != $parent_order_id && function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 							continue;
 						}
 
@@ -679,10 +681,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 
 						$parent_order = wc_get_order( $parent_order_id );
-						$billing_details = $parent_order->get_address( 'billing' );
-						$shipping_details = $parent_order->get_address( 'shipping' );
-						$parent_order_currency = $parent_order->get_currency();
-						$new_status = 'wc-wps_renewal';
 
 						$user_id = wps_sfw_get_meta_data( $subscription_id, 'wps_customer_id', true );
 						$product_id = wps_sfw_get_meta_data( $subscription_id, 'product_id', true );
@@ -691,13 +689,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$payment_method = $subscription->get_payment_method();
 						$payment_method_title = $subscription->get_payment_method_title();
 
-						$wps_old_payment_method = $parent_order->get_payment_method();
-						$args = array(
-							'status'      => $new_status,
-							'customer_id' => $user_id,
-						);
-						$wps_new_order = wc_create_order( $args );
-						$wps_new_order->set_currency( $parent_order_currency );
+						if ( $parent_order ) {
+							$wps_old_payment_method = $parent_order->get_payment_method();
+						}
 
 						$line_subtotal = wps_sfw_get_meta_data( $subscription_id, 'line_subtotal', true );
 						$line_total = wps_sfw_get_meta_data( $subscription_id, 'line_total', true );
@@ -718,8 +712,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$variation_data = [];
 
 						// Handle variation products separately.
-						if ($_product && $_product->is_type('variable') && $product_id) {
-							$variation_data = wc_get_product_variation_attributes($product_id);
+						if ( $_product && $_product->is_type('variable') && $product_id ) {
+							$variation_data = wc_get_product_variation_attributes( $product_id );
 						}
 
 						if ( 'yes' === $new_sub ) {
@@ -762,10 +756,17 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 						$wps_pro_args = apply_filters( 'wps_product_args_for_order', $wps_args );
 
+						$new_status = 'wc-pending';
+						$args = array(
+							'status'      => $new_status,
+							'customer_id' => $user_id,
+						);
+						$wps_new_order = wc_create_order( $args );
+
 						if ( 'wps_wsp_manual_method' == $payment_type ) {
 							// Hook to add product for renewal manual subscription order.
 							do_action( 'wps_sfw_add_new_product_for_manual_subscription', $wps_new_order->get_id(), $subscription_id );
-
+							$wps_new_order = wc_get_order( $wps_new_order->get_id() );
 						} else {
 							$new_item_id = $wps_new_order->add_product(
 								$_product,
@@ -781,8 +782,18 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						$wps_new_order->set_payment_method( $payment_method );
 						$wps_new_order->set_payment_method_title( $payment_method_title );
 
+						if ( $parent_order ) {
+							$billing_details = $parent_order->get_address( 'billing' );
+							$shipping_details = $parent_order->get_address( 'shipping' );
+							$currency = $parent_order->get_currency();
+						} else {
+							$billing_details = $subscription->get_address( 'billing' );
+							$shipping_details = $subscription->get_address( 'shipping' );
+							$currency = $subscription->get_currency();
+						}
 						$wps_new_order->set_address( $billing_details, 'billing' );
 						$wps_new_order->set_address( $shipping_details, 'shipping' );
+						$wps_new_order->set_currency( $currency );
 
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_renewal_order', 'yes' );
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription', $subscription_id );
@@ -847,14 +858,16 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', $wps_next_payment_date );
 
-						// custom filter.
-						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
-							return;
-						}
 						$wps_new_order = wc_get_order( $wps_new_order->get_id() ); // recalucate when shipping fee applied
 						// custom filter.
 
 						do_action( 'wps_sfw_other_payment_gateway_renewal', $wps_new_order, $subscription_id, $payment_method );
+
+						do_action( 'wps_sfw_handle_manual_renewal_status', $wps_new_order, $subscription_id, $parent_order ? 'normal' : 'manual' );
+						// custom filter.
+						if ( apply_filters( 'wps_sfw_stop_recurring_payment_incase_manual', false, $parent_order_id ) ) {
+							return;
+						}
 
 						if ( $wps_new_order->get_status() == 'processing' ) {
 							$virtual_order = false;

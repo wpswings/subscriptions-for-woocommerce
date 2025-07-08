@@ -858,40 +858,6 @@ class Subscriptions_For_Woocommerce_Admin {
 	}
 
 	/**
-	 * This function is used to custom order status for susbcription.
-	 *
-	 * @name wps_sfw_register_new_order_statuses
-	 * @param array $order_status order_status.
-	 * @since 1.0.0
-	 */
-	public function wps_sfw_register_new_order_statuses( $order_status ) {
-
-		$order_status['wc-wps_renewal'] = array(
-			'label'                     => _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			/* translators: %s: number of orders */
-			'label_count'               => _n_noop( 'Wps Renewal <span class="count">(%s)</span>', 'Wps Renewal <span class="count">(%s)</span>', 'subscriptions-for-woocommerce' ),
-		);
-		return $order_status;
-	}
-
-	/**
-	 * This function is used to custom order status for susbcription.
-	 *
-	 * @name wps_sfw_new_wc_order_statuses.
-	 * @since 1.0.0
-	 * @param array $order_statuses order_statuses.
-	 */
-	public function wps_sfw_new_wc_order_statuses( $order_statuses ) {
-		$order_statuses['wc-wps_renewal'] = _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' );
-
-		return $order_statuses;
-	}
-
-	/**
 	 * This function is used to custom field compatibility with WPML.
 	 *
 	 * @name wps_sfw_add_lock_custom_fields_ids.
@@ -1349,7 +1315,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 * This function is used to add subscription box product type in inventory tab.
 	 *
 	 * @param array $tabs as tabs.
-	 * @return void
+	 * @return $tabs .
 	 */
 	public function wps_sfw_subscription_box_product_data_tabs( $tabs ) {
 		$tabs['inventory']['class'][] = 'show_if_subscription_box';

@@ -91,7 +91,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		);
 		return $actions;
 	}
-
+	/**
+	 * Get On-hold url.
+	 *
+	 * @name wps_sfw_on_hold_url.
+	 * @since      1.0.0
+	 * @param int    $subscription_id subscription_id.
+	 * @param String $status status.
+	 */
 	public function wps_sfw_on_hold_url( $subscription_id, $status ){
 		$wps_link = add_query_arg(
 			array(
@@ -135,7 +142,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 				return $item[ $column_name ] . $this->row_actions( $actions );
 			case 'parent_order_id':
-				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				if ( 'manual' == $item[ $column_name ] ) {
+					$html = __( 'Manual', 'subscriptions-for-woocommerce' );
+				} elseif ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 					$html = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-orders&action=edit&id=' . $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
 				} else {
 					$html = '<a href="' . esc_url( get_edit_post_link( $item[ $column_name ] ) ) . '">' . $item[ $column_name ] . '</a>';
@@ -362,6 +371,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					'compare' => 'EXISTS',
 				),
 			);
+
 			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 				// Logic to fetch subscription using subscription id or parent id.
 				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
@@ -400,6 +410,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 			}
 			$wps_subscriptions = wc_get_orders( $args );
+
 		} else {
 
 			$args = array(
@@ -587,7 +598,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			foreach ( $wps_subscriptions as $id ) {
 
 				$parent_order_id   = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
-				if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
+				if ( 'manual' != $parent_order_id && function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
 					$total_count = --$total_count;
 					continue;
 				}
@@ -596,6 +607,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$wps_recurring_total     = wps_sfw_get_meta_data( $id, 'wps_recurring_total', true );
 				$wps_curr_args           = array();
 
+				if (  is_array( $product_name ) ) {
+					$product_name = implode( ', ', $product_name );
+				}
 				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 					$susbcription = new WPS_Subscription( $id );
 				} else {

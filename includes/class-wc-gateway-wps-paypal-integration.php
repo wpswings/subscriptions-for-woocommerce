@@ -699,7 +699,15 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					),
 				)
 			);
-			wps_sfw_update_meta_data( $order->get_id(), 'wps_order_payment_token', json_decode( $response['body'], true )['payment_source']['paypal']['attributes']['vault']['id'] );
+			$response_body = json_decode( $response['body'], true );
+			// Validate the structure of the response before accessing nested keys.
+			if ( is_array( $response_body ) && isset( $response_body['payment_source']['paypal']['attributes']['vault']['id'] ) ) {
+
+				$vault_id = $response_body['payment_source']['paypal']['attributes']['vault']['id'];
+				if ( ! empty( $vault_id ) ) {
+					wps_sfw_update_meta_data( $order->get_id(), 'wps_order_payment_token', $vault_id );
+				}
+			}
 
 			if ( ! is_wp_error( $response ) && in_array( (int) wp_remote_retrieve_response_code( $response ), array( 200, 201 ), true ) ) {
 				return array(

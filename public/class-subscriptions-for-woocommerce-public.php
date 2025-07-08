@@ -991,13 +991,14 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$args = array(
 				'type'   => 'wps_subscriptions',
+				'return' => 'ids',
+				'number' => 20,
 				'meta_query' => array(
 					array(
 						'key'   => 'wps_customer_id',
 						'value' => $user_id,
 					),
 				),
-				'return' => 'ids',
 			);
 			$wps_subscriptions = wc_get_orders( $args );
 		} else {
@@ -1014,7 +1015,6 @@ class Subscriptions_For_Woocommerce_Public {
 			);
 			$wps_subscriptions = get_posts( $args );
 		}
-
 		$wps_per_page = get_option( 'posts_per_page', 10 );
 		$wps_current_page = empty( $wps_current_page ) ? 1 : absint( $wps_current_page );
 		$wps_num_pages = ceil( count( $wps_subscriptions ) / $wps_per_page );
@@ -1231,9 +1231,11 @@ class Subscriptions_For_Woocommerce_Public {
 
 							$status = 'active';
 							$status = apply_filters( 'wps_sfw_set_subscription_status', $status, $subscription_id );
-							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
-
+							
+							do_action( 'wps_wsp_after_subscription_active', $status, $subscription_id );
+							
 							wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', $status );
+							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
 							wps_sfw_update_meta_data( $subscription_id, 'wps_schedule_start', $current_time );
 
 							$wps_susbcription_trial_end = wps_sfw_susbcription_trial_date( $subscription_id, $current_time );
@@ -1993,7 +1995,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 				if ( 'no' == $save_payment_method && 'disabled' != $upe_checkout_experience_enabled ) {
 
-					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'subscriptions-for-woocommerce' ) );
+					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'woocommerce-subscriptions-pro' ) );
 				}
 			}
 		}
@@ -2447,11 +2449,9 @@ class Subscriptions_For_Woocommerce_Public {
 									echo '</div>';
 								}
 							}
-
 							?>
 							<div class="wps_sfw-sb-cta">
-								
-								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php esc_attr_e( $wps_sfw_subscription_box_price ); ?>"><strong><?php esc_attr_e( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php esc_attr_e( get_woocommerce_currency_symbol() ); ?><span><?php esc_attr_e( $wps_sfw_subscription_box_price ); ?></span></div>
+								<div class="wps_sfw-sb-cta-total" data-wps_sfw_subscription_box_price="<?php echo esc_attr( $wps_sfw_subscription_box_price ); ?>"><strong><?php esc_attr_e( 'Total', 'subscriptions-for-woocommerce' ); ?>:</strong><?php echo esc_attr( get_woocommerce_currency_symbol() ); ?><span><?php echo esc_attr( $wps_sfw_subscription_box_price ); ?></span></div>
 								<button type="submit" class="button wps_sfw_subscription_product_id" data-subscription-box-id="<?php echo esc_attr( $product_id ); ?>"><?php esc_attr_e( 'Add to Subscription', 'subscriptions-for-woocommerce' ); ?></button>
 							</div>
 						</form>
@@ -2981,12 +2981,47 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_subscription_custom_add_body_class( $classes ) {
 
-		$current_uri = $_SERVER['REQUEST_URI'];
+		$current_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 		if ( strpos( $current_uri, '/my-account/show-subscription/' ) !== false ) {
 			$classes[] = 'wps_sfw_show-subscription-page';
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * This function is used to custom order status for susbcription.
+	 *
+	 * @name wps_sfw_register_new_order_statuses
+	 * @param array $order_status order_status.
+	 * @since 1.0.0
+	 */
+	public function wps_sfw_register_new_order_statuses( $order_status ) {
+
+		$order_status['wc-wps_renewal'] = array(
+			'label'                     => _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' ),
+			'public'                    => false,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			/* translators: %s: number of orders */
+			'label_count'               => _n_noop( 'Wps Renewal <span class="count">(%s)</span>', 'Wps Renewal <span class="count">(%s)</span>', 'subscriptions-for-woocommerce' ),
+		);
+		return $order_status;
+	}
+
+
+	/**
+	 * This function is used to custom order status for susbcription.
+	 *
+	 * @name wps_sfw_new_wc_order_statuses.
+	 * @since 1.0.0
+	 * @param array $order_statuses order_statuses.
+	 */
+	public function wps_sfw_new_wc_order_statuses( $order_statuses ) {
+		$order_statuses['wc-wps_renewal'] = _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' );
+
+		return $order_statuses;
 	}
 }

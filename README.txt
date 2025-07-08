@@ -5,8 +5,8 @@ Tags: subscriptions,subscription billing, subscription box, subscription, woocom
 Requires at least: 5.1.0
 Tested up to: 6.8
 WC requires at least: 5.1.0
-WC tested up to: 9.8.5
-Stable tag: 1.8.4
+WC tested up to: 9.9.5
+Stable tag: 1.8.5
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -311,6 +311,10 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 
 == Changelog ==
+
+= 1.8.5 - Released on 08 July 2025 =
+* New: Latest WP(6.8.1) and WC(9.5.0) Compatibility
+* New: Moved Advanced Tab HTML to core plugin with Pro Tag
 
 = 1.8.4 - Released on 22 May 2025 =
 * New: layout update for Subscription Tab and subscription information front end.
@@ -641,9 +645,8 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.8.4 - Released on 22 May 2025 =
-* New: layout update for Subscription Tab and subscription information front end.
-* New: Show points on renewal in existing PAR plugin compatibility
-* New: latest wp(6.8.1) and wc( 9.8.5 )
-* Fix: Fix inventory issue related to subscription box product type
+= 1.8.5 - Released on 08 July 2025 =
+* New: Latest WP(6.8.1) and WC(9.5.0) Compatibility
+* New: Moved Advanced Tab HTML to core plugin with Pro Tag
+
 

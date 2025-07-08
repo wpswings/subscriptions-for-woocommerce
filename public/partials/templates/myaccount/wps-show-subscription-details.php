@@ -209,6 +209,9 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 							$wps_product_name = wps_sfw_get_meta_data( $wps_subscription_id, 'product_name', true );
 							$product_qty = wps_sfw_get_meta_data( $wps_subscription_id, 'product_qty', true );
 
+							if (  is_array( $wps_product_name ) ) {
+								$product_name = implode( ', ', $product_name );
+							}
 							echo esc_html( $wps_product_name ) . ' x ' . esc_html( $product_qty );
 							do_action( 'wps_sfw_product_details_html', $wps_subscription_id );
 						?>
@@ -222,8 +225,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 					<td>
 					<?php
 						$price = wps_sfw_get_meta_data( $wps_subscription_id, 'line_subtotal', true );
-						echo wc_price( $price );
-						// do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $wps_subscription_id );
+						echo wp_kses_post( wc_price( $price ) );
 					?>
 					</td>
 				</tr>
@@ -238,7 +240,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 						</td>
 						<td>
 						<?php
-							echo wc_price( $tax_total );
+							echo wp_kses_post( wc_price( $tax_total ) );
 						?>
 						</td>
 					</tr>
@@ -253,7 +255,7 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 						</td>
 						<td>
 						<?php
-							echo wc_price( $get_shipping_total );
+							echo wp_kses_post( wc_price( $get_shipping_total ) );
 						?>
 						</td>
 					</tr>

@@ -559,3 +559,19 @@ img.wps_go_pro_images {
     max-width: 20px;
     vertical-align: middle;
 }
+#subscriptions-for-woocommerce-subscriptions-pro-features{
+	position: relative;
+	padding-right: 45px;
+}
+#subscriptions-for-woocommerce-subscriptions-pro-features::before {
+    content: "Pro";
+    display: inline-block;
+    background-color: #05d5d8;
+    color: white;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    position: absolute;
+    right:0;
+    line-height: 1;
+}
