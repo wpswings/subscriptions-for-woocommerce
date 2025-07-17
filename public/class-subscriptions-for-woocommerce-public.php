@@ -1974,31 +1974,6 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_process_checkout_hpos( $order ) {
 
-		if ( 'stripe' == $order->get_payment_method() && wps_sfw_is_cart_has_subscription_product() ) {
-			$request_body = file_get_contents( 'php://input' );
-			$data = json_decode( $request_body );
-
-			$woocommerce_stripe_settings = get_option( 'woocommerce_stripe_settings' );
-			$upe_checkout_experience_enabled = isset( $woocommerce_stripe_settings['upe_checkout_experience_enabled'] ) ? $woocommerce_stripe_settings['upe_checkout_experience_enabled'] : '';
-
-			if ( ! empty( $data ) && isset( $data->payment_data ) && ! empty( $data->payment_data ) ) {
-
-				$payment_object = $data->payment_data;
-				$save_payment_method = 'no';
-
-				foreach ( $payment_object as $data ) {
-					if ( ( 'save_payment_method' === $data->key && 'yes' == $data->value ) || ( 'wc-stripe-new-payment-method' == $data->key && 1 == $data->value ) || ( 'isSavedToken' == $data->key && 1 == $data->value ) || ( 'token' == $data->key && $data->value ) ) {
-						$save_payment_method = 'yes';
-						break;
-					}
-				}
-
-				if ( 'no' == $save_payment_method && 'disabled' != $upe_checkout_experience_enabled ) {
-
-					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'woocommerce-subscriptions-pro' ) );
-				}
-			}
-		}
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
 
@@ -3023,5 +2998,68 @@ class Subscriptions_For_Woocommerce_Public {
 		$order_statuses['wc-wps_renewal'] = _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' );
 
 		return $order_statuses;
+	}
+
+	public function wps_sfw_subscription_dashboard_shortcodes(){
+		add_shortcode( 'wps-subscription-dashboard', array( $this, 'wps_sfw_subscription_dashboard_shortcode_layout' ) );
+	}
+
+	public function wps_sfw_subscription_dashboard_shortcode_layout(){
+		ob_start();
+
+		if ( isset( $_GET['wps-show-subscription'] ) ) {
+			$wps_subscription_id = isset( $_GET['wps-show-subscription'] ) ? intval( $_GET['wps-show-subscription'] ) : 0;
+			wc_get_template( 'myaccount/wps-show-subscription-details.php', array( 'wps_subscription_id' => $wps_subscription_id ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+		} else {
+			$this->wps_sfw_subscription_dashboard_content();
+		}
+
+		
+		// $user_id = get_current_user_id();
+		// $wps_current_page = 1;
+		// if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+		// 	$args = array(
+		// 		'type'   => 'wps_subscriptions',
+		// 		'return' => 'ids',
+		// 		'number' => 20,
+		// 		'meta_query' => array(
+		// 			array(
+		// 				'key'   => 'wps_customer_id',
+		// 				'value' => $user_id,
+		// 			),
+		// 		),
+		// 	);
+		// 	$wps_subscriptions = wc_get_orders( $args );
+		// } else {
+		// 	$args = array(
+		// 		'numberposts' => -1,
+		// 		'post_type'   => 'wps_subscriptions',
+		// 		'post_status' => 'wc-wps_renewal',
+		// 		'meta_query' => array(
+		// 			array(
+		// 				'key'   => 'wps_customer_id',
+		// 				'value' => $user_id,
+		// 			),
+		// 		),
+		// 	);
+		// 	$wps_subscriptions = get_posts( $args );
+		// }
+		// $wps_per_page = get_option( 'posts_per_page', 10 );
+		// $wps_current_page = empty( $wps_current_page ) ? 1 : absint( $wps_current_page );
+		// $wps_num_pages = ceil( count( $wps_subscriptions ) / $wps_per_page );
+		// $subscriptions = array_slice( $wps_subscriptions, ( $wps_current_page - 1 ) * $wps_per_page, $wps_per_page );
+		// wc_get_template(
+		// 	'myaccount/wps-subscriptions.php',
+		// 	array(
+		// 		'wps_subscriptions' => $subscriptions,
+		// 		'wps_current_page'  => $wps_current_page,
+		// 		'wps_num_pages' => $wps_num_pages,
+		// 		'paginate'      => true,
+		// 	),
+		// 	'',
+		// 	SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/'
+		// );
+		return ob_get_clean();
+
 	}
 }

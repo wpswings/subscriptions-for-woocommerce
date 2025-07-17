@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.8.5
+ * Version:           1.8.6
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -179,7 +179,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.5' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.6' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -542,10 +542,6 @@ if ( $activated ) {
 	 * Allow to enable/diasble paypal standard
 	 */
 	function wps_sfw_enable_paypal_standard() {
-		$check_paypal_standard = get_option( 'wps_sfw_enable_paypal_standard', 'no' );
-		if ( 'on' === $check_paypal_standard ) {
-			add_filter( 'woocommerce_should_load_paypal_standard', '__return_true' );
-		}
 		if ( class_exists( '\WC_Gateway_Stripe' ) && version_compare( WC_STRIPE_VERSION, '4.1.11', '>' ) ) {
 			include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php';
 			include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe/class-wps-subscriptions-payment-stripe.php';

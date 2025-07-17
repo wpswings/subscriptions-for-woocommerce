@@ -669,3 +669,18 @@ a.wps_show_customer_subscription_box_popup {
 }
 
 /* subscription box end */
+
+a.wps_sfw_sub_detail_back svg {
+    width: 24px;
+    height: auto;
+}
+
+a.wps_sfw_sub_detail_back {
+    font-size: 16px;
+    align-items: center;
+    display: inline-flex;
+    gap: 5px;
+    text-decoration: none !important;
+    color: black;
+    margin-bottom: 15px;
+}

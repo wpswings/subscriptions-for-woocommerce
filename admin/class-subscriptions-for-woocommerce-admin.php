@@ -387,6 +387,17 @@ class Subscriptions_For_Woocommerce_Admin {
 				'value' => 'on',
 				'class' => 'sfw-checkbox-class',
 			),
+
+			array(
+				'title' => __( 'Subscription Shortcode', 'subscriptions-for-woocommerce' ),
+				'type' => 'text',
+				'id' => 'wps_sfw_shortcode',
+				'value' => '[wps-subscription-dashboard]',
+				'attr' => 'readonly',
+				'class' => 'sfw-text-class',
+				'placeholder' => __( 'ShortCode For Subscription', 'subscriptions-for-woocommerce' ),
+			),
+
 			array(
 				'title' => __( 'Enable Log', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
@@ -396,16 +407,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_subscription_log', '' ) ? 'on' : 'off' ),
 				'class' => 'sfw-checkbox-class',
 			),
-			array(
-				'title' => __( 'Enable Paypal Standard', 'subscriptions-for-woocommerce' ),
-				'type'  => 'checkbox',
-				/* translators: %1s: links */
-				'description'  => sprintf( __( 'You will see the %1s in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=paypal' ) . '">' . __( 'Paypal Standard Gateway', 'subscriptions-for-woocommerce' ) . '</a>' ) . '<br/>' . sprintf( __( 'Please click %1s to know that, How to get the API Credentials for the setup', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />' . __( 'Here', 'subscriptions-for-woocommerce' ) . '</a>' ),
-				'id'    => 'wps_sfw_enable_paypal_standard',
-				'value' => 'on',
-				'checked' => ( 'on' === get_option( 'wps_sfw_enable_paypal_standard', '' ) ? 'on' : 'off' ),
-				'class' => 'sfw-checkbox-class',
-			),
+			
 			array(
 				'type'  => 'button',
 				'id'    => 'wps_sfw_save_general_settings',
