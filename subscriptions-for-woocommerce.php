@@ -808,7 +808,8 @@ if ( ! function_exists( 'wps_banner_notification_plugin_html' ) ) {
 		if ( isset( $screen->id ) ) {
 			$pagescreen = $screen->id;
 		}
-		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) || ( 'wp-swings_page_home' == $pagescreen ) ) {
+
+		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) || ( 'wp-swings_page_home' == $pagescreen ) || ( 'dashboard' === $pagescreen ) ) {
 			$banner_id = get_option( 'wps_wgm_notify_new_banner_id', false );
 			if ( isset( $banner_id ) && '' !== $banner_id ) {
 				$hidden_banner_id            = get_option( 'wps_wgm_notify_hide_baneer_notification', false );
