@@ -110,8 +110,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 									''
 								);
 								echo esc_url( $url );
-
-								// Shortcode is present on this page
 							} else {
 								echo esc_url( wc_get_endpoint_url( 'show-subscription', $subcription_id, wc_get_page_permalink( 'myaccount' ) ) );
 

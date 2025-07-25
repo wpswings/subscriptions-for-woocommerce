@@ -42,7 +42,6 @@ if ( ! function_exists( 'wps_sfw_cancel_url' ) ) {
 <?php
 $referer = wp_get_referer();
 if ( $referer ) {
-	// echo '<a href="' . esc_url( $referer ) . '" class="button"></a>';
 	echo '<a href="' . esc_url( $referer ) . '"class="wps_sfw_sub_detail_back"><svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 1024 1024"><path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"/><path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"/></svg> Back</a>';
 }
 ?>
@@ -217,9 +216,9 @@ if ( $referer ) {
 							$wps_product_name = wps_sfw_get_meta_data( $wps_subscription_id, 'product_name', true );
 							$product_qty = wps_sfw_get_meta_data( $wps_subscription_id, 'product_qty', true );
 
-							if (  is_array( $wps_product_name ) ) {
-								$product_name = implode( ', ', $product_name );
-							}
+						if ( is_array( $wps_product_name ) ) {
+							$product_name = implode( ', ', $product_name );
+						}
 							echo esc_html( $wps_product_name ) . ' x ' . esc_html( $product_qty );
 							do_action( 'wps_sfw_product_details_html', $wps_subscription_id );
 						?>

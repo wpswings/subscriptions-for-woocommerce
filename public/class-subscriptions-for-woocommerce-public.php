@@ -1231,9 +1231,9 @@ class Subscriptions_For_Woocommerce_Public {
 
 							$status = 'active';
 							$status = apply_filters( 'wps_sfw_set_subscription_status', $status, $subscription_id );
-							
+
 							do_action( 'wps_wsp_after_subscription_active', $status, $subscription_id );
-							
+
 							wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', $status );
 							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
 							wps_sfw_update_meta_data( $subscription_id, 'wps_schedule_start', $current_time );
@@ -3000,11 +3000,21 @@ class Subscriptions_For_Woocommerce_Public {
 		return $order_statuses;
 	}
 
-	public function wps_sfw_subscription_dashboard_shortcodes(){
+	/**
+	 * Function to register subscription dashboard shortcodes.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_subscription_dashboard_shortcodes() {
 		add_shortcode( 'wps-subscription-dashboard', array( $this, 'wps_sfw_subscription_dashboard_shortcode_layout' ) );
 	}
 
-	public function wps_sfw_subscription_dashboard_shortcode_layout(){
+	/**
+	 * Function to render subscription dashboard content.
+	 *
+	 * @return string
+	 */
+	public function wps_sfw_subscription_dashboard_shortcode_layout() {
 		ob_start();
 
 		if ( isset( $_GET['wps-show-subscription'] ) ) {
@@ -3013,53 +3023,6 @@ class Subscriptions_For_Woocommerce_Public {
 		} else {
 			$this->wps_sfw_subscription_dashboard_content();
 		}
-
-		
-		// $user_id = get_current_user_id();
-		// $wps_current_page = 1;
-		// if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-		// 	$args = array(
-		// 		'type'   => 'wps_subscriptions',
-		// 		'return' => 'ids',
-		// 		'number' => 20,
-		// 		'meta_query' => array(
-		// 			array(
-		// 				'key'   => 'wps_customer_id',
-		// 				'value' => $user_id,
-		// 			),
-		// 		),
-		// 	);
-		// 	$wps_subscriptions = wc_get_orders( $args );
-		// } else {
-		// 	$args = array(
-		// 		'numberposts' => -1,
-		// 		'post_type'   => 'wps_subscriptions',
-		// 		'post_status' => 'wc-wps_renewal',
-		// 		'meta_query' => array(
-		// 			array(
-		// 				'key'   => 'wps_customer_id',
-		// 				'value' => $user_id,
-		// 			),
-		// 		),
-		// 	);
-		// 	$wps_subscriptions = get_posts( $args );
-		// }
-		// $wps_per_page = get_option( 'posts_per_page', 10 );
-		// $wps_current_page = empty( $wps_current_page ) ? 1 : absint( $wps_current_page );
-		// $wps_num_pages = ceil( count( $wps_subscriptions ) / $wps_per_page );
-		// $subscriptions = array_slice( $wps_subscriptions, ( $wps_current_page - 1 ) * $wps_per_page, $wps_per_page );
-		// wc_get_template(
-		// 	'myaccount/wps-subscriptions.php',
-		// 	array(
-		// 		'wps_subscriptions' => $subscriptions,
-		// 		'wps_current_page'  => $wps_current_page,
-		// 		'wps_num_pages' => $wps_num_pages,
-		// 		'paginate'      => true,
-		// 	),
-		// 	'',
-		// 	SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/'
-		// );
 		return ob_get_clean();
-
 	}
 }
