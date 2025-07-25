@@ -2,11 +2,11 @@
 Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions,subscription billing, subscription box, subscription, woocommerce subscriptions
-Requires at least: 5.1.0
-Tested up to: 6.8
+Requires at least: 6.7.0
+Tested up to: 6.8.2
 WC requires at least: 5.1.0
-WC tested up to: 9.9.5
-Stable tag: 1.8.5
+WC tested up to: 10.0.4
+Stable tag: 1.8.6
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -37,17 +37,19 @@ Our Subscription and Membership plugins are among the top-rated plugins, when co
 
 == WITH THE SUBSCRIPTIONS FOR WOOCOMMERCE PLUGIN YOU CAN: ==
 
-
+* Create a Subscription Box and Allow your customers to choose and shop their favorite products
+* Rest API to Get the Subscription Details
+* Generates error logs for subscription-related issues with subscription reports
 * Generate trouble-free recurring revenue with WordPress Subscription plugin
 * Sell subscription-based products and recurring services for a set period.
-* Supported Payment PayPal Standard payment gateway, Payfast, Amazon Pay Payment, WooCommerce Stripe Payment Gateway and WPS Paypal Payment Gateway. 
+* Provide signup fees or free trials of subscription-based products & services to your customers.
+* Supported Payment PayPal Standard payment gateway, Payfast, Amazon Pay Payment, WooCommerce Stripe Payment Gateway and WPS Paypal Payment Gateway
 * Convert your online store to a WooCommerce subscription-based store.
-* Provide signup fees or free trials of subscription-based products & services to your customers
 * Allows users to cancel WooCommerce subscriptions anytime.
-* Create a Subscription Box and Allow your customers to choose and shop their favorite products
+* Shortcode to show subscription table anywhere on the website
 * Subscriptions will automatically be canceled when the order is canceled.
+* Streamlined multi-step setup for easy configuration.
 * Receive automated email notifications for subscription cancellations, expirations, and renewal orders
-
 
 == KICKSTART YOUR SUBSCRIPTION BUSINESS ==
 [**Download Now!!**](https://downloads.wordpress.org/plugin/subscriptions-for-woocommerce.zip)
@@ -121,8 +123,7 @@ For previous users, the WPS PayPal Payment option will appear in the payment sec
 * **Compatible With PayPal Standard**: The Subscriptions plugin works flawlessly with PayPal Standard to receive WooCommerce recurring payments. You can add it as one of the payment methods by entering your PayPal merchant account API keys
 
 
-* Subscriptions plugin is compatible with [**Points and Rewards for WooCommerce Free**](https://wordpress.org/plugins/points-and-rewards-for-woocommerce/) and [**Points and Rewards for WooCommerce Pro**](https://wpswings.com/product/points-and-rewards-for-woocommerce-pro/?utm_source=wpswings-par-pro&utm_medium=subs-org-page&utm_campaign=par-pro). You can allow your users to use their earned points to purchase subscription products & services and reward users with points when they place recurring orders.Plus, the points your users have earned will be shown on their subscription table
-
+* Subscriptions plugin is compatible with [**Points and Rewards for WooCommerce Free**](https://wordpress.org/plugins/points-and-rewards-for-woocommerce/) and [**Points and Rewards for WooCommerce Pro**](https://wpswings.com/product/points-and-rewards-for-woocommerce-pro/?utm_source=wpswings-par-pro&utm_medium=subs-org-page&utm_campaign=par-pro). You can allow your users to use their earned points to purchase subscription products & services and reward users with points when they place recurring orders. Plus, the points your users have earned will be shown on their subscription table
 
 * [**Membership for WooCommerce**](https://wordpress.org/plugins/membership-for-woocommerce/) Free and [**Membership for WooCommerce Pro**](https://wpswings.com/product/membership-for-woocommerce-pro/?utm_source=wpswings-membership-pro&utm_medium=subs-org-page&utm_campaign=membership-pro): Our WooCommerce Subscriptions plugin works smoothly with the Membership plugin, letting you sell subscription services and products as part of your membership plans. You can easily create membership plans, offer exclusive discounts, and add options like a free trial or signup fee for membership products. This makes it simple to manage your membership and subscription options.
 
@@ -312,8 +313,13 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.8.6 - Released on 25 July 2025 =
+* New - Shortcode for subscription Table
+* New: Latest WP(6.8.2) and WC(10.0.4) Compatibility
+* Fix - Stripe compatibility issue fix on checkout page
+
 = 1.8.5 - Released on 08 July 2025 =
-* New: Latest WP(6.8.1) and WC(9.5.0) Compatibility
+* New: Latest WP(6.8.1) and WC(9.9.5) Compatibility
 * New: Moved Advanced Tab HTML to core plugin with Pro Tag
 
 = 1.8.4 - Released on 22 May 2025 =
@@ -645,8 +651,8 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.8.5 - Released on 08 July 2025 =
-* New: Latest WP(6.8.1) and WC(9.5.0) Compatibility
-* New: Moved Advanced Tab HTML to core plugin with Pro Tag
-
+= 1.8.6 - Released on 25 July 2025 =
+* New - Shortcode for subscription Table
+* New: Latest WP(6.8.2) and WC(10.0.4) Compatibility
+* Fix - Stripe compatibility issue fix on checkout page
 
