@@ -100,7 +100,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<span class="wps_sfw_account_show_subscription">
 									<a href="
 							<?php
-							echo esc_url( wc_get_endpoint_url( 'show-subscription', $subcription_id, wc_get_page_permalink( 'myaccount' ) ) );
+							global $post;
+
+							if ( isset( $post->post_content ) && has_shortcode( $post->post_content, 'wps-subscription-dashboard' ) ) {
+								$url = add_query_arg(
+									array(
+										'wps-show-subscription' => $subcription_id,
+									),
+									''
+								);
+								echo esc_url( $url );
+							} else {
+								echo esc_url( wc_get_endpoint_url( 'show-subscription', $subcription_id, wc_get_page_permalink( 'myaccount' ) ) );
+
+							}
 							?>
 									">
 							<?php

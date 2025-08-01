@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.8.4';
+			$this->version = '1.8.6';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -380,6 +380,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_public, 'wps_sfw_register_new_order_statuses' );
 			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_public, 'wps_sfw_new_wc_order_statuses' );
+			$this->loader->add_action( 'plugins_loaded', $sfw_plugin_public, 'wps_sfw_subscription_dashboard_shortcodes' );
 
 
 			// subscription box.

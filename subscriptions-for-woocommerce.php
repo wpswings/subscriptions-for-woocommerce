@@ -15,17 +15,17 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.8.5
+ * Version:           1.8.6
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  * Requires Plugins:  woocommerce
  *
- * Requires at least:        5.1.0
+ * Requires at least:        6.7.0
  * Tested up to:             6.8.1
  * WC requires at least:     5.1.0
- * WC tested up to:          9.9.4
+ * WC tested up to:          10.0.4
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -179,7 +179,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.5' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.6' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -542,10 +542,6 @@ if ( $activated ) {
 	 * Allow to enable/diasble paypal standard
 	 */
 	function wps_sfw_enable_paypal_standard() {
-		$check_paypal_standard = get_option( 'wps_sfw_enable_paypal_standard', 'no' );
-		if ( 'on' === $check_paypal_standard ) {
-			add_filter( 'woocommerce_should_load_paypal_standard', '__return_true' );
-		}
 		if ( class_exists( '\WC_Gateway_Stripe' ) && version_compare( WC_STRIPE_VERSION, '4.1.11', '>' ) ) {
 			include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe-sepa/class-wps-subscriptions-payment-stripe-sepa.php';
 			include_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'package/gateways/stripe/class-wps-subscriptions-payment-stripe.php';
@@ -643,7 +639,6 @@ if ( $activated ) {
 		}
 
 		// Remove the submenu from WooCommerce.
-		// remove_submenu_page( 'woocommerce', 'wc-orders--wps_subscriptions' );
 	}
 	add_action( 'admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999 );
 	// HPOS Compatibility for Custom Order type i.e. WPS_Subscription.
@@ -812,7 +807,8 @@ if ( ! function_exists( 'wps_banner_notification_plugin_html' ) ) {
 		if ( isset( $screen->id ) ) {
 			$pagescreen = $screen->id;
 		}
-		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) || ( 'wp-swings_page_home' == $pagescreen ) ) {
+
+		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) || ( 'wp-swings_page_home' == $pagescreen ) || ( 'dashboard' === $pagescreen ) ) {
 			$banner_id = get_option( 'wps_wgm_notify_new_banner_id', false );
 			if ( isset( $banner_id ) && '' !== $banner_id ) {
 				$hidden_banner_id            = get_option( 'wps_wgm_notify_hide_baneer_notification', false );

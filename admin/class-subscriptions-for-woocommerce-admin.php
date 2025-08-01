@@ -121,6 +121,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		$wps_sfw_branner_notice = array(
 			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 			'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
+			'check_pro_active'           => esc_html( $is_pro ),
 		);
 		wp_register_script( $this->plugin_name . 'admin-notice', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/wps-sfw-subscription-card-notices.js', array( 'jquery' ), $this->version, false );
 
@@ -387,6 +388,18 @@ class Subscriptions_For_Woocommerce_Admin {
 				'value' => 'on',
 				'class' => 'sfw-checkbox-class',
 			),
+
+			array(
+				'title' => __( 'Subscription Shortcode', 'subscriptions-for-woocommerce' ),
+				'type' => 'text',
+				'id' => 'wps_sfw_shortcode',
+				'value' => '[wps-subscription-dashboard]',
+				'attr' => 'readonly',
+				'class' => 'sfw-text-class',
+				'placeholder' => __( 'ShortCode For Subscription', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Subscription ShortCode', 'subscriptions-for-woocommerce' ),
+			),
+
 			array(
 				'title' => __( 'Enable Log', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
@@ -396,16 +409,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_subscription_log', '' ) ? 'on' : 'off' ),
 				'class' => 'sfw-checkbox-class',
 			),
-			array(
-				'title' => __( 'Enable Paypal Standard', 'subscriptions-for-woocommerce' ),
-				'type'  => 'checkbox',
-				/* translators: %1s: links */
-				'description'  => sprintf( __( 'You will see the %1s in the Woocommerce Payments section.', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=paypal' ) . '">' . __( 'Paypal Standard Gateway', 'subscriptions-for-woocommerce' ) . '</a>' ) . '<br/>' . sprintf( __( 'Please click %1s to know that, How to get the API Credentials for the setup', 'subscriptions-for-woocommerce' ), '<a target="__blank" href="https://developer.paypal.com/api/nvp-soap/apiCredentials/#link-apisignatures" />' . __( 'Here', 'subscriptions-for-woocommerce' ) . '</a>' ),
-				'id'    => 'wps_sfw_enable_paypal_standard',
-				'value' => 'on',
-				'checked' => ( 'on' === get_option( 'wps_sfw_enable_paypal_standard', '' ) ? 'on' : 'off' ),
-				'class' => 'sfw-checkbox-class',
-			),
+			
 			array(
 				'type'  => 'button',
 				'id'    => 'wps_sfw_save_general_settings',
@@ -1189,8 +1193,9 @@ class Subscriptions_For_Woocommerce_Admin {
 			update_option( 'wps_wgm_notify_new_banner_id', $banner_id );
 			update_option( 'wps_wgm_notify_new_banner_image', $banner_image );
 			update_option( 'wps_wgm_notify_new_banner_url', $banner_url );
+
 			if ( 'regular' == $banner_type ) {
-				update_option( 'wps_wgm_notify_hide_baneer_notification', '' );
+				update_option( 'wps_wgm_notify_hide_baneer_notification', 0 );
 			}
 		}
 	}

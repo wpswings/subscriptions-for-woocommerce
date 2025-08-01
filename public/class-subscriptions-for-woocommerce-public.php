@@ -1231,9 +1231,9 @@ class Subscriptions_For_Woocommerce_Public {
 
 							$status = 'active';
 							$status = apply_filters( 'wps_sfw_set_subscription_status', $status, $subscription_id );
-							
+
 							do_action( 'wps_wsp_after_subscription_active', $status, $subscription_id );
-							
+
 							wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', $status );
 							$current_time = apply_filters( 'wps_sfw_subs_curent_time', current_time( 'timestamp' ), $subscription_id );
 							wps_sfw_update_meta_data( $subscription_id, 'wps_schedule_start', $current_time );
@@ -1974,31 +1974,6 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_process_checkout_hpos( $order ) {
 
-		if ( 'stripe' == $order->get_payment_method() && wps_sfw_is_cart_has_subscription_product() ) {
-			$request_body = file_get_contents( 'php://input' );
-			$data = json_decode( $request_body );
-
-			$woocommerce_stripe_settings = get_option( 'woocommerce_stripe_settings' );
-			$upe_checkout_experience_enabled = isset( $woocommerce_stripe_settings['upe_checkout_experience_enabled'] ) ? $woocommerce_stripe_settings['upe_checkout_experience_enabled'] : '';
-
-			if ( ! empty( $data ) && isset( $data->payment_data ) && ! empty( $data->payment_data ) ) {
-
-				$payment_object = $data->payment_data;
-				$save_payment_method = 'no';
-
-				foreach ( $payment_object as $data ) {
-					if ( ( 'save_payment_method' === $data->key && 'yes' == $data->value ) || ( 'wc-stripe-new-payment-method' == $data->key && 1 == $data->value ) || ( 'isSavedToken' == $data->key && 1 == $data->value ) || ( 'token' == $data->key && $data->value ) ) {
-						$save_payment_method = 'yes';
-						break;
-					}
-				}
-
-				if ( 'no' == $save_payment_method && 'disabled' != $upe_checkout_experience_enabled ) {
-
-					throw new Exception( esc_html__( 'Please check <strong>"Save payment information to my account for future purchases"</strong> to proceed further ', 'woocommerce-subscriptions-pro' ) );
-				}
-			}
-		}
 		/*delete failed order subscription*/
 		wps_sfw_delete_failed_subscription( $order->get_id() );
 
@@ -3023,5 +2998,31 @@ class Subscriptions_For_Woocommerce_Public {
 		$order_statuses['wc-wps_renewal'] = _x( 'Wps Renewal', 'Order status', 'subscriptions-for-woocommerce' );
 
 		return $order_statuses;
+	}
+
+	/**
+	 * Function to register subscription dashboard shortcodes.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_subscription_dashboard_shortcodes() {
+		add_shortcode( 'wps-subscription-dashboard', array( $this, 'wps_sfw_subscription_dashboard_shortcode_layout' ) );
+	}
+
+	/**
+	 * Function to render subscription dashboard content.
+	 *
+	 * @return string
+	 */
+	public function wps_sfw_subscription_dashboard_shortcode_layout() {
+		ob_start();
+
+		if ( isset( $_GET['wps-show-subscription'] ) ) {
+			$wps_subscription_id = isset( $_GET['wps-show-subscription'] ) ? intval( $_GET['wps-show-subscription'] ) : 0;
+			wc_get_template( 'myaccount/wps-show-subscription-details.php', array( 'wps_subscription_id' => $wps_subscription_id ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+		} else {
+			$this->wps_sfw_subscription_dashboard_content();
+		}
+		return ob_get_clean();
 	}
 }
