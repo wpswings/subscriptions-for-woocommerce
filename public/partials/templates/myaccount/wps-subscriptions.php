@@ -32,12 +32,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</thead>
 					<tbody>
 					<?php
-					foreach ( $wps_subscriptions as $key => $wps_subscription ) {
-						if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-							$subcription_id = $wps_subscription;
-						} else {
-							$subcription_id = $wps_subscription->ID;
-						}
+					foreach ( $wps_subscriptions as $key => $subcription_id ) {
+
 						$parent_order_id   = wps_sfw_get_meta_data( $subcription_id, 'wps_parent_order', true );
 						$wps_wsfw_is_order = false;
 						if ( function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {

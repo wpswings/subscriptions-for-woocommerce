@@ -500,13 +500,13 @@ class Subscriptions_For_Woocommerce {
 			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 
-		// subscription box.
+		// Subscription box.
 		$sfw_default_tabs['subscription-for-woocommerce-subscription-box'] = array(
 			'title'       => esc_html__( 'Subscription Box', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscription-for-woocommerce-subscription-box',
 			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
-		// subscription box.
+		// Subscription box.
 
 		if ( ! defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION' ) ) {
 			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-pro-features'] = array(

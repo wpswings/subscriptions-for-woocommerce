@@ -845,15 +845,10 @@ class Subscriptions_For_Woocommerce_Admin {
 				$wps_wsp_payment_type = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_wsp_payment_type', true );
 				if ( 'wps_wsp_manual_method' == $wps_wsp_payment_type ) {
 					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
-					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_admin' );
-					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
-
-				} else {
-
-					do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
-					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_admin' );
-					wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 				}
+				do_action( 'wps_sfw_subscription_cancel', $wps_subscription_id, 'Cancel' );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_admin' );
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 				$redirect_url = admin_url() . 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-subscriptions-table';
 				wp_safe_redirect( $redirect_url );
 				exit;

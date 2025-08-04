@@ -296,7 +296,6 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 						}
 						$wps_new_order = wc_get_order( $wps_new_order->get_id() ); // recalucate when shipping fee applied.
 
-
 						if ( $wps_new_order->get_status() == 'processing' ) {
 							$virtual_order = false;
 							foreach ( $wps_new_order->get_items() as $item ) {
