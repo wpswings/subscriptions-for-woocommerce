@@ -63,25 +63,6 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     width: 100%;
 }
 
-/* .wps_sfw_account_wrap table th {
-    min-width: 100px;
-    text-align: left;
-}
-
-.wps_sfw_account_wrap table th:first-of-type {
-    min-width: 50px;
-}
-
-.wps_sfw_account_wrap table th:nth-of-type(3) {
-    min-width: 150px;
-}
-
-.wps_sfw_account_wrap table th:last-of-type,
-.wps_sfw_account_wrap table td:last-of-type {
-    min-width: 80px;
-    text-align: center;
-} */
-
 .wps_sfw_account_additional_wrap {
     padding: 10px;
     border-radius: 10px;
@@ -234,6 +215,11 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     margin: 0;
 }
 
+.wps_sfw_details_wrap-parent {
+    container-type: inline-size;
+    container-name: subs-box;
+}
+
 .wps_sfw_details_wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -255,6 +241,25 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
 .wps_sfw_account_additional_wrap:hover {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
 }
+
+@container subs-box (max-width: 690px) {
+    .wps_sfw_details_wrap {
+        gap: 30px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .wps_sfw_details_wrap .wps_sfw_account_additional_wrap table.shop_table{
+        width: 100%;
+    }
+    .wps_sfw_account_additional_wrap {
+        flex: 1 0 45%;
+    }
+    .wps_sfw_account_additional_wrap.wps_sfw_account_renewal_wrap {
+        overflow: auto;
+    }
+}
+
 /* Subscription on my account page end  */
 /* Single product page start */
 

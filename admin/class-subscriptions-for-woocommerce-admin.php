@@ -115,13 +115,11 @@ class Subscriptions_For_Woocommerce_Admin {
 		$screen = get_current_screen();
 
 		$recurring_payment_icon = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/recurring-payment.svg';
-		$is_pro = false;
-		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
+		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', false );
 
 		$wps_sfw_branner_notice = array(
 			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 			'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
-			'check_pro_active'           => esc_html( $is_pro ),
 		);
 		wp_register_script( $this->plugin_name . 'admin-notice', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/wps-sfw-subscription-card-notices.js', array( 'jquery' ), $this->version, false );
 
@@ -1240,7 +1238,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			if ( isset( $banner_id ) && '' != $banner_id ) {
 				update_option( 'wps_wgm_notify_hide_baneer_notification', $banner_id );
 			}
-
 			wp_send_json_success();
 		}
 	}
