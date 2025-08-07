@@ -382,7 +382,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param object $cart cart.
 	 * @since    1.0.0
 	 */
-	public function wps_sfw_add_subscription_price_and_sigup_fee( $cart ) {
+	public function wps_sfw_add_subscription_price( $cart ) {
 
 		// This is necessary for WC 3.0+.
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
@@ -408,21 +408,42 @@ class Subscriptions_For_Woocommerce_Public {
 
 						$cart_data['data']->set_price( $wps_cart_price );
 					}
-					// Add signup fee.
-					$product_id = isset( $cart_data['variation_id'] ) && $cart_data['variation_id'] ? $cart_data['variation_id'] : $cart_data['product_id'];
-					$wps_sfw_signup_fee = $this->wps_sfw_get_subscription_initial_signup_price( $product_id );
-					$wps_sfw_signup_fee = is_numeric( $wps_sfw_signup_fee ) ? (float) $wps_sfw_signup_fee : 0;
-					if ( $wps_sfw_signup_fee ) {
-						WC()->cart->add_fee(
-							esc_html__( 'Initial Signup Fee', 'subscriptions-for-woocommerce' ),
-							$wps_sfw_signup_fee,
-							false
-						);
-					}
 				}
 			}
 		}
 		do_action( 'wps_sfw_did_woocommerce_before_calculate_totals', $cart );
+	}
+
+	/**
+	 * This function is used to add subscription signup fee.
+	 *
+	 * @name  wps_sfw_add_subscription_signup_fee
+	 * @param object $cart cart.
+	 * @since 1.8.7
+	 */
+	public function wps_sfw_add_subscription_signup_fee($cart) {
+		// Only add the fee if it's not already added
+		if (is_admin() && !defined('DOING_AJAX')) return;
+
+		$wps_sfw_signup_fee = 0;
+		if ( isset( $cart ) && ! empty( $cart ) ) {
+			foreach ( $cart->cart_contents as $key => $cart_data ) {
+				if ( wps_sfw_check_product_is_subscription( $cart_data['data'] ) ) {
+
+					$product_id = $cart_data['data']->get_id();
+					// Add signup fee.
+					$product_id = isset( $cart_data['variation_id'] ) && $cart_data['variation_id'] ? $cart_data['variation_id'] : $cart_data['product_id'];
+					$wps_sfw_get_signup_fee = $this->wps_sfw_get_subscription_initial_signup_price( $product_id );
+					$wps_sfw_get_signup_fee = is_numeric( $wps_sfw_get_signup_fee ) ? (float) $wps_sfw_get_signup_fee : 0;
+					if ( $wps_sfw_get_signup_fee ) {
+						$wps_sfw_signup_fee += $wps_sfw_get_signup_fee;
+					}
+				}
+			}
+		}
+		if ( $wps_sfw_signup_fee ) {
+			$cart->add_fee(esc_html__('Initial Signup Fee', 'subscriptions-for-woocommerce'), $wps_sfw_signup_fee, false);
+		}
 	}
 
 	/**
@@ -654,7 +675,6 @@ class Subscriptions_For_Woocommerce_Public {
 			wps_sfw_update_meta_data( $subscription_id, 'wps_susbcription_trial_end', 0 );
 			wps_sfw_update_meta_data( $subscription_id, 'wps_susbcription_end', 0 );
 			wps_sfw_update_meta_data( $subscription_id, 'wps_next_payment_date', 0 );
-			wps_sfw_update_meta_data( $subscription_id, '_order_key', wc_generate_order_key() );
 
 			$attach_courses = get_post_meta( $wps_recurring_data['product_id'], 'wps_learnpress_course', true );
 			wps_sfw_update_meta_data( $subscription_id, 'wps_learnpress_course', $attach_courses );
@@ -672,6 +692,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$new_order->set_payment_method_title( $order->get_payment_method_title() );
 
 			$new_order->set_currency( $order->get_currency() );
+			$new_order->set_order_key( wc_generate_order_key() );
 
 			$line_subtotal   = $wps_args['line_subtotal'];
 			$line_total      = $wps_args['line_total'];
@@ -1872,6 +1893,10 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_sfw_subscription_expiry_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_expiry_number', true );
 			$wps_sfw_subscription_interval = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_interval', true );
 			$wps_sfw_subscription_free_trial_number = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_free_trial_number', true );
+
+			if ( ! empty( $wps_sfw_subscription_free_trial_number ) && ! $cart_item['data']->get_price() && $product_id && wc_get_product( $product_id ) ) {
+				$price = wc_price( wc_get_product( $product_id )->get_price() );
+			}
 
 			$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
 

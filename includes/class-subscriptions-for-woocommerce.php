@@ -296,7 +296,9 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'wps_sfw_show_subscription_price_on_cart', 99, 3 );
 
-			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee', 999 );
+			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price', 999 );
+			$this->loader->add_action( 'woocommerce_cart_calculate_fees', $sfw_plugin_public, 'wps_sfw_add_subscription_signup_fee', 999 );
+
 
 			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 999, 2 );
 

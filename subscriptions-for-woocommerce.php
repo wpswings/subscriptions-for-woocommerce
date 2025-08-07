@@ -867,3 +867,4 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
+
