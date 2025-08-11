@@ -1562,26 +1562,6 @@ class Subscriptions_For_Woocommerce_Public {
 	}
 
 	/**
-	 * Show the notice for stripe payment description.
-	 *
-	 * @param string  $description .
-	 * @param integer $gateway_id .
-	 */
-	public function wps_sfw_change_payment_gateway_description( $description, $gateway_id ) {
-		$available_gateways   = WC()->payment_gateways->get_available_payment_gateways();
-		$experimental_feature = 'no';
-		if ( isset( $available_gateways['stripe'] ) && isset( $available_gateways['stripe']->settings['upe_checkout_experience_enabled'] ) ) {
-			$experimental_feature = $available_gateways['stripe']->settings['upe_checkout_experience_enabled'];
-		}
-		$wps_has_subscription = wps_sfw_is_cart_has_subscription_product();
-
-		if ( 'stripe' === $gateway_id && $wps_has_subscription && 'yes' === $experimental_feature ) {
-			$description .= '<i><span class="wps_sfw_experimental_feature_notice">' . esc_html__( 'Only the Card is supported for the recurring payment', 'subscriptions-for-woocommerce' ) . '</span></i><br>';
-		}
-		return $description;
-	}
-
-	/**
 	 * Display the recurring
 	 *
 	 * @return void

@@ -37,9 +37,29 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_add_stripe_order_statuses_for_payment_complete' ), 10, 2 );
 
-			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback' ) );
+			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_display_save_payment_method_checkbox' ) );
 
-			add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback_old' ), 10, 2 );
+			// Path to Stripe's main plugin file
+			$stripe_main_file = WP_PLUGIN_DIR . '/woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';
+
+			$version = null;
+			if ( file_exists( $stripe_main_file ) ) {
+				$plugin_data = get_file_data(
+					$stripe_main_file,
+					array( 'Version' => 'Version' ),
+					'plugin'
+				);
+				$version = isset( $plugin_data['Version'] ) ? $plugin_data['Version'] : null;
+			}
+			if ( $version ) {
+				if ( version_compare( $version, '9.6.0', '>=' ) ) {
+					// New filter (≥ 9.6.0) — no deprecation.
+					add_filter( 'wc_stripe_force_save_payment_method', array( $this, 'wps_sfw_wc_stripe_force_save_source_new' ), 10, 2 );
+				} else {
+					// Old filter (< 9.6.0).
+					add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_old' ), 10, 2 );
+				}
+			}
 		}
 
 		/**
@@ -99,16 +119,16 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 			return apply_filters( 'wps_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
 		}
 
-		 /**
-		  * Force stripe to Save payment information to my account for future purchases.
-		  *
-		  * @param bool $force_save_source Should we force save payment source.
-		  */
-		public function wps_sfw_wc_stripe_force_save_source_callback( $force_save_source ) {
+		/**
+		 * Display save payment method checkbox.
+		 *
+		 * @param bool $display_save_payment_method_checkbox display_save_payment_method_checkbox.
+		 */
+		public function wps_sfw_display_save_payment_method_checkbox( $display_save_payment_method_checkbox ) {
 			if ( wps_sfw_is_cart_has_subscription_product() ) {
 				return false;
 			}
-			return $force_save_source;
+			return $display_save_payment_method_checkbox;
 		}
 
 		/**
@@ -117,8 +137,21 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		 * @param bool  $force_save_source Should we force save payment source.
 		 * @param array $customer as customer.
 		 */
-		public function wps_sfw_wc_stripe_force_save_source_callback_old( $force_save_source, $customer = null ) {
+		public function wps_sfw_wc_stripe_force_save_source_old( $force_save_source, $customer = null ) {
 			if ( wps_sfw_is_cart_has_subscription_product() ) {
+				return true;
+			}
+			return $force_save_source;
+		}
+
+		/**
+		 * Force stripe to Save payment information to my account for future purchases.
+		 *
+		 * @param bool  $force_save_source Should we force save payment source.
+		 * @param int   $order_id Order ID.
+		 */
+		public function wps_sfw_wc_stripe_force_save_source_new( $force_save_source, $order_id ) {
+			if ( wps_sfw_is_cart_has_subscription_product() || ( $order_id && wps_sfw_order_has_subscription( $order_id ) ) ) {
 				return true;
 			}
 			return $force_save_source;
