@@ -378,7 +378,7 @@ class Subscriptions_For_Woocommerce_Public {
 	/**
 	 * This function is used to add susbcription price.
 	 *
-	 * @name wps_sfw_add_subscription_price_and_sigup_fee
+	 * @name wps_sfw_add_subscription_price
 	 * @param object $cart cart.
 	 * @since    1.0.0
 	 */
@@ -403,11 +403,14 @@ class Subscriptions_For_Woocommerce_Public {
 					$wps_sfw_free_trial_number = $this->wps_sfw_get_subscription_trial_period_number( $product_id );
 
 					if ( isset( $wps_sfw_free_trial_number ) && ! empty( $wps_sfw_free_trial_number ) ) {
-						// Cart price.
-						$wps_cart_price = apply_filters( 'wps_sfw_cart_price_subscription', 0, $cart_data );
-
-						$cart_data['data']->set_price( $wps_cart_price );
+						$product_price = 0;
+					} else {
+						$product_price = $cart_data['data']->get_price();
 					}
+					// Cart price.
+					$wps_cart_price = apply_filters( 'wps_sfw_cart_price_subscription', $product_price, $cart_data );
+
+					$cart_data['data']->set_price( $wps_cart_price );
 				}
 			}
 		}
@@ -422,7 +425,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @since 1.8.7
 	 */
 	public function wps_sfw_add_subscription_signup_fee($cart) {
-		// Only add the fee if it's not already added
+		// Only add the fee if it's not already added.
 		if (is_admin() && !defined('DOING_AJAX')) return;
 
 		$wps_sfw_signup_fee = 0;
@@ -1024,7 +1027,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$order_id_field = 'post_id';
 		}
 
-		// Total count (for pagination)
+		// Total count (for pagination).
 		$sql_count = "
 			SELECT COUNT(DISTINCT {$table}.{$id_field})
 			FROM {$table}
@@ -1037,7 +1040,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$total_count = $wpdb->get_var( $wpdb->prepare( $sql_count, $user_id ) );
 		$wps_num_pages = ceil( $total_count / $wps_per_page );
 
-		// Paginated query
+		// Paginated query.
 		$sql = "
 			SELECT DISTINCT {$table}.{$id_field}
 			FROM {$table}

@@ -387,7 +387,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$where .= " AND {$table}.post_type = 'wps_subscriptions'";
 		}
 
-		// Search filter
+		// Search filter.
 		if ( $search_term ) {
 			if ( is_numeric( $search_term ) ) {
 
@@ -413,7 +413,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			}
 		}
 
-		// Fetch paginated data
+		// Fetch paginated data.
 		$sql = "
 			SELECT DISTINCT {$table}.{$id_field}
 			FROM {$table}
@@ -427,7 +427,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 		$wps_subscriptions = $wpdb->get_col( $wpdb->prepare( $sql, $per_page, $offset ) );
 
-		// Get total count
+		// Get total count.
 		$sql_count = "
 			SELECT COUNT(DISTINCT {$table}.{$id_field})
 			FROM {$table}
@@ -439,7 +439,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 		$total_count = $wpdb->get_var( $sql_count );
 
-		// redirection from order edit page link to specific subscription .
+		// Redirection from order edit page link to specific subscription.
 		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type'] ) {
 			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
 

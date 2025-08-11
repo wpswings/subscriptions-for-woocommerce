@@ -39,7 +39,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_display_save_payment_method_checkbox' ) );
 
-			// Path to Stripe's main plugin file
+			// Path to Stripe's main plugin file.
 			$stripe_main_file = WP_PLUGIN_DIR . '/woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';
 
 			$version = null;
