@@ -727,6 +727,13 @@ if ( $activated ) {
 		}
 	}
 
+	add_filter( 'woocommerce_product_class', function( $classname, $product_type ) {
+		if ( 'subscription_box' === $product_type ) {
+			$classname = 'WC_Product_Subscription_Box';
+		}
+		return $classname;
+	}, 10, 2 );
+
 } else {
 	// WooCommerce is not active so deactivate this plugin.
 	add_action( 'admin_init', 'wps_sfw_activation_failure' );

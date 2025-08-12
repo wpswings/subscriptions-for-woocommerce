@@ -254,8 +254,6 @@ class Subscriptions_For_Woocommerce {
 			// paypal Keys Validation.
 			$this->loader->add_filter( 'wp_ajax_wps_sfw_paypal_keys_validation', $sfw_plugin_admin, 'wps_sfw_paypal_keys_validation_callack' );
 
-			// subscription box working.
-			$this->loader->add_filter( 'product_type_selector', $sfw_plugin_admin, 'wsp_register_subscription_box_product_type', 10, 1 );
 			$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'wps_sfw_custom_product_tab_for_subscription_box' );
 			$this->loader->add_action( 'woocommerce_product_data_panels', $sfw_plugin_admin, 'wps_sfw_custom_product_fields_for_subscription_box' );
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_subscription_box_data_for_subscription', 999, 2 );
@@ -381,6 +379,11 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_register_shop_order_post_statuses', $sfw_plugin_public, 'wps_sfw_register_new_order_statuses' );
 			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_public, 'wps_sfw_new_wc_order_statuses' );
 			$this->loader->add_action( 'plugins_loaded', $sfw_plugin_public, 'wps_sfw_subscription_dashboard_shortcodes' );
+
+			// subscription box working.
+			$this->loader->add_filter( 'product_type_selector', $sfw_plugin_public, 'wsp_register_subscription_box_product_type', 10, 1 );
+			$this->loader->add_filter( 'woocommerce_blocks_product_editor_supported_product_types', $sfw_plugin_public, 'wps_sfw_subscription_box_product_type_support', 10, 1 );
+			$this->loader->add_action( 'woocommerce_layout_template_after_instantiation', $sfw_plugin_public, 'wps_sfw_subscription_box_product_type_support_after_instantiation', 10, 3 );
 
 
 			// subscription box.

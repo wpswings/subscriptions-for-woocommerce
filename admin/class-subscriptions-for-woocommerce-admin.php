@@ -1321,23 +1321,6 @@ class Subscriptions_For_Woocommerce_Admin {
 
 
 	/**
-	 * Register Subscription box product type in product dropdown.
-	 *
-	 * @param array $types as type.
-	 * @return array
-	 */
-	public function wsp_register_subscription_box_product_type( $types ) {
-		$enable_subscription_box = get_option( 'wsp_enable_subscription_box_features' );
-		if ( 'on' == $enable_subscription_box ) {
-			$types['subscription_box'] = esc_html__( 'Subscription Box', 'subscriptions-for-woocommerce' );
-		}
-		return $types;
-	}
-
-
-
-
-	/**
 	 * This function is used to add subscription box settings for product.
 	 *
 	 * @name wps_sfw_custom_product_tab_for_subscription

@@ -2977,4 +2977,175 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		return ob_get_clean();
 	}
+
+	/**
+	 * Register Subscription box product type in product dropdown.
+	 *
+	 * @param array $types as type.
+	 * @return array
+	 */
+	public function wsp_register_subscription_box_product_type( $types ) {
+		$enable_subscription_box = get_option( 'wsp_enable_subscription_box_features' );
+		if ( 'on' == $enable_subscription_box ) {
+			$types['subscription_box'] = esc_html__( 'Subscription Box', 'subscriptions-for-woocommerce' );
+		}
+		return $types;
+	}
+
+	public function wps_sfw_subscription_box_product_type_support( $types ){
+		$types[] = 'subscription_box';
+		return $types;
+	}
+
+	public function wps_sfw_subscription_box_product_type_support_after_instantiation( $layout_template_id, $layout_template_area, $layout_template ){
+
+		$general = $layout_template->get_group_by_id( 'general' );
+		if ( $general ) {
+            // Creating a new section, this is optional.
+            $subscription_section = $general->add_section(
+				array(
+					'id'         => 'subscription-section',
+					'order'      => 15,
+					'attributes' => array(
+						'title'       => __( 'Subscription Section', 'woocommerce' ),
+						'description' => __( 'Fields related to the subscription', 'woocommerce' ),
+					),
+					'hideConditions' => array(
+					array(
+						'expression' => 'editedProduct.type !== "simple" ',
+					),
+					// array(
+					// 	'expression' => 'editedProduct.type !== "variation"', //for this we need to use separte section which for for variable product.
+					),
+				),
+			);
+
+
+			$subscription_time_interval[] = array(
+			'label' => __( 'Day', 'subscriptions-for-woocommerce' ),
+			'value' => 'day',
+			);
+			$subscription_time_interval[] = array(
+				'label' => __( 'Week', 'subscriptions-for-woocommerce' ),
+				'value' => 'week',
+			);
+			$subscription_time_interval[] = array(
+				'label' => __( 'Month', 'subscriptions-for-woocommerce' ),
+				'value' => 'month',
+			);
+			$subscription_time_interval[] = array(
+				'label' => __( 'Year', 'subscriptions-for-woocommerce' ),
+				'value' => 'year',
+			);
+            
+
+			$subscription_section->add_block(
+				array(
+					'id'         => '_wps_sfw_product',
+					'blockName'  => 'woocommerce/product-toggle-field',
+					'attributes' => array(
+						'property'       => 'meta_data._wps_sfw_product',  // This is the meta key for the subscription product.  for variable we need to use wps_sfw_variable_product
+						'label'          => __( 'Subscription Product', 'subscriptions-for-woocommerce' ),
+						'checkedValue'   => 'yes',
+						'uncheckedValue' => 'no',
+					),
+					
+				)
+			);
+
+			$subscription_section->add_block(
+            [
+                'id'         => 'wps_sfw_subscription_number',
+                'blockName'  => 'woocommerce/product-number-field',
+                'attributes' => array(
+                    'property' => 'meta_data.wps_sfw_subscription_number',
+                    'label'    => __( 'Subscription Interval Number', 'subscriptions-for-woocommerce' ),
+                ),
+            ]
+
+       		 );
+
+			 $subscription_section->add_block(
+				array(
+					'id'         => 'product-wps_sfw_subscription_interval',
+					'blockName'  => 'woocommerce/product-select-field',
+					'attributes' => array(
+						'label'    => __( 'Subscription Time Interval', 'subscriptions-for-woocommerce' ),
+						'help'     => sprintf(
+						/* translators: %1$s: Learn more link opening tag. %2$s: Learn more link closing tag.*/
+							__( 'Choose the subscriptions time interval for the product &quot;for example 10 days', 'subscriptions-for-woocommerce' ),
+						),
+						'property' => 'meta_data.wps_sfw_subscription_interval',
+						'options'  => $subscription_time_interval,
+					),
+				)
+			);
+
+
+			 $subscription_section->add_block(
+				array(
+					'id'         => 'product-wps_sfw_subscription_expiry_number',
+					'blockName'  => 'woocommerce/product-number-field',
+					'attributes' => array(
+						'label'    => __( 'Subscription Expiry Number', 'subscriptions-for-woocommerce' ),
+						'property' => 'meta_data.wps_sfw_subscription_expiry_number',
+					),
+				)
+			);
+
+			 $subscription_section->add_block(
+				array(
+					'id'         => 'product-wps_sfw_subscription_expiry_interval',
+					'blockName'  => 'woocommerce/product-select-field',
+					'attributes' => array(
+						'label'    => __( 'Subscription Expiry Interval', 'subscriptions-for-woocommerce' ),
+						'help'     => sprintf(
+							__( 'Choose the subscriptions time interval for the product &quot;for example 10 days', 'subscriptions-for-woocommerce' ),
+						),
+						'property' => 'meta_data.wps_sfw_subscription_expiry_interval',
+						'options'  => $subscription_time_interval,
+					),
+				)
+			);
+
+			$subscription_section->add_block(
+				array(
+					'id'         => 'product-wps_sfw_subscription_initial_signup_price',
+					'blockName'  => 'woocommerce/product-number-field',
+					'attributes' => array(
+						'label'    => __( 'Subscription Initial Signup Price', 'subscriptions-for-woocommerce' ),
+						'property' => 'meta_data.wps_sfw_subscription_initial_signup_price',
+					),
+				)
+			);
+
+			$subscription_section->add_block(
+				array(
+					'id'         => 'product-wps_sfw_subscription_free_trial_number',
+					'blockName'  => 'woocommerce/product-number-field',
+					'attributes' => array(
+						'label'    => __( 'Subscription Free Trial Number', 'subscriptions-for-woocommerce' ),
+						'property' => 'meta_data.wps_sfw_subscription_free_trial_number',
+					),
+				)
+			);
+
+
+			 $subscription_section->add_block(
+				array(
+					'id'         => 'product-wps_sfw_subscription_free_trial_interval',
+					'blockName'  => 'woocommerce/product-select-field',
+					'attributes' => array(
+						'label'    => __( 'Subscription Free Trial Interval', 'subscriptions-for-woocommerce' ),
+						'help'     => sprintf(
+							__( 'Choose the subscriptions time interval for the product &quot;for example 10 days', 'subscriptions-for-woocommerce' ),
+						),
+						'property' => 'meta_data.wps_sfw_subscription_free_trial_interval',
+						'options'  => $subscription_time_interval,
+					),
+				)
+			);
+
+        }
+	}
 }
