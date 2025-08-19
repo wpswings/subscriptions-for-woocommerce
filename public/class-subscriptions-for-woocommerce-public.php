@@ -438,7 +438,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_id = isset( $cart_data['variation_id'] ) && $cart_data['variation_id'] ? $cart_data['variation_id'] : $cart_data['product_id'];
 					$wps_sfw_get_signup_fee = $this->wps_sfw_get_subscription_initial_signup_price( $product_id );
 					$wps_sfw_get_signup_fee = is_numeric( $wps_sfw_get_signup_fee ) ? (float) $wps_sfw_get_signup_fee : 0;
-					if ( $wps_sfw_get_signup_fee ) {
+					if ( $wps_sfw_get_signup_fee && apply_filters( 'wps_sfw_allow_signup_fee', true, $cart_data ) ) {
 						$wps_sfw_signup_fee += $wps_sfw_get_signup_fee;
 					}
 				}

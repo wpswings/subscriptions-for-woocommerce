@@ -114,7 +114,7 @@ if ( $old_sfw_pro_present ) {
 		<style>
 			.wps-notice-section > p:before {
 				content: none;
-			}	
+			}
 		</style>
 			<?php
 		}
@@ -625,22 +625,6 @@ if ( $activated ) {
 		}
 	);
 
-	/**
-	 * Function to Remove subscription menu.
-	 *
-	 * @return void
-	 */
-	function wps_sfw_remove_custom_woocommerce_menu() {
-		global $submenu, $pagenow;
-
-		// Allow direct access.
-		if ( isset( $_GET['page'] ) && 'wc-orders--wps_subscriptions' == $_GET['page'] && isset( $_GET['action'] ) && 'new' == $_GET['action'] ) {
-			return;
-		}
-
-		// Remove the submenu from WooCommerce.
-	}
-	add_action( 'admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999 );
 	// HPOS Compatibility for Custom Order type i.e. WPS_Subscription.
 	add_action(
 		'woocommerce_init',
