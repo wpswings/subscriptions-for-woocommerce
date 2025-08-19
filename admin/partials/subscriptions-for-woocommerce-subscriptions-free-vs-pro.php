@@ -104,32 +104,12 @@ tr:nth-child(even) {
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
   </tr>
   <tr>
-	<td><?php esc_html_e( 'WooCommerce PayPal Standard Payment Gateway Compatible', 'subscriptions-for-woocommerce' ); ?></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-  </tr>
-  <tr>
-	<td><?php esc_html_e( 'PayPal Express Checkout Payment Gateway Compatible', 'subscriptions-for-woocommerce' ); ?></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-  </tr>
-  <tr>
-	<td><?php esc_html_e( 'WooCommerce Integration with Authorize.net Compatible', 'subscriptions-for-woocommerce' ); ?></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-  </tr>
-  <tr>
-	<td><?php esc_html_e( 'WPML Compatible', 'subscriptions-for-woocommerce' ); ?></td>
+	<td><?php esc_html_e( 'WPML Compatibility', 'subscriptions-for-woocommerce' ); ?></td>
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
   </tr>
   <tr>
 	<td><?php esc_html_e( 'Change Place Order Text', 'subscriptions-for-woocommerce' ); ?></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-  </tr>
-  <tr>
-	<td><?php esc_html_e( 'Subscription Renewal Order Refund', 'subscriptions-for-woocommerce' ); ?></td>
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
   </tr>
@@ -144,17 +124,27 @@ tr:nth-child(even) {
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
   </tr>
   <tr>
-	<td><?php esc_html_e( 'Compatible with WooCommerce Eway Gateway', 'subscriptions-for-woocommerce' ); ?></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-  </tr>
+	  <td><?php esc_html_e( 'Subscription Renewal Order Refund', 'subscriptions-for-woocommerce' ); ?></td>
+	  <td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
+	  <td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
+	</tr>
+	  <tr>
+		<td><?php esc_html_e( 'WooCommerce Integration with Authorize.net Compatible', 'subscriptions-for-woocommerce' ); ?></td>
+		<td><img class="tick" src="<?php echo esc_attr( $cross ); ?>"></td>
+		<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
+	</tr>
+	<tr>
+		<td><?php esc_html_e( 'WooCommerce Paypal Payments', 'subscriptions-for-woocommerce' ); ?></td>
+		<td><img class="tick" src="<?php echo esc_attr( $cross ); ?>"></td>
+		<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
+	</tr>
+	<tr>
+	  <td><?php esc_html_e( 'Compatible with WooCommerce Eway Gateway', 'subscriptions-for-woocommerce' ); ?></td>
+	  <td><img class="tick" src="<?php echo esc_attr( $cross ); ?>"></td>
+	  <td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
+	</tr>
   <tr>
-	<td><?php esc_html_e( 'Subscription Renewal Order Refund', 'subscriptions-for-woocommerce' ); ?></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
-  </tr>
-  <tr>
-	<td><?php esc_html_e( 'Manual Subscription Payment Option', 'subscriptions-for-woocommerce' ); ?></td>
+	<td><?php esc_html_e( 'Manually Subscription Creation', 'subscriptions-for-woocommerce' ); ?></td>
 	<td><img class="cross" src="<?php echo esc_attr( $cross ); ?>"></td>
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
   </tr>
