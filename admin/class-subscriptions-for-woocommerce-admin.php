@@ -120,6 +120,7 @@ class Subscriptions_For_Woocommerce_Admin {
 		$wps_sfw_branner_notice = array(
 			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 			'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
+			'check_pro_active'           => esc_html( $is_pro ),
 		);
 		wp_register_script( $this->plugin_name . 'admin-notice', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/wps-sfw-subscription-card-notices.js', array( 'jquery' ), $this->version, false );
 

@@ -663,4 +663,3 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * Enhancement: Addressed UI/UX issues in the Subscription Details section for small screen devices to enhance mobile responsiveness and improve user experience
 * New: Latest WC(10.1.0) compatibility
 
-
