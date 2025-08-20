@@ -4,9 +4,9 @@ Donate link:  https://wpswings.com/
 Tags: subscriptions,subscription billing, subscription box, subscription, woocommerce subscriptions
 Requires at least: 6.7.0
 Tested up to: 6.8.2
-WC requires at least: 5.1.0
-WC tested up to: 10.0.4
-Stable tag: 1.8.6
+WC requires at least: 6.5.0
+WC tested up to: 10.1.0
+Stable tag: 1.8.7
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -312,6 +312,12 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 
 == Changelog ==
+
+= 1.8.7 - Released on 19 August 2025 =
+* Enhancement: Improved data retrieval mechanisms by implementing optimized MySQL queries to ensure consistent and accurate data fetching across the system
+* Enhancement: Modified the signup fee logic to prevent it from multiplying by quantity. Introduced a new cart-level fee concept to accurately apply signup charges
+* Enhancement: Addressed UI/UX issues in the Subscription Details section for small screen devices to enhance mobile responsiveness and improve user experience
+* New: Latest WC(10.1.0) compatibility
 
 = 1.8.6 - Released on 25 July 2025 =
 * New - Shortcode for subscription Table
@@ -651,8 +657,9 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.8.6 - Released on 25 July 2025 =
-* New - Shortcode for subscription Table
-* New: Latest WP(6.8.2) and WC(10.0.4) Compatibility
-* Fix - Stripe compatibility issue fix on checkout page
+= 1.8.7 - Released on 19 August 2025 =
+* Enhancement: Improved data retrieval mechanisms by implementing optimized MySQL queries to ensure consistent and accurate data fetching across the system
+* Enhancement: Modified the signup fee logic to prevent it from multiplying by quantity. Introduced a new cart-level fee concept to accurately apply signup charges
+* Enhancement: Addressed UI/UX issues in the Subscription Details section for small screen devices to enhance mobile responsiveness and improve user experience
+* New: Latest WC(10.1.0) compatibility
 

@@ -351,245 +351,112 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @link https://www.wpswing.com/
 	 */
 	public function wps_sfw_get_subscription_list() {
+		global $wpdb;
+
 		$wps_sfw_pro_plugin_activated = false;
 		if ( in_array( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 			$wps_sfw_pro_plugin_activated = true;
 		}
 
-		$current_page = isset( $_GET['paged'] ) ? sanitize_text_field( wp_unslash( $_GET['paged'] ) ) : 1;
+		$current_page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$per_page     = 10;
+		$offset       = ( $current_page - 1 ) * $per_page;
 
-		// get the data by pagination.
-		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-			$offset = ( $current_page - 1 ) * 10;
-			$args = array(
-				'number' => 10,
-				'offset' => $offset,
-				'return' => 'ids',
-				'type'   => 'wps_subscriptions',
-				'meta_query' => array(
-					'key'   => 'wps_customer_id',
-					'compare' => 'EXISTS',
-				),
-			);
+		$search_term  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
 
-			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// Logic to fetch subscription using subscription id or parent id.
-				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+		$is_hpos = OrderUtil::custom_orders_table_usage_is_enabled();
 
-				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if ( $sub_id ) {
-					$maybe_subscription_or_parent_id = $sub_id;
-				}
-				if ( $maybe_subscription_or_parent_id ) {
-					$args['meta_query'] = array(
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $maybe_subscription_or_parent_id,
-							'compare' => 'LIKE',
-						),
-					);
-				} else {
-					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// Logic to fetch subscription using username or email.
-
-					$user = get_user_by( 'email', $username_or_email );
-
-					// If no user is found by email, try to get by username.
-					if ( ! $user ) {
-						$user = get_user_by( 'login', $username_or_email );
-					}
-					$customer_id = $user ? $user->ID : false;
-
-					$args['meta_query'] = array(
-						array(
-							'key'   => 'wps_customer_id',
-							'value' => $customer_id,
-							'compare' => 'LIKE',
-						),
-					);
-				}
-			}
-			$wps_subscriptions = wc_get_orders( $args );
-
+		if ( $is_hpos ) {
+			$table      = $wpdb->prefix . 'wc_orders';
+			$meta_table = $wpdb->prefix . 'wc_orders_meta';
+			$id_field   = 'id';
+			$order_id_field = 'order_id';
 		} else {
-
-			$args = array(
-				'posts_per_page' => 10,
-				'paged' => $current_page,
-				'post_type'   => 'wps_subscriptions',
-				'post_status' => 'wc-wps_renewal',
-				'meta_query' => array(
-					array(
-						'key'   => 'wps_customer_id',
-						'compare' => 'EXISTS',
-					),
-				),
-				'fields' => 'ids',
-			);
-
-			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// Logic to fetch subscription using subscription id or parent id.
-				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-
-				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if ( $sub_id ) {
-					$maybe_subscription_or_parent_id = $sub_id;
-				}
-				if ( $maybe_subscription_or_parent_id ) {
-					$args['meta_query'] = array(
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $maybe_subscription_or_parent_id,
-							'compare' => 'LIKE',
-						),
-					);
-				} else {
-					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// Logic to fetch subscription using username or email.
-
-					$user = get_user_by( 'email', $username_or_email );
-
-					// If no user is found by email, try to get by username.
-					if ( ! $user ) {
-						$user = get_user_by( 'login', $username_or_email );
-					}
-					$customer_id = $user ? $user->ID : false;
-
-					$args['meta_query'] = array(
-						array(
-							'key'   => 'wps_customer_id',
-							'value' => $customer_id,
-							'compare' => 'LIKE',
-						),
-					);
-				}
-			}
-			$wps_subscriptions = get_posts( $args );
+			$table      = $wpdb->prefix . 'posts';
+			$meta_table = $wpdb->prefix . 'postmeta';
+			$id_field   = 'ID';
+			$order_id_field = 'post_id';
 		}
 
-		// Code to get the total item count.
-		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-			$args2 = array(
-				'type'   => 'wps_subscriptions',
-				'limit'  => -1,
-				'meta_query' => array(
-					array(
-						'key'   => 'wps_customer_id',
-						'compare' => 'EXISTS',
-					),
-				),
-				'return' => 'ids',
-			);
-			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// Logic to fetch subscription using subscription id or parent id.
-				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+		$where = "1=1";
+		$search_join = '';
 
-				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if ( $sub_id ) {
-					$maybe_subscription_or_parent_id = $sub_id;
-				}
-				if ( $maybe_subscription_or_parent_id ) {
-					$args2['meta_query'] = array(
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $maybe_subscription_or_parent_id,
-							'compare' => 'LIKE',
-						),
-					);
-				} else {
-					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// Logic to fetch subscription using username or email.
-
-					$user = get_user_by( 'email', $username_or_email );
-
-					// If no user is found by email, try to get by username.
-					if ( ! $user ) {
-						$user = get_user_by( 'login', $username_or_email );
-					}
-					$customer_id = $user ? $user->ID : false;
-
-					$args2['meta_query'] = array(
-						array(
-							'key'   => 'wps_customer_id',
-							'value' => $customer_id,
-							'compare' => 'LIKE',
-						),
-					);
-				}
-			}
-			$wps_subscriptions2 = wc_get_orders( $args2 );
-
+		if ( $is_hpos ) {
+			$where .= " AND {$table}.type = 'wps_subscriptions'";
 		} else {
-			$args2 = array(
-				'numberposts' => -1,
-				'post_type'   => 'wps_subscriptions',
-				'post_status' => 'wc-wps_renewal',
-				'meta_query' => array(
-					array(
-						'key'   => 'wps_customer_id',
-						'compare' => 'EXISTS',
-					),
-				),
-				'fields' => 'ids',
-			);
-			if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-				// Logic to fetch subscription using subscription id or parent id.
-				$maybe_subscription_or_parent_id = (int) sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
+			$where .= " AND {$table}.post_type = 'wps_subscriptions'";
+		}
 
-				$sub_id = wps_sfw_get_meta_data( $maybe_subscription_or_parent_id, 'wps_parent_order', true );
-				if ( $sub_id ) {
-					$maybe_subscription_or_parent_id = $sub_id;
+		// Search filter.
+		if ( $search_term ) {
+			if ( is_numeric( $search_term ) ) {
+
+				$search_join = "INNER JOIN {$meta_table} AS meta_search ON meta_search.{$order_id_field} = {$table}.{$id_field}";
+				$where .= $wpdb->prepare(
+					" AND (
+						meta_search.meta_key = 'wps_parent_order' AND meta_search.meta_value LIKE %s
+						OR {$table}.{$id_field} = %d
+					)",
+					'%' . $wpdb->esc_like( $search_term ) . '%',
+					$search_term
+				);
+			} else {
+				$user = get_user_by( 'email', $search_term );
+				if ( ! $user ) {
+					$user = get_user_by( 'login', $search_term );
 				}
-				if ( $maybe_subscription_or_parent_id ) {
-					$args2['meta_query'] = array(
-						array(
-							'key'   => 'wps_parent_order',
-							'value' => $maybe_subscription_or_parent_id,
-							'compare' => 'LIKE',
-						),
-					);
-				} else {
-					$username_or_email = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-					// Logic to fetch subscription using username or email.
-
-					$user = get_user_by( 'email', $username_or_email );
-
-					// If no user is found by email, try to get by username.
-					if ( ! $user ) {
-						$user = get_user_by( 'login', $username_or_email );
-					}
-					$customer_id = $user ? $user->ID : false;
-
-					$args2['meta_query'] = array(
-						array(
-							'key'   => 'wps_customer_id',
-							'value' => $customer_id,
-							'compare' => 'LIKE',
-						),
-					);
+				if ( $user ) {
+					$user_id = $user->ID;
+					$search_join = "INNER JOIN {$meta_table} AS meta_search ON meta_search.{$order_id_field} = {$table}.{$id_field}";
+					$where .= $wpdb->prepare( " AND (meta_search.meta_key = 'wps_customer_id' AND meta_search.meta_value LIKE %s)", '%' . $wpdb->esc_like( $user_id ) . '%' );
 				}
 			}
-			$wps_subscriptions2 = get_posts( $args2 );
 		}
-		$total_count = count( $wps_subscriptions2 );
 
-		// redirection from order edit page link to specific subscription .
+		// Fetch paginated data.
+		$sql = "
+			SELECT DISTINCT {$table}.{$id_field}
+			FROM {$table}
+			INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
+			$search_join
+			WHERE meta.meta_key = 'wps_customer_id'
+			AND $where
+			ORDER BY {$table}.{$id_field} DESC
+			LIMIT %d OFFSET %d
+		";
+
+		$wps_subscriptions = $wpdb->get_col( $wpdb->prepare( $sql, $per_page, $offset ) );
+
+		// Get total count.
+		$sql_count = "
+			SELECT COUNT(DISTINCT {$table}.{$id_field})
+			FROM {$table}
+			INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
+			$search_join
+			WHERE meta.meta_key = 'wps_customer_id'
+			AND $where
+		";
+
+		$total_count = $wpdb->get_var( $sql_count );
+
+		// Redirection from order edit page link to specific subscription.
 		if ( isset( $_GET['wps_order_type'] ) && 'subscription' == $_GET['wps_order_type'] ) {
 			$order_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : 0;
-			$wps_subs_id = wps_sfw_get_meta_data( $order_id, 'wps_parent_order', true );
-			$args2['meta_query'] = array(
-				array(
-					'key'   => 'wps_parent_order',
-					'value' => $wps_subs_id,
-					'compare' => 'LIKE',
-				),
-			);
 
-			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				$wps_subscriptions = wc_get_orders( $args2 );
-			} else {
-				$wps_subscriptions = get_posts( $args2 );
-			}
+			$get_sub_id = wps_sfw_get_meta_data( $order_id, 'wps_parent_order', true );
+
+			$get_sub_id = absint( $get_sub_id );
+
+			$sql = "
+				SELECT DISTINCT {$table}.{$id_field}
+				FROM {$table}
+				INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
+				WHERE meta.meta_key = 'wps_parent_order'
+				AND meta.meta_value LIKE %s
+			";
+			$wps_subscriptions = $wpdb->get_col(
+				$wpdb->prepare( $sql, '%' . $wpdb->esc_like( $get_sub_id ) . '%' )
+			);
 		}
 
 		$wps_subscriptions_data = array();

@@ -37,11 +37,29 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'wps_sfw_add_stripe_order_statuses_for_payment_complete' ), 10, 2 );
 
-			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback' ) );
+			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_display_save_payment_method_checkbox' ) );
 
-			add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_callback_old' ), 10, 2 );
+			// Path to Stripe's main plugin file.
+			$stripe_main_file = WP_PLUGIN_DIR . '/woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';
 
-			add_filter( 'wc_stripe_generate_create_intent_request', array( $this, 'wps_sfw_wc_stripe_generate_create_intent_request' ), 10, 3 );
+			$version = null;
+			if ( file_exists( $stripe_main_file ) ) {
+				$plugin_data = get_file_data(
+					$stripe_main_file,
+					array( 'Version' => 'Version' ),
+					'plugin'
+				);
+				$version = isset( $plugin_data['Version'] ) ? $plugin_data['Version'] : null;
+			}
+			if ( $version ) {
+				if ( version_compare( $version, '9.6.0', '>=' ) ) {
+					// New filter (≥ 9.6.0) — no deprecation.
+					add_filter( 'wc_stripe_force_save_payment_method', array( $this, 'wps_sfw_wc_stripe_force_save_source_new' ), 10, 2 );
+				} else {
+					// Old filter (< 9.6.0).
+					add_filter( 'wc_stripe_force_save_source', array( $this, 'wps_sfw_wc_stripe_force_save_source_old' ), 10, 2 );
+				}
+			}
 		}
 
 		/**
@@ -101,16 +119,16 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 			return apply_filters( 'wps_sfw_add_subscription_order_statuses_for_payment_complete', $order_status, $order );
 		}
 
-		 /**
-		  * Force stripe to Save payment information to my account for future purchases.
-		  *
-		  * @param bool $force_save_source Should we force save payment source.
-		  */
-		public function wps_sfw_wc_stripe_force_save_source_callback( $force_save_source ) {
+		/**
+		 * Display save payment method checkbox.
+		 *
+		 * @param bool $display_save_payment_method_checkbox display_save_payment_method_checkbox.
+		 */
+		public function wps_sfw_display_save_payment_method_checkbox( $display_save_payment_method_checkbox ) {
 			if ( wps_sfw_is_cart_has_subscription_product() ) {
 				return false;
 			}
-			return $force_save_source;
+			return $display_save_payment_method_checkbox;
 		}
 
 		/**
@@ -119,7 +137,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		 * @param bool  $force_save_source Should we force save payment source.
 		 * @param array $customer as customer.
 		 */
-		public function wps_sfw_wc_stripe_force_save_source_callback_old( $force_save_source, $customer = null ) {
+		public function wps_sfw_wc_stripe_force_save_source_old( $force_save_source, $customer = null ) {
 			if ( wps_sfw_is_cart_has_subscription_product() ) {
 				return true;
 			}
@@ -127,36 +145,16 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		}
 
 		/**
-		 * Function to generate intent request.
+		 * Force stripe to Save payment information to my account for future purchases.
 		 *
-		 * @param array  $request as request.
-		 * @param object $order as order.
-		 * @param object $prepared_source as prepared source.
-		 * @return array
+		 * @param bool  $force_save_source Should we force save payment source.
+		 * @param int   $order_id Order ID.
 		 */
-		public function wps_sfw_wc_stripe_generate_create_intent_request( $request, $order, $prepared_source ) {
-			// Ensure $order is a valid WooCommerce order instance.
-			if ( ! is_a( $order, 'WC_Order' ) ) {
-				return $request;
+		public function wps_sfw_wc_stripe_force_save_source_new( $force_save_source, $order_id ) {
+			if ( wps_sfw_is_cart_has_subscription_product() || ( $order_id && wps_sfw_order_has_subscription( $order_id ) ) ) {
+				return true;
 			}
-
-			// Check if order has a subscription (based on custom meta key).
-			if ( 'yes' !== $order->get_meta( 'wps_sfw_order_has_subscription' ) ) {
-				return $request;
-			}
-
-			// Get payment method used in the order.
-			$payment_method = $order->get_payment_method();
-
-			// Define payment methods that support `setup_future_usage`.
-			$supported_methods = array( 'stripe', 'stripe_cc', 'stripe_sepa' ); // Add more if needed.
-
-			// Apply only if the payment method is supported.
-			if ( in_array( $payment_method, $supported_methods, true ) ) {
-				$request['setup_future_usage'] = 'off_session';
-			}
-
-			return $request;
+			return $force_save_source;
 		}
 	}
 }

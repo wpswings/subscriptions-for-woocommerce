@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.8.6
+ * Version:           1.8.7
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -23,9 +23,9 @@
  * Requires Plugins:  woocommerce
  *
  * Requires at least:        6.7.0
- * Tested up to:             6.8.1
- * WC requires at least:     5.1.0
- * WC tested up to:          10.0.4
+ * Tested up to:             6.8.2
+ * WC requires at least:     6.5.0
+ * WC tested up to:          10.1.0
  *
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
@@ -114,7 +114,7 @@ if ( $old_sfw_pro_present ) {
 		<style>
 			.wps-notice-section > p:before {
 				content: none;
-			}	
+			}
 		</style>
 			<?php
 		}
@@ -179,7 +179,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.6' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.8.7' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -625,22 +625,6 @@ if ( $activated ) {
 		}
 	);
 
-	/**
-	 * Function to Remove subscription menu.
-	 *
-	 * @return void
-	 */
-	function wps_sfw_remove_custom_woocommerce_menu() {
-		global $submenu, $pagenow;
-
-		// Allow direct access.
-		if ( isset( $_GET['page'] ) && 'wc-orders--wps_subscriptions' == $_GET['page'] && isset( $_GET['action'] ) && 'new' == $_GET['action'] ) {
-			return;
-		}
-
-		// Remove the submenu from WooCommerce.
-	}
-	add_action( 'admin_menu', 'wps_sfw_remove_custom_woocommerce_menu', 999 );
 	// HPOS Compatibility for Custom Order type i.e. WPS_Subscription.
 	add_action(
 		'woocommerce_init',
@@ -867,3 +851,4 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
+

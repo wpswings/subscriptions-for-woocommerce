@@ -384,7 +384,7 @@
         
     <div class="wps-form-group wps_pro_settings_tag">
         <div class="wps-form-group__label">
-            <label for="" class="wps-form-label">Ability to accept prorate signup fee during Upgrade/Downgrade</label>
+            <label for="" class="wps-form-label">Ability to accept signup fee during Upgrade/Downgrade</label>
         </div>
         <div class="wps-form-group__control">
             <div>

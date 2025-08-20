@@ -296,7 +296,9 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_filter( 'woocommerce_cart_item_price', $sfw_plugin_public, 'wps_sfw_show_subscription_price_on_cart', 99, 3 );
 
-			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price_and_sigup_fee', 999 );
+			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price', 999 );
+			$this->loader->add_action( 'woocommerce_cart_calculate_fees', $sfw_plugin_public, 'wps_sfw_add_subscription_signup_fee', 999 );
+
 
 			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 999, 2 );
 
@@ -333,8 +335,6 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'wps_sfw__cancel_subs_woocommerce_order_status_changed', 150, 3 );
 
 			$this->loader->add_filter( 'woocommerce_checkout_registration_required', $sfw_plugin_public, 'wps_sfw_registration_required', 900 );
-
-			$this->loader->add_filter( 'woocommerce_gateway_description', $sfw_plugin_public, 'wps_sfw_change_payment_gateway_description', 10, 2 );
 
 			$this->loader->add_action( 'woocommerce_review_order_after_order_total', $sfw_plugin_public, 'wps_sfw_show_recurring_information', 10, 1 );
 
@@ -500,13 +500,13 @@ class Subscriptions_For_Woocommerce {
 			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 
-		// subscription box.
+		// Subscription box.
 		$sfw_default_tabs['subscription-for-woocommerce-subscription-box'] = array(
 			'title'       => esc_html__( 'Subscription Box', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscription-for-woocommerce-subscription-box',
 			'file_path'       => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
-		// subscription box.
+		// Subscription box.
 
 		if ( ! defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION' ) ) {
 			$sfw_default_tabs['subscriptions-for-woocommerce-subscriptions-pro-features'] = array(
