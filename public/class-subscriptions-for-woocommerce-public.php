@@ -2300,6 +2300,7 @@ class Subscriptions_For_Woocommerce_Public {
 								<h3><?php echo esc_html( $wps_sfw_subscription_box_step_label ); ?></h3>
 								<p><?php esc_attr_e( 'Choose which product to add to your box', 'subscriptions-for-woocommerce' ); ?></p>
 								<p class="wps_sfw_subscription_box_error_notice" style="display: none; color: red;"></p>
+								<button type="button" class="button wps_sfw-empty-cart" id="wps_sfw-empty-cart" style="display: none; color: red;">Empty Cart</button>
 							</div>
 						
 							<?php
@@ -2465,6 +2466,7 @@ class Subscriptions_For_Woocommerce_Public {
 			// If the cart is not empty, prevent adding the subscription box.
 			if ( ! empty( $cart ) && $cart_has_other_products ) {
 				wp_send_json_error( 'You cannot add a subscription box when other products are in the cart.' );
+				
 			}
 
 			// If a subscription box exists, prevent adding other products.
@@ -2480,6 +2482,7 @@ class Subscriptions_For_Woocommerce_Public {
 			// If no products are selected for the subscription box, return an error.
 			if ( empty( $products ) ) {
 				wp_send_json_error( 'Please select at least one product to add to the subscription box.' );
+			
 			}
 
 			// If there are no subscription products or products in the request, return an error.
@@ -2809,16 +2812,34 @@ class Subscriptions_For_Woocommerce_Public {
 
 		// Prevent adding different product types together.
 		if ( $cart_has_subscription_box && ! $is_subscription_box ) {
-			wc_add_notice( __( 'You cannot add other products while a Subscription Box is in the cart. Please remove it first.', 'subscriptions-for-woocommerce' ), 'error' );
+			// wc_add_notice( __( 'You cannot add other products while a Subscription Box is in the cart. Please remove it first.', 'subscriptions-for-woocommerce' ), 'error' );
+
+			 wc_add_notice(
+            __( 'You cannot add other products while a Subscription Box is in the cart. Please remove it first.', 'subscriptions-for-woocommerce' ) .
+            ' <button type="button" class="button wps_sfw_product_page-empty-cart" id="wps_sfw_product_page-empty-cart">Empty Cart</button>', 'error'
+        );
 			return false;
 		}
 
 		if ( $cart_has_other_products && $is_subscription_box ) {
-			wc_add_notice( __( 'You cannot add a Subscription Box when other products are in the cart. Please remove them first.', 'subscriptions-for-woocommerce' ), 'error' );
+			// wc_add_notice( __( 'You cannot add a Subscription Box when other products are in the cart. Please remove them first.', 'subscriptions-for-woocommerce' ), 'error' );
+			 wc_add_notice(
+            __( 'You cannot add a Subscription Box when other products are in the cart. Please remove them first.', 'subscriptions-for-woocommerce' ) .
+            ' <button type="button" class="button wps_sfw_product_page-empty-cart" id="wps_sfw_product_page-empty-cart">Empty Cart</button>', 'error'
+        );
 			return false;
 		}
 
 		return $valid;
+	}
+
+	/**
+	 * AJAX callback to empty the cart.
+	 */
+	public function wps_sfw_sub_box_empty_cart_callback(){
+		check_ajax_referer( 'wps_sfw_public_nonce', 'nonce' );
+		WC()->cart->empty_cart();
+		wp_send_json_success(array('message' => 'Your cart has been emptied!'));
 	}
 
 	/**

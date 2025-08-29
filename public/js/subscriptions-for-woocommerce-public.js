@@ -110,7 +110,47 @@
 			
 		});
 
-		
+	
+		$('.wps_sfw-empty-cart').on('click', function() {
+			console.log('Empty Cart button clicked');
+			// Send AJAX request to empty the cart
+			$.ajax({
+				url: sfw_public_param.ajaxurl,
+				type: 'POST',
+				data: {
+					action: 'wps_sfw_sub_box_empty_cart',
+					nonce: sfw_public_param.sfw_public_nonce,
+				},
+				success: function(response) {
+					console.log('Cart emptied:', response);
+					// Show success message and update cart totals
+					alert('Your cart has been emptied!');
+					$('.wps_sfw_subscription_box_error_notice').hide();
+					$('.wps_sfw-empty-cart').hide();
+					$(document.body).trigger('updated_cart_totals');
+				}
+			});
+		});
+
+		$('.wps_sfw_product_page-empty-cart').on('click', function() {
+			console.log('Empty Cart button clicked');
+			// Send AJAX request to empty the cart
+			$.ajax({
+				url: sfw_public_param.ajaxurl,
+				type: 'POST',
+				data: {
+					action: 'wps_sfw_sub_box_empty_cart',
+					nonce: sfw_public_param.sfw_public_nonce,
+				},
+				success: function(response) {
+					console.log('Cart emptied:', response);
+					// Show success message and update cart totals
+					alert('Your cart has been emptied!');
+					$(document.body).trigger('updated_cart_totals');
+					window.location.assign(window.location.href);
+				}
+			});
+		});
 
 		//new code.
 		$('#wps_sfw_subs_box-form').on('submit', function (e) {
@@ -156,7 +196,9 @@
 					if (response.message === "Subscription added to cart!") {
 						window.location.href = sfw_public_param.cart_url; // Redirect to cart page
 					} else {
-						$('.wps_sfw_subscription_box_error_notice').text(response.data || 'Something went wrong.').show();
+						// var emptyCartButton = '<button type="button" class="button wps_sfw-empty-cart" id="wps_sfw-empty-cart">Empty Cartssssdsdsds</button>';
+						$('.wps_sfw_subscription_box_error_notice').html((response.data || 'Something went wrong.') ).show();
+						$('.wps_sfw-empty-cart').show();
 					}
 				},
 				error: function (error) {
@@ -165,17 +207,17 @@
 				}
 			});
 		});
-			
-			
 
-			jQuery(document).ready(function($) {
-				$(document).on('click','.wps_show_customer_subscription_box_popup', function(e) {
-					e.preventDefault();
-					$(this).next('.wps-attached-products-popup').addClass('active_customer_popup');
-				});
-				$(document).on('click','.wps_sfw_customer_close_popup', function(e) {
-					$(this).parent('.wps-attached-products-popup').removeClass('active_customer_popup');
-				});
+		jQuery(document).ready(function($) {
+			$(document).on('click','.wps_show_customer_subscription_box_popup', function(e) {
+				e.preventDefault();
+				$(this).next('.wps-attached-products-popup').addClass('active_customer_popup');
 			});
+			$(document).on('click','.wps_sfw_customer_close_popup', function(e) {
+				$(this).parent('.wps-attached-products-popup').removeClass('active_customer_popup');
+			});
+
+
+		});
 	});
 })( jQuery );
