@@ -36,7 +36,7 @@ jQuery(function($){
 		validation
 	) => {
 		const isCartContext = args?.context === 'cart' || args?.context === 'summary';
-	
+
 		if ( ! isCartContext ) {
 			return defaultValue;
 		}
@@ -47,6 +47,7 @@ jQuery(function($){
 			 wspData = cartItem.find( item => item.name === 'wps-wsp-switch-direction');
 		}
 
+	
 		// subscription box.
 		if ( ! cartItem ) {
 			return defaultValue;
