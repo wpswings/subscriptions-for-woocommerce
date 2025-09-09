@@ -385,6 +385,7 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'wp_ajax_wps_sfw_sub_box_empty_cart', $sfw_plugin_public, 'wps_sfw_sub_box_empty_cart_callback' );
 			$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_sub_box_empty_cart', $sfw_plugin_public, 'wps_sfw_sub_box_empty_cart_callback' );
+			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'wps_sfw_woocommerce_affiliate_commision_renewal', 99, 3 );
 
 
 			// subscription box.
