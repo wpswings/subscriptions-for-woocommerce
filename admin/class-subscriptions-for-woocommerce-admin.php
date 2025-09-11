@@ -408,7 +408,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_subscription_log', '' ) ? 'on' : 'off' ),
 				'class' => 'sfw-checkbox-class',
 			),
-			
+
 			array(
 				'type'  => 'button',
 				'id'    => 'wps_sfw_save_general_settings',
@@ -417,12 +417,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			),
 		);
 
-		if ( class_exists( 'WooCommerce' ) ) {
-			$woocommerce_version = WC()->version;
-			if ( version_compare( $woocommerce_version, '8.8.3', '>' ) ) {
-				unset( $sfw_settings_general[5] );
-			}
-		}
 		// Add general settings.
 		return apply_filters( 'wps_sfw_add_general_settings_fields', $sfw_settings_general );
 	}
@@ -1381,7 +1375,6 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wps_sfw_subscription_box_price = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_box_price', true );
 
-
 		$wps_sfw_subscription_box_categories = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_box_categories', true );
 
 		$wps_sfw_manage_subscription_box_price = wps_sfw_get_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', true );
@@ -1400,7 +1393,6 @@ class Subscriptions_For_Woocommerce_Admin {
 				}
 			}
 		}
-
 
 		$is_pro = false;
 		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
@@ -1500,16 +1492,15 @@ class Subscriptions_For_Woocommerce_Admin {
 				?>
 				<div class="wps_sfw_steps_wrap" id="wps_sfw_steps_wrap">
 					<?php
-				
+
 					foreach ( $step_settings as $step_key => $step ) :
 						$type         = isset( $step['type'] ) ? $step['type'] : 'specific_products';
 						$product_ids  = isset( $step['product_ids'] ) ? (array) $step['product_ids'] : array();
 						$category_ids = isset( $step['category_ids'] ) ? (array) $step['category_ids'] : array();
 						$label        = isset( $step['label'] ) ? $step['label'] : 'step1';
 						$wps_sfw_subscription_box_min_number = isset( $step['min_num'] ) ? $step['min_num'] : '';
-						
+
 						$wps_sfw_subscription_box_max_number = isset( $step['max_num'] ) ? $step['max_num'] : '';
-						
 
 						if ( ! empty( $category_ids ) ) {
 							foreach ( $category_ids as $slug ) {
@@ -1520,22 +1511,21 @@ class Subscriptions_For_Woocommerce_Admin {
 							}
 						}
 
-						if( !$is_pro && $step_key != 'step1' ){
+						if ( ! $is_pro && 'step1' !== $step_key ) {
 							continue;
 						}
-						
-						
-					?>
+
+						?>
 					<div class="wps_sfw_step_card" data-step="<?php echo esc_attr( $step_key ); ?>" >
 					<div class="wps_sfw_step_header">
 						<strong><?php echo esc_attr( $label ); ?></strong>
-					<?php
-					 if( $step_key != 'step1' ){
-						?>
-						<button type="button" class="button button-link-delete wps_sfw_remove_step">Remove</button>
 						<?php
-					 }
-					 ?>
+						if ( 'step1' !== $step_key ) {
+							?>
+						<button type="button" class="button button-link-delete wps_sfw_remove_step">Remove</button>
+							<?php
+						}
+						?>
 					 </div>
 
 						<p class="form-field">
@@ -1607,9 +1597,9 @@ class Subscriptions_For_Woocommerce_Admin {
 
 						</p>
 					</div>
-					<?php
+						<?php
 					endforeach;
-					
+
 					?>
 				</div>
 
@@ -1674,7 +1664,12 @@ class Subscriptions_For_Woocommerce_Admin {
 		<?php
 	}
 
-	// Helper for printing product options preselected
+	/**
+	 * Helper for printing product options preselected (product).
+	 *
+	 * @param array $ids as product ids.
+	 * @return void
+	 */
 	public function wps_sfw_admin_render_product_options( $ids ) {
 		if ( empty( $ids ) ) {
 			return;
@@ -1687,21 +1682,20 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 	}
 
-	// Helper for printing category options preselected (product_cat)
+	/**
+	 * Helper for printing category options preselected (product_cat).
+	 *
+	 * @param array $term_ids as term ids.
+	 * @return void
+	 */
 	public function wps_sfw_admin_render_cat_options( $term_ids ) {
 		if ( empty( $term_ids ) ) {
 			return;
 		}
-		// $terms = get_terms( array(
-		// 	'taxonomy' => 'product_cat',
-		// 	'include'  =>  $term_ids ,
-		// 	'hide_empty' => false,
-		// ) );
-		// if ( ! is_wp_error( $terms ) ) {
-			foreach ( $term_ids as $t ) {
-				echo '<option value="' . esc_attr( $t ) . '" selected>' . esc_html( $t ) . '</option>';
-			}
-		// }
+
+		foreach ( $term_ids as $t ) {
+			echo '<option value="' . esc_attr( $t ) . '" selected>' . esc_html( $t ) . '</option>';
+		}
 	}
 
 
@@ -1733,8 +1727,6 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			$wps_sfw_manage_subscription_box_price = isset( $_POST['wps_sfw_manage_subscription_box_price'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_manage_subscription_box_price'] ) ) : '';
 
-			
-
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_price', $wps_sfw_subscription_box_price );
 			wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
 
@@ -1743,75 +1735,72 @@ class Subscriptions_For_Woocommerce_Admin {
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_box_expiry_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_interval', $wps_sfw_subscription_box_expiry_interval );
 
-			//modification.
+			// modification.
 
 				$clean_steps = array();
-			// echo"<pre>";
-			// print_r($_POST['wps_sfw_steps']);die;
-				if ( ! empty( $_POST['wps_sfw_steps'] ) && is_array( $_POST['wps_sfw_steps'] ) ) {
+			if ( ! empty( $_POST['wps_sfw_steps'] ) && is_array( $_POST['wps_sfw_steps'] ) ) {
 
-					$raw = wp_unslash( $_POST['wps_sfw_steps'] );
+				$raw = wp_unslash( $_POST['wps_sfw_steps'] );
 
-					// Keep DOM order (step1, step2, ...), even if keys come jumbled.
-					uksort( $raw, function( $a, $b ) {
+				// Keep DOM order (step1, step2, ...), even if keys come jumbled.
+				uksort(
+					$raw,
+					function ( $a, $b ) {
 						$ia = (int) preg_replace( '/\D+/', '', (string) $a );
 						$ib = (int) preg_replace( '/\D+/', '', (string) $b );
 						return $ia <=> $ib;
-					} );
-
-					$i = 1;
-					foreach ( $raw as $step ) {
-
-						$type = isset( $step['type'] ) ? sanitize_text_field( $step['type'] ) : 'specific_products';
-						if ( ! in_array( $type, array( 'specific_products', 'specific_categories' ), true ) ) {
-							$type = 'specific_products';
-						}
-
-						$label = isset( $step['label'] ) ? sanitize_text_field( $step['label'] ) : '';
-						$min_val = isset( $step['min_num'] ) ?  $step['min_num'] : '';
-						$max_val = isset( $step['max_num'] ) ?  $step['max_num'] : '';
-
-						$product_ids  = array();
-						$category_ids = array();
-
-						if ( ! empty( $step['product_ids'] ) ) {
-							$product_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $step['product_ids'] ) ) ) );
-						}
-						if ( ! empty( $step['category_ids'] ) ) {
-							$category_ids =  $step['category_ids'] ;
-						}
-						
-
-						// Only persist meaningful steps.
-						if ( '' === $label && empty( $product_ids ) && empty( $category_ids ) ) {
-							continue;
-						}
-
-						// Keep only the relevant IDs for the chosen type.
-						if ( 'specific_products' === $type ) {
-							$category_ids = array();
-						} else {
-							$product_ids = array();
-						}
-
-						$clean_steps[ 'step' . $i++ ] = array(
-							'type'         => $type,
-							'product_ids'  => $product_ids,
-							'category_ids' => $category_ids,
-							'label'        => $label,
-							'min_num'      => $min_val,
-							'max_num'      => $max_val,
-							
-						);
 					}
-					
+				);
+
+				$i = 1;
+				foreach ( $raw as $step ) {
+
+					$type = isset( $step['type'] ) ? sanitize_text_field( $step['type'] ) : 'specific_products';
+					if ( ! in_array( $type, array( 'specific_products', 'specific_categories' ), true ) ) {
+						$type = 'specific_products';
+					}
+
+					$label = isset( $step['label'] ) ? sanitize_text_field( $step['label'] ) : '';
+					$min_val = isset( $step['min_num'] ) ? $step['min_num'] : '';
+					$max_val = isset( $step['max_num'] ) ? $step['max_num'] : '';
+
+					$product_ids  = array();
+					$category_ids = array();
+
+					if ( ! empty( $step['product_ids'] ) ) {
+						$product_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $step['product_ids'] ) ) ) );
+					}
+					if ( ! empty( $step['category_ids'] ) ) {
+						$category_ids = $step['category_ids'];
+					}
+
+					// Only persist meaningful steps.
+					if ( '' === $label && empty( $product_ids ) && empty( $category_ids ) ) {
+						continue;
+					}
+
+					// Keep only the relevant IDs for the chosen type.
+					if ( 'specific_products' === $type ) {
+						$category_ids = array();
+					} else {
+						$product_ids = array();
+					}
+
+					$clean_steps[ 'step' . $i++ ] = array(
+						'type'         => $type,
+						'product_ids'  => $product_ids,
+						'category_ids' => $category_ids,
+						'label'        => $label,
+						'min_num'      => $min_val,
+						'max_num'      => $max_val,
+
+					);
 				}
+			}
 
-			
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_step_settings', $clean_steps );
-				
 
-			//modification.
+			// modification.
 
 			if ( 'on' == $wps_sfw_manage_subscription_box_price ) {
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', $wps_sfw_manage_subscription_box_price );

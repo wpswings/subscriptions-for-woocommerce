@@ -63,7 +63,7 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 			?>
 			</strong>
 		</p>
-		<p><strong><?php esc_html_e( 'Method Required as Get ', 'subscriptions-for-woocommerce' );?> </strong></p>
+		<p><strong><?php esc_html_e( 'Method Required as Get ', 'subscriptions-for-woocommerce' ); ?> </strong></p>
 		<?php
 		esc_html_e( 'Parameters Required : ', 'subscriptions-for-woocommerce' );
 		echo wp_kses_post( '<strong> {consumer_secret}</strong>' );
@@ -100,5 +100,5 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 	}
 	</pre>
 	</div>
-	<?php do_action( 'wps_sfw_subscription_api_html' ) ;  ?>
+	<?php do_action( 'wps_sfw_subscription_api_html' ); ?>
 </div>

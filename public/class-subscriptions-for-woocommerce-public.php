@@ -2288,7 +2288,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$out = array();
 
 			foreach ( (array) $maybe_terms as $val ) {
-				if ( $val === '' || $val === null ) {
+				if ( '' === $val || null === $val ) {
 					continue;
 				}
 				if ( is_numeric( $val ) ) {
@@ -2947,7 +2947,6 @@ class Subscriptions_For_Woocommerce_Public {
 
 		// Prevent adding different product types together.
 		if ( $cart_has_subscription_box && ! $is_subscription_box ) {
-			// wc_add_notice( __( 'You cannot add other products while a Subscription Box is in the cart. Please remove it first.', 'subscriptions-for-woocommerce' ), 'error' );
 
 			wc_add_notice(
 				__( 'You cannot add other products while a Subscription Box is in the cart. Please remove it first.', 'subscriptions-for-woocommerce' ) .
@@ -2958,7 +2957,6 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 
 		if ( $cart_has_other_products && $is_subscription_box ) {
-			// wc_add_notice( __( 'You cannot add a Subscription Box when other products are in the cart. Please remove them first.', 'subscriptions-for-woocommerce' ), 'error' );
 			wc_add_notice(
 				__( 'You cannot add a Subscription Box when other products are in the cart. Please remove them first.', 'subscriptions-for-woocommerce' ) .
 					' <button type="button" class="button wps_sfw_product_page-empty-cart" id="wps_sfw_product_page-empty-cart">Empty Cart</button>',
@@ -3147,49 +3145,48 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param string $new_status as new status.
 	 * @return void
 	 */
-	public function wps_sfw_woocommerce_affiliate_commision_renewal(  $order_id, $old_status, $new_status ){
-		if( ! class_exists( 'WPAM_Commission_Tracking' ) ){
+	public function wps_sfw_woocommerce_affiliate_commision_renewal( $order_id, $old_status, $new_status ) {
+		if ( ! class_exists( 'WPAM_Commission_Tracking' ) ) {
 			return;
 		}
 		if ( $old_status != $new_status ) {
 			if ( 'completed' == $new_status || 'processing' == $new_status ) {
 					$wps_sfw_renewal_order = wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
-					if( 'yes' === $wps_sfw_renewal_order ){
-						$parent_order_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_parent_order_id', true );
-						if( $parent_order_id ){
-							$parent_order = wc_get_order($parent_order_id);
+				if ( 'yes' === $wps_sfw_renewal_order ) {
+					$parent_order_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_parent_order_id', true );
+					if ( $parent_order_id ) {
+						$parent_order = wc_get_order( $parent_order_id );
 
-							$order = wc_get_order( $order_id );
-							$total = $order->get_total();
-							$shipping = $order->get_total_shipping();
-							$tax = $order->get_total_tax();
-							$buyer_email = $order->get_billing_email();
-							$total_fee = 0;
-							$order_fee_items = $order->get_fees();
-							if(!is_array($order_fee_items)){
-								return $total_fee;
-							}
-
-							foreach ( $order_fee_items as $fee_item ) {
-								$total_fee += $fee_item['line_total'];
-							}
-							$purchaseAmount = $total - $shipping - $tax - $total_fee;
-
-							$wpam_refkey = $parent_order->get_meta('_wpam_refkey'); //get_post_meta($parent_order_id, '_wpam_refkey', true);
-							$wpam_id = $parent_order->get_meta('_wpam_id'); //get_post_meta($parent_order_id, '_wpam_id', true);
-							if(!empty($wpam_id)){
-								$wpam_refkey = $wpam_id;
-							}
-							$args = array();
-							$args['txn_id'] = $order_id;
-							$args['amount'] = $purchaseAmount;
-							$args['aff_id'] = $wpam_refkey;
-							$args['email'] = $buyer_email;
-							// WPAM_Logger::log_debug('WooCommerce Subscription Integration - awarding commission for order ID: ' . $order_id . ', Purchase amount: ' . $purchaseAmount . ', Affiliate ID: ' . $wpam_refkey . ', Buyer Email: ' . $buyer_email);
-							WPAM_Commission_Tracking::award_commission($args);
-
+						$order = wc_get_order( $order_id );
+						$total = $order->get_total();
+						$shipping = $order->get_total_shipping();
+						$tax = $order->get_total_tax();
+						$buyer_email = $order->get_billing_email();
+						$total_fee = 0;
+						$order_fee_items = $order->get_fees();
+						if ( ! is_array( $order_fee_items ) ) {
+							return $total_fee;
 						}
+
+						foreach ( $order_fee_items as $fee_item ) {
+							$total_fee += $fee_item['line_total'];
+						}
+						$purchaseAmount = $total - $shipping - $tax - $total_fee;
+
+						$wpam_refkey = $parent_order->get_meta( '_wpam_refkey' );
+						$wpam_id = $parent_order->get_meta( '_wpam_id' );
+						if ( ! empty( $wpam_id ) ) {
+							$wpam_refkey = $wpam_id;
+						}
+						$args = array();
+						$args['txn_id'] = $order_id;
+						$args['amount'] = $purchaseAmount;
+						$args['aff_id'] = $wpam_refkey;
+						$args['email'] = $buyer_email;
+						WPAM_Commission_Tracking::award_commission( $args );
+
 					}
+				}
 			}
 		}
 	}

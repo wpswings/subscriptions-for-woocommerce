@@ -40,9 +40,8 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Onhold_Active_Subscription_E
 			$this->template_html  = 'wps-sfw-onhold-active-subscription-email-template.php';
 			$this->template_plain = 'plain/wps-sfw-onhold-active-subscription-email-template.php';
 			$this->template_base  = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'emails/templates/';
-            $this->customer_email = true;
+			$this->customer_email = true;
 			parent::__construct();
-			
 		}
 
 		/**
@@ -84,7 +83,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Onhold_Active_Subscription_E
 				$wps_parent_order = wc_get_order( $wps_parent_order_id );
 				if ( ! empty( $wps_parent_order ) ) {
 					$user_email = $wps_parent_order->get_billing_email();
-                    $this->recipient = $user_email;
+					$this->recipient = $user_email;
 				}
 			}
 

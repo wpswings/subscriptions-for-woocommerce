@@ -99,7 +99,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * @param int    $subscription_id subscription_id.
 	 * @param String $status status.
 	 */
-	public function wps_sfw_on_hold_url( $subscription_id, $status ){
+	public function wps_sfw_on_hold_url( $subscription_id, $status ) {
 		$wps_link = add_query_arg(
 			array(
 				'wps_subscription_id'               => $subscription_id,
@@ -378,7 +378,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			$order_id_field = 'post_id';
 		}
 
-		$where = "1=1";
+		$where = '1=1';
 		$search_join = '';
 
 		if ( $is_hpos ) {
@@ -474,7 +474,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				$wps_recurring_total     = wps_sfw_get_meta_data( $id, 'wps_recurring_total', true );
 				$wps_curr_args           = array();
 
-				if (  is_array( $product_name ) ) {
+				if ( is_array( $product_name ) ) {
 					$product_name = implode( ', ', $product_name );
 				}
 				if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
@@ -518,7 +518,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 
 				$is_payment_manual = wps_sfw_get_meta_data( $id, 'wps_wsp_payment_type', true );
-				
+
 				$parent_order = wc_get_order( $parent_order_id );
 				$payment_type = $parent_order ? $parent_order->get_payment_method_title() : null;
 				if ( $is_payment_manual ) {
