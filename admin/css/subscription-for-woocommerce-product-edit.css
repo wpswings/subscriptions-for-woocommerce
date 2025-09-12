@@ -4,20 +4,23 @@
  */
 
 
-  @media only screen and (max-width: 1248px) {
-  	.woocommerce_options_panel select {
-  		margin-top: 15px !important;
-  		width: 80%;
-  	}
-
+@media only screen and (max-width: 1248px) {
+  .woocommerce_options_panel select {
+    margin-top: 15px !important;
+    width: 80%;
   }
 
-  /*  Pro  start */
+}
+
+/*  Pro  start */
 
 img.wps_go_pro_images {
-    max-height: 100px;
+  max-height: 100px;
 }
-.wps_pro_settings_tag,.wps_pro_settings label {
+
+.wps_pro_settings_tag,
+.wps_pro_settings label,
+.wps_pro_settings.wps_sfw_subscription_box_add_step_field_pro {
   position: relative;
 }
 
@@ -26,7 +29,9 @@ p.wps_pro_settings label {
   width: 130px;
 }
 
-.wps_pro_settings_tag:before, .wps_pro_settings label:before{
+.wps_pro_settings_tag:before,
+.wps_pro_settings label:before,
+.wps_pro_settings.wps_sfw_subscription_box_add_step_field_pro:before {
   background-color: #008000;
   position: absolute;
   content: '';
@@ -37,7 +42,10 @@ p.wps_pro_settings label {
   z-index: 99;
   clip-path: polygon(0 0, 0% 100%, 100% 100%);
 }
-.wps_pro_settings_tag:after,.wps_pro_settings label:after {
+
+.wps_pro_settings_tag:after,
+.wps_pro_settings label:after,
+.wps_pro_settings.wps_sfw_subscription_box_add_step_field_pro::after {
   position: absolute;
   content: 'pro';
   left: 0px;
@@ -51,7 +59,8 @@ p.wps_pro_settings label {
   color: #fff;
 }
 
-.wps_sfw_subscription_box_price_field_pro.wps_pro_settings:before,.wps_sfw_subscription_box_price_field_pro.wps_pro_settings:after {
+.wps_sfw_subscription_box_price_field_pro.wps_pro_settings:before,
+.wps_sfw_subscription_box_price_field_pro.wps_pro_settings:after {
   position: unset;
 }
 
@@ -72,11 +81,13 @@ p.wps_pro_settings label {
   width: 100%;
   z-index: 99999;
 }
+
 .wps_sfw_lite_go_pro_popup_wrap.wps_sfw_lite_go_pro_popup_show {
   opacity: 1;
   visibility: visible;
   transition: 0.3s linear all;
 }
+
 .wps_sfw_lite_go_pro_popup {
   background-color: #ffffff;
   max-width: 800px;
@@ -86,6 +97,7 @@ p.wps_pro_settings label {
   position: relative;
   margin-left: 160px;
 }
+
 .wps_sfw_lite_go_pro_popup_head h2 {
   background-color: #7979f6;
   border-radius: 5px 5px 0 0;
@@ -97,21 +109,24 @@ p.wps_pro_settings label {
   padding: 20px 10px;
   max-width: 400px;
 }
+
 .wps_sfw_lite_go_pro_popup_close {
   position: absolute;
   right: 8px;
   top: 6px;
   opacity: 0.8;
   width: 25px;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
   font-size: 22px;
-  border: 1px solid rgba(255,255,255,0.6);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   height: 25px;
   line-height: 21px;
   border-radius: 50%;
 }
-.wps_sfw_lite_go_pro_popup_button .wps_ubo_lite_overview_go_pro_button, .button.wps_ubo_lite_overview_go_pro_button {
+
+.wps_sfw_lite_go_pro_popup_button .wps_ubo_lite_overview_go_pro_button,
+.button.wps_ubo_lite_overview_go_pro_button {
   background-color: #78c900;
   color: #ffffff;
 
@@ -123,22 +138,67 @@ p.wps_pro_settings label {
   text-transform: capitalize;
   box-shadow: none;
 }
-.wps_sfw_lite_go_pro_popup_button .wps_ubo_lite_overview_go_pro_button span, .button.wps_ubo_lite_overview_go_pro_button span {
+
+.wps_sfw_lite_go_pro_popup_button .wps_ubo_lite_overview_go_pro_button span,
+.button.wps_ubo_lite_overview_go_pro_button span {
   vertical-align: middle;
   margin-left: 5px;
 }
+
 .wps_sfw_lite_go_pro_popup_text {
-	font-size: 16px;
-	text-align: center;
-	max-width: 400px;
-	margin: 0 auto 10px;
-	padding: 0 20px;
+  font-size: 16px;
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto 10px;
+  padding: 0 20px;
 }
-.wps_sfw_lite_go_pro_popup_head{
+
+.wps_sfw_lite_go_pro_popup_head {
   margin-bottom: 10px;
 }
 
 .wps_pro_settings_tag>label {
-    padding-bottom: 10px;
+  padding-bottom: 10px;
 }
-  /* pro popup end  */
+
+/* pro popup end  */
+
+.wps_sfw_steps_wrap, .wps_sfw_subscription_box_wrap {
+  padding: 0 15px;
+}
+
+#wps_subscription_box_product_target_section .wps_sfw_setup-box-ttile {
+  padding: 15px;
+  line-height: 1.25;
+  color: #000;
+  background: #f2f2f2;
+  margin: 0 0 15px;
+  font-size: 18px;
+}
+
+.wps_sfw_steps_wrap .wps_sfw_step_header {
+  font-size: 16px;
+  color: #000;
+  text-transform: capitalize;
+  border-bottom: 1.5px solid #e2e2e2;
+  padding: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wps_sfw_step_card {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.wps_sfw_subscription_box_add_step_field_pro {
+  padding-left: 15px;
+}
+
+#wps_subscription_box_product_target_section .wps_sfw_remove_step {
+    background: #ffdbdb;
+    border-color: red;
+}

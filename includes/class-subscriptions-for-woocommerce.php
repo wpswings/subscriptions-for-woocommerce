@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.8.6';
+			$this->version = '1.8.8';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -299,7 +299,6 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'woocommerce_before_calculate_totals', $sfw_plugin_public, 'wps_sfw_add_subscription_price', 999 );
 			$this->loader->add_action( 'woocommerce_cart_calculate_fees', $sfw_plugin_public, 'wps_sfw_add_subscription_signup_fee', 999 );
 
-
 			$this->loader->add_action( 'woocommerce_checkout_order_processed', $sfw_plugin_public, 'wps_sfw_process_checkout', 999, 2 );
 
 			$this->loader->add_action( 'woocommerce_available_payment_gateways', $sfw_plugin_public, 'wps_sfw_unset_offline_payment_gateway_for_subscription' );
@@ -382,6 +381,9 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'wc_order_statuses', $sfw_plugin_public, 'wps_sfw_new_wc_order_statuses' );
 			$this->loader->add_action( 'plugins_loaded', $sfw_plugin_public, 'wps_sfw_subscription_dashboard_shortcodes' );
 
+			$this->loader->add_action( 'wp_ajax_wps_sfw_sub_box_empty_cart', $sfw_plugin_public, 'wps_sfw_sub_box_empty_cart_callback' );
+			$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_sub_box_empty_cart', $sfw_plugin_public, 'wps_sfw_sub_box_empty_cart_callback' );
+			$this->loader->add_action( 'woocommerce_order_status_changed', $sfw_plugin_public, 'wps_sfw_woocommerce_affiliate_commision_renewal', 99, 3 );
 
 			// subscription box.
 

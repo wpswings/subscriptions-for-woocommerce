@@ -408,7 +408,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_subscription_log', '' ) ? 'on' : 'off' ),
 				'class' => 'sfw-checkbox-class',
 			),
-			
+
 			array(
 				'type'  => 'button',
 				'id'    => 'wps_sfw_save_general_settings',
@@ -417,12 +417,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			),
 		);
 
-		if ( class_exists( 'WooCommerce' ) ) {
-			$woocommerce_version = WC()->version;
-			if ( version_compare( $woocommerce_version, '8.8.3', '>' ) ) {
-				unset( $sfw_settings_general[5] );
-			}
-		}
 		// Add general settings.
 		return apply_filters( 'wps_sfw_add_general_settings_fields', $sfw_settings_general );
 	}
@@ -1366,7 +1360,6 @@ class Subscriptions_For_Woocommerce_Admin {
 	public function wps_sfw_custom_product_fields_for_subscription_box() {
 		global $post;
 		$post_id = $post->ID;
-		$product = wc_get_product( $post_id );
 
 		$wps_sfw_subscription_box_number = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_number', true );
 		if ( empty( $wps_sfw_subscription_box_number ) ) {
@@ -1381,9 +1374,6 @@ class Subscriptions_For_Woocommerce_Admin {
 		$wps_sfw_subscription_box_expiry_interval = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_expiry_interval', true );
 
 		$wps_sfw_subscription_box_price = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_box_price', true );
-
-		$wps_sfw_subscription_box_setup = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_box_setup', true );
-		$wps_sfw_subscription_box_products = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_box_products', true );
 
 		$wps_sfw_subscription_box_categories = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_box_categories', true );
 
@@ -1404,15 +1394,6 @@ class Subscriptions_For_Woocommerce_Admin {
 			}
 		}
 
-		$categories = get_terms(
-			array(
-				'taxonomy' => 'product_cat',
-				'hide_empty' => false,
-			)
-		);
-
-		$wps_sfw_subscription_box_step_label = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription_box_step_label', true );
-
 		$is_pro = false;
 		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', $is_pro );
 		if ( ! $is_pro ) {
@@ -1421,101 +1402,216 @@ class Subscriptions_For_Woocommerce_Admin {
 		?>
 		<div id="wps_subscription_box_product_target_section" class="panel woocommerce_options_panel hidden">
 
-			<strong><?php esc_html_e( 'Subscriptions Setting For Box', 'subscriptions-for-woocommerce' ); ?></strong>
-
-			<p class="form-field wps_sfw_subscription_box_price_field ">
-					<label for="wps_sfw_subscription_box_price">
-					<?php esc_html_e( 'Subscriptions Box Price', 'subscriptions-for-woocommerce' ); ?>
-					</label>
-					<input type="number" class="short wc_input_number"  min="1"  name="wps_sfw_subscription_box_price" id="wps_sfw_subscription_box_price" value="<?php echo esc_attr( $wps_sfw_subscription_box_price ); ?>" placeholder="<?php esc_html_e( 'Enter subscription Box price', 'subscriptions-for-woocommerce' ); ?>"> 
-				
-			</p>
-			<p class="form-field wps_sfw_manage_subscription_box_price_field wps_sfw_subscription_box_price_field_pro <?php echo esc_attr( $pro_group_tag ); ?>">
-				<label for="wps_sfw_manage_subscription_box_price"><?php esc_html_e( 'Manage subscription box Price through all selected products', 'subscriptions-for-woocommerce' ); ?></label>
-				<input type="checkbox" id="wps_sfw_manage_subscription_box_price" name="wps_sfw_manage_subscription_box_price" value="on"  <?php echo esc_attr( ( 'on' === $wps_sfw_manage_subscription_box_price ) ? 'checked' : null ); ?> />
-			</p>
-			<p class="form-field wps_sfw_subscription_box_number_field ">
-				<label for="wps_sfw_subscription_box_number">
-				<?php esc_html_e( 'Subscriptions Per Interval', 'subscriptions-for-woocommerce' ); ?>
-				</label>
-				<input type="number" class="short wc_input_number"  min="1" required name="wps_sfw_subscription_box_number" id="wps_sfw_subscription_box_number" value="<?php echo esc_attr( $wps_sfw_subscription_box_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
-				<select id="wps_sfw_subscription_box_interval" name="wps_sfw_subscription_box_interval" class="wps_sfw_subscription_box_interval" >
-					<?php foreach ( wps_sfw_subscription_period() as $value => $label ) { ?>
-						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_box_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
-					<?php } ?>
-					</select>
-			<?php
-				$description_text = __( 'Choose the subscriptions time interval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
-				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-			?>
-			</p>
-			<p class="form-field wps_sfw_subscription_box_expiry_field ">
-				<label for="wps_sfw_subscription_box_expiry_number">
-				<?php esc_html_e( 'Subscriptions Expiry Interval', 'subscriptions-for-woocommerce' ); ?>
-				</label>
-				<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_subscription_box_expiry_number" id="wps_sfw_subscription_box_expiry_number" value="<?php echo esc_attr( $wps_sfw_subscription_box_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
-				<select id="wps_sfw_subscription_box_expiry_interval" name="wps_sfw_subscription_box_expiry_interval" class="wps_sfw_subscription_box_expiry_interval" >
-					<?php foreach ( wps_sfw_subscription_expiry_period( $wps_sfw_subscription_box_interval ) as $value => $label ) { ?>
-						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_box_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
-					<?php } ?>
-					</select>
-			<?php
-				$description_text = __( 'Choose the subscriptions expiry time interval for the product "leave empty for unlimited"', 'subscriptions-for-woocommerce' );
-				echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
-			?>
-			</p>
-
-			<strong><?php esc_html_e( 'Setup For Subscription Box', 'subscriptions-for-woocommerce' ); ?></strong>
-				<p class="form-field wps_sfw_subscription_box_setup_field ">
-					<label for="wps_sfw_subscription_box_setup">
-						<?php esc_html_e( 'Apply Subscription Box To', 'subscriptions-for-woocommerce' ); ?>
-					</label>
-					<select id="wps_sfw_subscription_box_setup" name="wps_sfw_subscription_box_setup">
-						<option value="specific_products" <?php selected( $wps_sfw_subscription_box_setup, 'specific_products' ); ?>><?php esc_html_e( 'Specific Products', 'subscriptions-for-woocommerce' ); ?></option>
-						<option value="specific_categories" <?php selected( $wps_sfw_subscription_box_setup, 'specific_categories' ); ?>><?php esc_html_e( 'Specific Categories', 'subscriptions-for-woocommerce' ); ?></option>
-					</select>
-				</p>
-
-				<p class="form-field wps_sfw_subscription_box_products_field" style="display: none;">
-					<label for="wps_sfw_subscription_box_products">
-						<?php esc_html_e( 'Select Products', 'subscriptions-for-woocommerce' ); ?>
-					</label>
-					<select id="wps_sfw_subscription_box_products" name="wps_sfw_subscription_box_products[]" class="wc-product-search" multiple="multiple" style="width: 100%;"
-						data-placeholder="<?php esc_attr_e( 'Search for a product...', 'subscriptions-for-woocommerce' ); ?>"
-						data-action="woocommerce_json_search_products_and_variations">
-						<?php
-						if ( ! empty( $wps_sfw_subscription_box_products ) ) {
-							foreach ( $wps_sfw_subscription_box_products as $product_id ) {
-								$product = wc_get_product( $product_id );
-								if ( $product ) {
-									echo '<option value="' . esc_attr( $product_id ) . '" selected>' . esc_html( $product->get_name() ) . '</option>';
-								}
-							}
-						}
-						?>
-					</select>
-				</p>
-
-				<p class="form-field wps_sfw_subscription_box_categories_field" style="display: none;">
-					<label for="wps_sfw_subscription_box_categories">
-						<?php esc_html_e( 'Select Categories', 'subscriptions-for-woocommerce' ); ?>
-					</label>
-					<select id="wps_sfw_subscription_box_categories" name="wps_sfw_subscription_box_categories[]" class="wc-category-search" multiple="multiple" style="width: 100%;"data-placeholder="<?php esc_attr_e( 'Search for categories...', 'subscriptions-for-woocommerce' ); ?>"data-action="woocommerce_json_search_categories"> 
+			<p class="wps_sfw_setup-box-ttile"><strong><?php esc_html_e( 'Subscriptions Setting For Box', 'subscriptions-for-woocommerce' ); ?></strong></p>
+			<div class="wps_sfw_subscription_box_wrap">
+				<div class="wps_sfw_step_card">
+					<p class="form-field wps_sfw_subscription_box_price_field ">
+							<label for="wps_sfw_subscription_box_price">
+							<?php esc_html_e( 'Subscriptions Box Price', 'subscriptions-for-woocommerce' ); ?>
+							</label>
+							<input type="number" class="short wc_input_number"  min="1" step="any" name="wps_sfw_subscription_box_price" id="wps_sfw_subscription_box_price" value="<?php echo esc_attr( $wps_sfw_subscription_box_price ); ?>" placeholder="<?php esc_html_e( 'Enter subscription Box price', 'subscriptions-for-woocommerce' ); ?>"> 
 						
-						<?php
-						if ( ! empty( $categories ) ) {
-							foreach ( $categories as $category ) {
-								if ( in_array( $category->name, $selected_category_ids ) ) {
+					</p>
+					<p class="form-field wps_sfw_manage_subscription_box_price_field wps_sfw_subscription_box_price_field_pro <?php echo esc_attr( $pro_group_tag ); ?>">
+						<label for="wps_sfw_manage_subscription_box_price"><?php esc_html_e( 'Manage subscription box Price through all selected products', 'subscriptions-for-woocommerce' ); ?></label>
+						<input type="checkbox" id="wps_sfw_manage_subscription_box_price" name="wps_sfw_manage_subscription_box_price" value="on"  <?php echo esc_attr( ( 'on' === $wps_sfw_manage_subscription_box_price ) ? 'checked' : null ); ?> />
+					</p>
+					<p class="form-field wps_sfw_subscription_box_number_field ">
+						<label for="wps_sfw_subscription_box_number">
+						<?php esc_html_e( 'Subscriptions Per Interval', 'subscriptions-for-woocommerce' ); ?>
+						</label>
+						<input type="number" class="short wc_input_number"  min="1" required name="wps_sfw_subscription_box_number" id="wps_sfw_subscription_box_number" value="<?php echo esc_attr( $wps_sfw_subscription_box_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription interval', 'subscriptions-for-woocommerce' ); ?>"> 
+						<select id="wps_sfw_subscription_box_interval" name="wps_sfw_subscription_box_interval" class="wps_sfw_subscription_box_interval" >
+							<?php foreach ( wps_sfw_subscription_period() as $value => $label ) { ?>
+								<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_box_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
+							<?php } ?>
+							</select>
+					<?php
+						$description_text = __( 'Choose the subscriptions time interval for the product "for example 10 days"', 'subscriptions-for-woocommerce' );
+						echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
+					?>
+					</p>
+					<p class="form-field wps_sfw_subscription_box_expiry_field ">
+						<label for="wps_sfw_subscription_box_expiry_number">
+						<?php esc_html_e( 'Subscriptions Expiry Interval', 'subscriptions-for-woocommerce' ); ?>
+						</label>
+						<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_subscription_box_expiry_number" id="wps_sfw_subscription_box_expiry_number" value="<?php echo esc_attr( $wps_sfw_subscription_box_expiry_number ); ?>" placeholder="<?php esc_html_e( 'Enter subscription expiry', 'subscriptions-for-woocommerce' ); ?>"> 
+						<select id="wps_sfw_subscription_box_expiry_interval" name="wps_sfw_subscription_box_expiry_interval" class="wps_sfw_subscription_box_expiry_interval" >
+							<?php foreach ( wps_sfw_subscription_expiry_period( $wps_sfw_subscription_box_interval ) as $value => $label ) { ?>
+								<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $wps_sfw_subscription_box_expiry_interval, true ); ?>><?php echo esc_html( $label ); ?></option>
+							<?php } ?>
+							</select>
+					<?php
+						$description_text = __( 'Choose the subscriptions expiry time interval for the product "leave empty for unlimited"', 'subscriptions-for-woocommerce' );
+						echo wp_kses_post( wc_help_tip( $description_text ) ); // WPCS: XSS ok.
+					?>
+					</p>
+				</div>
+			</div>
 
-									$selected = in_array( (int) $category->name, $selected_category_ids ) ? 'selected="selected"' : '';
-									echo '<option value="' . esc_attr( $category->name ) . '" ' . esc_html( $selected ) . '>' . esc_html( $category->name ) . '</option>';
+			<p class="wps_sfw_setup-box-ttile"><strong><?php esc_html_e( 'Setup For Subscription Box', 'subscriptions-for-woocommerce' ); ?></strong></p>
+			
+			<!-- subscription box setup modification -->
+			 <?php
+				$step_settings = get_post_meta( $post->ID, 'wps_sfw_step_settings', true );
+				$step_settings = is_array( $step_settings ) ? $step_settings : array();
+
+				// Fallback/migration: if you still have old single fields, turn them into step1 once.
+				if ( empty( $step_settings ) ) {
+					$old_type        = get_post_meta( $post->ID, 'wps_sfw_subscription_box_setup', true );
+					$old_label       = get_post_meta( $post->ID, 'wps_sfw_subscription_box_step_label', true );
+					$old_products    = (array) get_post_meta( $post->ID, 'wps_sfw_subscription_box_products', true );
+					$old_categories  = (array) get_post_meta( $post->ID, 'wps_sfw_subscription_box_categories', true );
+
+					if ( $old_type || $old_label || $old_products || $old_categories ) {
+						$step_settings = array(
+							'step1' => array(
+								'type'         => $old_type ?: 'specific_products',
+								'product_ids'  => array_map( 'absint', $old_products ),
+								'category_ids' => array_map( 'absint', $old_categories ),
+								'label'        => $old_label ?: '',
+
+							),
+						);
+					}
+				}
+
+				// If still empty, start with one blank step1.
+				if ( empty( $step_settings ) ) {
+					$step_settings = array(
+						'step1' => array(
+							'type'         => 'specific_products',
+							'product_ids'  => array(),
+							'category_ids' => array(),
+							'label'        => '',
+							'min_num'      => 1,
+							'max_num'      => 1,
+						),
+					);
+				}
+				?>
+				<div class="wps_sfw_steps_wrap" id="wps_sfw_steps_wrap">
+					<?php
+
+					foreach ( $step_settings as $step_key => $step ) :
+						$type         = isset( $step['type'] ) ? $step['type'] : 'specific_products';
+						$product_ids  = isset( $step['product_ids'] ) ? (array) $step['product_ids'] : array();
+						$category_ids = isset( $step['category_ids'] ) ? (array) $step['category_ids'] : array();
+						$label        = isset( $step['label'] ) ? $step['label'] : 'step1';
+						$wps_sfw_subscription_box_min_number = isset( $step['min_num'] ) ? $step['min_num'] : '';
+
+						$wps_sfw_subscription_box_max_number = isset( $step['max_num'] ) ? $step['max_num'] : '';
+
+						if ( ! empty( $category_ids ) ) {
+							foreach ( $category_ids as $slug ) {
+								$term = get_term_by( 'id', $slug, 'product_cat' );
+								if ( $term ) {
+									$category_ids[] = $term->id; // Store term IDs.
 								}
 							}
 						}
-						?>
 
-					</select>
-				</p>
+						if ( ! $is_pro && 'step1' !== $step_key ) {
+							continue;
+						}
+
+						?>
+					<div class="wps_sfw_step_card" data-step="<?php echo esc_attr( $step_key ); ?>" >
+					<div class="wps_sfw_step_header">
+						<strong><?php echo esc_attr( $label ); ?></strong>
+						<?php
+						if ( 'step1' !== $step_key ) {
+							?>
+						<button type="button" class="button button-link-delete wps_sfw_remove_step">Remove</button>
+							<?php
+						}
+						?>
+					 </div>
+
+						<p class="form-field">
+							<label><strong><?php esc_html_e( 'Box Step Label', 'subscriptions-for-woocommerce' ); ?></strong></label>
+							<input type="text"
+								name="wps_sfw_steps[<?php echo esc_attr( $step_key ); ?>][label]"
+								value="<?php echo esc_attr( $label ); ?>"
+								class="short"
+								placeholder="<?php esc_attr_e( 'Enter step label', 'subscriptions-for-woocommerce' ); ?>">
+						</p>
+
+						<p class="form-field">
+							<label for="wps_sfw_type_<?php echo esc_attr( $step_key ); ?>">
+								<?php esc_html_e( 'Apply Subscription Box To', 'subscriptions-for-woocommerce' ); ?>
+							</label>
+							<select id="wps_sfw_type_<?php echo esc_attr( $step_key ); ?>"
+									class="wps_sfw_step_type"
+									name="wps_sfw_steps[<?php echo esc_attr( $step_key ); ?>][type]">
+								<option value="specific_products" <?php selected( $type, 'specific_products' ); ?>>
+									<?php esc_html_e( 'Specific Products', 'subscriptions-for-woocommerce' ); ?>
+								</option>
+								<option value="specific_categories" <?php selected( $type, 'specific_categories' ); ?>>
+									<?php esc_html_e( 'Specific Categories', 'subscriptions-for-woocommerce' ); ?>
+								</option>
+							</select>
+						</p>
+
+						<p class="form-field wps_sfw_products_field" style="<?php echo $type === 'specific_products' ? '' : 'display:none;'; ?>">
+							<label for="wps_sfw_products_<?php echo esc_attr( $step_key ); ?>">
+								<?php esc_html_e( 'Select Products', 'subscriptions-for-woocommerce' ); ?>
+							</label>
+							<select id="wps_sfw_products_<?php echo esc_attr( $step_key ); ?>"
+									name="wps_sfw_steps[<?php echo esc_attr( $step_key ); ?>][product_ids][]"
+									class="wc-product-search"
+									multiple="multiple"
+									style="width:100%;"
+									data-placeholder="<?php esc_attr_e( 'Search for a product…', 'subscriptions-for-woocommerce' ); ?>"
+									data-action="woocommerce_json_search_products_and_variations">
+								<?php $this->wps_sfw_admin_render_product_options( $product_ids ); ?>
+							</select>
+						</p>
+
+						<p class="form-field wps_sfw_categories_field" style="<?php echo $type === 'specific_categories' ? '' : 'display:none;'; ?>">
+							<label for="wps_sfw_categories_<?php echo esc_attr( $step_key ); ?>">
+								<?php esc_html_e( 'Select Categories', 'subscriptions-for-woocommerce' ); ?>
+							</label>
+							<select id="wps_sfw_categories_<?php echo esc_attr( $step_key ); ?>"
+									name="wps_sfw_steps[<?php echo esc_attr( $step_key ); ?>][category_ids][]"
+									class="wc-category-search"
+									multiple="multiple"
+									style="width:100%;"
+									data-placeholder="<?php esc_attr_e( 'Search for categories…', 'subscriptions-for-woocommerce' ); ?>"
+									data-action="woocommerce_json_search_categories">
+								<?php $this->wps_sfw_admin_render_cat_options( $category_ids ); ?>
+							</select>
+						</p>
+
+						<p class="form-field wps_sfw_subscription_box_min_number_field <?php echo esc_attr( $pro_group_tag ); ?>">
+							<label for="wps_sfw_subscription_box_min_number_<?php echo esc_attr( $step_key ); ?>">
+								<?php esc_html_e( 'Minimum Number of Product Allow in this step', 'subscriptions-for-woocommerce' ); ?>
+							</label>
+								<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_steps[<?php echo esc_attr( $step_key ); ?>][min_num]" id="wps_sfw_subscription_box_min_number_<?php echo esc_attr( $step_key ); ?>" value="<?php echo esc_attr( $wps_sfw_subscription_box_min_number ); ?>" placeholder="<?php esc_html_e( 'Enter minimum number', 'subscriptions-for-woocommerce' ); ?>">	 
+						</p>
+						<p class="form-field wps_sfw_subscription_box_max_number_field <?php echo esc_attr( $pro_group_tag ); ?>">
+							<label for="wps_sfw_subscription_box_max_number_<?php echo esc_attr( $step_key ); ?>">
+								<?php esc_html_e( 'Maximum Number of Product Allow in this step', 'subscriptions-for-woocommerce' ); ?>
+							</label>
+								<input type="number" class="short wc_input_number"  min="1" name="wps_sfw_steps[<?php echo esc_attr( $step_key ); ?>][max_num]" id="wps_sfw_subscription_box_max_number_<?php echo esc_attr( $step_key ); ?>" value="<?php echo esc_attr( $wps_sfw_subscription_box_max_number ); ?>" placeholder="<?php esc_html_e( 'Enter maximum number', 'subscriptions-for-woocommerce' ); ?>">
+
+						</p>
+					</div>
+						<?php
+					endforeach;
+
+					?>
+				</div>
+
+				<div class="form-field wps_sfw_subscription_box_add_step_field_pro <?php echo esc_attr( $pro_group_tag ); ?>">
+					<button type="button" class="button button-secondary" id="wps_sfw_add_step">
+						+ <?php esc_html_e( 'Add Step', 'subscriptions-for-woocommerce' ); ?>
+					</button>
+				</div>
+
+				<?php do_action( 'wps_sfw_after_subscription_box_steps' ); ?>
+			
+			<!-- subscription box setup modification -->
 				<!-- pro popup -->
 					<div class="wps_sfw_lite_go_pro_popup_wrap ">
 							<!-- Go pro popup main start. -->
@@ -1556,12 +1652,6 @@ class Subscriptions_For_Woocommerce_Admin {
 							</div>
 					</div>
 				<!-- Go pro popup main end. -->
-				<p class="form-field wps_sfw_subscription_box_setup">
-					<label for="wps_sfw_subscription_box_step_label">
-					<?php esc_html_e( 'Box Step Label', 'subscriptions-for-woocommerce' ); ?>
-					</label>
-					<input type="text" class="short" name="wps_sfw_subscription_box_step_label" id="wps_sfw_subscription_box_step_label" value="<?php echo esc_attr( $wps_sfw_subscription_box_step_label ); ?>" placeholder="<?php esc_html_e( 'Enter step label', 'subscriptions-for-woocommerce' ); ?>">
-				</p>
 				
 			</p>
 			<?php
@@ -1573,6 +1663,41 @@ class Subscriptions_For_Woocommerce_Admin {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Helper for printing product options preselected (product).
+	 *
+	 * @param array $ids as product ids.
+	 * @return void
+	 */
+	public function wps_sfw_admin_render_product_options( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+		foreach ( $ids as $pid ) {
+			$product = wc_get_product( $pid );
+			if ( $product ) {
+				echo '<option value="' . esc_attr( $pid ) . '" selected>' . esc_html( $product->get_formatted_name() ) . '</option>';
+			}
+		}
+	}
+
+	/**
+	 * Helper for printing category options preselected (product_cat).
+	 *
+	 * @param array $term_ids as term ids.
+	 * @return void
+	 */
+	public function wps_sfw_admin_render_cat_options( $term_ids ) {
+		if ( empty( $term_ids ) ) {
+			return;
+		}
+
+		foreach ( $term_ids as $t ) {
+			echo '<option value="' . esc_attr( $t ) . '" selected>' . esc_html( $t ) . '</option>';
+		}
+	}
+
 
 	/**
 	 * Function to save subscription box settings.
@@ -1600,21 +1725,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			$wps_sfw_subscription_box_expiry_interval = isset( $_POST['wps_sfw_subscription_box_expiry_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_box_expiry_interval'] ) ) : '';
 
-			$wps_sfw_subscription_box_setup = isset( $_POST['wps_sfw_subscription_box_setup'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_box_setup'] ) ) : '';
-
-			$wps_sfw_subscription_box_step_label = isset( $_POST['wps_sfw_subscription_box_step_label'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_subscription_box_step_label'] ) ) : '';
-
-			$wps_sfw_subscription_box_products = isset( $_POST['wps_sfw_subscription_box_products'] ) ? $_POST['wps_sfw_subscription_box_products'] : array();
-
 			$wps_sfw_manage_subscription_box_price = isset( $_POST['wps_sfw_manage_subscription_box_price'] ) ? sanitize_text_field( wp_unslash( $_POST['wps_sfw_manage_subscription_box_price'] ) ) : '';
-
-			if ( $wps_sfw_subscription_box_products ) {
-				wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_products', $wps_sfw_subscription_box_products );
-			}
-			$selected_categories = isset( $_POST['wps_sfw_subscription_box_categories'] ) ? $_POST['wps_sfw_subscription_box_categories'] : array();
-			if ( $selected_categories ) {
-				wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_categories', $selected_categories );
-			}
 
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_price', $wps_sfw_subscription_box_price );
 			wps_sfw_update_meta_data( $post_id, '_price', $wps_sfw_subscription_box_price );
@@ -1623,9 +1734,73 @@ class Subscriptions_For_Woocommerce_Admin {
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_interval', $wps_sfw_subscription_box_interval );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_number', $wps_sfw_subscription_box_expiry_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_expiry_interval', $wps_sfw_subscription_box_expiry_interval );
-			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_setup', $wps_sfw_subscription_box_setup );
-			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_step_label', $wps_sfw_subscription_box_step_label );
-			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_box_products', $wps_sfw_subscription_box_products );
+
+			// modification.
+
+				$clean_steps = array();
+			if ( ! empty( $_POST['wps_sfw_steps'] ) && is_array( $_POST['wps_sfw_steps'] ) ) {
+
+				$raw = wp_unslash( $_POST['wps_sfw_steps'] );
+
+				// Keep DOM order (step1, step2, ...), even if keys come jumbled.
+				uksort(
+					$raw,
+					function ( $a, $b ) {
+						$ia = (int) preg_replace( '/\D+/', '', (string) $a );
+						$ib = (int) preg_replace( '/\D+/', '', (string) $b );
+						return $ia <=> $ib;
+					}
+				);
+
+				$i = 1;
+				foreach ( $raw as $step ) {
+
+					$type = isset( $step['type'] ) ? sanitize_text_field( $step['type'] ) : 'specific_products';
+					if ( ! in_array( $type, array( 'specific_products', 'specific_categories' ), true ) ) {
+						$type = 'specific_products';
+					}
+
+					$label = isset( $step['label'] ) ? sanitize_text_field( $step['label'] ) : '';
+					$min_val = isset( $step['min_num'] ) ? $step['min_num'] : '';
+					$max_val = isset( $step['max_num'] ) ? $step['max_num'] : '';
+
+					$product_ids  = array();
+					$category_ids = array();
+
+					if ( ! empty( $step['product_ids'] ) ) {
+						$product_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $step['product_ids'] ) ) ) );
+					}
+					if ( ! empty( $step['category_ids'] ) ) {
+						$category_ids = $step['category_ids'];
+					}
+
+					// Only persist meaningful steps.
+					if ( '' === $label && empty( $product_ids ) && empty( $category_ids ) ) {
+						continue;
+					}
+
+					// Keep only the relevant IDs for the chosen type.
+					if ( 'specific_products' === $type ) {
+						$category_ids = array();
+					} else {
+						$product_ids = array();
+					}
+
+					$clean_steps[ 'step' . $i++ ] = array(
+						'type'         => $type,
+						'product_ids'  => $product_ids,
+						'category_ids' => $category_ids,
+						'label'        => $label,
+						'min_num'      => $min_val,
+						'max_num'      => $max_val,
+
+					);
+				}
+			}
+
+				wps_sfw_update_meta_data( $post_id, 'wps_sfw_step_settings', $clean_steps );
+
+			// modification.
 
 			if ( 'on' == $wps_sfw_manage_subscription_box_price ) {
 				wps_sfw_update_meta_data( $post_id, 'wps_sfw_manage_subscription_box_price', $wps_sfw_manage_subscription_box_price );

@@ -110,12 +110,56 @@
 			
 		});
 
-		
+	
+		$('.wps_sfw-empty-cart').on('click', function() {
+			console.log('Empty Cart button clicked');
+			// Send AJAX request to empty the cart
+			$.ajax({
+				url: sfw_public_param.ajaxurl,
+				type: 'POST',
+				data: {
+					action: 'wps_sfw_sub_box_empty_cart',
+					nonce: sfw_public_param.sfw_public_nonce,
+				},
+				success: function(response) {
+					console.log('Cart emptied:', response);
+					// Show success message and update cart totals
+					alert('Your cart has been emptied!');
+					$('.wps_sfw-empty-cart').hide();
+					$(document.body).trigger('updated_cart_totals');
+				}
+			});
+		});
+
+		$('.wps_sfw_product_page-empty-cart').on('click', function() {
+			console.log('Empty Cart button clicked');
+			// Send AJAX request to empty the cart
+			$.ajax({
+				url: sfw_public_param.ajaxurl,
+				type: 'POST',
+				data: {
+					action: 'wps_sfw_sub_box_empty_cart',
+					nonce: sfw_public_param.sfw_public_nonce,
+				},
+				success: function(response) {
+					console.log('Cart emptied:', response);
+					// Show success message and update cart totals
+					alert('Your cart has been emptied!');
+					$(document.body).trigger('updated_cart_totals');
+					window.location.assign(window.location.href);
+				}
+			});
+		});
 
 		//new code.
 		$('#wps_sfw_subs_box-form').on('submit', function (e) {
 			e.preventDefault();
-		
+			var $form = $('#wps_sfw_subs_box-form');
+			var $current = $form.find('.wps_sfw-sb-step:visible');
+			if(!validateStep($current)){
+				e.preventDefault();
+				return false;
+			}
 			let wps_sfw_subscription_product_id = $('.wps_sfw_subscription_product_id').data('subscription-box-id');
 		
 			let formData = {
@@ -139,6 +183,9 @@
 		
 			if (formData.products.length === 0) {
 				$('.wps_sfw_subscription_box_error_notice').text('No products selected. Please add at least one product.').show();
+				setTimeout(function() {
+					$('.wps_sfw_subscription_box_error_notice').fadeOut(500);
+				}, 5000); // Hide after 5 seconds
 				return;
 			}
 		
@@ -156,26 +203,121 @@
 					if (response.message === "Subscription added to cart!") {
 						window.location.href = sfw_public_param.cart_url; // Redirect to cart page
 					} else {
-						$('.wps_sfw_subscription_box_error_notice').text(response.data || 'Something went wrong.').show();
+						// var emptyCartButton = '<button type="button" class="button wps_sfw-empty-cart" id="wps_sfw-empty-cart">Empty Cartssssdsdsds</button>';
+						$('.wps_sfw_subscription_box_error_notice').html((response.data || 'Something went wrong.') ).show();
+						$('.wps_sfw-empty-cart').show();
+						setTimeout(function() {
+							$('.wps_sfw_subscription_box_error_notice').fadeOut(500);
+						}, 5000); // Hide after 5 seconds
+						
 					}
 				},
 				error: function (error) {
 					console.error('Error:', error);
 					$('.wps_sfw_subscription_box_error_notice').text('Failed to process request.').show();
+					setTimeout(function() {
+						$('.wps_sfw_subscription_box_error_notice').fadeOut(500);
+					}, 5000); // Hide after 5 seconds
 				}
 			});
 		});
-			
-			
 
-			jQuery(document).ready(function($) {
-				$(document).on('click','.wps_show_customer_subscription_box_popup', function(e) {
-					e.preventDefault();
-					$(this).next('.wps-attached-products-popup').addClass('active_customer_popup');
-				});
-				$(document).on('click','.wps_sfw_customer_close_popup', function(e) {
-					$(this).parent('.wps-attached-products-popup').removeClass('active_customer_popup');
-				});
-			});
+		$(document).on('click','.wps_show_customer_subscription_box_popup', function(e) {
+			e.preventDefault();
+			$(this).next('.wps-attached-products-popup').addClass('active_customer_popup');
+		});
+		$(document).on('click','.wps_sfw_customer_close_popup', function(e) {
+			$(this).parent('.wps-attached-products-popup').removeClass('active_customer_popup');
+		});
+
+		var $form = $('#wps_sfw_subs_box-form');
+    if(!$form.length) return;
+
+    var totalSteps = $form.find('.wps_sfw-sb-step').length;
+    var $prevBtn = $form.find('.wps_sfw-sb-prev');
+    var $nextBtn = $form.find('.wps_sfw-sb-next');
+    var $addBtn  = $form.find('.wps_sfw_subscription_product_id');
+    var $error   = $form.find('.wps_sfw_subscription_box_error_notice');
+
+    function showError(msg){
+		$error.text(msg).show();
+		setTimeout(function() {
+			$error.fadeOut(500);
+		}, 5000); // Hide after 5 seconds
+    }
+    function clearError(){
+        $error.hide().text('');
+    }
+
+    function validateStep($step){
+        var min = parseInt($step.data('min-num'), 10) || 0;
+        var max = parseInt($step.data('max-num'), 10) || 0;
+        if(min === 0 && max === 0){ return true; }
+
+        var totalQty = 0;
+        $step.find('.wps_sfw_sub_box_prod_count').each(function(){
+            totalQty += parseInt($(this).val(), 10) || 0;
+        });
+		console.log(totalQty, min, max);
+        if(min && totalQty < min){
+            showError("Please select at least " + min + " products in this step.");
+            return false;
+        }
+        if(max && totalQty > max){
+            showError("You can select maximum " + max + " products in this step.");
+            return false;
+        }
+        return true;
+    }
+
+    function showStep(index){
+        $form.find('.wps_sfw-sb-step').hide();
+        $form.find('.wps_sfw-sb-step[data-step-index="'+index+'"]').show();
+        clearError();
+
+        if(index <= 1){
+            $prevBtn.hide();
+        } else {
+            $prevBtn.show().data('goto', index-1);
+        }
+
+        if(index >= totalSteps){
+            $nextBtn.hide();
+            $addBtn.show();
+        } else {
+            $nextBtn.show().data('goto', index+1);
+            $addBtn.hide();
+        }
+    }
+
+    // Init first step
+    showStep(1);
+
+    $prevBtn.on('click', function(e){
+        e.preventDefault();
+        var gotoIndex = parseInt($(this).data('goto'), 10);
+        showStep(gotoIndex);
+    });
+
+    $nextBtn.on('click', function(e){
+        e.preventDefault();
+        var $current = $form.find('.wps_sfw-sb-step:visible');
+		 if(!validateStep($current)){
+            e.preventDefault();
+            return false;
+        }
+        var gotoIndex = parseInt($(this).data('goto'), 10);
+        showStep(gotoIndex);
+    });
+
+    $form.on('submit', function(e){
+        var $current = $form.find('.wps_sfw-sb-step:visible');
+        if(!validateStep($current)){
+            e.preventDefault();
+            return false;
+        }
+    });
+
+
 	});
 })( jQuery );

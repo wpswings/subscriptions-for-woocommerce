@@ -3,7 +3,7 @@
  * included in this file.
  */
 
- .wps_sfw_account_wrap {
+.wps_sfw_account_wrap {
     overflow-x: auto;
 }
 
@@ -249,12 +249,14 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
         flex-wrap: wrap;
     }
 
-    .wps_sfw_details_wrap .wps_sfw_account_additional_wrap table.shop_table{
+    .wps_sfw_details_wrap .wps_sfw_account_additional_wrap table.shop_table {
         width: 100%;
     }
+
     .wps_sfw_account_additional_wrap {
         flex: 1 0 45%;
     }
+
     .wps_sfw_account_additional_wrap.wps_sfw_account_renewal_wrap {
         overflow: auto;
     }
@@ -327,15 +329,18 @@ a.button.wps_sfw_subs_box-button {
 .wps_sfw_subs_box-content {
     background: white;
     padding: 20px;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    top: 15px;
+    left: 15px;
+    bottom: 15px;
+    right: 15px;
     text-align: center;
-    position: relative;
+    border-radius: 10px;
+    position: absolute;
     animation: fadeIn 0.3s ease-in-out;
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
+}
+
+.wps_sfw_subs_box-content form {
+    margin: 0;
 }
 
 @keyframes fadeIn {
@@ -374,11 +379,13 @@ a.button.wps_sfw_subs_box-button {
 .wps_sfw_sub_box_prod_container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    height: calc(100vh - 234px);
     overflow: auto;
     padding: 20px;
     gap: 15px;
+    position: absolute;
     align-items: flex-start;
+    top: 90px;
+    bottom: 90px;
 }
 
 .wps_sfw_sub_box_prod_count {
@@ -388,12 +395,23 @@ a.button.wps_sfw_subs_box-button {
     display: inline-block;
 }
 
+.wps_sfw-sb-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
+}
+
 #wps_sfw_subs_box-form .wps_sfw-sb-title h2 {
     margin: 0 auto;
     font-size: 22px;
     font-weight: bold;
     line-height: 1.25;
     max-width: 450px;
+    position: relative;
     padding: 0 30px;
 }
 
@@ -419,7 +437,7 @@ a.button.wps_sfw_subs_box-button {
 }
 
 #wps_sfw_subs_box-form .wps_sfw-sb-cta {
-    padding: 20px;
+    padding: 15px;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -431,6 +449,7 @@ a.button.wps_sfw_subs_box-button {
     gap: 15px;
     align-items: center;
     flex-wrap: wrap;
+    border-radius: 0 0 10px 10px;
 }
 
 #wps_sfw_subs_box-form .wps_sfw_sub_box_prod_item {
@@ -518,7 +537,7 @@ a.button.wps_sfw_subs_box-button {
 #wps_sfw_subs_box-form .wps_sfw-sb-cta button {
     background: var(--wps_sfw_box-primary);
     border-radius: 5px;
-    padding: 15px 20px;
+    padding: 10px 20px;
     line-height: 1.25;
     font-size: 14px;
     font-weight: bold;
@@ -620,6 +639,29 @@ a.wps_show_customer_subscription_box_popup {
     gap: 5px;
     align-items: center;
     font-size: 14px;
+}
+
+p.wps_sfw_subscription_box_error_notice {
+    background: #ffe7e7;
+    padding: 12px 15px;
+    font-size: 14px !important;
+    border-radius: 0 5px 5px 0;
+    display: inline-block;
+    border-left: 5px solid;
+    position: absolute;
+    left: 0;
+}
+
+#wps_sfw_subs_box-form .wps_sfw-sb-title .wps_sfw-sb-step-label {
+    background: rgb(237 244 255);
+    display: inline-block;
+    padding: 6px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 50px;
+    text-transform: capitalize;
+    color: var(--wps_sfw_box-primary);
+    margin: 10px 0 0;
 }
 
 /* Cart popup end */

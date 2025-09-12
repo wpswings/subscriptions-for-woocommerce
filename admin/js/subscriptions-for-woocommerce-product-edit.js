@@ -90,12 +90,11 @@
         $('#wps_sfw_subscription_box_setup').change(toggleSubscriptionBoxFields);
         toggleSubscriptionBoxFields();
 
-        $(document).on( 'click', '.wps_sfw_subscription_box_price_field_pro.wps_pro_settings', function(e) {
-            // if (wsfw_admin_param.is_pro_plugin != 1){
-            // $(this).prop("checked", false);
+        $(document).on( 'click', '.wps_sfw_subscription_box_price_field_pro.wps_pro_settings, .wps_pro_settings.wps_sfw_subscription_box_add_step_field_pro, .wps_pro_settings.wps_sfw_subscription_box_min_number_field, .wps_pro_settings.wps_sfw_subscription_box_max_number_field', function(e) {
+
             e.preventDefault();
             $('.wps_sfw_lite_go_pro_popup_wrap').addClass('wps_sfw_lite_go_pro_popup_show');
-            // }
+         
         });
 
         $(document).on( 'click', '.wps_sfw_lite_go_pro_popup_close', function() {
@@ -252,6 +251,8 @@
                 $(document).find('.wps_subscription_box_product_target_section').removeClass('active');
             }
         }
+
+
         // add select2 for multiselect.
         if( $('.wps_learnpress_course').length > 0 ) {
             $('.wps_learnpress_course').select2();
@@ -265,5 +266,72 @@
                 $('select option[value="subscription_box"]').prop( 'disabled', true );
             }
         }
+
+        function toggleFields($card){
+            var type = $card.find('.wps_sfw_step_type').val();
+            $card.find('.wps_sfw_products_field').toggle(type === 'specific_products');
+            $card.find('.wps_sfw_categories_field').toggle(type === 'specific_categories');
+            // Init only the visible select (avoids width glitches)
+            if (type === 'specific_products') {
+            ensureEnhanced($card.find('.wc-product-search'));
+            } else {
+            ensureEnhanced($card.find('.wc-category-search'));
+            }
+        }
+        function ensureEnhanced($els){
+        if (!$els || !$els.length) return;
+
+        // First try Woo’s own initializer
+        $(document.body).trigger('wc-enhanced-select-init');
+
+        // If still not enhanced (older WC or custom classes), do a manual init
+        $els.filter(':not(.enhanced)').each(function(){
+        var $sel = $(this);
+        if (typeof $.fn.selectWoo !== 'function' && typeof $.fn.select2 !== 'function') return;
+
+        var isProduct   = $sel.hasClass('wc-product-search');
+        var action      = $sel.data('action') || (isProduct ? 'woocommerce_json_search_products_and_variations' : 'woocommerce_json_search_categories');
+        var nonceKey    = isProduct ? 'search_products_nonce' : 'search_categories_nonce';
+        var lib         = $.fn.selectWoo ? 'selectWoo' : 'select2';
+            
+        var args = {
+            allowClear: !!$sel.data('allow_clear'),
+            placeholder: $sel.data('placeholder') || '',
+            minimumInputLength: 1,
+            ajax: {
+            url: (window.wc_enhanced_select_params || {}).ajax_url || ajaxurl,
+            dataType: 'json', delay: 250,
+            data: function(params){
+                return {
+                term: params.term || '',
+                action: action,
+                security: (window.wc_enhanced_select_params || {})[nonceKey],
+                exclude: $sel.data('exclude') || [],
+                include: $sel.data('include') || [],
+                limit: $sel.data('limit') || 30
+                };
+            },
+            processResults: function(data){
+                // Woo may return { results: [...] } or {id:text} map
+                var results = data && (data.results || data);
+                if ($.isArray(results)) return { results: results };
+                var out = [];
+                $.each(results || {}, function(id, text){ out.push({ id:id, text:text }); });
+                return { results: out };
+            },
+            cache: true
+            },
+            escapeMarkup: function(m){ return m; }
+        };
+
+        $sel[lib](args).addClass('enhanced');
+        });
+    }
+
+    // Change handler (delegated) keeps working for future cards
+    $('#wps_sfw_steps_wrap').on('change', '.wps_sfw_step_type', function(){
+        toggleFields($(this).closest('.wps_sfw_step_card'));
+    });
+
     });
 })( jQuery );
