@@ -321,6 +321,69 @@ if ( ! function_exists( 'wps_sfw_email_subscriptions_details' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wps_sfw_email_subscriptions_all_details' ) ) {
+	/**
+	 * This function is used to create html for all susbcription details.
+	 *
+	 * @name wps_sfw_email_subscriptions_all_details
+	 * @since 1.0.0
+	 * @param int $wps_subscription_id wps_subscription_id.
+	 */
+	function wps_sfw_email_subscriptions_all_details( $wps_subscription_id ) {
+		$wps_text_align = is_rtl() ? 'right' : 'left';
+
+		?>
+		<div style="margin-bottom: 40px;">
+			<table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
+				<thead>
+					<tr>
+						<th class="td" scope="col" style="text-align:<?php echo esc_attr( $wps_text_align ); ?>;"><?php esc_html_e( 'Status', 'subscriptions-for-woocommerce' ); ?></th>
+						<th class="td" scope="col" style="text-align:<?php echo esc_attr( $wps_text_align ); ?>;"><?php esc_html_e( 'Product', 'subscriptions-for-woocommerce' ); ?></th>
+						<th class="td" scope="col" style="text-align:<?php echo esc_attr( $wps_text_align ); ?>;"><?php esc_html_e( 'Quantity', 'subscriptions-for-woocommerce' ); ?></th>
+						<th class="td" scope="col" style="text-align:<?php echo esc_attr( $wps_text_align ); ?>;"><?php esc_html_e( 'Price', 'subscriptions-for-woocommerce' ); ?></th>
+						<th class="td" scope="col" style="text-align:<?php echo esc_attr( $wps_text_align ); ?>;"><?php esc_html_e( 'Next Payment Date', 'subscriptions-for-woocommerce' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<?php
+								$wps_subscription_status = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_subscription_status', true );
+								echo esc_html( $wps_subscription_status );
+							?>
+						 </td>
+						<td>
+							<?php
+								$wps_product_name = wps_sfw_get_meta_data( $wps_subscription_id, 'product_name', true );
+								echo esc_html( $wps_product_name );
+							?>
+						 </td>
+						<td>
+							<?php
+							$product_qty = wps_sfw_get_meta_data( $wps_subscription_id, 'product_qty', true );
+							echo esc_html( $product_qty );
+							?>
+						</td>
+						<td>
+						<?php
+							do_action( 'wps_sfw_display_susbcription_recerring_total_account_page', $wps_subscription_id );
+						?>
+						</td>
+						<td>
+							<?php
+								$wps_next_payment_date = wps_sfw_get_meta_data( $wps_subscription_id, 'wps_next_payment_date', true );
+								$wps_next_payment_date = wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date );
+								echo esc_html( $wps_next_payment_date );
+							?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<?php
+	}
+}
+
 if ( ! function_exists( 'wps_sfw_check_plugin_enable' ) ) {
 	/**
 	 * This function is used to check plugin is enable.
