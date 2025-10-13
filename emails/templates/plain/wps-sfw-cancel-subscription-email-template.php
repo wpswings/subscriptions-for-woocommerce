@@ -39,4 +39,7 @@ $product_qty = wps_sfw_get_meta_data( $wps_subscription, 'product_qty', true );
 	</tr>
 </table>
 <?php
+// for custom work.
+do_action( 'wps_sfw_cancel_subscriptions_email_detials', $wps_subscription );
+// for custom work.
 echo wp_kses_post( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) ); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped

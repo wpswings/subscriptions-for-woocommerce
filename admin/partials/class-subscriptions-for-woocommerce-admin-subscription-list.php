@@ -65,6 +65,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		return apply_filters( 'wps_sfw_column_subscription_table', $columns );
 	}
 
+	/**
+	 * This function is used to create cancel url in subscription table.
+	 *
+	 * @param int    $subscription_id as id.
+	 * @param string $status as status.
+	 * @return string
+	 */
 	public function wps_sfw_cancel_url( $subscription_id, $status ) {
 		$wps_link = add_query_arg(
 			array(
@@ -79,6 +86,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		return $actions;
 	}
 
+	/**
+	 * This function is used to create on hold url in subscription table.
+	 *
+	 * @param int    $subscription_id as id.
+	 * @param string $status as status.
+	 * @return string
+	 */
 	public function wps_sfw_on_hold_url( $subscription_id, $status ) {
 		$wps_link = add_query_arg(
 			array(
@@ -94,6 +108,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		return $actions;
 	}
 
+	/**
+	 * This function is used to create on hold url in subscription table.
+	 *
+	 * @param array  $item as item.
+	 * @param string $column_name as column name.
+	 * @return array
+	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'subscription_id':
@@ -179,6 +200,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		do_action( 'wps_sfw_process_bulk_reset_option', $this->current_action(), $_POST );
 	}
 
+	/**
+	 * Get bulk actions for subscription table.
+	 *
+	 * @return array
+	 */
 	public function get_bulk_actions() {
 		$actions = array(
 			'bulk-delete' => __( 'Delete', 'subscriptions-for-woocommerce' ),
@@ -187,6 +213,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		return apply_filters( 'wps_sfw_bulk_option', $actions );
 	}
 
+	/**
+	 * This function is used to create checkbox in subscription table.
+	 *
+	 * @return array
+	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
 			'subscription_id'   => array( 'subscription_id', false ),
@@ -196,6 +227,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		return $sortable_columns;
 	}
 
+	/**
+	 * This function is used to prepare items in subscription table.
+	 *
+	 * @since 1.0.0
+	 */
 	public function prepare_items() {
 		$per_page              = 10;
 		$columns               = $this->get_columns();
@@ -219,6 +255,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		);
 	}
 
+	/**
+	 * This function is used to short the data in subscription table.
+	 *
+	 * @param array $cloumna as cloumna.
+	 * @param array $cloumnb as cloumnb.
+	 * @return int
+	 */
 	public function wps_sfw_usort_reorder( $cloumna, $cloumnb ) {
 		$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'subscription_id';
 		$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'desc';
@@ -235,6 +278,12 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		}
 	}
 
+	/**
+	 * This function is used to create checkbox in subscription table.
+	 *
+	 * @param array $item as item.
+	 * @return string
+	 */
 	public function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="wps_sfw_subscriptions_ids[]" value="%s" />',
@@ -246,72 +295,72 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 	 * Fetch subscription list (with new status filter support).
 	 */
 	/**
- * This function is used to get all subscriptions list.
- *
- * @since 1.0.0
- */
-public function wps_sfw_get_subscription_list() {
-	global $wpdb;
+	 * This function is used to get all subscriptions list.
+	 *
+	 * @since 1.0.0
+	 */
+	public function wps_sfw_get_subscription_list() {
+		global $wpdb;
 
-	$wps_sfw_pro_plugin_activated = false;
-	if ( in_array( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-		$wps_sfw_pro_plugin_activated = true;
-	}
+		$wps_sfw_pro_plugin_activated = false;
+		if ( in_array( 'woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+			$wps_sfw_pro_plugin_activated = true;
+		}
 
-	$current_page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	$per_page     = 10;
-	$offset       = ( $current_page - 1 ) * $per_page;
-	$search_term  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
+		$current_page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$per_page     = 10;
+		$offset       = ( $current_page - 1 ) * $per_page;
+		$search_term  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
 
-	$is_hpos = OrderUtil::custom_orders_table_usage_is_enabled();
-	$table      = $is_hpos ? $wpdb->prefix . 'wc_orders' : $wpdb->prefix . 'posts';
-	$meta_table = $is_hpos ? $wpdb->prefix . 'wc_orders_meta' : $wpdb->prefix . 'postmeta';
-	$id_field   = $is_hpos ? 'id' : 'ID';
-	$order_id_field = $is_hpos ? 'order_id' : 'post_id';
+		$is_hpos = OrderUtil::custom_orders_table_usage_is_enabled();
+		$table      = $is_hpos ? $wpdb->prefix . 'wc_orders' : $wpdb->prefix . 'posts';
+		$meta_table = $is_hpos ? $wpdb->prefix . 'wc_orders_meta' : $wpdb->prefix . 'postmeta';
+		$id_field   = $is_hpos ? 'id' : 'ID';
+		$order_id_field = $is_hpos ? 'order_id' : 'post_id';
 
-	$where = '1=1';
-	$search_join = '';
+		$where = '1=1';
+		$search_join = '';
 
-	$where .= $is_hpos ? " AND {$table}.type = 'wps_subscriptions'" : " AND {$table}.post_type = 'wps_subscriptions'";
+		$where .= $is_hpos ? " AND {$table}.type = 'wps_subscriptions'" : " AND {$table}.post_type = 'wps_subscriptions'";
 
-	// 🔹 Filter by status dropdown.
-$status_filter = isset( $_GET['wps_sfw_filter_status'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_filter_status'] ) ) : '';
-if ( ! empty( $status_filter ) ) {
-	// Always append join to avoid overwriting by search join.
-	$search_join .= " LEFT JOIN {$meta_table} AS meta_status ON meta_status.{$order_id_field} = {$table}.{$id_field} ";
-	$where .= $wpdb->prepare(
-		" AND ( meta_status.meta_key = 'wps_subscription_status' AND meta_status.meta_value = %s ) ",
-		$status_filter
-	);
-}
-
-	// 🔸 Search filter.
-	if ( $search_term ) {
-		if ( is_numeric( $search_term ) ) {
-			$search_join .= " LEFT JOIN {$meta_table} AS meta_search ON meta_search.{$order_id_field} = {$table}.{$id_field}";
+		// 🔹 Filter by status dropdown.
+		$status_filter = isset( $_GET['wps_sfw_filter_status'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_filter_status'] ) ) : '';
+		if ( ! empty( $status_filter ) ) {
+			// Always append join to avoid overwriting by search join.
+			$search_join .= " LEFT JOIN {$meta_table} AS meta_status ON meta_status.{$order_id_field} = {$table}.{$id_field} ";
 			$where .= $wpdb->prepare(
-				" AND ( (meta_search.meta_key = 'wps_parent_order' AND meta_search.meta_value LIKE %s) OR {$table}.{$id_field} = %d )",
-				'%' . $wpdb->esc_like( $search_term ) . '%',
-				$search_term
+				" AND ( meta_status.meta_key = 'wps_subscription_status' AND meta_status.meta_value = %s ) ",
+				$status_filter
 			);
-		} else {
-			$user = get_user_by( 'email', $search_term );
-			if ( ! $user ) {
-				$user = get_user_by( 'login', $search_term );
-			}
-			if ( $user ) {
-				$user_id = $user->ID;
-				$search_join .= " LEFT JOIN {$meta_table} AS meta_search_user ON meta_search_user.{$order_id_field} = {$table}.{$id_field}";
+		}
+
+		// 🔸 Search filter.
+		if ( $search_term ) {
+			if ( is_numeric( $search_term ) ) {
+				$search_join .= " LEFT JOIN {$meta_table} AS meta_search ON meta_search.{$order_id_field} = {$table}.{$id_field}";
 				$where .= $wpdb->prepare(
-					" AND (meta_search_user.meta_key = 'wps_customer_id' AND meta_search_user.meta_value LIKE %s)",
-					'%' . $wpdb->esc_like( $user_id ) . '%'
+					" AND ( (meta_search.meta_key = 'wps_parent_order' AND meta_search.meta_value LIKE %s) OR {$table}.{$id_field} = %d )",
+					'%' . $wpdb->esc_like( $search_term ) . '%',
+					$search_term
 				);
+			} else {
+				$user = get_user_by( 'email', $search_term );
+				if ( ! $user ) {
+					$user = get_user_by( 'login', $search_term );
+				}
+				if ( $user ) {
+					$user_id = $user->ID;
+					$search_join .= " LEFT JOIN {$meta_table} AS meta_search_user ON meta_search_user.{$order_id_field} = {$table}.{$id_field}";
+					$where .= $wpdb->prepare(
+						" AND (meta_search_user.meta_key = 'wps_customer_id' AND meta_search_user.meta_value LIKE %s)",
+						'%' . $wpdb->esc_like( $user_id ) . '%'
+					);
+				}
 			}
 		}
-	}
 
-	// Fetch paginated data.
-	$sql = "
+		// Fetch paginated data.
+		$sql = "
 		SELECT DISTINCT {$table}.{$id_field}
 		FROM {$table}
 		INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
@@ -321,10 +370,10 @@ if ( ! empty( $status_filter ) ) {
 		ORDER BY {$table}.{$id_field} DESC
 		LIMIT %d OFFSET %d
 	";
-	$wps_subscriptions = $wpdb->get_col( $wpdb->prepare( $sql, $per_page, $offset ) );
+		$wps_subscriptions = $wpdb->get_col( $wpdb->prepare( $sql, $per_page, $offset ) );
 
-	// Get total count.
-	$sql_count = "
+		// Get total count.
+		$sql_count = "
 		SELECT COUNT(DISTINCT {$table}.{$id_field})
 		FROM {$table}
 		INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
@@ -332,86 +381,85 @@ if ( ! empty( $status_filter ) ) {
 		WHERE meta.meta_key = 'wps_customer_id'
 		AND $where
 	";
-	$total_count = $wpdb->get_var( $sql_count );
+		$total_count = $wpdb->get_var( $sql_count );
 
-	$wps_subscriptions_data = array();
+		$wps_subscriptions_data = array();
 
-	if ( ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
-		foreach ( $wps_subscriptions as $id ) {
+		if ( ! empty( $wps_subscriptions ) && is_array( $wps_subscriptions ) ) {
+			foreach ( $wps_subscriptions as $id ) {
 
-			$parent_order_id = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
-			if ( 'manual' != $parent_order_id && function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
-				$total_count = --$total_count;
-				continue;
+				$parent_order_id = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
+				if ( 'manual' != $parent_order_id && function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
+					$total_count = --$total_count;
+					continue;
+				}
+
+				$wps_subscription_status = wps_sfw_get_meta_data( $id, 'wps_subscription_status', true );
+				$product_name            = wps_sfw_get_meta_data( $id, 'product_name', true );
+				$wps_recurring_total     = wps_sfw_get_meta_data( $id, 'wps_recurring_total', true );
+				$wps_curr_args           = array();
+
+				if ( is_array( $product_name ) ) {
+					$product_name = implode( ', ', $product_name );
+				}
+
+				$susbcription = $is_hpos ? new WPS_Subscription( $id ) : wc_get_order( $id );
+				if ( $susbcription ) {
+					$wps_recurring_total = $susbcription->get_total();
+					$wps_curr_args = array( 'currency' => $susbcription->get_currency() );
+				}
+
+				$wps_recurring_total = wc_price( $wps_recurring_total, $wps_curr_args );
+				$wps_next_payment_date = wps_sfw_get_meta_data( $id, 'wps_next_payment_date', true );
+				$wps_susbcription_end  = wps_sfw_get_meta_data( $id, 'wps_susbcription_end', true );
+				if ( $wps_next_payment_date === $wps_susbcription_end ) {
+					$wps_next_payment_date = '';
+				}
+
+				if ( in_array( $wps_subscription_status, array( 'on-hold', 'cancelled' ), true ) ) {
+					$wps_recurring_total = '---';
+				}
+
+				$wps_customer_id = wps_sfw_get_meta_data( $id, 'wps_customer_id', true );
+				$user = get_user_by( 'id', $wps_customer_id );
+				$parent_order = wc_get_order( $parent_order_id );
+				$payment_type = $parent_order ? $parent_order->get_payment_method_title() : '';
+				$user_nicename = isset( $user->user_login ) ? $user->user_login : '';
+
+				$wps_subscriptions_data[] = array(
+					'subscription_id'           => $id,
+					'parent_order_id'           => $parent_order_id,
+					'status'                    => $wps_subscription_status,
+					'product_name'              => $product_name,
+					'recurring_amount'          => $wps_recurring_total,
+					'payment_type'              => $payment_type,
+					'user_name'                 => $user_nicename,
+					'next_payment_date'         => wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ),
+					'subscriptions_expiry_date' => wps_sfw_get_the_wordpress_date_format( $wps_susbcription_end ),
+				);
 			}
-
-			$wps_subscription_status = wps_sfw_get_meta_data( $id, 'wps_subscription_status', true );
-			$product_name            = wps_sfw_get_meta_data( $id, 'product_name', true );
-			$wps_recurring_total     = wps_sfw_get_meta_data( $id, 'wps_recurring_total', true );
-			$wps_curr_args           = array();
-
-			if ( is_array( $product_name ) ) {
-				$product_name = implode( ', ', $product_name );
-			}
-
-			$susbcription = $is_hpos ? new WPS_Subscription( $id ) : wc_get_order( $id );
-			if ( $susbcription ) {
-				$wps_recurring_total = $susbcription->get_total();
-				$wps_curr_args = array( 'currency' => $susbcription->get_currency() );
-			}
-
-			$wps_recurring_total = wc_price( $wps_recurring_total, $wps_curr_args );
-			$wps_next_payment_date = wps_sfw_get_meta_data( $id, 'wps_next_payment_date', true );
-			$wps_susbcription_end  = wps_sfw_get_meta_data( $id, 'wps_susbcription_end', true );
-			if ( $wps_next_payment_date === $wps_susbcription_end ) {
-				$wps_next_payment_date = '';
-			}
-
-			if ( in_array( $wps_subscription_status, array( 'on-hold', 'cancelled' ), true ) ) {
-				$wps_recurring_total = '---';
-			}
-
-			$wps_customer_id = wps_sfw_get_meta_data( $id, 'wps_customer_id', true );
-			$user = get_user_by( 'id', $wps_customer_id );
-			$parent_order = wc_get_order( $parent_order_id );
-			$payment_type = $parent_order ? $parent_order->get_payment_method_title() : '';
-			$user_nicename = isset( $user->user_login ) ? $user->user_login : '';
-
-			$wps_subscriptions_data[] = array(
-				'subscription_id'           => $id,
-				'parent_order_id'           => $parent_order_id,
-				'status'                    => $wps_subscription_status,
-				'product_name'              => $product_name,
-				'recurring_amount'          => $wps_recurring_total,
-				'payment_type'              => $payment_type,
-				'user_name'                 => $user_nicename,
-				'next_payment_date'         => wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ),
-				'subscriptions_expiry_date' => wps_sfw_get_the_wordpress_date_format( $wps_susbcription_end ),
-			);
 		}
+
+		$this->wps_total_count = $total_count;
+		return $wps_subscriptions_data;
 	}
 
-	$this->wps_total_count = $total_count;
-	return $wps_subscriptions_data;
-}
-
 
 	/**
-	 * Add the filter dropdown at top.
+	 * This function is used to create extra tablenav in subscription table.
+	 *
+	 * @param string $which as which.
 	 */
-	/**
- * Add the filter dropdown at top.
- */
-public function extra_tablenav( $which ) {
-	if ( 'top' === $which ) {
+	public function extra_tablenav( $which ) {
+		if ( 'top' === $which ) {
 
-		// Add this line here — build a clean base URL for the Clear button.
-		$current_url = remove_query_arg(
-			array( 'wps_sfw_filter_status', 'paged', '_wp_http_referer', '_wpnonce', 'susbcription_list_table' )
-		);
+			// Add this line here — build a clean base URL for the Clear button.
+			$current_url = remove_query_arg(
+				array( 'wps_sfw_filter_status', 'paged', '_wp_http_referer', '_wpnonce', 'susbcription_list_table' )
+			);
 
-		$selected_status = isset( $_GET['wps_sfw_filter_status'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_filter_status'] ) ) : '';
-		?>
+			$selected_status = isset( $_GET['wps_sfw_filter_status'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_filter_status'] ) ) : '';
+			?>
 		<div class="alignleft actions">
 			<label for="wps_sfw_filter_status" class="screen-reader-text"><?php esc_html_e( 'Filter by Status', 'subscriptions-for-woocommerce' ); ?></label>
 			<select name="wps_sfw_filter_status" id="wps_sfw_filter_status">
@@ -428,11 +476,10 @@ public function extra_tablenav( $which ) {
 				<a href="<?php echo esc_url( $current_url ); ?>" class="button"><?php esc_html_e( 'Clear', 'subscriptions-for-woocommerce' ); ?></a>
 			<?php endif; ?>
 		</div>
-		<?php
+			<?php
+		}
+		do_action( 'wps_sfw_extra_tablenav_html', $which );
 	}
-	do_action( 'wps_sfw_extra_tablenav_html', $which );
-}
-
 }
 if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) && defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_DIR_PATH' ) ) {
 	$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_view_renewal_order'] ) );
