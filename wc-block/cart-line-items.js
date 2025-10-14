@@ -102,7 +102,7 @@ jQuery(function($){
 								if (viewLabel.length) {
 									viewLabel.html(viewLabelHTML);
 								} else {
-									container.after(`<p class="${viewLabelClass}">${viewLabelHTML}</p>`);
+									container.after(`${viewLabelHTML}`);
 								}
 							});
 						}
