@@ -19,5 +19,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php
 wps_sfw_email_subscriptions_details( $wps_subscription );
-
+// for custom work.
+do_action( 'wps_sfw_cancel_subscriptions_email_detials', $wps_subscription );
+// for custom work.
 do_action( 'woocommerce_email_footer', $email );

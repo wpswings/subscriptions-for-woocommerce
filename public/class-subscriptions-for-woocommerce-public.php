@@ -1287,6 +1287,13 @@ class Subscriptions_For_Woocommerce_Public {
 								wps_sfw_update_meta_data( $subscription_id, '_wps_paypal_subscription_id', $billing_agreement_id );
 							}
 							do_action( 'wps_sfw_order_status_changed', $order_id, $subscription_id );
+
+							$mailer = WC()->mailer()->get_emails();
+							// Send the "reactivate" notification.
+							if ( isset( $mailer['wps_wsp_new_subscription'] ) ) {
+								$mailer['wps_wsp_new_subscription']->trigger( $subscription_id );
+							}
+
 						}
 						wps_sfw_update_meta_data( $order_id, 'wps_sfw_subscription_activated', 'yes' );
 					}
@@ -3051,7 +3058,7 @@ class Subscriptions_For_Woocommerce_Public {
 		 * @return object
 		 */
 	public function wps_sfw_woocommerce_email_preview_dummy_order_callback( $order, $email_type ) {
-		if ( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Onhold_Active_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Pause_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reactivate_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Plan_Going_To_Expire_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reminder_Email' == $email_type || 'Woocommerce_Subscription_Pro_Expired_Subscription_Email' == $email_type ) {
+		if ( 'Subscriptions_For_Woocommerce_Cancel_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Expired_Subscription_Email' == $email_type || 'Subscriptions_For_Woocommerce_Onhold_Active_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Pause_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reactivate_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_Plan_Going_To_Expire_Email' == $email_type || 'Woocommerce_Subscription_Pro_Reminder_Email' == $email_type || 'Woocommerce_Subscription_Pro_Expired_Subscription_Email' == $email_type || 'Woocommerce_Subscription_Pro_New_Subscription_Email' == $email_type ) {
 
 			$order = wc_get_order( 12345 );
 		}
