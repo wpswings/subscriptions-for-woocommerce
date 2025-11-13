@@ -160,11 +160,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 		if ( 'bulk-delete' === $this->current_action() ) {
 
-			if ( isset( $_POST['susbcription_list_table'] ) ) {
-				$susbcription_list_table = sanitize_text_field( wp_unslash( $_POST['susbcription_list_table'] ) );
+			if ( isset( $_REQUEST['susbcription_list_table'] ) ) {
+				$susbcription_list_table = sanitize_text_field( wp_unslash( $_REQUEST['susbcription_list_table'] ) );
 				if ( wp_verify_nonce( $susbcription_list_table, 'susbcription_list_table' ) ) {
-					if ( isset( $_POST['wps_sfw_subscriptions_ids'] ) && ! empty( $_POST['wps_sfw_subscriptions_ids'] ) ) {
-						$all_id = map_deep( wp_unslash( $_POST['wps_sfw_subscriptions_ids'] ), 'sanitize_text_field' );
+					if ( isset( $_REQUEST['wps_sfw_subscriptions_ids'] ) && ! empty( $_REQUEST['wps_sfw_subscriptions_ids'] ) ) {
+						$all_id = map_deep( wp_unslash( $_REQUEST['wps_sfw_subscriptions_ids'] ), 'sanitize_text_field' );
 						foreach ( $all_id as $value ) {
 							if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 								$subscription = new WPS_Subscription( $value );
@@ -180,11 +180,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 			}
 		} elseif ( 'bulk-cancel' === $this->current_action() ) {
-			if ( isset( $_POST['susbcription_list_table'] ) ) {
-				$susbcription_list_table = sanitize_text_field( wp_unslash( $_POST['susbcription_list_table'] ) );
+			if ( isset( $_REQUEST['susbcription_list_table'] ) ) {
+				$susbcription_list_table = sanitize_text_field( wp_unslash( $_REQUEST['susbcription_list_table'] ) );
 				if ( wp_verify_nonce( $susbcription_list_table, 'susbcription_list_table' ) ) {
-					if ( isset( $_POST['wps_sfw_subscriptions_ids'] ) && ! empty( $_POST['wps_sfw_subscriptions_ids'] ) ) {
-						$all_id = map_deep( wp_unslash( $_POST['wps_sfw_subscriptions_ids'] ), 'sanitize_text_field' );
+					if ( isset( $_REQUEST['wps_sfw_subscriptions_ids'] ) && ! empty( $_REQUEST['wps_sfw_subscriptions_ids'] ) ) {
+						$all_id = map_deep( wp_unslash( $_REQUEST['wps_sfw_subscriptions_ids'] ), 'sanitize_text_field' );
 						foreach ( $all_id as $value ) {
 							do_action( 'wps_sfw_subscription_cancel', $value, 'Cancel' );
 							wps_sfw_update_meta_data( $value, 'wps_subscription_cancelled_by', 'by_admin_bulk_action' );
@@ -197,7 +197,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				}
 			}
 		}
-		do_action( 'wps_sfw_process_bulk_reset_option', $this->current_action(), $_POST );
+		do_action( 'wps_sfw_process_bulk_reset_option', $this->current_action(), $_REQUEST );
 	}
 
 	/**
