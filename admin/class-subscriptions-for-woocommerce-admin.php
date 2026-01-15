@@ -1879,5 +1879,57 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		echo '</td>';
 	}
+
+	/**
+	 * Add 'Contains Subscription' column on orders page.
+	 *
+	 * @param mixed $columns columns.
+	 * @since 3.5.0
+	 */
+	public function wps_sfw_add_contains_subscription_column( $columns ) {
+		
+		$new_columns = array();
+
+		foreach ( $columns as $key => $label ) {
+
+			$new_columns[ $key ] = $label;
+
+			// Add column AFTER order status
+			if ( 'order_status' === $key ) {
+				$new_columns['wps_sfw_contains_subscription'] =
+					'<span class="dashicons dashicons-controls-repeat tips" data-tip="' .
+					esc_attr__( 'Subscription Relationship', 'subscriptions-for-woocommerce' ) .
+					'"></span>';
+			}
+		}
+
+		return $new_columns;
+	}
+
+	/**
+	 * Add content for 'Contains Subscription' column on orders page.
+	 *
+	 * @param mixed $column column.
+	 * @param mixed $post_id post ID.
+	 * @since 3.5.0
+	 */
+	public function wps_sfw_add_contains_subscription_column_content( $column, $post_id ) {
+		if ( 'wps_sfw_contains_subscription' === $column ) {
+			$wps_subscription_id = wps_sfw_get_meta_data( $post_id, 'wps_subscription_id', true );
+			$wps_sfw_order_has_subscription = wps_sfw_get_meta_data( $post_id, 'wps_sfw_order_has_subscription', true );
+			$wps_sfw_renewal_order = wps_sfw_get_meta_data( $post_id, 'wps_sfw_renewal_order', true );
+			$wps_sfw_subscription = wps_sfw_get_meta_data( $post_id, 'wps_sfw_subscription', true );
+			if( $wps_subscription_id && 'yes' == $wps_sfw_order_has_subscription ) {
+				echo '<span class="dashicons dashicons-controls-repeat tips" data-tip="' . esc_attr__( 'Parent Order', 'subscriptions-for-woocommerce' ) . '"></span>';
+				
+			} elseif( 'yes' == $wps_sfw_renewal_order && $wps_sfw_subscription ) {
+				// echo esc_html__( 'Renewal', 'subscriptions-for-woocommerce' );
+				echo '<span class="dashicons dashicons-backup tips" data-tip="' . esc_attr__( 'Renewal Order', 'subscriptions-for-woocommerce' ) . '"></span>';
+			} else {
+				echo '-';
+			}
+			
+		}
+	}
 }
 

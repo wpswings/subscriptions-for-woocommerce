@@ -80,7 +80,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '1.9.0';
+			$this->version = '1.9.1';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -259,6 +259,12 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_product_data_tabs', $sfw_plugin_admin, 'wps_sfw_custom_product_tab_for_subscription_box' );
 			$this->loader->add_action( 'woocommerce_product_data_panels', $sfw_plugin_admin, 'wps_sfw_custom_product_fields_for_subscription_box' );
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_subscription_box_data_for_subscription', 999, 2 );
+
+
+			$this->loader->add_filter( 'manage_edit-shop_order_columns', $sfw_plugin_admin , 'wps_sfw_add_contains_subscription_column' );
+			$this->loader->add_filter( 'woocommerce_shop_order_list_table_columns', $sfw_plugin_admin, 'wps_sfw_add_contains_subscription_column' );
+			$this->loader->add_action( 'manage_shop_order_posts_custom_column', $sfw_plugin_admin, 'wps_sfw_add_contains_subscription_column_content', 10, 1 );
+			$this->loader->add_action( 'woocommerce_shop_order_list_table_custom_column', $sfw_plugin_admin, 'wps_sfw_add_contains_subscription_column_content', 10, 2 );
 		}
 
 		/*cron for notification*/
