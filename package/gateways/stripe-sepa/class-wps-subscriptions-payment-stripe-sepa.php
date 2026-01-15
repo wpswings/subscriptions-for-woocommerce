@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 use Automattic\WooCommerce\Utilities\OrderUtil;
-if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
+if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) && class_exists( 'WC_Gateway_Stripe_Sepa' ) ) {
 	/**
 	 * Extending the existing stripe sepa class.
 	 */
