@@ -2797,7 +2797,7 @@ class Subscriptions_For_Woocommerce_Public {
 		 * @return array
 		 */
 	public function wps_subscription_box_meta_on_cart( $data = array(), $cart_item = array() ) {
-
+		
 		// Retrieve subscription box data from cart item meta.
 		$subscription_box_data = isset( $cart_item['is_subscription_main'] ) ? $cart_item['is_subscription_main'] : '';
 
@@ -2833,7 +2833,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$wps_price = wps_sfw_get_time_interval_for_price( $subscription_number, $subscription_interval );
 
 			/* translators: %s: subscription interval */
-			$wps_sfw_price_html = '<span class="wps_sfw_interval">' . sprintf( esc_html( ' / %s ' ), $wps_price ) . '</span>';
+			$wps_sfw_price_html =  sprintf( esc_html( ' / %s ' ), $wps_price );
 			$price = apply_filters( 'wps_sfw_show_sync_interval', $wps_sfw_price_html, '' );
 		}
 
@@ -2841,11 +2841,11 @@ class Subscriptions_For_Woocommerce_Public {
 		if ( ! empty( $subscription_expiry_number ) ) {
 			$subscription_expiry_interval = isset( $cart_item['wps_sfw_subscription_expiry_interval'] ) ? $cart_item['wps_sfw_subscription_expiry_interval'] : '';
 			$expiry_price_html = wps_sfw_get_time_interval( $subscription_expiry_number, $subscription_expiry_interval );
-			$expiry_price_html = '<span class="wps_subscription_box_expiry_interval">' . sprintf(
+			$expiry_price_html = sprintf(
 				/* translators: %s: subscription expiry interval */
 				esc_html__( ' For %s ', 'subscriptions-for-woocommerce' ),
 				$expiry_price_html
-			) . '</span>';
+			);
 
 			$price .= $expiry_price_html;
 		}
