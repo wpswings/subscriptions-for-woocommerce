@@ -1594,6 +1594,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_permalink = $cart_item['data']->get_permalink();
 
 					$product_name = '<a href="' . esc_url( $product_permalink ) . '" target="_blank">' . esc_html( $cart_item['data']->get_name() ) . '</a><br>';
+					$product_name = apply_filters( 'wps_sfw_product_name_modification_checkout', $product_name, $cart_item );
 					?>
 					<tr class="wps_recurring_bifurcation_wrapper">
 						<th>
@@ -1636,6 +1637,7 @@ class Subscriptions_For_Woocommerce_Public {
 						$renewal_amount = $product_price . '/' . $wps_price . ' For ' . $subscription_box_renewal_amount;
 
 						$product_name = esc_html( $cart_item['data']->get_name() ) . '<br>';
+						$product_name = apply_filters( 'wps_sfw_product_name_modification_checkout', $product_name, $cart_item );
 						?>
 					<tr class="wps_recurring_bifurcation_wrapper">
 						<th>
@@ -1805,6 +1807,7 @@ class Subscriptions_For_Woocommerce_Public {
 					$product_permalink = $cart_item['data']->get_permalink();
 
 					$product_name = '<a href="' . esc_url( $product_permalink ) . '" target="_blank">' . esc_html( $cart_item['data']->get_name() ) . '</a><br>';
+					$product_name = apply_filters( 'wps_sfw_product_name_modification_checkout', $product_name, $cart_item );
 					$content .=
 						'<div class="wps_recurring_bifurcation_wrapper"><tr class="order-total wps_wsp_recurring_total_tr">
 						<th><h4>' . esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $product_name ) . '</h4></th>
@@ -1840,6 +1843,7 @@ class Subscriptions_For_Woocommerce_Public {
 						$renewal_amount = $product_price . '/' . $wps_price . ' For ' . $subscription_box_renewal_amount;
 
 						$product_name = esc_html( $cart_item['data']->get_name() ) . '<br>';
+						$product_name = apply_filters( 'wps_sfw_product_name_modification_checkout', $product_name, $cart_item );
 						$content .=
 							'<div class="wps_recurring_bifurcation_wrapper"><tr class="order-total wps_wsp_recurring_total_tr">
 						<th><h4>' . esc_attr__( 'Renewal For', 'subscriptions-for-woocommerce' ) . ' ' . wp_kses_post( $product_name ) . '</h4></th>
