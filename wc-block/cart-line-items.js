@@ -69,7 +69,8 @@ jQuery(function($){
 					const cartBoxIndex = parseInt(cartIndex.value);
 					if (response.success) {
 						let attachedProducts = response.data.attached_products;
-						if (attachedProducts.length > 0) {
+						wps_show_customer_subscription_box_popup = jQuery('.wps_show_customer_subscription_box_popup');
+						if (attachedProducts.length > 0 && wps_show_customer_subscription_box_popup.length < 1) {
 							let attachedProductsHtml = `<div class="wps-attached-products-popup">
 								<strong>Attached Products:</strong><ul>`;
 		
@@ -96,7 +97,7 @@ jQuery(function($){
 
 							containers.forEach(container => {
 								if (!container.length) return;
-
+								// console.log(container.length);
 								let viewLabel = $(document).find(viewLabelSelector);
 
 								if (viewLabel.length) {
