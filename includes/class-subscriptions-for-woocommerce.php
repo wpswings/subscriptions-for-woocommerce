@@ -491,7 +491,7 @@ class Subscriptions_For_Woocommerce {
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);
 		$sfw_default_tabs['subscriptions-for-woocommerce-general'] = array(
-			'title'       => esc_html__( 'General Setting', 'subscriptions-for-woocommerce' ),
+			'title'       => esc_html__( 'General Settings', 'subscriptions-for-woocommerce' ),
 			'name'        => 'subscriptions-for-woocommerce-general',
 			'file_path'        => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 		);

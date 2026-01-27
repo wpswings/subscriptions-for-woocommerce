@@ -80,7 +80,7 @@
         
     <div class="wps-form-group wps_pro_settings_tag">
         <div class="wps-form-group__label">
-            <label for="" class="wps-form-label">Give Ability to Edit their active subscription</label>
+            <label for="" class="wps-form-label">Give ability to edit their active subscription</label>
         </div>
         <div class="wps-form-group__control">
             <div>
@@ -98,7 +98,7 @@
         
     <div class="wps-form-group wps_pro_settings_tag">
         <div class="wps-form-group__label">
-            <label for="" class="wps-form-label">Allow the Time duration for the Subscription cancellation</label>
+            <label for="" class="wps-form-label">Allow the time duration for the subscription cancellation</label>
         </div>
         <div class="wps-form-group__control">
             <div>
@@ -508,7 +508,7 @@
         
     <div class="wps-form-group wps_pro_settings_tag">
         <div class="wps-form-group__label">
-            <label for="" class="wps-form-label">Allow Shipping Costs for Renewals</label>
+            <label for="" class="wps-form-label">Allow shipping costs for renewals</label>
         </div>
         <div class="wps-form-group__control">
             <div>
@@ -527,7 +527,7 @@
     <h3>User Roles</h3>
     <div class="wps-form-group wps_pro_settings_tag">
             <div class="wps-form-group__label">
-                <label class="wps-form-label" for="wps_wsp_subsciber_user_role">Default Subscriber Role</label>
+                <label class="wps-form-label" for="wps_wsp_subsciber_user_role">Default subscriber role</label>
             </div>
             <div class="wps-form-group__control">
                 <div class="wps-form-select">
@@ -556,7 +556,7 @@
         </div>
     <div class="wps-form-group wps_pro_settings_tag">
         <div class="wps-form-group__label">
-            <label class="wps-form-label" for="wps_wsp_inactive_subscriber_role">Inactive Subscriber Role</label>
+            <label class="wps-form-label" for="wps_wsp_inactive_subscriber_role">Inactive subscriber role</label>
         </div>
         <div class="wps-form-group__control">
             <div class="wps-form-select">
