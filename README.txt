@@ -6,7 +6,7 @@ Requires at least: 6.7.0
 Tested up to: 6.9
 WC requires at least: 6.5.0
 WC tested up to: 10.4.3
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -308,7 +308,10 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
-= 1.9.1 - Released on 27 January 2026 =
+= 1.9.2 - Released on 29 January 2026 =
+* Fix: Critical error resolved by fixing the number of arguments passed to add_filter.
+
+= 1.9.1 - Released on 28 January 2026 =
 * New: Compatibility with [**PDF Generator For WP Pro**](https://wpswings.com/product/pdf-generator-for-wp-pro/) by Wpswings
 * New: Subscription Relation column in WooCommerce order section
 
@@ -435,8 +438,6 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 * New : Renewal order contain downloadable/virtual product will go to complete status
 * Fix : Issue with Subscription status translation
 * Fix : Place order button label text issue
-
-
 
 
 = 1.6.3 - Released on 06 March 2024 =
@@ -675,6 +676,5 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.9.1 - Released on 27 January 2026 =
-* New: Compatibility with [**PDF Generator For WP Pro**](https://wpswings.com/product/pdf-generator-for-wp-pro/) by Wpswings
-* New: Subscription Relation column in WooCommerce order section
+= 1.9.2 - Released on 29 January 2026 =
+* Fix: Critical error resolved by fixing the number of arguments passed to add_filter.
