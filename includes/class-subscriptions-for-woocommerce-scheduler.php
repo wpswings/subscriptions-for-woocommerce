@@ -871,7 +871,7 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							$virtual_order = false;
 							foreach ( $wps_new_order->get_items() as $item ) {
 								$product = $item->get_product();
-								if ( $product->is_virtual() || $product->is_downloadable() ) {
+								if ( $product && ( $product->is_virtual() || $product->is_downloadable() ) ) {
 									if ( 'mwb_booking' === $product->get_type() ) {
 										$virtual_order = false;
 										break;

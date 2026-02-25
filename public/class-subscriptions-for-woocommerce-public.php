@@ -2578,6 +2578,7 @@ class Subscriptions_For_Woocommerce_Public {
 						'order_item_type' => 'line_item', // product.
 					)
 				);
+				// print_r($items_value['product_id']);echo"<br>---------dfdffsdfsdfsdfsdfsd---------";
 				if ( $order_item_id ) {
 					// Provide its meta information.
 					wc_add_order_item_meta( $order_item_id, '_qty', $items_value['qty'], true ); // Quantity.

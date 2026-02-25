@@ -1016,7 +1016,7 @@ if ( ! function_exists( 'wps_sfw_add_attached_product_for_subscription_box' ) ) 
 
 		foreach ( $order->get_items() as $item_id => $item ) {
 			$attached_products = wc_get_order_item_meta( $item_id, 'wps_sfw_attached_products', true );
-
+			// print_r($attached_products);die('gghfgfgf');
 			if ( ! empty( $attached_products ) ) {
 				foreach ( $attached_products as $attached_product ) {
 					$product_id = $attached_product['product_id'];
@@ -1024,7 +1024,13 @@ if ( ! function_exists( 'wps_sfw_add_attached_product_for_subscription_box' ) ) 
 
 					// Add attached product as a new order item with WooCommerce functions.
 					$attached_item = new WC_Order_Item_Product();
-					$attached_item->set_product_id( $product_id );
+					if ( $product && $product->is_type( 'variation' ) ) {
+						// If it's a variation, set the variation ID
+						$attached_item->set_variation_id( $product_id );
+					} else {
+						// If it's a simple product, set the simple product ID
+						$attached_item->set_product_id( $product_id );
+					}
 					$attached_item->set_name( $product->get_name() );
 					$attached_item->set_quantity( $attached_product['quantity'] );
 					$attached_item->set_subtotal( 0 );
