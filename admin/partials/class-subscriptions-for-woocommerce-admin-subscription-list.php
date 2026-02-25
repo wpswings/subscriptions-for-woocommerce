@@ -77,9 +77,12 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			array(
 				'wps_subscription_id'               => $subscription_id,
 				'wps_subscription_status_admin'     => $status,
+				'wps_sfw_cancel_nonce' => wp_create_nonce( $subscription_id . $status ),
+
 			)
 		);
 		$wps_link = wp_nonce_url( $wps_link, $subscription_id . $status );
+		
 		$actions = array(
 			'wps_sfw_cancel' => '<a href="' . $wps_link . '">' . __( 'Cancel', 'subscriptions-for-woocommerce' ) . '</a>',
 		);
@@ -98,6 +101,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			array(
 				'wps_subscription_id'               => $subscription_id,
 				'wps_subscription_status_admin_reactivate'     => $status,
+				'wps_sfw_pause_nonce' => wp_create_nonce( $subscription_id . $status ),
 			)
 		);
 

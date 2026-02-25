@@ -830,7 +830,8 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_admin_cancel_susbcription() {
 
-		if ( isset( $_GET['wps_subscription_status_admin'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+		if ( isset( $_GET['wps_subscription_status_admin'] ) && isset( $_GET['wps_subscription_id'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['wps_sfw_cancel_nonce'] ) ), $_GET['wps_subscription_id'] . $_GET['wps_subscription_status_admin'] )  && current_user_can( 'manage_woocommerce' ) ) {
+
 			$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin'] ) );
 			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
@@ -1822,7 +1823,7 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_admin_reactivate_onhold_susbcription() {
 
-		if ( isset( $_GET['wps_subscription_status_admin_reactivate'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+		if ( isset( $_GET['wps_subscription_status_admin_reactivate'] ) && isset( $_GET['wps_subscription_id'] ) &&  wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['wps_sfw_pause_nonce'] ) ), $_GET['wps_subscription_id'] . $_GET['wps_subscription_status_admin_reactivate']  ) && current_user_can( 'manage_woocommerce' ) ) {
 			$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin_reactivate'] ) );
 			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {

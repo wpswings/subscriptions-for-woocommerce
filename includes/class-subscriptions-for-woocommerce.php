@@ -245,8 +245,8 @@ class Subscriptions_For_Woocommerce {
 
 			$this->loader->add_action( 'woocommerce_process_product_meta', $sfw_plugin_admin, 'wps_sfw_save_custom_product_fields_data_for_subscription', 10, 2 );
 
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription', 99 );
-			$this->loader->add_action( 'init', $sfw_plugin_admin, 'wps_sfw_admin_reactivate_onhold_susbcription', 99 );
+			$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'wps_sfw_admin_cancel_susbcription', 99 );
+			$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'wps_sfw_admin_reactivate_onhold_susbcription', 99 );
 
 			// WPLM Translation.
 			$this->loader->add_filter( 'wcml_js_lock_fields_ids', $sfw_plugin_admin, 'wps_sfw_add_lock_custom_fields_ids' );
