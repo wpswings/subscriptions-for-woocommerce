@@ -3,10 +3,10 @@ Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions,subscription billing, subscription box, subscription, woocommerce subscriptions
 Requires at least: 6.7.0
-Tested up to: 6.9
+Tested up to: 6.9.1
 WC requires at least: 6.5.0
-WC tested up to: 10.4.3
-Stable tag: 1.9.2
+WC tested up to: 10.5.2
+Stable tag: 1.9.3
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -307,6 +307,11 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 
 == Changelog ==
+
+= 1.9.3 - Released on 27 February 2026 =
+* New: Compatibility with latest WP( 6.9.1) and WC( 10.5.2 )
+* Fix: issue fix for invalid product id for subscription box in case variation product.
+* Fix: Vulnerability fixes for Unauthenticated Arbitrary Subscription Cancellation.
 
 = 1.9.2 - Released on 29 January 2026 =
 * Fix: Critical error resolved by fixing the number of arguments passed to add_filter.
@@ -676,5 +681,7 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.9.2 - Released on 29 January 2026 =
-* Fix: Critical error resolved by fixing the number of arguments passed to add_filter.
+= 1.9.3 - Released on 27 February 2026 =
+* New: Compatibility with latest WP( 6.9.1) and WC( 10.5.2 )
+* Fix: issue fix for invalid product id for subscription box in case variation product.
+* Fix: Vulnerability fixes for Unauthenticated Arbitrary Subscription Cancellation.
