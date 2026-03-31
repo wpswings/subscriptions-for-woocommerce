@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-02-26 18:27+0530\n"
+"POT-Creation-Date: 2026-03-31 17:38+0530\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -327,7 +327,7 @@ msgid "To Create Multiple Subscription Box Feature Need Use Pro Version"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:1328
-#: includes/class-subscriptions-for-woocommerce.php:512
+#: includes/class-subscriptions-for-woocommerce.php:513
 msgid "Subscription Box"
 msgstr ""
 
@@ -435,17 +435,17 @@ msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:1872
 #: admin/class-subscriptions-for-woocommerce-admin.php:1877
-#: includes/class-subscriptions-for-woocommerce.php:644
-#: includes/class-subscriptions-for-woocommerce.php:647
-#: includes/class-subscriptions-for-woocommerce.php:650
+#: includes/class-subscriptions-for-woocommerce.php:645
+#: includes/class-subscriptions-for-woocommerce.php:648
+#: includes/class-subscriptions-for-woocommerce.php:651
 msgid "Yes"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:1874
 #: admin/class-subscriptions-for-woocommerce-admin.php:1879
-#: includes/class-subscriptions-for-woocommerce.php:644
-#: includes/class-subscriptions-for-woocommerce.php:647
-#: includes/class-subscriptions-for-woocommerce.php:650
+#: includes/class-subscriptions-for-woocommerce.php:645
+#: includes/class-subscriptions-for-woocommerce.php:648
+#: includes/class-subscriptions-for-woocommerce.php:651
 msgid "No"
 msgstr ""
 
@@ -531,52 +531,52 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:468
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:484
 msgid "Filter by Status"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:470
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:486
 msgid "All Statuses"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:471
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:487
 msgid "Active"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:472
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:488
 msgid "On Hold"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:473
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:489
 msgid "Cancelled"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:474
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:490
 msgid "Pending"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:475
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:491
 msgid "Paused"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:476
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:492
 msgid "Expired"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:478
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:494
 msgid "Apply"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:480
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:496
 msgid "Clear"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:499
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:515
 #: public/class-subscriptions-for-woocommerce-public.php:997
 msgid "Subscriptions"
 msgstr ""
 
-#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:514
+#: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:530
 msgid "Search Order"
 msgstr ""
 
@@ -1325,96 +1325,96 @@ msgstr ""
 msgid "This renewal order belongs to Subscription #%s"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:488
+#: includes/class-subscriptions-for-woocommerce.php:489
 msgid "Overview"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:493 src/App.js:49
+#: includes/class-subscriptions-for-woocommerce.php:494 src/App.js:49
 #: src/component/FirstStep.js:16
 msgid "General Settings"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:500
+#: includes/class-subscriptions-for-woocommerce.php:501
 msgid "Subscription Table"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:505
+#: includes/class-subscriptions-for-woocommerce.php:506
 msgid "API Settings"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:520
+#: includes/class-subscriptions-for-woocommerce.php:521
 msgid "Advanced Settings"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:527
+#: includes/class-subscriptions-for-woocommerce.php:528
 msgid "Free Vs Pro"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:534
+#: includes/class-subscriptions-for-woocommerce.php:535
 msgid "System Status"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:539
+#: includes/class-subscriptions-for-woocommerce.php:540
 msgid "Developer"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:562
+#: includes/class-subscriptions-for-woocommerce.php:563
 #, php-format
 msgid ""
 "Unable to locate file at location \"%s\". Some features may not work "
 "properly in this plugin. Please contact us!"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:620
+#: includes/class-subscriptions-for-woocommerce.php:621
 msgid "N/A (phpversion function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:629
+#: includes/class-subscriptions-for-woocommerce.php:630
 msgid "N/A (make sure exec function is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:632
+#: includes/class-subscriptions-for-woocommerce.php:633
 msgid "N/A (ABSPATH constant not defined)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:635
+#: includes/class-subscriptions-for-woocommerce.php:636
 msgid "N/A (php_uname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:638
+#: includes/class-subscriptions-for-woocommerce.php:639
 msgid "N/A (get_bloginfo function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:641
+#: includes/class-subscriptions-for-woocommerce.php:642
 msgid "N/A (get_option function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:653
+#: includes/class-subscriptions-for-woocommerce.php:654
 msgid "N/A (count_users function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:659
-#: includes/class-subscriptions-for-woocommerce.php:665
-#: includes/class-subscriptions-for-woocommerce.php:668
-#: includes/class-subscriptions-for-woocommerce.php:696
-#: includes/class-subscriptions-for-woocommerce.php:699
+#: includes/class-subscriptions-for-woocommerce.php:660
+#: includes/class-subscriptions-for-woocommerce.php:666
+#: includes/class-subscriptions-for-woocommerce.php:669
+#: includes/class-subscriptions-for-woocommerce.php:697
+#: includes/class-subscriptions-for-woocommerce.php:700
 msgid "N/A (ini_get function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:662
+#: includes/class-subscriptions-for-woocommerce.php:663
 msgid "N/A"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:680
+#: includes/class-subscriptions-for-woocommerce.php:681
 msgid "N/A (gethostname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:683
-#: includes/class-subscriptions-for-woocommerce.php:692
+#: includes/class-subscriptions-for-woocommerce.php:684
+#: includes/class-subscriptions-for-woocommerce.php:693
 msgid "N/A (make sure exec is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:702
+#: includes/class-subscriptions-for-woocommerce.php:703
 msgid "N/A (wps_sfw_get_file_content function does not exist)"
 msgstr ""
 
