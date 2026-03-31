@@ -322,6 +322,22 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		$id_field   = $is_hpos ? 'id' : 'ID';
 		$order_id_field = $is_hpos ? 'order_id' : 'post_id';
 
+		// Exclude subscriptions whose parent order no longer exists.
+		$valid_parent_join  = '';
+		$valid_parent_where = '';
+		if ( function_exists( 'wps_sfw_check_valid_order' ) ) {
+			$valid_parent_join .= " LEFT JOIN {$meta_table} AS meta_parent_order ON meta_parent_order.{$order_id_field} = {$table}.{$id_field} AND meta_parent_order.meta_key = 'wps_parent_order' ";
+			if ( $is_hpos ) {
+				$parent_order_table = $wpdb->prefix . 'wc_orders';
+				$valid_parent_join .= " LEFT JOIN {$parent_order_table} AS parent_order_lookup ON parent_order_lookup.id = meta_parent_order.meta_value ";
+				$valid_parent_where = " AND ( meta_parent_order.meta_value = 'manual' OR ( meta_parent_order.meta_value <> '' AND parent_order_lookup.id IS NOT NULL ) ) ";
+			} else {
+				$parent_order_table = $wpdb->posts;
+				$valid_parent_join .= " LEFT JOIN {$parent_order_table} AS parent_order_lookup ON parent_order_lookup.ID = meta_parent_order.meta_value ";
+				$valid_parent_where = " AND ( meta_parent_order.meta_value = 'manual' OR ( meta_parent_order.meta_value <> '' AND parent_order_lookup.ID IS NOT NULL AND parent_order_lookup.post_status <> 'trash' ) ) ";
+			}
+		}
+
 		$where = '1=1';
 		$search_join = '';
 
@@ -368,9 +384,11 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		SELECT DISTINCT {$table}.{$id_field}
 		FROM {$table}
 		INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
+		$valid_parent_join
 		$search_join
 		WHERE meta.meta_key = 'wps_customer_id'
 		AND $where
+		$valid_parent_where
 		ORDER BY {$table}.{$id_field} DESC
 		LIMIT %d OFFSET %d
 	";
@@ -381,11 +399,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		SELECT COUNT(DISTINCT {$table}.{$id_field})
 		FROM {$table}
 		INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
+		$valid_parent_join
 		$search_join
 		WHERE meta.meta_key = 'wps_customer_id'
 		AND $where
+		$valid_parent_where
 	";
-		$total_count = $wpdb->get_var( $sql_count );
+		$total_count = absint( $wpdb->get_var( $sql_count ) );
 
 		$wps_subscriptions_data = array();
 
@@ -393,10 +413,6 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			foreach ( $wps_subscriptions as $id ) {
 
 				$parent_order_id = wps_sfw_get_meta_data( $id, 'wps_parent_order', true );
-				if ( 'manual' != $parent_order_id && function_exists( 'wps_sfw_check_valid_order' ) && ! wps_sfw_check_valid_order( $parent_order_id ) ) {
-					$total_count = --$total_count;
-					continue;
-				}
 
 				$wps_subscription_status = wps_sfw_get_meta_data( $id, 'wps_subscription_status', true );
 				$product_name            = wps_sfw_get_meta_data( $id, 'product_name', true );
