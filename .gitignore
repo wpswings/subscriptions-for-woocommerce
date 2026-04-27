@@ -3,6 +3,7 @@ node_modules/*
 vendor
 vendor/*
 .history
+.codex
 # ignore compiled files
 *.com
 *.class

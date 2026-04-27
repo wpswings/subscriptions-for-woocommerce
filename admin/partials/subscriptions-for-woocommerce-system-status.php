@@ -20,9 +20,14 @@ $sfw_default_status = $sfw_wps_sfw_obj->wps_sfw_plug_system_status();
 $sfw_wordpress_details = is_array( $sfw_default_status['wp'] ) && ! empty( $sfw_default_status['wp'] ) ? $sfw_default_status['wp'] : array();
 $sfw_php_details = is_array( $sfw_default_status['php'] ) && ! empty( $sfw_default_status['php'] ) ? $sfw_default_status['php'] : array();
 ?>
-<div class="wps-sfw-table-wrap">
-	<div class="wps-col-wrap">
-		<div id="wps-sfw-table-inner-container" class="table-responsive mdc-data-table">
+<div class="wps-sfw-status-grid">
+	<div class="wps-sfw-data-card">
+		<div class="wps-sfw-data-card__head">
+			<div class="wps-sfw-data-card__eyebrow"><?php esc_html_e( 'WordPress', 'subscriptions-for-woocommerce' ); ?></div>
+			<h3><?php esc_html_e( 'WP Environment', 'subscriptions-for-woocommerce' ); ?></h3>
+			<p><?php esc_html_e( 'Review the WordPress runtime values that affect subscription workflows and admin tooling.', 'subscriptions-for-woocommerce' ); ?></p>
+		</div>
+		<div id="wps-sfw-table-inner-container" class="table-responsive mdc-data-table wps-sfw-data-card__table">
 			<div class="mdc-data-table__table-container">
 				<table class="wps-sfw-table mdc-data-table__table wps-table" id="wps-sfw-wp">
 					<thead>
@@ -47,8 +52,13 @@ $sfw_php_details = is_array( $sfw_default_status['php'] ) && ! empty( $sfw_defau
 			</div>
 		</div>
 	</div>
-	<div class="wps-col-wrap">
-		<div id="wps-sfw-table-inner-container" class="table-responsive mdc-data-table">
+	<div class="wps-sfw-data-card">
+		<div class="wps-sfw-data-card__head">
+			<div class="wps-sfw-data-card__eyebrow"><?php esc_html_e( 'Server', 'subscriptions-for-woocommerce' ); ?></div>
+			<h3><?php esc_html_e( 'System Environment', 'subscriptions-for-woocommerce' ); ?></h3>
+			<p><?php esc_html_e( 'Inspect PHP and server-level values used by recurring orders, scheduling, and plugin health checks.', 'subscriptions-for-woocommerce' ); ?></p>
+		</div>
+		<div id="wps-sfw-table-inner-container" class="table-responsive mdc-data-table wps-sfw-data-card__table">
 			<div class="mdc-data-table__table-container">
 				<table class="wps-sfw-table mdc-data-table__table wps-table" id="wps-sfw-sys">
 					<thead>

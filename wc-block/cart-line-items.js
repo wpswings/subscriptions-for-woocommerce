@@ -2,146 +2,160 @@ jQuery(function($){
 	if ( ! window.wc ) {
 		return;
 	}
-	var { registerCheckoutFilters } = window.wc.blocksCheckout;
+	if ( typeof window.sfw_public_block === 'undefined' || typeof window.sfw_public_param === 'undefined' ) {
+		return;
+	}
+	if ( ! window.wc.blocksCheckout || ! window.wc.blocksCheckout.registerCheckoutFilters ) {
+		return;
+	}
 
-	const wpsSfwmodifySubtotalPriceFormat = (
-		defaultValue,
-		extensions,
-		args,
-		validation
-	) => {
-		const isCartContext = args?.context === 'cart';
-		
+	var registerCheckoutFilters = window.wc.blocksCheckout.registerCheckoutFilters;
+	var cartItemRequestCache = {};
+	var cartItemRequestPending = {};
+
+	function getArgsContext( args ) {
+		return ( args && args.context ) ? args.context : '';
+	}
+
+	function getCartItemData( args ) {
+		return ( args && args.cartItem && args.cartItem.item_data ) ? args.cartItem.item_data : null;
+	}
+
+	function wpsSfwmodifySubtotalPriceFormat( defaultValue, extensions, args ) {
+		var isCartContext = ( getArgsContext( args ) === 'cart' );
 		if ( ! isCartContext ) {
 			return defaultValue;
 		}
-	    const cartItem = args?.cartItem.item_data;
-		var sfwPrice = '';
-		if(cartItem != '' && cartItem != undefined){
-	     sfwPrice = cartItem.find( item => item.name === 'wps-sfw-price-html');
-		}
-	    if ( sfwPrice ) {
-			val = sfwPrice?.value;
-	        if ( val != '' ) {
-				return defaultValue + ' ' + val;
-	        }
-	    }
-		return defaultValue;
-	};
 
-	const wpsWspmodifyCartItemPrice = (
-		defaultValue,
-		extensions,
-		args,
-		validation
-	) => {
-		const isCartContext = args?.context === 'cart' || args?.context === 'summary';
-
-		if ( ! isCartContext ) {
-			return defaultValue;
-		}
-		
-	    const cartItem = args?.cartItem.item_data;
-		var wspData = '';
-		if(cartItem != '' && cartItem != undefined){
-			 wspData = cartItem.find( item => item.name === 'wps-wsp-switch-direction');
-		}
-
-	
-		// subscription box.
+		var cartItem = getCartItemData( args );
 		if ( ! cartItem ) {
 			return defaultValue;
 		}
-		const cartkey = cartItem.find( item => item.name === 'wps_sfw_subscription_box_cart_key' );
-		const cartIndex = cartItem.find( item => item.name === 'wps_sfw_subscription_box_cart_index' );
 
-		if ( cartkey && cartIndex ) {
-			let cartKey = cartkey.value;
+		var sfwPrice = cartItem.find( function( item ) {
+			return item && item.name === 'wps-sfw-price-html';
+		} );
+
+		if ( sfwPrice && typeof sfwPrice.value !== 'undefined' && sfwPrice.value !== '' ) {
+			return defaultValue + ' ' + sfwPrice.value;
+		}
+
+		return defaultValue;
+	}
+
+	function applyAttachedProductsUI( attachedProducts, cartBoxIndex ) {
+		if ( ! attachedProducts || ! attachedProducts.length ) {
+			return;
+		}
+
+		if ( jQuery('.wps_show_customer_subscription_box_popup').length > 0 ) {
+			return;
+		}
+
+		var attachedProductsHtml = '<div class="wps-attached-products-popup"><strong>Attached Products:</strong><ul>';
+		for ( var i = 0; i < attachedProducts.length; i++ ) {
+			var product = attachedProducts[i];
+			if ( ! product ) {
+				continue;
+			}
+			attachedProductsHtml += '<li><img src="' + product.image + '" width="40" height="40" />' + product.name + ' x ' + product.quantity + '</li>';
+		}
+		attachedProductsHtml += '</ul><span class="wps_sfw_customer_close_popup" style="cursor: pointer;">&times;</span></div>';
+
+		var viewLabelHTML = '<a href="#" class="wps_show_customer_subscription_box_popup">View Attached Products</a>' + attachedProductsHtml;
+
+		var containers = [
+			jQuery(".wc-block-components-order-summary-item").eq( cartBoxIndex ).find('.wc-block-components-product-name'),
+			jQuery(".wc-block-cart-items__row").eq( cartBoxIndex ).find('.wc-block-cart-item__prices')
+		];
+
+		for ( var c = 0; c < containers.length; c++ ) {
+			var container = containers[c];
+			if ( container && container.length ) {
+				container.after( viewLabelHTML );
+			}
+		}
+	}
+
+	function wpsWspmodifyCartItemPrice( defaultValue, extensions, args ) {
+		var ctx = getArgsContext( args );
+		var isCartContext = ( ctx === 'cart' || ctx === 'summary' );
+		if ( ! isCartContext ) {
+			return defaultValue;
+		}
+
+		var cartItem = getCartItemData( args );
+		if ( ! cartItem ) {
+			return defaultValue;
+		}
+
+		var cartkey = cartItem.find( function( item ) {
+			return item && item.name === 'wps_sfw_subscription_box_cart_key';
+		} );
+		var cartIndex = cartItem.find( function( item ) {
+			return item && item.name === 'wps_sfw_subscription_box_cart_index';
+		} );
+
+		if ( cartkey && cartIndex && cartkey.value ) {
+			var cartKey = cartkey.value;
+			var cartBoxIndex = parseInt( cartIndex.value, 10 );
+
+			if ( cartItemRequestCache.hasOwnProperty( cartKey ) ) {
+				applyAttachedProductsUI( cartItemRequestCache[ cartKey ], cartBoxIndex );
+				return defaultValue;
+			}
+
+			if ( cartItemRequestPending.hasOwnProperty( cartKey ) ) {
+				return defaultValue;
+			}
+
+			cartItemRequestPending[ cartKey ] = true;
 			jQuery.ajax({
 				url: sfw_public_block.ajaxurl,
 				type: "POST",
 				data: {
 					action: "wps_get_cart_item",
 					cart_key: cartKey,
-					nonce: sfw_public_param.sfw_public_nonce,
+					nonce: sfw_public_param.sfw_public_nonce
 				},
 				success: function (response) {
-					const cartBoxIndex = parseInt(cartIndex.value);
-					if (response.success) {
-						let attachedProducts = response.data.attached_products;
-						wps_show_customer_subscription_box_popup = jQuery('.wps_show_customer_subscription_box_popup');
-						if (attachedProducts.length > 0 && wps_show_customer_subscription_box_popup.length < 1) {
-							let attachedProductsHtml = `<div class="wps-attached-products-popup">
-								<strong>Attached Products:</strong><ul>`;
-		
-							attachedProducts.forEach(product => {
-								attachedProductsHtml += `<li>
-									<img src="${product.image}" width="40" height="40" />
-									${product.name} x ${product.quantity}
-								</li>`;
-							});
-		
-							attachedProductsHtml += `</ul>
-								<span class="wps_sfw_customer_close_popup" style="cursor: pointer;">&times;</span>
-							</div>`;
-
-							const viewLabelClass = 'wps_sfw_view_product_label_' + cartBoxIndex;
-							const viewLabelSelector = '.' + viewLabelClass;
-							const viewLabelHTML = '<a href="#" class="wps_show_customer_subscription_box_popup">View Attached Products</a>' + attachedProductsHtml;
-
-							// Try both checkout and cart rows
-							const containers = [
-								$(".wc-block-components-order-summary-item").eq(cartBoxIndex).find('.wc-block-components-product-name'),
-								$(".wc-block-cart-items__row").eq(cartBoxIndex).find('.wc-block-cart-item__prices')
-							];
-
-							containers.forEach(container => {
-								if (!container.length) return;
-								// console.log(container.length);
-								let viewLabel = $(document).find(viewLabelSelector);
-
-								if (viewLabel.length) {
-									viewLabel.html(viewLabelHTML);
-								} else {
-									container.after(`${viewLabelHTML}`);
-								}
-							});
-						}
+					var attachedProducts = [];
+					if ( response && response.success && response.data && response.data.attached_products ) {
+						attachedProducts = response.data.attached_products;
 					}
+					cartItemRequestCache[ cartKey ] = attachedProducts;
+					delete cartItemRequestPending[ cartKey ];
+					applyAttachedProductsUI( attachedProducts, cartBoxIndex );
 				},
-				error: function (error) {
-					console.error("Error fetching cart item:", error);
-				},
+				error: function () {
+					delete cartItemRequestPending[ cartKey ];
+				}
 			});
-		
-			// ✅ Return only the default value (without extra HTML)
+
 			return defaultValue;
 		}
-		// subscription box.
-		
-	    if ( wspData ) {
-			val = wspData?.value;
-	        if ( val != '' ) {
-	           return defaultValue + ' ' + val;
-	        }
-	    }
+
+		var wspData = cartItem.find( function( item ) {
+			return item && item.name === 'wps-wsp-switch-direction';
+		} );
+
+		if ( wspData && typeof wspData.value !== 'undefined' && wspData.value !== '' ) {
+			return defaultValue + ' ' + wspData.value;
+		}
+
 		return defaultValue;
-	};
+	}
 
-	
-
-	const modifyPlaceOrderButtonLabel = ( defaultValue, extensions, args ) => {
-
+	function modifyPlaceOrderButtonLabel( defaultValue ) {
 		if ( sfw_public_block.place_order_button_text ) {
 			return sfw_public_block.place_order_button_text;
 		}
 		return defaultValue;
-	};
+	}
 
-	
 	registerCheckoutFilters( 'wps-sfw-checkout-block', {
 		subtotalPriceFormat: wpsSfwmodifySubtotalPriceFormat,
 		cartItemPrice: wpsWspmodifyCartItemPrice,
-		placeOrderButtonLabel: modifyPlaceOrderButtonLabel,
+		placeOrderButtonLabel: modifyPlaceOrderButtonLabel
 	} );
 });

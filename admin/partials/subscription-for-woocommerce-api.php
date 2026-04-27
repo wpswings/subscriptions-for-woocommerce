@@ -22,7 +22,7 @@ $sfw_api_settings = apply_filters( 'wps_sfw_api_settings_array', array() );
 	<div class="sfw-secion-wrap">
 		<?php
 		$wsp_api_html = $sfw_wps_sfw_obj->wps_sfw_plug_generate_html( $sfw_api_settings );
-		echo esc_html( $wsp_api_html );
+		echo $wsp_api_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Renderer escapes field markup internally.
 		wp_nonce_field( 'wps-sfw-api-nonce', 'wps-sfw-api-nonce-field' );
 		?>
 	</div>

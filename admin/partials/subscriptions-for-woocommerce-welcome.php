@@ -37,20 +37,28 @@ $sfw_tab_key = '';
 			$sfw_genaral_settings = apply_filters(
 				'sfw_home_settings_array',
 				array(
-					array(
-						'title' => __( 'Enable Tracking', 'subscriptions-for-woocommerce' ),
-						'type'  => 'radio-switch',
-						'id'    => 'wps_sfw_enable_tracking',
-						'value' => get_option( 'wps_sfw_enable_tracking' ),
-						'class' => 'sfw-radio-switch-class',
-						'options' => array(
-							'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
-							'no' => __( 'NO', 'subscriptions-for-woocommerce' ),
-						),
-					),
-					array(
-						'type'  => 'button',
-						'id'    => 'sfw_track_button',
+				array(
+					'type'        => 'section',
+					'id'          => 'wps_sfw_section_tracking',
+					'eyebrow'     => __( 'Preferences', 'subscriptions-for-woocommerce' ),
+					'title'       => __( 'Usage Tracking', 'subscriptions-for-woocommerce' ),
+					'description' => __( 'Control whether anonymous plugin usage insights are shared to improve the subscription workflow.', 'subscriptions-for-woocommerce' ),
+				),
+				array(
+					'title' => __( 'Enable Tracking', 'subscriptions-for-woocommerce' ),
+					'type'  => 'radio-switch',
+					'id'    => 'wps_sfw_enable_tracking',
+					'value' => get_option( 'wps_sfw_enable_tracking' ),
+					'class' => 'sfw-radio-switch-class',
+					'subtitle' => __( 'Share anonymous usage data so the product team can improve onboarding and recurring commerce flows.', 'subscriptions-for-woocommerce' ),
+					'toggle_label_active' => __( 'Enabled', 'subscriptions-for-woocommerce' ),
+					'toggle_label_inactive' => __( 'Disabled', 'subscriptions-for-woocommerce' ),
+					'toggle_state_active' => __( 'Anonymous tracking is enabled for this store.', 'subscriptions-for-woocommerce' ),
+					'toggle_state_inactive' => __( 'No tracking data is being shared from this store.', 'subscriptions-for-woocommerce' ),
+				),
+				array(
+					'type'  => 'button',
+					'id'    => 'sfw_track_button',
 						'button_text' => __( 'Save', 'subscriptions-for-woocommerce' ),
 						'class' => 'sfw-button-class',
 					),
@@ -61,7 +69,7 @@ $sfw_tab_key = '';
 				<div class="sfw-secion-wrap">
 					<?php
 					$sfw_general_html = $sfw_wps_sfw_obj->wps_sfw_plug_generate_html( $sfw_genaral_settings );
-					echo esc_html( $sfw_general_html );
+					echo $sfw_general_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Renderer escapes field markup internally.
 					wp_nonce_field( 'wps-sfw-general-nonce', 'wps-sfw-general-nonce-field' );
 					?>
 				</div>

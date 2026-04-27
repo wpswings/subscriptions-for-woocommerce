@@ -393,7 +393,7 @@ if ( ! function_exists( 'wps_sfw_check_plugin_enable' ) ) {
 	 */
 	function wps_sfw_check_plugin_enable() {
 		$is_enable = false;
-		$wps_sfw_enable_plugin = get_option( 'wps_sfw_enable_plugin', '' );
+		$wps_sfw_enable_plugin = function_exists( 'wps_sfw_get_option_with_legacy_fallback' ) ? wps_sfw_get_option_with_legacy_fallback( 'wps_sfw_enable_plugin', '' ) : get_option( 'wps_sfw_enable_plugin', '' );
 		if ( 'on' == $wps_sfw_enable_plugin ) {
 			$is_enable = true;
 		}
@@ -409,7 +409,7 @@ if ( ! function_exists( 'mwb_sfw_check_plugin_enable' ) ) {
 	 */
 	function mwb_sfw_check_plugin_enable() {
 		$is_enable = false;
-		$wps_sfw_enable_plugin = get_option( 'wps_sfw_enable_plugin', '' );
+		$wps_sfw_enable_plugin = function_exists( 'wps_sfw_get_option_with_legacy_fallback' ) ? wps_sfw_get_option_with_legacy_fallback( 'wps_sfw_enable_plugin', '' ) : get_option( 'wps_sfw_enable_plugin', '' );
 		if ( 'on' == $wps_sfw_enable_plugin ) {
 			$is_enable = true;
 		}

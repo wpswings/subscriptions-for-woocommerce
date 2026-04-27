@@ -582,7 +582,7 @@ msgstr ""
 
 #: admin/partials/subscription-for-woocommerce-api.php:31
 msgid "Plugin API Details"
-msgstr "Plugin API Details TEST"
+msgstr ""
 
 #: admin/partials/subscription-for-woocommerce-api.php:33
 msgid "Authentication"

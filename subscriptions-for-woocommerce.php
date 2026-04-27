@@ -15,7 +15,7 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.9.4
+ * Version:           1.9.5
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
@@ -179,7 +179,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.9.3' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.9.5' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -315,6 +315,33 @@ if ( $activated ) {
 
 	if ( ! function_exists( 'wps_sfw_check_multistep' ) ) {
 		/**
+		 * Read an option value while recovering legacy keys that were saved with trailing spaces.
+		 *
+		 * @param string $option_name Canonical option name.
+		 * @param mixed  $default     Default value when neither key exists.
+		 * @return mixed
+		 */
+		function wps_sfw_get_option_with_legacy_fallback( $option_name, $default = false ) {
+			$value = get_option( $option_name, null );
+
+			if ( null !== $value ) {
+				return $value;
+			}
+
+			$legacy_option_name = $option_name . ' ';
+			$legacy_value       = get_option( $legacy_option_name, null );
+
+			if ( null === $legacy_value ) {
+				return $default;
+			}
+
+			update_option( $option_name, $legacy_value );
+			delete_option( $legacy_option_name );
+
+			return $legacy_value;
+		}
+
+		/**
 		 * This function is used to check susbcripton product in cart.
 		 *
 		 * @name wps_sfw_check_multistep
@@ -323,8 +350,7 @@ if ( $activated ) {
 		function wps_sfw_check_multistep() {
 			$bool = false;
 			$wps_sfw_check = get_option( 'wps_sfw_multistep_done', false );
-			$wps_sfw_enable_plugin = get_option( 'wps_sfw_enable_plugin', false );
-			if ( ! empty( $wps_sfw_check ) && 'on' == $wps_sfw_enable_plugin ) {
+			if ( ! empty( $wps_sfw_check ) ) {
 				$bool = true;
 			}
 
@@ -851,4 +877,3 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
-

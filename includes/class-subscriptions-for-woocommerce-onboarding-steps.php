@@ -36,6 +36,35 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 	protected static $_instance = null;
 
 	/**
+	 * Whether admin footer hooks have been registered.
+	 *
+	 * @var bool
+	 */
+	private $wps_sfw_footer_hooks_registered = false;
+
+	/**
+	 * Get a stable asset version for cache-busting.
+	 *
+	 * Uses file modification time when possible, otherwise falls back to the plugin version constant.
+	 *
+	 * @param string $relative_path Path relative to plugin root.
+	 * @return string
+	 */
+	private function wps_sfw_asset_version( $relative_path ) {
+		$relative_path = ltrim( (string) $relative_path, '/' );
+		$path          = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . $relative_path;
+
+		if ( $relative_path && file_exists( $path ) ) {
+			$mtime = filemtime( $path );
+			if ( false !== $mtime ) {
+				return (string) $mtime;
+			}
+		}
+
+		return defined( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION' ) ? (string) SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION : '1.0.0';
+	}
+
+	/**
 	 * Base url of hubspot api for subscriptions-for-woocommerce.
 	 *
 	 * @since 1.0.0
@@ -115,8 +144,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'wps_sfw_onboarding_enqueue_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'wps_sfw_onboarding_enqueue_scripts' ) );
-		add_action( 'admin_footer', array( $this, 'wps_sfw_add_onboarding_popup_screen' ) );
-		add_action( 'admin_footer', array( $this, 'wps_sfw_add_deactivation_popup_screen' ) );
+		add_action( 'current_screen', array( $this, 'wps_sfw_maybe_register_footer_hooks' ) );
 
 		add_filter( 'wps_sfw_on_boarding_form_fields', array( $this, 'wps_sfw_add_on_boarding_form_fields' ) );
 		add_filter( 'wps_sfw_deactivation_form_fields', array( $this, 'wps_sfw_add_deactivation_form_fields' ) );
@@ -168,14 +196,14 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		}
 		if ( $this->wps_sfw_valid_page_screen_check() || $is_valid ) {
 			// comment the line of code Only when your plugin doesn't uses the Select2.
-			wp_enqueue_style( 'wps-sfw-onboarding-select2-style', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-onboarding-select2-style', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), $this->wps_sfw_asset_version( 'package/lib/select-2/subscriptions-for-woocommerce-select2.css' ), 'all' );
 
-			wp_enqueue_style( 'wps-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), time(), 'all' );
-			wp_enqueue_style( 'wps-sfw-meterial-css2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.css', array(), time(), 'all' );
-			wp_enqueue_style( 'wps-sfw-meterial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.css', array(), time(), 'all' );
-			wp_enqueue_style( 'wps-sfw-meterial-icons-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/icon.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-web.min.css' ), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-css2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-v5.0-web.min.css' ), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-lite.min.css' ), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-icons-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/icon.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/icon.css' ), 'all' );
 
-			wp_enqueue_style( 'wps-sfw-onboarding-style', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'onboarding/css/subscriptions-for-woocommerce-onboarding.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-onboarding-style', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'onboarding/css/subscriptions-for-woocommerce-onboarding.css', array(), $this->wps_sfw_asset_version( 'onboarding/css/subscriptions-for-woocommerce-onboarding.css' ), 'all' );
 
 		}
 	}
@@ -202,13 +230,16 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 		}
 		if ( $this->wps_sfw_valid_page_screen_check() || $is_valid ) {
 
-			wp_enqueue_script( 'wps-sfw-onboarding-select2-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.js', array( 'jquery' ), '1.0.0', false );
+			wp_enqueue_script( 'wps-sfw-onboarding-select2-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.js', array( 'jquery' ), $this->wps_sfw_asset_version( 'package/lib/select-2/subscriptions-for-woocommerce-select2.js' ), true );
 
-			wp_enqueue_script( 'wps-sfw-metarial-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.js', array(), time(), false );
-			wp_enqueue_script( 'wps-sfw-metarial-js2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.js', array(), time(), false );
-			wp_enqueue_script( 'wps-sfw-metarial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.js', array(), time(), false );
+			wp_enqueue_script( 'wps-sfw-metarial-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.js', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-web.min.js' ), true );
+			wp_enqueue_script( 'wps-sfw-metarial-js2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.js', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-v5.0-web.min.js' ), true );
+			wp_enqueue_script( 'wps-sfw-metarial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.js', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-lite.min.js' ), true );
 
-			wp_enqueue_script( 'wps-sfw-onboarding-scripts', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'onboarding/js/subscriptions-for-woocommerce-onboarding.js', array( 'jquery', 'wps-sfw-onboarding-select2-js', 'wps-sfw-metarial-js', 'wps-sfw-metarial-js2', 'wps-sfw-metarial-lite' ), time(), true );
+			wp_enqueue_script( 'wps-sfw-onboarding-scripts', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'onboarding/js/subscriptions-for-woocommerce-onboarding.js', array( 'jquery', 'wps-sfw-onboarding-select2-js', 'wps-sfw-metarial-js', 'wps-sfw-metarial-js2', 'wps-sfw-metarial-lite' ), $this->wps_sfw_asset_version( 'onboarding/js/subscriptions-for-woocommerce-onboarding.js' ), true );
+			if ( function_exists( 'wp_script_add_data' ) ) {
+				wp_script_add_data( 'wps-sfw-onboarding-scripts', 'strategy', 'defer' );
+			}
 
 			$sfw_current_slug = ! empty( explode( '/', plugin_basename( __FILE__ ) ) ) ? explode( '/', plugin_basename( __FILE__ ) )[0] : '';
 			wp_localize_script(
@@ -221,6 +252,26 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 					'sfw_current_supported_slug'    => apply_filters( 'wps_sfw_deactivation_supported_slug', array( $sfw_current_slug ) ),
 				)
 			);
+		}
+	}
+
+	/**
+	 * Register admin footer hooks only on screens that may render onboarding/deactivation UI.
+	 *
+	 * @since 1.0.0
+	 */
+	public function wps_sfw_maybe_register_footer_hooks() {
+		if ( $this->wps_sfw_footer_hooks_registered ) {
+			return;
+		}
+
+		global $pagenow;
+		$is_plugins_screen = ( 'plugins.php' === $pagenow );
+
+		if ( $is_plugins_screen || $this->wps_sfw_valid_page_screen_check() ) {
+			add_action( 'admin_footer', array( $this, 'wps_sfw_add_onboarding_popup_screen' ) );
+			add_action( 'admin_footer', array( $this, 'wps_sfw_add_deactivation_popup_screen' ) );
+			$this->wps_sfw_footer_hooks_registered = true;
 		}
 	}
 
@@ -460,39 +511,39 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 			 * Email field with label. ( auto filled with admin email )
 			 */
 
-			rand() => array(
-				'id' => 'wps-sfw-deactivation-reason',
-				'title' => '',
-				'description' => '',
-				'type' => 'radio',
-				'placeholder' => '',
-				'name' => 'plugin_deactivation_reason',
-				'value' => '',
-				'multiple' => 'no',
-				'required' => 'yes',
-				'class' => 'sfw-radio-class',
-				'options' => array(
-					'temporary-deactivation-for-debug'      => __( 'It is a temporary deactivation. I am just debugging an issue.', 'subscriptions-for-woocommerce' ),
-					'site-layout-broke'         => __( 'The plugin broke my layout or some functionality.', 'subscriptions-for-woocommerce' ),
-					'complicated-configuration'         => __( 'The plugin is too complicated to configure.', 'subscriptions-for-woocommerce' ),
-					'no-longer-need'        => __( 'I no longer need the plugin', 'subscriptions-for-woocommerce' ),
-					'found-better-plugin'   => __( 'I found a better plugin', 'subscriptions-for-woocommerce' ),
-					'other'         => __( 'Other', 'subscriptions-for-woocommerce' ),
+				rand() => array(
+					'id' => 'wps-sfw-deactivation-reason',
+					'title' => esc_html__( 'What best describes your reason?', 'subscriptions-for-woocommerce' ),
+					'subtitle' => esc_html__( 'Pick the closest option so we can improve the plugin experience.', 'subscriptions-for-woocommerce' ),
+					'description' => '',
+					'type' => 'radio',
+					'placeholder' => '',
+					'name' => 'plugin_deactivation_reason',
+					'value' => '',
+					'multiple' => 'no',
+					'required' => 'yes',
+					'class' => 'sfw-radio-class',
+					'options' => array(
+						'temporary-deactivation-for-debug' => __( 'It is a temporary deactivation. I am just debugging an issue.', 'subscriptions-for-woocommerce' ),
+						'site-layout-broke'                => __( 'The plugin broke my layout or some functionality.', 'subscriptions-for-woocommerce' ),
+						'complicated-configuration'        => __( 'The plugin is too complicated to configure.', 'subscriptions-for-woocommerce' ),
+						'no-longer-need'                   => __( 'I no longer need the plugin', 'subscriptions-for-woocommerce' ),
+						'found-better-plugin'              => __( 'I found a better plugin', 'subscriptions-for-woocommerce' ),
+						'other'                            => __( 'Other', 'subscriptions-for-woocommerce' ),
+					),
 				),
-			),
 
-			rand() => array(
-				'id' => 'wps-sfw-deactivation-reason-text',
-				/* translators: %s: plugin name */
-				'title' => sprintf( esc_html__( ' Let us know why you are deactivating %s so we can improve the plugin', 'subscriptions-for-woocommerce' ), self::$wps_sfw_plugin_name_label ),
-				'type' => 'textarea',
-				'description' => '',
-				'name' => 'deactivation_reason_text',
-				'placeholder' => esc_html__( 'Reason', 'subscriptions-for-woocommerce' ),
-				'value' => '',
-				'required' => '',
-				'class' => 'wps-keep-hidden',
-			),
+				rand() => array(
+					'id' => 'wps-sfw-deactivation-reason-text',
+					'title' => esc_html__( 'Anything else you want us to know?', 'subscriptions-for-woocommerce' ),
+					'type' => 'textarea',
+					'description' => esc_html__( 'Optional. Share any bug details, missing features, or setup friction that influenced your decision.', 'subscriptions-for-woocommerce' ),
+					'name' => 'deactivation_reason_text',
+					'placeholder' => esc_html__( 'Add more detail here', 'subscriptions-for-woocommerce' ),
+					'value' => '',
+					'required' => '',
+					'class' => 'wps-keep-hidden',
+				),
 
 			rand() => array(
 				'id' => 'wps-sfw-admin-email',

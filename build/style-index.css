@@ -1,145 +1,194 @@
 .wpsMsfWrapper {
-  height: 100%;
-  min-height: 100vh;
+  min-height: 100%;
 }
 .wpsTypography {
   text-align: center;
 }
 .wpsStepper {
-  height: 60px;
-  border-bottom: 1px solid #dcdcde;
+  background: linear-gradient(180deg, #fefcff 0%, #f7f1ff 100%);
+  border: 1px solid #ece3fb;
+  border-radius: 20px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: #fff;
+  margin: 0 auto 20px;
+  padding: 18px 12px;
+}
+.wpsStepper .MuiStepLabel-label {
+  color: #8c82a3;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.wpsStepper .MuiStepIcon-root {
+  color: #ded4f0;
+}
+.wpsStepper .MuiStepIcon-root.MuiStepIcon-active,
+.wpsStepper .MuiStepIcon-root.MuiStepIcon-completed {
+  color: #2f1d51;
+}
+.wpsStepper .MuiStepLabel-label.MuiStepLabel-active,
+.wpsStepper .MuiStepLabel-label.MuiStepLabel-completed {
+  color: #2f1d51;
 }
 .wpsMsf {
-  background: rgb(255, 255, 255);
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 1px solid rgb(226, 228, 231);
-  margin: 36px auto 16px;
-  padding: 30px;
-  padding-top: 22px;
+  background: #fff;
+  border: 1px solid #ece3fb;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(73, 40, 109, 0.06);
+  margin: 0 auto 16px;
+  padding: 26px;
 }
-.wpsMsf input[type=date], 
-.wpsMsf input[type=datetime-local], 
-.wpsMsf input[type=datetime], 
-.wpsMsf input[type=email], 
-.wpsMsf input[type=month], 
-.wpsMsf input[type=number], 
-.wpsMsf input[type=password], 
-.wpsMsf input[type=search], 
-.wpsMsf input[type=tel], 
-.wpsMsf input[type=text], 
-.wpsMsf input[type=time], 
-.wpsMsf input[type=url], 
+.wpsMsf input[type=date],
+.wpsMsf input[type=datetime-local],
+.wpsMsf input[type=datetime],
+.wpsMsf input[type=email],
+.wpsMsf input[type=month],
+.wpsMsf input[type=number],
+.wpsMsf input[type=password],
+.wpsMsf input[type=search],
+.wpsMsf input[type=tel],
+.wpsMsf input[type=text],
+.wpsMsf input[type=time],
+.wpsMsf input[type=url],
 .wpsMsf input[type=week] {
-  padding: 18.5px 14px;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   line-height: normal;
   min-height: 1.1876em;
-  box-shadow: none;
-  border-radius: 0;
-  border: 0;
-  background: none;
+  padding: 18.5px 14px;
 }
 .wps-title {
-  margin: 0;
-  margin-bottom: 25px;
-  color: #676767;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 1.3;
-  font-family: "Poppins", sans-serif;
-}
-.wpsButtonWrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  color: #2b1e46;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0 0 22px;
 }
 .wpsHeadingWrap {
-  text-align: center;
-  padding-top: 50px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 10px 0 22px;
+  text-align: left;
 }
 .wpsHeadingWrap h2 {
-  color: #202020;
-  font-size: 24px;
-  font-weight: 600;
-  margin:0;
-  line-height: 1.3;
-  margin-bottom: 8px;
-  font-family: "Poppins", sans-serif;
+  color: #25183f;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 10px;
 }
+.wpsHeadingWrap h3,
 .wpsHeadingWrap p {
-  color: #939299;
+  color: #7f7591;
+  font-family: "Nunito Sans", sans-serif;
   font-size: 14px;
-  font-family: "Roboto", sans-serif;
+  font-weight: 600;
   margin: 0;
+}
+.wpsMsf .wpsFormLabel,
+.wpsMsf .wpsFormRadio,
+.wpsMsf .MuiFormControlLabel-label {
+  color: #5f546f;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.wpsMsf .fieldsetWrapper {
+  margin-bottom: 18px;
+}
+.wpsMsf .MuiOutlinedInput-root,
+.wpsMsf textarea,
+.wpsMsf .MuiInputBase-root.MuiOutlinedInput-root {
+  background: #fff;
+  border-radius: 16px;
+}
+.wpsMsf .MuiOutlinedInput-notchedOutline {
+  border-color: #e8dff7;
+}
+.wpsMsf .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+.wpsMsf .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #2f1d51;
+}
+.wpsMsf .MuiInputLabel-outlined,
+.wpsMsf .MuiFormHelperText-root,
+.wpsMsf .MuiListSubheader-root {
+  font-family: "Nunito Sans", sans-serif;
+}
+.wpsMsf .MuiInputLabel-outlined {
+  color: #8b81a1;
+}
+.wpsMsf .MuiFormHelperText-root {
+  color: #9a8fb1;
+  line-height: 1.6;
+  margin: 8px 2px 0;
+}
+.wpsMsf .MuiCheckbox-colorPrimary.Mui-checked,
+.wpsMsf .MuiCheckbox-colorPrimary.MuiCheckbox-indeterminate,
+.wpsMsf .MuiButton-containedPrimary,
+.wpsMsf .MuiRadio-colorPrimary.Mui-checked {
+  color: #2f1d51;
+}
+.wpsMsf .MuiButton-containedPrimary {
+  background: #2f1d51;
+  color: #fff;
+}
+.wpsMsf .MuiButton-contained {
+  border-radius: 14px;
+  box-shadow: none;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  min-width: 120px;
+  padding: 12px 18px;
+  text-transform: none;
+}
+.wpsMsf .MuiButton-contained:not(.MuiButton-containedPrimary) {
+  background: #f3ecff;
+  color: #2f1d51;
 }
 .wpsButtonWrap {
-  display: flex;
   align-items: center;
+  border-top: 1px solid #efe7fa;
+  display: flex;
   justify-content: space-between;
-}
-.wpsMsf .wpsFormLabel {
-  color: #939299;
-  font-size: 16px;
-  font-family: "Roboto", sans-serif;
-  line-height: 1.4;
-  margin-bottom: 15px;
-}
-.wpsMsf .wpsFormRadio {
-  color: #939299;
-  font-size: 16px;
-  font-family: "Roboto", sans-serif;
-  line-height: 1.4;
-}
-form.wpsMsf h1 {
-  color: #202020;
-  font-size: 22px;
-  font-weight: 600;
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  padding-top: 10px;
-  text-align: center;
-}
-.wpsStepper {
-    height: 42px;
-    border-bottom: 1px solid #dcdcde;
-    background: #fff;
+  margin-top: 10px;
+  padding-top: 22px;
 }
 form.wpsMsf textarea {
-  padding: 9.5px 14px;
-  border: 1px solid #c7c7c7 !important;
-  font-size: 16px;
+  border: 1px solid #e8dff7 !important;
   color: #2c3338;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 15px;
+  padding: 14px 16px;
+  width: 100%;
 }
 form.wpsMsf textarea:focus {
-  border:1px solid #3f51b5 !important
+  border: 1px solid #2f1d51 !important;
+  outline: none;
 }
 form.wpsMsf textarea::-moz-placeholder {
-  color: #767676;
+  color: #8f86a3;
 }
 form.wpsMsf textarea:-ms-input-placeholder {
-  color: #767676;
+  color: #8f86a3;
 }
 form.wpsMsf textarea::placeholder {
-  color: #767676;
+  color: #8f86a3;
 }
 .wpsCircularProgress {
-  text-align: center;
-  margin: 0 auto;
   display: block !important;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
+  text-align: center;
 }
 @media screen and (max-width:991px) {
   span.MuiTypography-root.MuiStepLabel-label {
       display: none;
   }
-  .wpsMsfWrapper .MuiStepper-root {
-      padding: 20px 5px;
+  .wpsMsf {
+      padding: 18px;
   }
 }
 

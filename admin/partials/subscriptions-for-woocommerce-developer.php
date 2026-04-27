@@ -25,13 +25,17 @@ apply_filters( 'sfw_developer_public_hooks_array', array() );
 $count_public = filtered_array( $sfw_developer_public_hooks );
 ?>
 <!--  template file for admin settings. -->
-<div class="sfw-section-wrap">
-	<div class="wps-col-wrap">
+<div class="wps-sfw-status-grid wps-sfw-status-grid--developer">
+	<div class="wps-sfw-data-card">
+		<div class="wps-sfw-data-card__head">
+			<div class="wps-sfw-data-card__eyebrow"><?php esc_html_e( 'Admin', 'subscriptions-for-woocommerce' ); ?></div>
+			<h3><?php esc_html_e( 'Admin Hooks', 'subscriptions-for-woocommerce' ); ?></h3>
+			<p><?php esc_html_e( 'Reference hooks available across plugin settings, admin flows, and recurring-order management screens.', 'subscriptions-for-woocommerce' ); ?></p>
+		</div>
 
-		<div id="admin-hooks-listing" class="table-responsive mdc-data-table">
-			<table class="wps-sfw-table mdc-data-table__table wps-table"  id="wps-sfw-wp">
+		<div id="admin-hooks-listing" class="table-responsive mdc-data-table wps-sfw-data-card__table">
+			<table class="wps-sfw-table mdc-data-table__table wps-table wps-sfw-dev-table" id="wps-sfw-wp">
 				<thead>
-				<tr><th class="mdc-data-table__header-cell"><?php esc_html_e( 'Admin Hooks', 'subscriptions-for-woocommerce' ); ?></th></tr>
 				<tr>
 					<th class="mdc-data-table__header-cell"><?php esc_html_e( 'Type of Hook', 'subscriptions-for-woocommerce' ); ?></th>
 					<th class="mdc-data-table__header-cell"><?php esc_html_e( 'Hooks', 'subscriptions-for-woocommerce' ); ?></th>
@@ -44,11 +48,11 @@ $count_public = filtered_array( $sfw_developer_public_hooks );
 					foreach ( $count_admin as $k => $v ) {
 						if ( isset( $v['action_hook'] ) ) {
 							?>
-						<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Action Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['action_hook'] ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
+						<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Action Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><code><?php echo esc_html( $v['action_hook'] ); ?></code></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
 							<?php
 						} else {
 							?>
-							<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Filter Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['filter_hook'] ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
+							<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Filter Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><code><?php echo esc_html( $v['filter_hook'] ); ?></code></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
 							<?php
 						}
 					}
@@ -62,11 +66,15 @@ $count_public = filtered_array( $sfw_developer_public_hooks );
 			</table>
 		</div>
 	</div>
-	<div class="wps-col-wrap">
-		<div id="public-hooks-listing" class="table-responsive mdc-data-table">
-			<table class="wps-sfw-table mdc-data-table__table wps-table" id="wps-sfw-sys">
+	<div class="wps-sfw-data-card">
+		<div class="wps-sfw-data-card__head">
+			<div class="wps-sfw-data-card__eyebrow"><?php esc_html_e( 'Frontend', 'subscriptions-for-woocommerce' ); ?></div>
+			<h3><?php esc_html_e( 'Public Hooks', 'subscriptions-for-woocommerce' ); ?></h3>
+			<p><?php esc_html_e( 'Reference hooks available on storefront and customer-facing subscription flows for custom integrations.', 'subscriptions-for-woocommerce' ); ?></p>
+		</div>
+		<div id="public-hooks-listing" class="table-responsive mdc-data-table wps-sfw-data-card__table">
+			<table class="wps-sfw-table mdc-data-table__table wps-table wps-sfw-dev-table" id="wps-sfw-sys">
 				<thead>
-				<tr><th class="mdc-data-table__header-cell"><?php esc_html_e( 'Public Hooks', 'subscriptions-for-woocommerce' ); ?></th></tr>
 				<tr>
 					<th class="mdc-data-table__header-cell"><?php esc_html_e( 'Type of Hook', 'subscriptions-for-woocommerce' ); ?></th>
 					<th class="mdc-data-table__header-cell"><?php esc_html_e( 'Hooks', 'subscriptions-for-woocommerce' ); ?></th>
@@ -79,11 +87,11 @@ $count_public = filtered_array( $sfw_developer_public_hooks );
 					foreach ( $count_public as $k => $v ) {
 						if ( isset( $v['action_hook'] ) ) {
 							?>
-						<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Action Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['action_hook'] ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
+						<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Action Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><code><?php echo esc_html( $v['action_hook'] ); ?></code></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
 							<?php
 						} else {
 							?>
-							<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Filter Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['filter_hook'] ); ?></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
+							<tr class="mdc-data-table__row"><td class="mdc-data-table__cell"><?php esc_html_e( 'Filter Hook', 'subscriptions-for-woocommerce' ); ?></td><td class="mdc-data-table__cell"><code><?php echo esc_html( $v['filter_hook'] ); ?></code></td><td class="mdc-data-table__cell"><?php echo esc_html( $v['desc'] ); ?></td></tr>
 							<?php
 						}
 					}

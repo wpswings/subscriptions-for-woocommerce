@@ -22,7 +22,7 @@ $sfw_genaral_settings = apply_filters( 'wps_sfw_general_settings_array', array()
 	<div class="sfw-secion-wrap">
 		<?php
 		$sfw_general_html = $sfw_wps_sfw_obj->wps_sfw_plug_generate_html( $sfw_genaral_settings );
-		echo esc_html( $sfw_general_html );
+		echo $sfw_general_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Renderer escapes field markup internally.
 		wp_nonce_field( 'wps-sfw-general-nonce', 'wps-sfw-general-nonce-field' );
 		?>
 	</div>

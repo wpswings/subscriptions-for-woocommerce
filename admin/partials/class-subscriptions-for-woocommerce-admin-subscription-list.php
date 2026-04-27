@@ -146,6 +146,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				return $html;
 
 			case 'status':
+				$status_key   = sanitize_html_class( strtolower( (string) $item[ $column_name ] ) );
+				$status_label = ucwords( str_replace( '-', ' ', (string) $item[ $column_name ] ) );
+				return '<mark class="order-status status-' . esc_attr( $status_key ) . '"><span>' . esc_html( $status_label ) . '</span></mark>';
 			case 'product_name':
 			case 'recurring_amount':
 			case 'payment_type':
@@ -512,7 +515,7 @@ if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_
 } else {
 	?>
 	<div class="wps_sfw_subscription_table_inner_wrap">
-	<h3 class="wp-heading-inline" id="wps_sfw_heading"><?php esc_html_e( 'Subscriptions', 'subscriptions-for-woocommerce' ); ?></h3>
+	<!-- <h3 class="wp-heading-inline" id="wps_sfw_heading"><?php esc_html_e( 'Subscriptions', 'subscriptions-for-woocommerce' ); ?></h3> -->
 	<?php do_action( 'wps_sfw_add_button_manual_subscription' ); ?>
 	</div>
 		<!-- <form method="post"> -->

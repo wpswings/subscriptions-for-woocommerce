@@ -112,7 +112,6 @@
 
 	
 		$('.wps_sfw-empty-cart').on('click', function() {
-			console.log('Empty Cart button clicked');
 			// Send AJAX request to empty the cart
 			$.ajax({
 				url: sfw_public_param.ajaxurl,
@@ -122,7 +121,6 @@
 					nonce: sfw_public_param.sfw_public_nonce,
 				},
 				success: function(response) {
-					console.log('Cart emptied:', response);
 					// Show success message and update cart totals
 					alert('Your cart has been emptied!');
 					$('.wps_sfw-empty-cart').hide();
@@ -132,7 +130,6 @@
 		});
 
 		$('.wps_sfw_product_page-empty-cart').on('click', function() {
-			console.log('Empty Cart button clicked');
 			// Send AJAX request to empty the cart
 			$.ajax({
 				url: sfw_public_param.ajaxurl,
@@ -142,7 +139,6 @@
 					nonce: sfw_public_param.sfw_public_nonce,
 				},
 				success: function(response) {
-					console.log('Cart emptied:', response);
 					// Show success message and update cart totals
 					alert('Your cart has been emptied!');
 					$(document.body).trigger('updated_cart_totals');
@@ -198,8 +194,6 @@
 					nonce: sfw_public_param.sfw_public_nonce,
 				},
 				success: function (response) {
-					console.log('Server Response:', response);
-		
 					if (response.message === "Subscription added to cart!") {
 						window.location.href = sfw_public_param.cart_url; // Redirect to cart page
 					} else {
@@ -228,6 +222,32 @@
 		});
 		$(document).on('click','.wps_sfw_customer_close_popup', function(e) {
 			$(this).parent('.wps-attached-products-popup').removeClass('active_customer_popup');
+		});
+
+		$(document).on('click', '.wps-sfw-aurora-filter', function(e) {
+			e.preventDefault();
+
+			var $button = $(this);
+			var filter = $button.data('filter');
+			var $container = $button.closest('.wps-sfw-aurora-account');
+			var $filters = $container.find('.wps-sfw-aurora-filter');
+			var $cards = $container.find('.wps-sfw-aurora-subscription-card');
+			var visibleCount = 0;
+
+			$filters.removeClass('is-active');
+			$button.addClass('is-active');
+
+			$cards.each(function() {
+				var $card = $(this);
+				var matches = filter === 'all' || $card.data('status') === filter;
+
+				$card.toggle(matches);
+				if ( matches ) {
+					visibleCount++;
+				}
+			});
+
+			$container.find('.wps-sfw-aurora-filterbar__meta').text('Showing ' + visibleCount + ' of ' + $cards.length);
 		});
 
 		var $form = $('#wps_sfw_subs_box-form');

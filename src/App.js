@@ -64,7 +64,12 @@ function App(props) {
             case 3:
             return <FinalStep />;
             case 4:
-                return <h1>{__( 'Thanks for your details', 'subscriptions-for-woocommerce' )}</h1>;
+                return (
+                    <>
+                        <h2 className="wps-title">{__( 'Setup complete', 'subscriptions-for-woocommerce' )}</h2>
+                        <p className="wpsFormLabel">{__( 'Your subscription setup has been saved. Redirecting you to the plugin dashboard now.', 'subscriptions-for-woocommerce' )}</p>
+                    </>
+                );
             default:
                 return __( 'Unknown stepIndex', 'subscriptions-for-woocommerce' );
         }
@@ -108,7 +113,7 @@ function App(props) {
                 setTimeout(() => {
                 window.location.href = frontend_ajax_object.redirect_url; 
                     return null;
-                }, 3000);
+                }, 1200);
             }).catch(error=>{
 
         })

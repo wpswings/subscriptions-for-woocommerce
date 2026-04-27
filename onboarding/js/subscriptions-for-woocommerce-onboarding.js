@@ -13,8 +13,8 @@ jQuery(document).ready(function($) {
         return new MDCSwitch(el);
     });
 
-    var dialog = "";
-    if( $('.wps-sfw-on-boarding-dialog').length > 0 ) {
+    var dialog = '';
+    if ( $('.wps-sfw-on-boarding-dialog').length > 0 ) {
         dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.wps-sfw-on-boarding-dialog'));
     }
     /*if device is mobile*/
@@ -32,24 +32,17 @@ jQuery(document).ready(function($) {
     // On click of deactivate.
     if ('plugins.php' == wps_sfw_onboarding.sfw_current_screen) {
 
-        // Add Deactivation id to all deactivation links.
-        wps_sfw_embed_id_to_deactivation_urls();
-        wps_sfw_add_deactivate_slugs_callback(wps_sfw_onboarding.sfw_current_supported_slug);
+        wps_sfw_bind_deactivation_popup(wps_sfw_onboarding.sfw_current_supported_slug);
+        wps_sfw_toggle_deactivation_reason_field(jQuery('input[name="plugin_deactivation_reason"]:checked').val() || '');
 
-        jQuery(document).on('change', '.sfw-on-boarding-radio-field', function(e) {
-
-            e.preventDefault();
-            if ('other' == jQuery(this).attr('id')) {
-                jQuery('#deactivation-reason-text').removeClass('wps-sfw-keep-hidden');
-            } else {
-                jQuery('#deactivation-reason-text').addClass('wps-sfw-keep-hidden');
-            }
+        jQuery(document).on('change', 'input[name="plugin_deactivation_reason"]', function() {
+            wps_sfw_toggle_deactivation_reason_field(jQuery(this).val());
         });
     } else {
         
         // Show Popup after 1 second of entering into the WPS pagescreen.
         if (jQuery('#wps-sfw-show-counter').length > 0 && jQuery('#wps-sfw-show-counter').val() == 'not-sent') {
-            setTimeout(wps_sfw_show_onboard_popup(), 1000);
+            setTimeout(wps_sfw_show_onboard_popup, 1000);
         }
     }
 
@@ -61,8 +54,11 @@ jQuery(document).ready(function($) {
 
     /* Skip and deactivate. */
     jQuery(document).on('click', '.wps-sfw-deactivation-no_thanks', function(e) {
+        e.preventDefault();
 
-        window.location.replace(deactivate_url);
+        if (deactivate_url) {
+            window.location.replace(deactivate_url);
+        }
         wps_sfw_hide_onboard_popup();
     });
 
@@ -110,6 +106,10 @@ jQuery(document).ready(function($) {
 
     /* Open Popup */
     function wps_sfw_show_onboard_popup() {
+        if (!dialog) {
+            return;
+        }
+
         dialog.open();
         if (!jQuery('body').hasClass('mobile-device')) {
             jQuery('body').addClass('wps-on-boarding-wrapper-control');
@@ -118,54 +118,70 @@ jQuery(document).ready(function($) {
 
     /* Close Popup */
     function wps_sfw_hide_onboard_popup() {
+        if (!dialog) {
+            return;
+        }
+
         dialog.close();
         if (!jQuery('body').hasClass('mobile-device')) {
             jQuery('body').removeClass('wps-on-boarding-wrapper-control');
         }
     }
 
+    function wps_sfw_toggle_deactivation_reason_field(selected_reason) {
+        var $deactivation_field = jQuery('#wps-sfw-deactivation-reason-text').closest('.wps-sfw-setting-field');
 
+        if (!$deactivation_field.length) {
+            return;
+        }
 
-    /* Apply deactivate in all the WPS plugins. */
-    function wps_sfw_add_deactivate_slugs_callback(all_slugs) {
-
-        for (var i = all_slugs.length - 1; i >= 0; i--) {
-
-            jQuery(document).on('click', '#deactivate-' + all_slugs[i], function(e) {
-
-                e.preventDefault();
-                deactivate_url = jQuery(this).attr('href');
-                plugin_name = jQuery(this).attr('aria-label');
-                plugin_name = plugin_name.replace('Deactivate ', '');
-                jQuery('#plugin-name').val(plugin_name);
-                jQuery('.wps-sfw-on-boarding-heading').text(plugin_name + ' Feedback');
-                var placeholder = jQuery('#wps-sfw-deactivation-reason-text').attr('placeholder');
-                jQuery('#wps-sfw-deactivation-reason-text').attr('placeholder', placeholder.replace('{plugin-name}', plugin_name));
-                wps_sfw_show_onboard_popup();
-            });
+        if ('other' === selected_reason) {
+            $deactivation_field.removeClass('wps-sfw-setting-field--hidden');
+        } else {
+            $deactivation_field.addClass('wps-sfw-setting-field--hidden');
         }
     }
 
-    /* Add deactivate id in all the plugins links. */
-    function wps_sfw_embed_id_to_deactivation_urls() {
-        jQuery('a').each(function() {
-            if ('Deactivate' == jQuery(this).text() && 0 < jQuery(this).attr('href').search('action=deactivate')) {
-                if ('undefined' == typeof jQuery(this).attr('id')) {
-                    var slug = jQuery(this).closest('tr').attr('data-slug');
-                    jQuery(this).attr('id', 'deactivate-' + slug);
-                }
+
+
+    function wps_sfw_open_deactivation_popup($trigger) {
+        var placeholder = '';
+        var plugin_name = '';
+        var $deactivation_reason = jQuery('#wps-sfw-deactivation-reason-text');
+
+        deactivate_url = $trigger.attr('href');
+        plugin_name = $trigger.attr('aria-label') || $trigger.closest('tr').find('.plugin-title strong').text() || '';
+        plugin_name = plugin_name.replace(/^Deactivate\s+/i, '').trim();
+
+        jQuery('#wps-sfw-plugin-name').val(plugin_name);
+        if (plugin_name) {
+            jQuery('.wps-sfw-on-boarding-heading').text(plugin_name + ' Feedback');
+        }
+
+        if ($deactivation_reason.length) {
+            placeholder = $deactivation_reason.attr('placeholder') || '';
+
+            if (placeholder.indexOf('{plugin-name}') !== -1) {
+                $deactivation_reason.attr('placeholder', placeholder.replace('{plugin-name}', plugin_name));
             }
+        }
+
+        wps_sfw_show_onboard_popup();
+    }
+
+    /* Attach deactivation popup to supported plugin rows reliably across plugin list refreshes. */
+    function wps_sfw_bind_deactivation_popup(all_slugs) {
+        jQuery(document).on('click', 'tr[data-slug] .deactivate a', function(e) {
+            var slug = jQuery(this).closest('tr').attr('data-slug') || '';
+
+            if (-1 === jQuery.inArray(slug, all_slugs)) {
+                return;
+            }
+
+            e.preventDefault();
+            wps_sfw_open_deactivation_popup(jQuery(this));
         });
     }
 
-    jQuery("#wps-sfw-deactivation-reason-text").parent().hide();
-    jQuery(document).on( 'change', '#wps-sfw-deactivation-reason', function(e) {
-        if (this.value == 'other'){
-            jQuery("#wps-sfw-deactivation-reason-text").parent().show();
-        } else {
-            jQuery("#wps-sfw-deactivation-reason-text").parent().hide();
-        }
-        
-    });
     // End of scripts.
 });

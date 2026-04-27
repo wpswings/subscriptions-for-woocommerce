@@ -40,6 +40,60 @@ class Subscriptions_For_Woocommerce_Admin {
 	private $version;
 
 	/**
+	 * Get a stable asset version for cache-busting.
+	 *
+	 * Uses file modification time when possible, otherwise falls back to the plugin version.
+	 *
+	 * @param string $relative_path Path relative to plugin root.
+	 * @return string
+	 */
+	private function wps_sfw_asset_version( $relative_path ) {
+		$relative_path = ltrim( (string) $relative_path, '/' );
+		$path          = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . $relative_path;
+
+		if ( $relative_path && file_exists( $path ) ) {
+			$mtime = filemtime( $path );
+			if ( false !== $mtime ) {
+				return (string) $mtime;
+			}
+		}
+
+		return (string) $this->version;
+	}
+
+	/**
+	 * Check whether plugin-specific admin assets should be loaded on this screen.
+	 *
+	 * @param WP_Screen|null $screen Current screen.
+	 * @return bool
+	 */
+	private function wps_sfw_should_load_assets( $screen ) {
+		$wps_sfw_screen_ids = function_exists( 'wps_sfw_get_page_screen' ) ? wps_sfw_get_page_screen() : array();
+		$screen_id          = ( $screen && isset( $screen->id ) ) ? $screen->id : '';
+
+		if ( $screen_id && in_array( $screen_id, $wps_sfw_screen_ids, true ) ) {
+			return true;
+		}
+
+		return (bool) ( $screen_id && in_array( $screen_id, array( 'wp-swings_page_home', 'woocommerce_page_wc-settings', 'wps_subscriptions' ), true ) );
+	}
+
+	/**
+	 * Check whether the banner notice JS is needed on this screen.
+	 *
+	 * @param WP_Screen|null $screen Current screen.
+	 * @return bool
+	 */
+	private function wps_sfw_should_load_notice_script( $screen ) {
+		global $pagenow;
+		if ( 'plugins.php' === $pagenow ) {
+			return true;
+		}
+
+		return $this->wps_sfw_should_load_assets( $screen );
+	}
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -69,36 +123,41 @@ class Subscriptions_For_Woocommerce_Admin {
 		if ( isset( $screen->id ) && ( in_array( $screen->id, $wps_sfw_screen_ids ) || ( 'wp-swings_page_home' == $screen->id ) ) ) {
 			// Multistep form css.
 			if ( ! wps_sfw_check_multistep() ) {
+				wp_enqueue_style( 'wps-sfw-meterial-icons-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/icon.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/icon.css' ), 'all' );
+
 				$style_url        = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'build/style-index.css';
 				wp_enqueue_style(
 					'wps-sfw-admin-react-styles',
 					$style_url,
 					array(),
-					time(),
+					$this->wps_sfw_asset_version( 'build/style-index.css' ),
 					false
 				);
+
+				wp_enqueue_style( $this->plugin_name . '-admin-global', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin-global.css', array( 'wps-sfw-meterial-icons-css' ), $this->wps_sfw_asset_version( 'admin/css/subscriptions-for-woocommerce-admin-global.css' ), 'all' );
+				wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), $this->wps_sfw_asset_version( 'admin/css/subscriptions-for-woocommerce-admin.css' ), 'all' );
 				return;
 			}
-			wp_enqueue_style( 'wps-sfw-select2-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-select2-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.css', array(), $this->wps_sfw_asset_version( 'package/lib/select-2/subscriptions-for-woocommerce-select2.css' ), 'all' );
 
-			wp_enqueue_style( 'wps-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), time(), 'all' );
-			wp_enqueue_style( 'wps-sfw-meterial-css2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.css', array(), time(), 'all' );
-			wp_enqueue_style( 'wps-sfw-meterial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-web.min.css' ), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-css2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-v5.0-web.min.css' ), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-lite.min.css' ), 'all' );
 
-			wp_enqueue_style( 'wps-sfw-meterial-icons-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/icon.css', array(), time(), 'all' );
+			wp_enqueue_style( 'wps-sfw-meterial-icons-css', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/icon.css', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/icon.css' ), 'all' );
 
-			wp_enqueue_style( $this->plugin_name . '-admin-global', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin-global.css', array( 'wps-sfw-meterial-icons-css' ), time(), 'all' );
+			wp_enqueue_style( $this->plugin_name . '-admin-global', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin-global.css', array( 'wps-sfw-meterial-icons-css' ), $this->wps_sfw_asset_version( 'admin/css/subscriptions-for-woocommerce-admin-global.css' ), 'all' );
 
-			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
+			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), $this->wps_sfw_asset_version( 'admin/css/subscriptions-for-woocommerce-admin.css' ), 'all' );
 		}
 
 		if ( ( isset( $pagescreen ) && 'plugins' === $pagescreen ) ) {
 
-			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), time(), 'all' );
+			wp_enqueue_style( $this->plugin_name, SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscriptions-for-woocommerce-admin.css', array(), $this->wps_sfw_asset_version( 'admin/css/subscriptions-for-woocommerce-admin.css' ), 'all' );
 		}
 
 		if ( isset( $screen->id ) && ( 'product' == $screen->id || 'wp-swings_page_home' == $screen->id ) ) {
-			wp_enqueue_style( 'subscription-for-woocommerce-product-edit', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), time(), 'all' );
+			wp_enqueue_style( 'subscription-for-woocommerce-product-edit', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/subscription-for-woocommerce-product-edit.css', array(), $this->wps_sfw_asset_version( 'admin/css/subscription-for-woocommerce-product-edit.css' ), 'all' );
 
 		}
 	}
@@ -117,15 +176,20 @@ class Subscriptions_For_Woocommerce_Admin {
 		$recurring_payment_icon = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/recurring-payment.svg';
 		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', false );
 
-		$wps_sfw_branner_notice = array(
-			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-			'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
-			'check_pro_active'           => esc_html( $is_pro ),
-		);
-		wp_register_script( $this->plugin_name . 'admin-notice', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/wps-sfw-subscription-card-notices.js', array( 'jquery' ), $this->version, false );
+		if ( $this->wps_sfw_should_load_notice_script( $screen ) ) {
+			$wps_sfw_branner_notice = array(
+				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+				'wps_sfw_nonce' => wp_create_nonce( 'wps-sfw-verify-notice-nonce' ),
+				'check_pro_active'           => esc_html( $is_pro ),
+			);
+			wp_register_script( $this->plugin_name . 'admin-notice', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/wps-sfw-subscription-card-notices.js', array( 'jquery' ), $this->wps_sfw_asset_version( 'admin/js/wps-sfw-subscription-card-notices.js' ), true );
+			if ( function_exists( 'wp_script_add_data' ) ) {
+				wp_script_add_data( $this->plugin_name . 'admin-notice', 'strategy', 'defer' );
+			}
 
-		wp_localize_script( $this->plugin_name . 'admin-notice', 'wps_sfw_branner_notice', $wps_sfw_branner_notice );
-		wp_enqueue_script( $this->plugin_name . 'admin-notice' );
+			wp_localize_script( $this->plugin_name . 'admin-notice', 'wps_sfw_branner_notice', $wps_sfw_branner_notice );
+			wp_enqueue_script( $this->plugin_name . 'admin-notice' );
+		}
 
 		if ( isset( $screen->id ) && ( in_array( $screen->id, $wps_sfw_screen_ids ) || 'wp-swings_page_home' == $screen->id || 'woocommerce_page_wc-settings' == $screen->id || 'wps_subscriptions' == $screen->id ) ) {
 
@@ -167,13 +231,16 @@ class Subscriptions_For_Woocommerce_Admin {
 				);
 				return;
 			}
-			wp_enqueue_script( 'wps-sfw-select2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.js', array( 'jquery' ), time(), false );
+			wp_enqueue_script( 'wps-sfw-select2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/select-2/subscriptions-for-woocommerce-select2.js', array( 'jquery' ), $this->wps_sfw_asset_version( 'package/lib/select-2/subscriptions-for-woocommerce-select2.js' ), true );
 
-			wp_enqueue_script( 'wps-sfw-metarial-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.js', array(), time(), false );
-			wp_enqueue_script( 'wps-sfw-metarial-js2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.js', array(), time(), false );
-			wp_enqueue_script( 'wps-sfw-metarial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.js', array(), time(), false );
+			wp_enqueue_script( 'wps-sfw-metarial-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-web.min.js', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-web.min.js' ), true );
+			wp_enqueue_script( 'wps-sfw-metarial-js2', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-components-v5.0-web.min.js', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-components-v5.0-web.min.js' ), true );
+			wp_enqueue_script( 'wps-sfw-metarial-lite', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'package/lib/material-design/material-lite.min.js', array(), $this->wps_sfw_asset_version( 'package/lib/material-design/material-lite.min.js' ), true );
 
-			wp_register_script( $this->plugin_name . 'admin-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-admin.js', array( 'jquery', 'wps-sfw-select2', 'wps-sfw-metarial-js', 'wps-sfw-metarial-js2', 'wps-sfw-metarial-lite' ), $this->version, false );
+			wp_register_script( $this->plugin_name . 'admin-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-admin.js', array( 'jquery', 'wps-sfw-select2', 'wps-sfw-metarial-js', 'wps-sfw-metarial-js2', 'wps-sfw-metarial-lite' ), $this->wps_sfw_asset_version( 'admin/js/subscriptions-for-woocommerce-admin.js' ), true );
+			if ( function_exists( 'wp_script_add_data' ) ) {
+				wp_script_add_data( $this->plugin_name . 'admin-js', 'strategy', 'defer' );
+			}
 
 			wp_localize_script(
 				$this->plugin_name . 'admin-js',
@@ -194,7 +261,10 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 
 		if ( ( isset( $screen->id ) && 'product' == $screen->id ) || 'wps_subscriptions' == $screen->id ) {
-			wp_register_script( 'wps-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-product-edit.js', array( 'jquery' ), $this->version, false );
+			wp_register_script( 'wps-sfw-admin-single-product-js', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/js/subscriptions-for-woocommerce-product-edit.js', array( 'jquery' ), $this->wps_sfw_asset_version( 'admin/js/subscriptions-for-woocommerce-product-edit.js' ), true );
+			if ( function_exists( 'wp_script_add_data' ) ) {
+				wp_script_add_data( 'wps-sfw-admin-single-product-js', 'strategy', 'defer' );
+			}
 			wp_enqueue_script( 'wps-sfw-admin-single-product-js' );
 
 			$wps_sfw_data = array(
@@ -352,18 +422,38 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$sfw_settings_general = array(
 			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_subscription_status',
+				'eyebrow'     => __( 'Master Control', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Subscription Status', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Turn the subscription engine on or off across your store.', 'subscriptions-for-woocommerce' ),
+			),
+			array(
 				'title' => __( 'Enable/Disable Subscription', 'subscriptions-for-woocommerce' ),
-				'type'  => 'checkbox',
+				'type'  => 'radio-switch',
 				'description'  => __( 'Check this box to enable the subscription.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'When enabled, customers can purchase subscription products and manage recurring orders.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_enable_plugin',
 				'class' => 'sfw-checkbox-class',
 				'value' => 'on',
-				'checked' => ( 'on' === get_option( 'wps_sfw_enable_plugin', '' ) ? 'on' : 'off' ),
+				'checked' => ( 'on' === get_option( 'wps_sfw_enable_plugin', '' ) ? 'on' : '' ),
+				'toggle_label_active' => __( 'Enabled', 'subscriptions-for-woocommerce' ),
+				'toggle_label_inactive' => __( 'Disabled', 'subscriptions-for-woocommerce' ),
+				'toggle_state_active' => __( 'Subscription engine is active on your storefront.', 'subscriptions-for-woocommerce' ),
+				'toggle_state_inactive' => __( 'All recurring orders are paused until you enable the plugin again.', 'subscriptions-for-woocommerce' ),
+			),
+			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_storefront_labels',
+				'eyebrow'     => __( 'Storefront Labels', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Button Text', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Override the default WooCommerce copy shown on subscription product pages and checkout.', 'subscriptions-for-woocommerce' ),
 			),
 			array(
 				'title' => __( 'Add To Cart Text', 'subscriptions-for-woocommerce' ),
 				'type'  => 'text',
 				'description'  => __( 'Use this option to change add to cart button text.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Shown on subscription product pages in place of the default WooCommerce button.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_add_to_cart_text',
 				'value' => get_option( 'wps_sfw_add_to_cart_text', '' ),
 				'class' => 'sfw-text-class',
@@ -373,21 +463,57 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'Place Order Text', 'subscriptions-for-woocommerce' ),
 				'type'  => 'text',
 				'description'  => __( 'Use this option to change place order button text.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Shown on checkout when the cart contains a subscription item.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_place_order_button_text',
 				'value' => get_option( 'wps_sfw_place_order_button_text', '' ),
 				'class' => 'sfw-text-class',
 				'placeholder' => __( 'Place order button text', 'subscriptions-for-woocommerce' ),
 			),
 			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_customer_controls',
+				'eyebrow'     => __( 'Customer Controls', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Self-Service Permissions', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Define what subscribers can do from My Account without contacting support.', 'subscriptions-for-woocommerce' ),
+			),
+			array(
 				'title' => __( 'Allow Customer To Cancel Subscription', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
 				'description'  => __( 'Enable this option to allow the customer to cancel the subscription.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'When enabled, subscribers can cancel their own plan from My Account. Cancellation activity remains logged.', 'subscriptions-for-woocommerce' ),
+				'control_label' => __( 'Enable this option to allow the customer to cancel the subscription.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_cancel_subscription_for_customer',
 				'checked' => ( 'on' === get_option( 'wps_sfw_cancel_subscription_for_customer', '' ) ? 'on' : 'off' ),
 				'value' => 'on',
 				'class' => 'sfw-checkbox-class',
 			),
-
+			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_customer_dashboard',
+				'eyebrow'     => __( 'Customer Dashboard', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Frontend Subscription Layout', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Choose which customer-facing design should be used for the subscription list and subscription detail screens.', 'subscriptions-for-woocommerce' ),
+			),
+			array(
+				'title' => __( 'Subscription Dashboard Layout', 'subscriptions-for-woocommerce' ),
+				'type'  => 'select',
+				'description'  => __( 'Select the customer-facing layout for the subscription dashboard.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Applies to both the `wps_subscriptions` list endpoint and the `show-subscription` detail endpoint in My Account.', 'subscriptions-for-woocommerce' ),
+				'id'    => 'wps_sfw_frontend_subscription_layout',
+				'value' => get_option( 'wps_sfw_frontend_subscription_layout', 'default' ),
+				'class' => 'sfw-select-class',
+				'options' => array(
+					'default' => __( 'Default Layout', 'subscriptions-for-woocommerce' ),
+					'aurora'  => __( 'Aurora Cards Layout', 'subscriptions-for-woocommerce' ),
+				),
+			),
+			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_advanced',
+				'eyebrow'     => __( 'Advanced', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Shortcode & Logging', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Embed the subscriber dashboard on any page and record subscription events for debugging.', 'subscriptions-for-woocommerce' ),
+			),
 			array(
 				'title' => __( 'Subscription Shortcode', 'subscriptions-for-woocommerce' ),
 				'type' => 'text',
@@ -396,6 +522,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				'attr' => 'readonly',
 				'class' => 'sfw-text-class',
 				'placeholder' => __( 'ShortCode For Subscription', 'subscriptions-for-woocommerce' ),
+				'subtitle' => __( 'Paste this shortcode into a page to render the customer-facing subscription dashboard.', 'subscriptions-for-woocommerce' ),
 				'description' => __( 'Subscription ShortCode', 'subscriptions-for-woocommerce' ),
 			),
 
@@ -403,6 +530,8 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'Enable Log', 'subscriptions-for-woocommerce' ),
 				'type'  => 'checkbox',
 				'description'  => __( 'Enable Log.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Records subscription events to WooCommerce logs so recurring payment issues are easier to debug.', 'subscriptions-for-woocommerce' ),
+				'control_label' => __( 'Enable log.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_enable_subscription_log',
 				'value' => 'on',
 				'checked' => ( 'on' === get_option( 'wps_sfw_enable_subscription_log', '' ) ? 'on' : 'off' ),
@@ -435,21 +564,30 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$wsp_api_settings = array(
 			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_api_access',
+				'eyebrow'     => __( 'API Access', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Authentication & Credentials', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Configure secure API access used by external subscription integrations.', 'subscriptions-for-woocommerce' ),
+			),
+			array(
 				'title' => __( 'Enable API Features', 'subscriptions-for-woocommerce' ),
 				'type'  => 'radio-switch',
 				'description'  => __( 'Enable this to allow API functionality to view subscription.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Allow authenticated integrations to retrieve subscription records and recurring order data.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wsp_enable_api_features',
 				'value' => get_option( 'wsp_enable_api_features' ),
 				'class' => 'wsp-radio-switch-class',
-				'options' => array(
-					'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
-					'no' => __( 'NO', 'subscriptions-for-woocommerce' ),
-				),
+				'toggle_label_active' => __( 'Enabled', 'subscriptions-for-woocommerce' ),
+				'toggle_label_inactive' => __( 'Disabled', 'subscriptions-for-woocommerce' ),
+				'toggle_state_active' => __( 'API requests can access subscription data with the configured secret key.', 'subscriptions-for-woocommerce' ),
+				'toggle_state_inactive' => __( 'External API access is currently blocked until this option is enabled.', 'subscriptions-for-woocommerce' ),
 			),
 			array(
 				'title' => __( 'API Secret Key', 'subscriptions-for-woocommerce' ),
 				'type'  => 'text',
 				'description'  => __( 'API secret key.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Use this key when authenticating requests against the subscription API endpoints.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wsp_api_secret_key',
 				'value' => get_option( 'wsp_api_secret_key', '' ),
 				'class' => 'wsp-text-class',
@@ -493,11 +631,14 @@ class Subscriptions_For_Woocommerce_Admin {
 					unset( $sfw_genaral_settings[ $sfw_button_index ] );
 					if ( is_array( $sfw_genaral_settings ) && ! empty( $sfw_genaral_settings ) ) {
 						foreach ( $sfw_genaral_settings as $sfw_genaral_setting ) {
+							if ( $this->wps_sfw_skip_non_input_setting( $sfw_genaral_setting ) ) {
+								continue;
+							}
 							if ( isset( $sfw_genaral_setting['id'] ) && '' !== $sfw_genaral_setting['id'] ) {
 
 								if ( isset( $_POST[ $sfw_genaral_setting['id'] ] ) && ! empty( $_POST[ $sfw_genaral_setting['id'] ] ) ) {
 
-									$posted_value = sanitize_text_field( wp_unslash( $_POST[ $sfw_genaral_setting['id'] ] ) );
+									$posted_value = $this->wps_sfw_sanitize_admin_setting_value( wp_unslash( $_POST[ $sfw_genaral_setting['id'] ] ) );
 									update_option( $sfw_genaral_setting['id'], $posted_value );
 								} else {
 									update_option( $sfw_genaral_setting['id'], '' );
@@ -529,12 +670,15 @@ class Subscriptions_For_Woocommerce_Admin {
 				unset( $wsp_api_settings[ $wsp_button_index ] );
 				if ( is_array( $wsp_api_settings ) && ! empty( $wsp_api_settings ) ) {
 					foreach ( $wsp_api_settings as $wsp_api_setting ) {
+						if ( $this->wps_sfw_skip_non_input_setting( $wsp_api_setting ) ) {
+							continue;
+						}
 						if ( isset( $wsp_api_setting['id'] ) && '' !== $wsp_api_setting['id'] ) {
 							if ( 'wsp_api_secret_key' == $wsp_api_setting['id'] && empty( $_POST[ $wsp_api_setting['id'] ] ) ) {
 								$_POST[ $wsp_api_setting['id'] ] = 'wps_' . wc_rand_hash();
 							}
 							if ( isset( $_POST[ $wsp_api_setting['id'] ] ) ) {
-								$posted_value = sanitize_text_field( wp_unslash( $_POST[ $wsp_api_setting['id'] ] ) );
+								$posted_value = $this->wps_sfw_sanitize_admin_setting_value( wp_unslash( $_POST[ $wsp_api_setting['id'] ] ) );
 								update_option( $wsp_api_setting['id'], $posted_value );
 							} else {
 								update_option( $wsp_api_setting['id'], '' );
@@ -567,11 +711,14 @@ class Subscriptions_For_Woocommerce_Admin {
 					unset( $sfw_subscription_box_settings[ $sfw_button_index ] );
 					if ( is_array( $sfw_subscription_box_settings ) && ! empty( $sfw_subscription_box_settings ) ) {
 						foreach ( $sfw_subscription_box_settings as $sfw_subscription_box_setting ) {
+							if ( $this->wps_sfw_skip_non_input_setting( $sfw_subscription_box_setting ) ) {
+								continue;
+							}
 							if ( isset( $sfw_subscription_box_setting['id'] ) && '' !== $sfw_subscription_box_setting['id'] ) {
 
 								if ( isset( $_POST[ $sfw_subscription_box_setting['id'] ] ) && ! empty( $_POST[ $sfw_subscription_box_setting['id'] ] ) ) {
 
-									$posted_value = sanitize_text_field( wp_unslash( $_POST[ $sfw_subscription_box_setting['id'] ] ) );
+									$posted_value = $this->wps_sfw_sanitize_admin_setting_value( wp_unslash( $_POST[ $sfw_subscription_box_setting['id'] ] ) );
 									update_option( $sfw_subscription_box_setting['id'], $posted_value );
 								} else {
 									update_option( $sfw_subscription_box_setting['id'], '' );
@@ -606,6 +753,36 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			}
 		}
+	}
+
+	/**
+	 * Skip layout-only settings while saving tab data.
+	 *
+	 * @param array $setting Settings field config.
+	 * @return bool
+	 */
+	public function wps_sfw_skip_non_input_setting( $setting ) {
+		$non_input_types = array( 'button', 'submit', 'section', 'information' );
+
+		if ( empty( $setting['type'] ) ) {
+			return false;
+		}
+
+		return in_array( $setting['type'], $non_input_types, true );
+	}
+
+	/**
+	 * Sanitize settings values before saving them in options.
+	 *
+	 * @param mixed $posted_value Raw posted value.
+	 * @return mixed
+	 */
+	public function wps_sfw_sanitize_admin_setting_value( $posted_value ) {
+		if ( is_array( $posted_value ) ) {
+			return array_map( 'sanitize_text_field', $posted_value );
+		}
+
+		return sanitize_text_field( $posted_value );
 	}
 
 	/**
@@ -902,9 +1079,12 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		// Update settings.
 		if ( 'true' == $enable_plugin ) {
-			update_option( 'wps_sfw_enable_plugin ', 'on' );
-			update_option( 'wps_sfw_add_to_cart_text ', $add_to_cart_text );
-			update_option( 'wps_sfw_place_order_button_text ', $place_order_text );
+			update_option( 'wps_sfw_enable_plugin', 'on' );
+			update_option( 'wps_sfw_add_to_cart_text', $add_to_cart_text );
+			update_option( 'wps_sfw_place_order_button_text', $place_order_text );
+			delete_option( 'wps_sfw_enable_plugin ' );
+			delete_option( 'wps_sfw_add_to_cart_text ' );
+			delete_option( 'wps_sfw_place_order_button_text ' );
 		}
 		$allready_created = get_option( 'wps_sfw_multistep_product_create_done', 'no' );
 		// Create products.
@@ -1254,22 +1434,37 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 		$wsp_subscription_box_settings = array(
 			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_subscription_box_status',
+				'eyebrow'     => __( 'Master Control', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Subscription Box Status', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Enable bundled subscription-box products and control their storefront behavior.', 'subscriptions-for-woocommerce' ),
+			),
+			array(
 				'title' => __( 'Enable Subscription Box Feature', 'subscriptions-for-woocommerce' ),
 				'type'  => 'radio-switch',
 				'description'  => __( 'Enable this to Create and Sell Subscription Box', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Turn this on to create subscription-box products and sell curated recurring bundles.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wsp_enable_subscription_box_features',
 				'value' => get_option( 'wsp_enable_subscription_box_features' ),
 				'class' => 'wsp-radio-switch-class',
-				'options' => array(
-					'yes' => __( 'YES', 'subscriptions-for-woocommerce' ),
-					'no' => __( 'NO', 'subscriptions-for-woocommerce' ),
-				),
+				'toggle_label_active' => __( 'Enabled', 'subscriptions-for-woocommerce' ),
+				'toggle_label_inactive' => __( 'Disabled', 'subscriptions-for-woocommerce' ),
+				'toggle_state_active' => __( 'Subscription box products can now be configured and sold in your catalog.', 'subscriptions-for-woocommerce' ),
+				'toggle_state_inactive' => __( 'Subscription box controls remain unavailable until this feature is enabled.', 'subscriptions-for-woocommerce' ),
 			),
-
+			array(
+				'type'        => 'section',
+				'id'          => 'wps_sfw_section_subscription_box_labels',
+				'eyebrow'     => __( 'Storefront Labels', 'subscriptions-for-woocommerce' ),
+				'title'       => __( 'Button Text', 'subscriptions-for-woocommerce' ),
+				'description' => __( 'Control the copy customers see when purchasing subscription-box products.', 'subscriptions-for-woocommerce' ),
+			),
 			array(
 				'title' => __( 'Add To Cart Text For Subscription Box', 'subscriptions-for-woocommerce' ),
 				'type'  => 'text',
 				'description'  => __( 'Use this option to change add to cart button text For Subscription Box Product.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Shown on subscription-box product pages in place of the default add to cart label.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_subscription_box_add_to_cart_text',
 				'value' => get_option( 'wps_sfw_subscription_box_add_to_cart_text', '' ),
 				'class' => 'sfw-text-class',
@@ -1279,12 +1474,13 @@ class Subscriptions_For_Woocommerce_Admin {
 				'title' => __( 'Place Order Text For Subscription Box', 'subscriptions-for-woocommerce' ),
 				'type'  => 'text',
 				'description'  => __( 'Use this option to change place order button text For Subscription Box Product.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Shown on checkout when the cart contains a subscription-box item.', 'subscriptions-for-woocommerce' ),
 				'id'    => 'wps_sfw_subscription_box_place_order_button_text',
 				'value' => get_option( 'wps_sfw_subscription_box_place_order_button_text', '' ),
 				'class' => 'sfw-text-class',
 				'placeholder' => __( 'Subscription Box Place order button text', 'subscriptions-for-woocommerce' ),
 			),
-
+			
 			array(
 				'name' => __( 'To Create Multiple Subscription Box Feature Need Use Pro Version', 'subscriptions-for-woocommerce' ),
 				'type'  => 'information',
@@ -1933,4 +2129,3 @@ class Subscriptions_For_Woocommerce_Admin {
 		}
 	}
 }
-
