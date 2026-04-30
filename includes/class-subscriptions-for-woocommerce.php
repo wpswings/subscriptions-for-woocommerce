@@ -1004,7 +1004,7 @@ class Subscriptions_For_Woocommerce {
 
 			case 'select':
 			case 'multiselect':
-				$markup .= '<div class="wps-sfw-input-group">';
+				$markup .= '<div class="wps-sfw-input-group wps-sfw-input-group--select">';
 				if ( ! empty( $sfw_component['placeholder'] ) ) {
 					$markup .= '<span class="wps-sfw-input-label">' . esc_html( $sfw_component['placeholder'] ) . '</span>';
 				}
@@ -1027,10 +1027,19 @@ class Subscriptions_For_Woocommerce {
 				break;
 
 			case 'checkbox':
-				$markup .= '<label class="wps-sfw-check" for="' . esc_attr( $field_id ) . '">';
-				$markup .= '<input class="wps-sfw-check__input' . esc_attr( $input_classes ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" type="checkbox" value="' . esc_attr( $value_attr ) . '" ' . checked( $checked, true, false ) . ' ' . $attr_string . '>';
-				$markup .= '<span class="wps-sfw-check__box" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7 L6 10 L11 4"></path></svg></span>';
-				$markup .= '<span class="wps-sfw-check__label">' . wp_kses_post( $control_label ) . '</span>';
+				$toggle_label = $checked && ! empty( $sfw_component['toggle_label_active'] ) ? $sfw_component['toggle_label_active'] : __( 'Enabled', 'subscriptions-for-woocommerce' );
+				if ( ! $checked ) {
+					$toggle_label = ! empty( $sfw_component['toggle_label_inactive'] ) ? $sfw_component['toggle_label_inactive'] : __( 'Disabled', 'subscriptions-for-woocommerce' );
+				}
+				$toggle_state = $checked && ! empty( $sfw_component['toggle_state_active'] ) ? $sfw_component['toggle_state_active'] : __( 'This setting is active.', 'subscriptions-for-woocommerce' );
+				if ( ! $checked ) {
+					$toggle_state = ! empty( $sfw_component['toggle_state_inactive'] ) ? $sfw_component['toggle_state_inactive'] : __( 'This setting is inactive.', 'subscriptions-for-woocommerce' );
+				}
+
+				$markup .= '<label class="wps-sfw-toggle" for="' . esc_attr( $field_id ) . '">';
+				$markup .= '<input class="wps-sfw-toggle__input' . esc_attr( $input_classes ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" type="checkbox" value="' . esc_attr( $value_attr ) . '" role="switch" aria-checked="' . esc_attr( $checked ? 'true' : 'false' ) . '" ' . checked( $checked, true, false ) . ' ' . $attr_string . '>';
+				$markup .= '<span class="wps-sfw-toggle__track" aria-hidden="true"><span class="wps-sfw-toggle__thumb"></span></span>';
+				$markup .= '<span class="wps-sfw-toggle__text">' . esc_html( $toggle_label ) . '<span class="wps-sfw-toggle__state">' . esc_html( $toggle_state ) . '</span></span>';
 				$markup .= '</label>';
 				break;
 

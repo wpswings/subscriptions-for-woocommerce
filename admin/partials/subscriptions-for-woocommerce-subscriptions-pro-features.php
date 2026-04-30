@@ -1,40 +1,3 @@
-<style>
-.wsp-secion-pro-wrap h3 {
-	margin: 0 0 15px;
-    font-size: 20px;
-    background-color: #F2F2F1;
-    padding: 8px 15px;
-    border-radius: 12px;
-    position: relative;
-	cursor: pointer;
-}
-.wsp-secion-pro-wrap h3::before {
-    position: absolute;
-	content: "\f347";
-	top: 50%;
-	right: 15px;
-	transform: translateY(-50%);
-	font-size: 24px;
-	line-height: 20px;
-	font-family: dashicons;
-}
-.wsp-secion-pro-wrap .wps-form-group {
-    overflow: hidden;
-    transition: opacity 0.4s ease-in-out, height 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
-    padding: 0 15px;
-}
-
-.wsp-secion-pro-wrap .wps-form-group.wps_wsp_active_section {
-    opacity: 1;
-    height: auto;
-    padding: 10px 15px;
-    margin: 0 0 15px;
-}
-.wsp-secion-pro-wrap .wps-form-group__control {
-    position: relative;
-    padding-bottom: 25px;
-}
-</style>
 <div class="wsp-secion-pro-wrap">
 									
 								
@@ -626,3 +589,4 @@
     </div>
     <div class="wps-form-group-save">   
     </div>
+</div>

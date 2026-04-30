@@ -183,6 +183,14 @@ form.wpsMsf textarea::placeholder {
   margin: 0 auto 30px;
   text-align: center;
 }
+.wpsMsfWrapper h2,
+.wpsMsfWrapper h3,
+.wps-title,
+.wpsHeadingWrap h2,
+.wpsHeadingWrap h3 {
+  font-size: 20px;
+  line-height: 1.25;
+}
 @media screen and (max-width:991px) {
   span.MuiTypography-root.MuiStepLabel-label {
       display: none;

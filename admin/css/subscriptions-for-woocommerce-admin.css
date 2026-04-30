@@ -434,31 +434,32 @@ img.wps_go_pro_images {
 }
 .wps_pro_settings_tag {
   position: relative;
+  overflow: hidden;
 }
 
 .wps_pro_settings_tag:before{
-  background-color: #008000;
+  align-items: center;
+  background: linear-gradient(180deg, #8ce7e3 0%, #66d3cd 100%);
+  border: 1px solid #5fcfc8;
+  border-radius: 999px;
+  box-shadow: 0 8px 14px rgba(102, 211, 205, 0.18);
+  color: #114644;
+  content: 'PRO';
+  display: inline-flex;
+  font-family: 'NunitoSans-ExtraBold';
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  min-height: 22px;
+  padding: 0 9px;
   position: absolute;
-  content: '';
-  left: 0;
-  bottom: 0;
-  width: 32px;
-  aspect-ratio: 1;
-  z-index: 99;
-  clip-path: polygon(0 0, 0% 100%, 100% 100%);
+  right: 14px;
+  text-transform: uppercase;
+  top: 14px;
+  z-index: 9;
 }
 .wps_pro_settings_tag:after {
-  position: absolute;
-  content: 'pro';
-  left: 0px;
-  padding: 0px 2px;
-  transform: rotate(45deg);
-  z-index: 999;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: capitalize;
-  bottom: 0;
-  color: #fff;
+  content: none;
 }
 .wps_sfw_lite_go_pro_popup_wrap {
   align-items: center;
@@ -561,17 +562,26 @@ img.wps_go_pro_images {
 }
 #subscriptions-for-woocommerce-subscriptions-pro-features{
 	position: relative;
-	padding-right: 45px;
+	padding-right: 54px;
 }
 #subscriptions-for-woocommerce-subscriptions-pro-features::before {
     content: "Pro";
-    display: inline-block;
-    background-color: #05d5d8;
-    color: white;
-    font-size: 12px;
-    padding: 5px 10px;
-    border-radius: 4px;
+    align-items: center;
+    background: linear-gradient(180deg, #8ce7e3 0%, #66d3cd 100%);
+    border: 1px solid #5fcfc8;
+    border-radius: 999px;
+    box-shadow: 0 8px 14px rgba(102, 211, 205, 0.18);
+    color: #114644;
+    display: inline-flex;
+    font-family: 'NunitoSans-ExtraBold';
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    min-height: 22px;
+    padding: 0 9px;
     position: absolute;
-    right:0;
+    right: 0;
     line-height: 1;
+    text-transform: uppercase;
+    top: 50%;
+    transform: translateY(-54%);
 }

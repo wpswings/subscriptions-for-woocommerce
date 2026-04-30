@@ -258,6 +258,12 @@ input#s2id_autogen1 {
     margin: 0 auto;
 }
 
+.wps-sfw-on-boarding-form-submit .wps-sfw-on-boarding-submit {
+    padding-right: 32px!important;
+    opacity: 1;
+}
+
+
 .mdc-button {
     border-radius: 35px!important;
     padding: 12px 24px!important;
@@ -293,7 +299,7 @@ input#s2id_autogen1 {
     display: inline-block;
     font-size: 20px;
     position: absolute;
-    right: 5px;
+    right: 8px;
     top: 12px;
     transition: transform 0.3s ease-out;
 }
@@ -336,7 +342,7 @@ input#s2id_autogen1 {
 .wps-sfw-on-boarding-form-no_thanks {
     display: inline-block;
     float: right;
-    margin: 10px 0 0 0px;
+    margin: 0;
 }
 
 .wps-sfw-customer-data-form-single-field .select2-search-choice {
@@ -897,4 +903,11 @@ img.wps-info-img {
         justify-content: center;
         width: 100%;
     }
+}
+
+.wps-sfw-on-boarding-wrapper h2,
+.wps-sfw-on-boarding-wrapper h3,
+.wps-sfw-on-boarding-heading {
+    font-size: 20px !important;
+    line-height: 1.25;
 }

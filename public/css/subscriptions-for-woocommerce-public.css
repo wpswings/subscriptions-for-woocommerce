@@ -306,7 +306,7 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
 
 .wps-sfw-aurora-metrics {
     display: grid;
-    gap: 0;
+    gap: 16px;
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
@@ -322,11 +322,11 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
 }
 
 .wps-sfw-aurora-metric {
-    padding: 20px 22px;
-}
-
-.wps-sfw-aurora-metric + .wps-sfw-aurora-metric {
-    border-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 152px;
+    padding: 22px 24px;
 }
 
 .wps-sfw-aurora-metric__label,
@@ -336,7 +336,6 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
 .wps-sfw-aurora-panel__head h3,
 .wps-sfw-aurora-summary__total span {
     color: var(--wps-sfw-aurora-muted);
-    display: block;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -351,8 +350,6 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
 .wps-sfw-aurora-subscription-card__schedule strong {
     color: var(--wps-sfw-aurora-text);
     display: block;
-    font-size: 22px;
-    line-height: 1.1;
     margin: 0 0 6px;
 }
 
@@ -762,27 +759,30 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
 .wps-sfw-aurora-pro-actions a.button,
 .wps-sfw-aurora-pro-actions .btn.button {
     align-items: center;
-    background: #fff;
-    border: 1px solid var(--wps-sfw-aurora-border);
+    background: linear-gradient(180deg, #d99360 0%, #c97a45 100%);
+    border: 0;
     border-radius: 12px;
-    box-shadow: none;
-    color: var(--wps-sfw-aurora-text);
+    box-shadow: 0 10px 20px rgba(201, 122, 69, 0.16);
+    color: #fff;
     display: inline-flex;
+    font-weight: 700;
     justify-content: center;
     line-height: 1;
     margin: 0 !important;
-    min-height: 40px;
-    padding: 0 16px;
+    min-height: 42px;
+    padding: 0 18px;
     text-decoration: none !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     white-space: nowrap;
 }
 
 .wps-sfw-aurora-pro-actions .button:hover,
 .wps-sfw-aurora-pro-actions a.button:hover,
 .wps-sfw-aurora-pro-actions .btn.button:hover {
-    background: var(--wps-sfw-aurora-accent-soft);
-    border-color: var(--wps-sfw-aurora-accent);
-    color: var(--wps-sfw-aurora-accent);
+    background: linear-gradient(180deg, #de9b6a 0%, #cf7b44 100%);
+    box-shadow: 0 16px 28px rgba(201, 122, 69, 0.24);
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 .wps-sfw-aurora-summary {
@@ -1481,4 +1481,22 @@ a.wps_sfw_sub_detail_back {
     text-decoration: none !important;
     color: black;
     margin-bottom: 15px;
+}
+
+.wps_sfw_account_wrap h2,
+.wps_sfw_account_wrap h3,
+.wps_sfw_account_additional_wrap h2,
+.wps_sfw_account_additional_wrap h3,
+.wps_sfw_details_wrap h2,
+.wps_sfw_details_wrap h3,
+.wps-sfw-aurora-account h2,
+.wps-sfw-aurora-account h3,
+.wps-sfw-aurora-detail h2,
+.wps-sfw-aurora-detail h3,
+#wps_sfw_subs_box-form h2,
+#wps_sfw_subs_box-form h3,
+.wps-attached-products-popup h2,
+.wps-attached-products-popup h3 {
+    font-size: 20px !important;
+    line-height: 1.25;
 }

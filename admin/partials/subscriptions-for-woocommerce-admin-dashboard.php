@@ -31,6 +31,26 @@ $is_full_width_tab     = in_array(
 	),
 	true
 ) || $is_renewal_table_view;
+$sfw_lite_version = defined( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION' ) ? (string) SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION : '1.0.0';
+$sfw_pro_version  = $sfw_lite_version;
+
+if ( $is_pro_active ) {
+	if ( defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION' ) ) {
+		$sfw_pro_version = (string) WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION;
+	} elseif ( function_exists( 'get_plugins' ) ) {
+		$sfw_plugins = get_plugins();
+		if ( ! empty( $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'] ) ) {
+			$sfw_pro_version = (string) $sfw_plugins['woocommerce-subscriptions-pro/woocommerce-subscriptions-pro.php']['Version'];
+		}
+	}
+}
+
+$sfw_version_label = sprintf(
+	/* translators: 1: plugin version, 2: edition label */
+	__( 'v%s %s', 'subscriptions-for-woocommerce' ),
+	$is_pro_active ? $sfw_pro_version : $sfw_lite_version,
+	$is_pro_active ? __( 'Pro', 'subscriptions-for-woocommerce' ) : __( 'Lite', 'subscriptions-for-woocommerce' )
+);
 $plugin_title     = apply_filters( 'wps_sfw_dashboard_plugin_title', esc_attr( strtoupper( str_replace( '-', ' ', $sfw_wps_sfw_obj->sfw_get_plugin_name() ) ) ) );
 $active_tab_data  = isset( $sfw_default_tabs[ $sfw_active_tab ] ) ? $sfw_default_tabs[ $sfw_active_tab ] : array(
 	'title' => esc_html__( 'General Settings', 'subscriptions-for-woocommerce' ),
@@ -102,8 +122,12 @@ $active_intro     = isset( $page_intro_map[ $sfw_active_tab ] ) ? $page_intro_ma
 	'title'       => isset( $active_tab_data['title'] ) ? $active_tab_data['title'] : esc_html__( 'Subscriptions', 'subscriptions-for-woocommerce' ),
 	'description' => esc_html__( 'Manage plugin settings and subscription workflow controls from the shared admin dashboard.', 'subscriptions-for-woocommerce' ),
 );
+$shell_classes    = array(
+	'wps-sfw-admin-shell',
+	'wps-sfw-admin-shell--tab-' . sanitize_html_class( $sfw_active_tab ),
+);
 ?>
-<div class="wps-sfw-admin-shell">
+<div class="<?php echo esc_attr( implode( ' ', $shell_classes ) ); ?>">
 	<?php if ( $is_multistep_pending ) : ?>
 		<div class="wps-sfw-admin-notices">
 			<?php
@@ -162,7 +186,7 @@ $active_intro     = isset( $page_intro_map[ $sfw_active_tab ] ) ? $page_intro_ma
 	<div class="wps-sfw-admin-surface wps-bg-white wps-r-8">
 		<nav class="wps-navbar">
 			<div class="wps-navbar__tabs">
-				<span class="wps-sfw-admin-brand__version"><?php echo esc_html( $is_pro_active ? __( 'v5.5.9 Pro', 'subscriptions-for-woocommerce' ) : __( 'v5.5.9 Lite', 'subscriptions-for-woocommerce' ) ); ?></span>
+				<span class="wps-sfw-admin-brand__version"><?php echo esc_html( $sfw_version_label ); ?></span>
 				<ul class="wps-navbar__items">
 					<?php
 					if ( is_array( $sfw_default_tabs ) && ! empty( $sfw_default_tabs ) ) {

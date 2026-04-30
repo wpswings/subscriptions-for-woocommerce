@@ -1126,12 +1126,16 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
 
 .wps_sfw_list_table select,
 .wps_wsp_list_table select {
-    appearance: none;
-    background-image: linear-gradient(45deg, transparent 50%, #6b6081 50%), linear-gradient(135deg, #6b6081 50%, transparent 50%);
-    background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
+    appearance: auto;
+    background-color: #fbf9ff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3.25 5.25L7 9l3.75-3.75' fill='none' stroke='%234b3a69' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'/%3E%3C/svg%3E"), linear-gradient(180deg, #ece3fb 0%, #ece3fb 100%);
+    background-position: calc(100% - 14px) 50%, calc(100% - 38px) 0;
     background-repeat: no-repeat;
-    background-size: 6px 6px, 6px 6px;
-    padding: 0 34px 0 14px !important;
+    background-size: 14px 14px, 1px 100%;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+    cursor: pointer;
+    min-width: 160px;
+    padding: 0 40px 0 14px !important;
 }
 
 .wps_sfw_list_table .button,
@@ -1589,9 +1593,9 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
 .wps-sfw-settings-section__head h3 {
     color: #25183f;
     font-family: 'NunitoSans-ExtraBold';
-    font-size: 31px;
-    line-height: 1.12;
-    margin-bottom: 10px;
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 8px;
 }
 
 .wps-sfw-settings-section__head p {
@@ -1651,6 +1655,30 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
     padding: 10px 14px 12px;
 }
 
+.wps-sfw-input-group--select {
+    background: linear-gradient(180deg, #ffffff 0%, #fbf7ff 100%);
+    cursor: pointer;
+    padding-right: 20px;
+    position: relative;
+}
+
+.wps-sfw-input-group--select::after {
+    border-bottom: 2px solid #4a356a;
+    border-right: 2px solid #4a356a;
+    content: "";
+    height: 9px;
+    pointer-events: none;
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-65%) rotate(45deg);
+    width: 9px;
+}
+
+.wps-sfw-input-group--select select.sfw-select-class {
+    max-width: 100%;
+}
+
 .wps-sfw-input-label {
     color: #3897ff;
     display: block;
@@ -1683,7 +1711,10 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
 }
 
 .wps-sfw-select {
-    padding-right: 18px !important;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    padding-right: 6px !important;
 }
 
 .wps-sfw-input[readonly] {
@@ -1862,6 +1893,51 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
 .wps-sfw-save-button:focus {
     background: #060606;
     color: #fff;
+}
+
+.wps-sfw-admin-shell--tab-woocommerce-subscriptions-pro-others .wps-sfw-settings-actions {
+    bottom: 28px;
+    display: flex;
+    justify-content: flex-end;
+    left: auto;
+    margin-top: 0;
+    padding: 0;
+    position: fixed;
+    right: max(32px, calc((100vw - 1280px) / 2 + 32px));
+    width: auto;
+    z-index: 999;
+}
+
+.wps-sfw-admin-shell--tab-woocommerce-subscriptions-pro-others .wps-sfw-save-button {
+    background: linear-gradient(135deg, #2f1d51 0%, #523081 100%);
+    border-radius: 999px;
+    box-shadow: 0 20px 40px rgba(47, 29, 81, 0.18);
+    font-family: 'NunitoSans-ExtraBold';
+    letter-spacing: 0.14em;
+    min-height: 56px;
+    padding: 18px 28px;
+}
+
+.wps-sfw-admin-shell--tab-woocommerce-subscriptions-pro-others .wps-sfw-save-button:hover,
+.wps-sfw-admin-shell--tab-woocommerce-subscriptions-pro-others .wps-sfw-save-button:focus {
+    background: linear-gradient(135deg, #38235f 0%, #60389a 100%);
+    box-shadow: 0 24px 46px rgba(47, 29, 81, 0.22);
+    transform: translateY(-1px);
+}
+
+@media only screen and (max-width: 991px) {
+    .wps-sfw-admin-shell--tab-woocommerce-subscriptions-pro-others .wps-sfw-settings-actions {
+        bottom: 18px;
+        left: 14px;
+        right: 14px;
+        z-index: 999;
+    }
+
+    .wps-sfw-admin-shell--tab-woocommerce-subscriptions-pro-others .wps-sfw-save-button {
+        justify-content: center;
+        max-width: 100%;
+        width: 100%;
+    }
 }
 
 .wps_sfw_api_details_main_wrapper {
@@ -2088,6 +2164,11 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
         grid-template-columns: 1fr;
     }
 
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout {
+        align-items: start;
+        grid-template-columns: minmax(0, 1fr) 252px !important;
+    }
+
     .wps-sfw-overview-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -2096,6 +2177,12 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
         display: grid;
         gap: 14px;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout__sidebar {
+        display: flex !important;
+        flex-direction: column;
+        grid-template-columns: none;
     }
 
     .wps_sfw_list_table .search-box,
@@ -2119,6 +2206,17 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
 }
 
 @media only screen and (max-width: 991px) {
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout {
+        align-items: start;
+        grid-template-columns: minmax(0, 1fr) 232px !important;
+    }
+
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout__sidebar {
+        display: flex !important;
+        flex-direction: column;
+        grid-template-columns: none;
+    }
+
     .wps-sfw-admin-banner,
     .wps-sfw-page-intro {
         align-items: flex-start;
@@ -2166,6 +2264,16 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
 }
 
 @media only screen and (max-width: 767px) {
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout {
+        grid-template-columns: minmax(0, 1fr) 208px !important;
+    }
+
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout__sidebar {
+        display: flex !important;
+        flex-direction: column;
+        grid-template-columns: none;
+    }
+
     .wps-sfw-admin-shell {
         margin-right: 10px;
     }
@@ -2217,5 +2325,101 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
     .wps-sfw-page-intro__content h2,
     .wps-sfw-sidebar-card h3 {
         font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 560px) {
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout__sidebar {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+
+.wps-sfw-admin-shell h2,
+.wps-sfw-admin-shell h3 {
+    font-size: 20px;
+    line-height: 1.25;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout {
+    align-items: start;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 268px !important;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout__main {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    min-width: 0;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wps-sfw-admin-layout__sidebar {
+    display: flex !important;
+    flex-direction: column;
+    gap: 14px;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap h3 {
+    background: linear-gradient(180deg, #fdfbff 0%, #f7f1ff 100%);
+    border: 1px solid #ece3fb;
+    border-radius: 18px;
+    color: #24193c;
+    margin: 0;
+    padding: 14px 18px;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap h3::before {
+    color: #6d6483;
+    font-size: 18px;
+    right: 18px;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .wps-form-group {
+    background: #fff;
+    border: 1px solid #ece3fb;
+    border-radius: 18px;
+    margin: 0;
+    overflow: visible;
+    padding: 18px !important;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .wps-form-group__control {
+    padding-bottom: 0;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .wps-form-label {
+    color: #24193c;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .mdc-text-field-helper-text--persistent,
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .mdl-textfield__label {
+    color: #8c82a1;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .mdc-switch,
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .mdc-text-field,
+.wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .wps-form-select {
+    opacity: 0.82;
+}
+
+@media only screen and (max-width: 767px) {
+    .wps-sfw-admin-shell--tab-subscriptions-for-woocommerce-subscriptions-pro-features .wsp-secion-pro-wrap .wps-form-group {
+        padding: 16px !important;
     }
 }
