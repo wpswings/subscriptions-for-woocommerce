@@ -55695,7 +55695,7 @@ const useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_2__["
 
 function App(props) {
   const [loading, setLoading] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false);
-  const [state, setState] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
+  const defaultFormState = {
     EnablePlugin: true,
     AddToCartText: 'Add to cart',
     PlaceOrderText: 'Place order',
@@ -55710,6 +55710,9 @@ function App(props) {
     EnableWpsPaypalTestmode: false,
     WpsPaypalClientId: '',
     WpsPaypalClientSecret: ''
+  };
+  const [state, setState] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({ ...defaultFormState,
+    ...(frontend_ajax_object.multistep_defaults || {})
   });
   const supported_payment_gateway = frontend_ajax_object.supported_gateway;
   const [showAvailblePayment, setAvailblePayment] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(supported_payment_gateway);

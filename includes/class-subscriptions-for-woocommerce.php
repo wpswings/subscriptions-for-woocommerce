@@ -175,6 +175,7 @@ class Subscriptions_For_Woocommerce {
 
 			// The class responsible for defining all actions that occur in the admin area.
 			require_once plugin_dir_path( __DIR__ ) . 'admin/class-subscriptions-for-woocommerce-admin.php';
+			require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-talk-to-expert-form.php';
 
 			// The class responsible for on-boarding steps for plugin.
 			if ( is_dir( plugin_dir_path( __DIR__ ) . 'onboarding' ) && ! class_exists( 'Subscriptions_For_Woocommerce_Onboarding_Steps' ) ) {
@@ -313,9 +314,12 @@ class Subscriptions_For_Woocommerce {
 	private function subscriptions_for_woocommerce_admin_hooks() {
 
 		$sfw_plugin_admin = new Subscriptions_For_Woocommerce_Admin( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
+		$sfw_talk_to_expert = Subscriptions_For_Woocommerce_Talk_To_Expert_Form::get_instance();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'wps_sfw_admin_enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'wps_sfw_admin_enqueue_scripts' );
+		$this->loader->add_action( 'admin_init', $this, 'wps_sfw_register_pro_report_ajax_fallback', 1 );
+		$this->loader->add_action( 'wp_ajax_' . Subscriptions_For_Woocommerce_Talk_To_Expert_Form::AJAX_ACTION, $sfw_talk_to_expert, 'submit_form_ajax' );
 
 		// Add settings menu for Subscriptions For Woocommerce.
 		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_options_page' );
@@ -387,6 +391,623 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_filter( 'woocommerce_payment_gateways_setting_columns', $sfw_plugin_admin, 'wps_sfw_subscription_support_in_payment_gateway' );
 		// 'Upsell Support' content on payment gateways page.
 		$this->loader->add_action( 'woocommerce_payment_gateways_setting_column_wps_sub_renewal', $sfw_plugin_admin, 'wps_sfw_subscription_content_in_payment_gateway' );
+	}
+
+	/**
+	 * Register fallback AJAX handlers for the Pro report screen.
+	 *
+	 * The Pro plugin currently gates these handlers behind the core "plugin enabled" flag,
+	 * but the report tab can still render when that flag is off. In that state the React
+	 * report app sends valid admin-ajax requests to unregistered actions and WordPress
+	 * returns HTTP 400. This fallback keeps the report endpoints available without
+	 * duplicating hooks when Pro already registered them.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_register_pro_report_ajax_fallback() {
+		if ( ! apply_filters( 'wsp_sfw_check_pro_plugin', false ) ) {
+			return;
+		}
+
+		if ( ! class_exists( 'Woocommerce_Subscriptions_Pro_Admin' ) ) {
+			return;
+		}
+
+		$report_hooks = array(
+			'wps_wsp_chart_data'                 => 'wps_sfw_report_chart_data_callback',
+			'wps_wsp_chart_product_data'         => 'wps_sfw_report_chart_product_data_callback',
+			'wps_wsp_chart_total_renewal'        => 'wps_sfw_report_chart_total_renewal_callback',
+			'wps_wsp_get_cancelled_subscription' => 'wps_sfw_report_get_cancelled_subscription_callback',
+			'wps_wsp_get_renewed_subscription'   => 'wps_sfw_report_get_renewed_subscription_callback',
+			'wps_wsp_get_mrr_data'               => 'wps_sfw_report_get_mrr_data_callback',
+			'wps_wsp_get_grid_data'              => 'wps_sfw_report_get_grid_data_callback',
+			'wps_wsp_get_churn_arr_data'         => 'wps_sfw_report_get_churn_arr_data_callback',
+		);
+
+		$pro_version = defined( 'WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION' ) ? WOOCOMMERCE_SUBSCRIPTIONS_PRO_VERSION : $this->sfw_get_version();
+		$pro_admin   = new Woocommerce_Subscriptions_Pro_Admin( 'woocommerce-subscriptions-pro', $pro_version );
+
+		foreach ( $report_hooks as $hook_name => $method ) {
+			if ( ! has_action( 'wp_ajax_' . $hook_name ) ) {
+				add_action( 'wp_ajax_' . $hook_name, array( $this, $method ) );
+			}
+		}
+
+		if ( ! has_action( 'wp_ajax_wps_wsp_generate_csv' ) ) {
+			add_action( 'wp_ajax_wps_wsp_generate_csv', array( $pro_admin, 'wps_wsp_export_csv_report_callback' ) );
+		}
+	}
+
+	/**
+	 * Read and normalize report date range from AJAX payload.
+	 *
+	 * @return array{0:string,1:string}
+	 */
+	private function wps_sfw_get_report_date_range() {
+		$start_date = isset( $_POST['startDate'] ) ? sanitize_text_field( wp_unslash( $_POST['startDate'] ) ) : '';
+		$end_date   = isset( $_POST['endDate'] ) ? sanitize_text_field( wp_unslash( $_POST['endDate'] ) ) : '';
+
+		return array( $start_date, $end_date );
+	}
+
+	/**
+	 * Fetch subscription order IDs for the report date range.
+	 *
+	 * @param array $extra_args Extra wc_get_orders arguments.
+	 * @return array
+	 */
+	private function wps_sfw_get_report_subscription_ids( $extra_args = array() ) {
+		list( $start_date, $end_date ) = $this->wps_sfw_get_report_date_range();
+
+		$args = wp_parse_args(
+			(array) $extra_args,
+			array(
+				'date_created' => $start_date . '...' . $end_date,
+				'limit'        => -1,
+				'post_type'    => 'wps_subscriptions',
+				'return'       => 'ids',
+			)
+		);
+
+		return wc_get_orders( $args );
+	}
+
+	/**
+	 * Report callback: total subscription sales.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_chart_data_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		$orders               = $this->wps_sfw_get_report_subscription_ids();
+		$temp_order_date      = array();
+		$temp_no_order        = array();
+		$temp_order_revenue   = array();
+		$display_data         = array();
+
+		if ( ! empty( $orders ) ) {
+			$orders = array_reverse( $orders );
+
+			foreach ( $orders as $order_id ) {
+				$subscription = new WPS_Subscription( $order_id );
+				$created      = $subscription->get_date_created();
+
+				if ( ! $created ) {
+					continue;
+				}
+
+				$formatted_date = $created->format( wc_date_format() );
+				$total          = (float) $subscription->get_total();
+				$parent_id      = $subscription->get_meta( 'wps_parent_order' );
+				$status         = $subscription->get_meta( 'wps_subscription_status' );
+				$renewals       = $subscription->get_meta( 'wps_wsp_renewal_order_data' );
+				$last_renewal   = esc_attr__( 'No Renewal', 'subscriptions-for-woocommerce' );
+
+				if ( is_array( $renewals ) && ! empty( $renewals ) ) {
+					$last_renewal = end( $renewals );
+				}
+
+				if ( ! in_array( $formatted_date, $temp_order_date, true ) ) {
+					$temp_order_date[] = $formatted_date;
+				}
+
+				$temp_no_order[ $formatted_date ]      = isset( $temp_no_order[ $formatted_date ] ) ? $temp_no_order[ $formatted_date ] + 1 : 1;
+				$temp_order_revenue[ $formatted_date ] = isset( $temp_order_revenue[ $formatted_date ] ) ? $temp_order_revenue[ $formatted_date ] + $total : $total;
+
+				$display_data[] = array(
+					'id'              => $order_id,
+					'parent_id'       => $parent_id,
+					'status'          => $status,
+					'last_renewal_id' => $last_renewal,
+					'date'            => $formatted_date,
+				);
+			}
+		}
+
+		wp_send_json(
+			array(
+				'dates'                => array_values( $temp_order_date ),
+				'newSubscriptions'     => array_values( $temp_no_order ),
+				'subscriptionsRevenue' => array_values( $temp_order_revenue ),
+				'displayData'          => $display_data,
+			)
+		);
+	}
+
+	/**
+	 * Report callback: top products.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_chart_product_data_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		$orders       = $this->wps_sfw_get_report_subscription_ids();
+		$product_ids  = array();
+		$result       = array();
+		$display_data = array();
+
+		if ( ! empty( $orders ) ) {
+			$orders = array_reverse( $orders );
+
+			foreach ( $orders as $order_id ) {
+				$subscription = new WPS_Subscription( $order_id );
+				$product_id   = absint( $subscription->get_meta( 'product_id' ) );
+
+				if ( ! $product_id ) {
+					continue;
+				}
+
+				$product_ids[ $product_id ] = isset( $product_ids[ $product_id ] ) ? $product_ids[ $product_id ] + 1 : 1;
+			}
+		}
+
+		if ( ! empty( $product_ids ) ) {
+			$total_count    = array_sum( $product_ids );
+			$others_percent = 0;
+
+			arsort( $product_ids );
+
+			$top_products   = array_slice( $product_ids, 0, 4, true );
+			$other_products = array_slice( $product_ids, 4, null, true );
+
+			foreach ( $top_products as $product_id => $count ) {
+				$product = get_post( $product_id );
+				if ( ! $product ) {
+					continue;
+				}
+
+				$result[] = array(
+					'value' => round( ( $count / $total_count ) * 100, 2 ),
+					'name'  => 'ID : ' . $product->ID . ' | ' . $product->post_title,
+				);
+			}
+
+			foreach ( $other_products as $count ) {
+				$others_percent += ( $count / $total_count ) * 100;
+			}
+
+			if ( ! empty( $other_products ) ) {
+				$result[] = array(
+					'value' => round( $others_percent, 2 ),
+					'name'  => 'others',
+				);
+			}
+
+			foreach ( $product_ids as $product_id => $count ) {
+				$product = wc_get_product( $product_id );
+				if ( ! $product ) {
+					continue;
+				}
+
+				$display_data[] = array(
+					'id'    => $product_id,
+					'name'  => $product->get_name(),
+					'type'  => $product->get_type(),
+					'count' => $count,
+				);
+			}
+		}
+
+		wp_send_json(
+			array(
+				'displayData' => $display_data,
+				'result1'     => $result,
+			)
+		);
+	}
+
+	/**
+	 * Report callback: renewal totals.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_chart_total_renewal_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		list( $start_date, $end_date ) = $this->wps_sfw_get_report_date_range();
+
+		$orders = wc_get_orders(
+			array(
+				'date_created' => $start_date . '...' . $end_date,
+				'limit'        => -1,
+				'meta_key'     => 'wps_sfw_renewal_order',
+				'meta_value'   => 'yes',
+				'return'       => 'ids',
+			)
+		);
+
+		$array_data   = array();
+		$display_data = array();
+
+		if ( ! empty( $orders ) ) {
+			$orders = array_reverse( $orders );
+
+			foreach ( $orders as $id ) {
+				$renewal_order = wc_get_order( $id );
+				if ( ! $renewal_order ) {
+					continue;
+				}
+
+				$subscription_id = $renewal_order->get_meta( 'wps_sfw_subscription' );
+				$parent_id       = $renewal_order->get_meta( 'wps_sfw_parent_order_id' );
+				$status          = $renewal_order->get_status();
+				$product_id      = function_exists( 'wps_wsp_get_meta_data' ) ? wps_wsp_get_meta_data( $subscription_id, 'product_id', true ) : '';
+				$created_date    = $renewal_order->get_date_created();
+				$date            = $created_date ? $created_date->date( wc_date_format() ) : '';
+				$total           = (float) $renewal_order->get_total();
+
+				if ( '' === $date ) {
+					continue;
+				}
+
+				$array_data[ $date ]['ids'][]             = $id;
+				$array_data[ $date ]['parent_id'][]       = $parent_id;
+				$array_data[ $date ]['subcription_id'][]  = $subscription_id;
+				$array_data[ $date ]['status'][]          = $status;
+				$array_data[ $date ]['product_id'][]      = $product_id;
+				$array_data[ $date ]['total'][]           = $total;
+
+				$display_data[] = array(
+					'id'              => $id,
+					'subscription_id' => $subscription_id,
+					'status'          => $status,
+					'date'            => $date,
+				);
+			}
+		}
+
+		wp_send_json(
+			array(
+				'result2'     => $array_data,
+				'displayData' => $display_data,
+			)
+		);
+	}
+
+	/**
+	 * Report callback: cancelled subscriptions.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_get_cancelled_subscription_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		$orders = $this->wps_sfw_get_report_subscription_ids(
+			array(
+				'meta_key'   => 'wps_subscription_status',
+				'meta_value' => 'cancelled',
+			)
+		);
+
+		$cancelled_subs = array();
+		$display_data   = array();
+
+		if ( ! empty( $orders ) ) {
+			foreach ( $orders as $subscription_id ) {
+				$subscription = new WPS_Subscription( $subscription_id );
+				$created_date = $subscription->get_date_created();
+				$date         = $created_date ? $created_date->date( wc_date_format() ) : '';
+
+				if ( '' === $date ) {
+					continue;
+				}
+
+				$reason         = $subscription->get_meta( 'wps_subscription_cancelled_by' );
+				$cancelled_date = $subscription->get_meta( 'wps_subscription_cancelled_date' );
+
+				$cancelled_subs[ $date ]['id'][]     = $subscription_id;
+				$cancelled_subs[ $date ]['reason'][] = $reason;
+
+				$display_data[] = array(
+					'id'             => $subscription_id,
+					'reason'         => $reason,
+					'status'         => 'cancelled',
+					'date'           => $date,
+					'cancelled_date' => $cancelled_date ? date_i18n( wc_date_format(), $cancelled_date ) : null,
+				);
+			}
+		}
+
+		wp_send_json(
+			array(
+				'result3'     => $cancelled_subs,
+				'displayData' => $display_data,
+			)
+		);
+	}
+
+	/**
+	 * Report callback: renewed subscriptions.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_get_renewed_subscription_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		$orders = $this->wps_sfw_get_report_subscription_ids(
+			array(
+				'meta_query' => array(
+					array(
+						'key'     => 'wps_wsp_renewal_order_data',
+						'value'   => '',
+						'compare' => '!=',
+					),
+				),
+			)
+		);
+
+		$subscription_data = array();
+		$display_data      = array();
+
+		if ( ! empty( $orders ) ) {
+			$orders = array_reverse( $orders );
+
+			foreach ( $orders as $subscription_id ) {
+				$subscription = new WPS_Subscription( $subscription_id );
+				$created      = $subscription->get_date_created();
+				$date         = $created ? $created->format( wc_date_format() ) : '';
+
+				if ( '' === $date ) {
+					continue;
+				}
+
+				$parent_id  = $subscription->get_meta( 'wps_parent_order' );
+				$status     = $subscription->get_meta( 'wps_subscription_status' );
+				$product_id = $subscription->get_meta( 'product_id' );
+				$total      = (float) $subscription->get_total();
+
+				$subscription_data[ $date ]['id'][]         = $subscription_id;
+				$subscription_data[ $date ]['parent_id'][]  = $parent_id;
+				$subscription_data[ $date ]['status'][]     = $status;
+				$subscription_data[ $date ]['product_id'][] = $product_id;
+				$subscription_data[ $date ]['total'][]      = $total;
+
+				$display_data[] = array(
+					'id'           => $subscription_id,
+					'status'       => $status,
+					'see_renewals' => $subscription_id,
+					'date'         => $date,
+				);
+			}
+		}
+
+		wp_send_json(
+			array(
+				'result4'     => $subscription_data,
+				'displayData' => $display_data,
+			)
+		);
+	}
+
+	/**
+	 * Report callback: MRR data.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_get_mrr_data_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		list( $start_date, $end_date ) = $this->wps_sfw_get_report_date_range();
+
+		$orders = wc_get_orders(
+			array(
+				'limit'        => -1,
+				'date_created' => $start_date . '...' . $end_date,
+				'return'       => 'ids',
+				'meta_key'     => 'wps_sfw_renewal_order',
+				'meta_value'   => 'yes',
+				'status'       => array( 'wc-processing', 'wc-completed' ),
+			)
+		);
+
+		$subscription_data = array();
+		$display_data      = array();
+
+		if ( ! empty( $orders ) ) {
+			$orders = array_reverse( $orders );
+
+			foreach ( $orders as $renewal_id ) {
+				$renewal = wc_get_order( $renewal_id );
+				if ( ! $renewal ) {
+					continue;
+				}
+
+				$created = $renewal->get_date_created();
+				if ( ! $created ) {
+					continue;
+				}
+
+				$formatted_date = $created->format( 'F, y' );
+				$total          = (float) $renewal->get_total();
+				$subscription_id = $renewal->get_meta( 'wps_sfw_subscription' );
+
+				$subscription_data[ $formatted_date ]['ids'][]   = $renewal_id;
+				$subscription_data[ $formatted_date ]['total'][] = $total;
+
+				$display_data[] = array(
+					'id'              => $renewal_id,
+					'subscription_id' => $subscription_id,
+					'total'           => $total,
+					'date'            => $formatted_date,
+				);
+			}
+		}
+
+		wp_send_json(
+			array(
+				'result5'     => $subscription_data,
+				'displayData' => $display_data,
+			)
+		);
+	}
+
+	/**
+	 * Report callback: grid counts.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_get_grid_data_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		$response_data = array(
+			1 => 0,
+			2 => 0,
+			3 => 0,
+			4 => 0,
+			5 => 0,
+			6 => 0,
+		);
+
+		$subscriptions = $this->wps_sfw_get_report_subscription_ids();
+		if ( ! empty( $subscriptions ) ) {
+			$response_data[1] = count( $subscriptions );
+
+			$product_ids = array();
+			foreach ( $subscriptions as $order_id ) {
+				$subscription = new WPS_Subscription( $order_id );
+				$product_id   = absint( $subscription->get_meta( 'product_id' ) );
+
+				if ( ! $product_id ) {
+					continue;
+				}
+
+				$product_ids[ $product_id ] = true;
+			}
+			$response_data[2] = count( $product_ids );
+		}
+
+		list( $start_date, $end_date ) = $this->wps_sfw_get_report_date_range();
+
+		$renewals = wc_get_orders(
+			array(
+				'date_created' => $start_date . '...' . $end_date,
+				'limit'        => -1,
+				'meta_key'     => 'wps_sfw_renewal_order',
+				'meta_value'   => 'yes',
+				'return'       => 'ids',
+			)
+		);
+		$response_data[3] = ! empty( $renewals ) ? count( $renewals ) : 0;
+
+		$cancelled = $this->wps_sfw_get_report_subscription_ids(
+			array(
+				'meta_key'   => 'wps_subscription_status',
+				'meta_value' => 'cancelled',
+			)
+		);
+		$response_data[4] = ! empty( $cancelled ) ? count( $cancelled ) : 0;
+
+		$renewed = $this->wps_sfw_get_report_subscription_ids(
+			array(
+				'meta_query' => array(
+					array(
+						'key'     => 'wps_wsp_renewal_order_data',
+						'value'   => '',
+						'compare' => '!=',
+					),
+				),
+			)
+		);
+		$response_data[5] = ! empty( $renewed ) ? count( $renewed ) : 0;
+
+		if ( ! empty( $renewals ) ) {
+			$total = 0;
+			foreach ( $renewals as $renewal_id ) {
+				$renewal = wc_get_order( $renewal_id );
+				if ( $renewal ) {
+					$total += (float) $renewal->get_total();
+				}
+			}
+			$response_data[6] = $total;
+		}
+
+		wp_send_json( $response_data );
+	}
+
+	/**
+	 * Report callback: churn rate and ARR.
+	 *
+	 * @return void
+	 */
+	public function wps_sfw_report_get_churn_arr_data_callback() {
+		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		$current_year = gmdate( 'Y' );
+		$start_date   = $current_year . '-01-01';
+		$end_date     = gmdate( 'Y-m-d' );
+		$total        = 0;
+		$sub_count    = 0;
+		$cancel_count = 0;
+
+		$renewals = wc_get_orders(
+			array(
+				'limit'        => -1,
+				'date_created' => $start_date . '...' . $end_date,
+				'return'       => 'ids',
+				'meta_key'     => 'wps_sfw_renewal_order',
+				'meta_value'   => 'yes',
+				'status'       => array( 'wc-processing', 'wc-completed' ),
+			)
+		);
+
+		if ( ! empty( $renewals ) ) {
+			foreach ( $renewals as $renewal_id ) {
+				$renewal = wc_get_order( $renewal_id );
+				if ( $renewal ) {
+					$total += (float) $renewal->get_total();
+				}
+			}
+		}
+
+		$subscriptions = wc_get_orders(
+			array(
+				'date_created' => $start_date . '...' . $end_date,
+				'limit'        => -1,
+				'post_type'    => 'wps_subscriptions',
+				'return'       => 'ids',
+			)
+		);
+
+		if ( ! empty( $subscriptions ) ) {
+			foreach ( $subscriptions as $subscription_id ) {
+				$subscription = new WPS_Subscription( $subscription_id );
+				if ( 'cancelled' === $subscription->get_meta( 'wps_subscription_status' ) ) {
+					$cancel_count++;
+				}
+				$sub_count++;
+			}
+		}
+
+		$churn_rate = $sub_count > 0 ? round( ( $cancel_count / $sub_count ) * 100, 2 ) : 0;
+
+		wp_send_json_success(
+			array(
+				'churnRate' => $churn_rate,
+				'arr'       => $total,
+			)
+		);
 	}
 
 	/**

@@ -187,7 +187,11 @@ $shell_classes    = array(
 		<nav class="wps-navbar">
 			<div class="wps-navbar__tabs">
 				<span class="wps-sfw-admin-brand__version"><?php echo esc_html( $sfw_version_label ); ?></span>
-				<ul class="wps-navbar__items">
+				<button type="button" class="wps-navbar__toggle" aria-expanded="false" aria-controls="wps-sfw-admin-tabs">
+					<span class="wps-navbar__toggle-label"><?php esc_html_e( 'Menu', 'subscriptions-for-woocommerce' ); ?></span>
+					<span class="wps-navbar__toggle-icon" aria-hidden="true"></span>
+				</button>
+				<ul id="wps-sfw-admin-tabs" class="wps-navbar__items">
 					<?php
 					if ( is_array( $sfw_default_tabs ) && ! empty( $sfw_default_tabs ) ) {
 						foreach ( $sfw_default_tabs as $sfw_tab_key => $sfw_default_tab ) {
@@ -207,6 +211,46 @@ $shell_classes    = array(
 				</ul>
 			</div>
 		</nav>
+		<script>
+			jQuery( function( $ ) {
+				var mobileQuery = window.matchMedia( '(max-width: 767px)' );
+
+				$( '.wps-navbar__tabs' ).each( function() {
+					var $tabs   = $( this );
+					var $button = $tabs.find( '.wps-navbar__toggle' );
+					var $items  = $tabs.find( '.wps-navbar__items' );
+
+					if ( ! $button.length || ! $items.length ) {
+						return;
+					}
+
+					var syncTabs = function() {
+						if ( mobileQuery.matches ) {
+							var isOpen = $tabs.hasClass( 'is-open' );
+							$button.attr( 'aria-expanded', isOpen ? 'true' : 'false' );
+							$items.prop( 'hidden', ! isOpen );
+						} else {
+							$tabs.removeClass( 'is-open' );
+							$button.attr( 'aria-expanded', 'false' );
+							$items.prop( 'hidden', false );
+						}
+					};
+
+					$button.on( 'click', function() {
+						$tabs.toggleClass( 'is-open' );
+						syncTabs();
+					} );
+
+					if ( mobileQuery.addEventListener ) {
+						mobileQuery.addEventListener( 'change', syncTabs );
+					} else if ( mobileQuery.addListener ) {
+						mobileQuery.addListener( syncTabs );
+					}
+
+					syncTabs();
+				} );
+			} );
+		</script>
 
 		<section class="wps-section">
 			<div class="wps_sfw_lite_go_pro_popup_wrap">
@@ -288,6 +332,7 @@ $shell_classes    = array(
 								<a href="https://wpswings.com/submit-query/?utm_source=wpswings-subs-support&utm_medium=subs-org-backend&utm_campaign=support" target="_blank"><?php esc_html_e( 'Support', 'subscriptions-for-woocommerce' ); ?></a>
 							</div>
 						</div>
+						<?php Subscriptions_For_Woocommerce_Talk_To_Expert_Form::get_instance()->render_sidebar_card(); ?>
 
 						<div class="wps-sfw-sidebar-card wps-sfw-sidebar-card--accent">
 							<h3><?php esc_html_e( 'Still facing problems?', 'subscriptions-for-woocommerce' ); ?></h3>
@@ -306,3 +351,4 @@ $shell_classes    = array(
 		</section>
 	</div>
 </div>
+<?php Subscriptions_For_Woocommerce_Talk_To_Expert_Form::get_instance()->render_modal(); ?>

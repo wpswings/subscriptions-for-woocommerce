@@ -62,6 +62,60 @@ class Subscriptions_For_Woocommerce_Admin {
 	}
 
 	/**
+	 * Return a saved option when present, otherwise fall back to a setup default.
+	 *
+	 * @param string $option_name Option name.
+	 * @param mixed  $default     Default value.
+	 * @return mixed
+	 */
+	private function wps_sfw_get_multistep_default_option( $option_name, $default ) {
+		$value = function_exists( 'wps_sfw_get_option_with_legacy_fallback' ) ? wps_sfw_get_option_with_legacy_fallback( $option_name, null ) : get_option( $option_name, null );
+
+		if ( null === $value || '' === $value ) {
+			return $default;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Get the wizard-created subscription product data when available.
+	 *
+	 * @return array
+	 */
+	private function wps_sfw_get_multistep_product_defaults() {
+		$defaults   = array(
+			'ProductName'             => 'Subscription',
+			'ProductDescription'      => 'This is Subscription',
+			'ProductShortDescription' => 'This is Subscription Product',
+			'ProductPrice'            => '10',
+			'SubscriptionNumber'      => '1',
+			'SubscriptionInterval'    => 'day',
+		);
+		$product_id = absint( get_option( 'wps_sfw_multistep_product_id', 0 ) );
+
+		if ( ! $product_id || 'product' !== get_post_type( $product_id ) ) {
+			return $defaults;
+		}
+
+		$product = wc_get_product( $product_id );
+		$post    = get_post( $product_id );
+
+		if ( ! $product || ! $post ) {
+			return $defaults;
+		}
+
+		$defaults['ProductName']             = $post->post_title ? $post->post_title : $defaults['ProductName'];
+		$defaults['ProductDescription']      = $post->post_content ? $post->post_content : $defaults['ProductDescription'];
+		$defaults['ProductShortDescription'] = $post->post_excerpt ? $post->post_excerpt : $defaults['ProductShortDescription'];
+		$defaults['ProductPrice']            = '' !== (string) $product->get_regular_price() ? (string) $product->get_regular_price() : $defaults['ProductPrice'];
+		$defaults['SubscriptionNumber']      = (string) ( wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_number', true ) ? wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_number', true ) : $defaults['SubscriptionNumber'] );
+		$defaults['SubscriptionInterval']    = (string) ( wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_interval', true ) ? wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_interval', true ) : $defaults['SubscriptionInterval'] );
+
+		return $defaults;
+	}
+
+	/**
 	 * Check whether plugin-specific admin assets should be loaded on this screen.
 	 *
 	 * @param WP_Screen|null $screen Current screen.
@@ -227,6 +281,22 @@ class Subscriptions_For_Woocommerce_Admin {
 						'disable_track_url' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=subscriptions-for-woocommerce-developer' ),
 						'supported_gateway' => wps_sfw_get_subscription_supported_payment_method(),
 						'wps_build_in_paypal_setup_url' => admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wps_paypal' ),
+						'multistep_defaults' => array(
+							'EnablePlugin'            => wps_sfw_check_plugin_enable(),
+							'AddToCartText'           => $this->wps_sfw_get_multistep_default_option( 'wps_sfw_add_to_cart_text', 'Add to cart subscription' ),
+							'PlaceOrderText'          => $this->wps_sfw_get_multistep_default_option( 'wps_sfw_place_order_button_text', 'Place order subscription' ),
+							'ProductName'             => $this->wps_sfw_get_multistep_product_defaults()['ProductName'],
+							'ProductDescription'      => $this->wps_sfw_get_multistep_product_defaults()['ProductDescription'],
+							'ProductShortDescription' => $this->wps_sfw_get_multistep_product_defaults()['ProductShortDescription'],
+							'ProductPrice'            => $this->wps_sfw_get_multistep_product_defaults()['ProductPrice'],
+							'SubscriptionNumber'      => $this->wps_sfw_get_multistep_product_defaults()['SubscriptionNumber'],
+							'SubscriptionInterval'    => $this->wps_sfw_get_multistep_product_defaults()['SubscriptionInterval'],
+							'consetCheck'             => 'yes',
+							'EnableWpsPaypal'         => 'yes' === ( get_option( 'woocommerce_wps_paypal_settings', array() )['enabled'] ?? 'no' ),
+							'EnableWpsPaypalTestmode' => 'yes' === ( get_option( 'woocommerce_wps_paypal_settings', array() )['testmode'] ?? 'no' ),
+							'WpsPaypalClientId'       => get_option( 'woocommerce_wps_paypal_settings', array() )['client_id'] ?? '',
+							'WpsPaypalClientSecret'   => get_option( 'woocommerce_wps_paypal_settings', array() )['client_secret'] ?? '',
+						),
 					)
 				);
 				return;
@@ -250,6 +320,10 @@ class Subscriptions_For_Woocommerce_Admin {
 					'reloadurl' => admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu' ),
 					'sfw_gen_tab_enable' => get_option( 'sfw_radio_switch_demo' ),
 					'sfw_auth_nonce'    => wp_create_nonce( 'wps_sfw_admin_nonce' ),
+					'talk_to_expert_action' => Subscriptions_For_Woocommerce_Talk_To_Expert_Form::AJAX_ACTION,
+					'talk_to_expert_nonce' => wp_create_nonce( Subscriptions_For_Woocommerce_Talk_To_Expert_Form::NONCE_ACTION ),
+					'talk_to_expert_success_delay' => 2600,
+					'talk_to_expert_error' => esc_html__( 'Unable to submit the request right now. Please try again.', 'subscriptions-for-woocommerce' ),
 					'empty_fields'    => esc_html__( 'Make Sure, You have filled the Client ID and Client secret keys', 'subscriptions-for-woocommerce' ),
 					'recurring_payment_icon' => $recurring_payment_icon,
 					'Supported_recurring_payment' => esc_html__( 'Supported Recurring Payment', 'subscriptions-for-woocommerce' ),
@@ -1077,18 +1151,23 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		$subscription_interval = ! empty( $_POST['SubscriptionInterval'] ) ? sanitize_text_field( wp_unslash( $_POST['SubscriptionInterval'] ) ) : '';
 
+		$is_plugin_enabled = filter_var( $enable_plugin, FILTER_VALIDATE_BOOLEAN );
+
 		// Update settings.
-		if ( 'true' == $enable_plugin ) {
+		if ( $is_plugin_enabled ) {
 			update_option( 'wps_sfw_enable_plugin', 'on' );
-			update_option( 'wps_sfw_add_to_cart_text', $add_to_cart_text );
-			update_option( 'wps_sfw_place_order_button_text', $place_order_text );
-			delete_option( 'wps_sfw_enable_plugin ' );
-			delete_option( 'wps_sfw_add_to_cart_text ' );
-			delete_option( 'wps_sfw_place_order_button_text ' );
+		} else {
+			update_option( 'wps_sfw_enable_plugin', 'off' );
 		}
+		update_option( 'wps_sfw_add_to_cart_text', $add_to_cart_text );
+		update_option( 'wps_sfw_place_order_button_text', $place_order_text );
+		
+
 		$allready_created = get_option( 'wps_sfw_multistep_product_create_done', 'no' );
+		$multistep_product_id = absint( get_option( 'wps_sfw_multistep_product_id', 0 ) );
+
 		// Create products.
-		if ( $enable_plugin && 'yes' !== $allready_created ) {
+		if ( $is_plugin_enabled && 'yes' !== $allready_created ) {
 			$post_id = wp_insert_post(
 				array(
 					'post_title' => $product_name,
@@ -1114,6 +1193,28 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			$product->save();
 			update_option( 'wps_sfw_multistep_product_create_done', 'yes' );
+			update_option( 'wps_sfw_multistep_product_id', $post_id );
+		} elseif ( $is_plugin_enabled && $multistep_product_id && 'product' === get_post_type( $multistep_product_id ) ) {
+			wp_update_post(
+				array(
+					'ID'           => $multistep_product_id,
+					'post_title'   => $product_name,
+					'post_content' => $product_description,
+					'post_excerpt' => $short_description,
+				)
+			);
+
+			wps_sfw_update_meta_data( $multistep_product_id, '_wps_sfw_product', 'yes' );
+			wps_sfw_update_meta_data( $multistep_product_id, 'wps_sfw_subscription_number', $subscription_number );
+			wps_sfw_update_meta_data( $multistep_product_id, 'wps_sfw_subscription_interval', $subscription_interval );
+			wps_sfw_update_meta_data( $multistep_product_id, '_regular_price', $product_price );
+			wps_sfw_update_meta_data( $multistep_product_id, '_sale_price', '' );
+			wps_sfw_update_meta_data( $multistep_product_id, '_price', $product_price );
+
+			$product = wc_get_product( $multistep_product_id );
+			if ( $product ) {
+				$product->save();
+			}
 		}
 
 		if ( isset( $_POST['EnableWpsPaypal'] ) ) {

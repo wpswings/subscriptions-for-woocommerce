@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function App(props) {
     const [loading, setLoading] = useState(false);
-    const [state, setState] = useState({
+    const defaultFormState = {
         EnablePlugin:true,
         AddToCartText:'Add to cart',
         PlaceOrderText:'Place order',
@@ -33,6 +33,10 @@ function App(props) {
         EnableWpsPaypalTestmode:false,
         WpsPaypalClientId:'',
         WpsPaypalClientSecret:'',
+    };
+    const [state, setState] = useState({
+        ...defaultFormState,
+        ...( frontend_ajax_object.multistep_defaults || {} ),
     });
     
     const supported_payment_gateway = frontend_ajax_object.supported_gateway;

@@ -1336,6 +1336,12 @@ class Subscriptions_For_Woocommerce_Public {
 
 			do_action( 'wps_sfw_cancel_susbcription', $wps_subscription_id, $user_id );
 
+			// Some gateway integrations do not update the local subscription meta on customer cancel.
+			// Keep the frontend state consistent once the cancellation flow succeeds.
+			if ( 'cancelled' !== wps_sfw_get_meta_data( $wps_subscription_id, 'wps_subscription_status', true ) ) {
+				wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_status', 'cancelled' );
+			}
+
 			wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_by', 'by_user' );
 			wps_sfw_update_meta_data( $wps_subscription_id, 'wps_subscription_cancelled_date', time() );
 

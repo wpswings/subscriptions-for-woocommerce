@@ -201,6 +201,15 @@ form.wpsMsf textarea::placeholder {
   color: #8f86a3;
 }
 
+.wpsMsf input[type=text]::placeholder,
+.wpsMsf input[type=email]::placeholder,
+.wpsMsf input[type=number]::placeholder,
+.wpsMsf input[type=password]::placeholder,
+.wpsMsf textarea::placeholder {
+  color: #aa9fc2;
+  opacity: 1;
+}
+
 .wpsCircularProgress {
   display: block !important;
   margin: 0 auto 30px;

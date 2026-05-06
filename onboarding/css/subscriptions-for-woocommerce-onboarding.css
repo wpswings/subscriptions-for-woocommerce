@@ -658,6 +658,12 @@ img.wps-info-img {
     width: 100%;
 }
 
+.wps-sfw-deactivation-popup .wps-sfw-input::placeholder,
+.wps-sfw-deactivation-popup .wps-sfw-textarea::placeholder {
+    color: #afa1c8;
+    opacity: 1;
+}
+
 .wps-sfw-deactivation-popup .wps-sfw-textarea {
     display: block;
     min-height: 104px;

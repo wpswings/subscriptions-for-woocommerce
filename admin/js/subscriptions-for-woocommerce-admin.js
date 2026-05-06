@@ -85,6 +85,137 @@
 			}
 		});
 
+		const expertModal = $('[data-wps-sfw-expert-modal]');
+
+		if ( expertModal.length ) {
+			const expertForm = expertModal.find('[data-wps-sfw-expert-form]');
+			const expertError = expertModal.find('[data-wps-sfw-expert-error]');
+			const expertSuccess = expertModal.find('[data-wps-sfw-expert-success]');
+			const expertSuccessMessage = expertModal.find('[data-wps-sfw-expert-success-message]');
+			const expertSubmit = expertModal.find('[data-wps-sfw-expert-submit]');
+			const defaultSuccessMessage = expertSuccessMessage.text();
+			let expertCloseTimer = null;
+
+			const setExpertError = function( message ) {
+				expertError.text( message ).prop( 'hidden', ! message );
+			};
+
+			const setExpertSubmitState = function( isLoading ) {
+				expertSubmit.prop( 'disabled', isLoading );
+				expertSubmit.text( isLoading ? expertSubmit.data( 'loading-label' ) : expertSubmit.data( 'default-label' ) );
+			};
+
+			const resetExpertModal = function() {
+				if ( expertCloseTimer ) {
+					window.clearTimeout( expertCloseTimer );
+					expertCloseTimer = null;
+				}
+
+				if ( expertForm.length && expertForm[0] ) {
+					expertForm[0].reset();
+				}
+
+				expertModal.removeClass( 'is-submitting is-success' );
+				expertForm.prop( 'hidden', false );
+				expertSuccess.prop( 'hidden', true );
+				expertSuccessMessage.text( defaultSuccessMessage );
+				setExpertSubmitState( false );
+				setExpertError( '' );
+			};
+
+			const openExpertModal = function() {
+				resetExpertModal();
+				expertModal.attr( 'aria-hidden', 'false' ).addClass( 'is-open' );
+				$( 'body' ).addClass( 'wps-sfw-expert-modal-open' );
+				expertModal.find( 'input, select, textarea, button' ).filter( ':visible:first' ).trigger( 'focus' );
+			};
+
+			const closeExpertModal = function() {
+				expertModal.attr( 'aria-hidden', 'true' ).removeClass( 'is-open is-submitting is-success' );
+				$( 'body' ).removeClass( 'wps-sfw-expert-modal-open' );
+				resetExpertModal();
+			};
+
+			const normalizeExpertFormData = function( formElement ) {
+				const formData = new window.FormData( formElement );
+				const normalized = {};
+
+				formData.forEach( function( value, key ) {
+					const normalizedKey = key.replace( /\[\]$/, '' );
+
+					if ( Object.prototype.hasOwnProperty.call( normalized, normalizedKey ) ) {
+						if ( ! Array.isArray( normalized[ normalizedKey ] ) ) {
+							normalized[ normalizedKey ] = [ normalized[ normalizedKey ] ];
+						}
+
+						normalized[ normalizedKey ].push( value );
+						return;
+					}
+
+					normalized[ normalizedKey ] = normalizedKey !== key ? [ value ] : value;
+				} );
+
+				return normalized;
+			};
+
+			$(document).on( 'click', '[data-wps-sfw-open-expert-modal]', function( e ) {
+				e.preventDefault();
+				openExpertModal();
+			});
+
+			$(document).on( 'click', '[data-wps-sfw-close-expert-modal]', function( e ) {
+				e.preventDefault();
+				closeExpertModal();
+			});
+
+			$(document).on( 'keydown', function( e ) {
+				if ( 'Escape' === e.key && expertModal.hasClass( 'is-open' ) ) {
+					closeExpertModal();
+				}
+			});
+
+			expertForm.on( 'submit', function( e ) {
+				e.preventDefault();
+
+				setExpertError( '' );
+				setExpertSubmitState( true );
+				expertModal.addClass( 'is-submitting' );
+
+				$.ajax({
+					url: sfw_admin_param.ajaxurl,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: sfw_admin_param.talk_to_expert_action,
+						nonce: sfw_admin_param.talk_to_expert_nonce,
+						form_data: JSON.stringify( normalizeExpertFormData( this ) )
+					}
+				}).done( function( response ) {
+					if ( ! response || ! response.success ) {
+						setExpertError( response && response.data && response.data.message ? response.data.message : sfw_admin_param.talk_to_expert_error );
+						return;
+					}
+
+					expertModal.removeClass( 'is-submitting' ).addClass( 'is-success' );
+					expertForm.prop( 'hidden', true );
+					expertSuccessMessage.text( response.data && response.data.message ? response.data.message : defaultSuccessMessage );
+					expertSuccess.prop( 'hidden', false );
+
+					expertCloseTimer = window.setTimeout( function() {
+						closeExpertModal();
+					}, parseInt( sfw_admin_param.talk_to_expert_success_delay, 10 ) || 2600 );
+				}).fail( function( xhr ) {
+					const message = xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message ? xhr.responseJSON.data.message : sfw_admin_param.talk_to_expert_error;
+					setExpertError( message );
+				}).always( function() {
+					expertModal.removeClass( 'is-submitting' );
+					if ( ! expertModal.hasClass( 'is-success' ) ) {
+						setExpertSubmitState( false );
+					}
+				});
+			});
+		}
+
 	});
 
 	$(window).load(function(){
