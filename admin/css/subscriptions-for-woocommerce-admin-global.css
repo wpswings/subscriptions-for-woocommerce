@@ -1030,6 +1030,7 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
     grid-column: 1;
     grid-row: 1;
     min-width: 0;
+    height: auto;
 }
 
 .wps_sfw_list_table .tablenav.bottom,
