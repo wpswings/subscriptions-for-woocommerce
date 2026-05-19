@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-05-06 15:43+0530\n"
+"POT-Creation-Date: 2026-05-19 11:12+0530\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2355,14 +2355,37 @@ msgstr[1] ""
 #: public/class-subscriptions-for-woocommerce-public.php:292
 #: public/class-subscriptions-for-woocommerce-public.php:1272
 #: public/class-subscriptions-for-woocommerce-public.php:2058
-#: public/class-subscriptions-for-woocommerce-public.php:2986
-#: public/class-subscriptions-for-woocommerce-public.php:2994
+#: public/class-subscriptions-for-woocommerce-public.php:2958
+#: public/class-subscriptions-for-woocommerce-public.php:2966
 #, php-format
 msgid " / %s "
 msgstr ""
 
 #: includes/subscriptions-for-woocommerce-common-function.php:868
 msgid "WooCommerce Stripe Gateway"
+msgstr ""
+
+#: includes/subscriptions-for-woocommerce-common-function.php:1218
+msgid "No products are configured for this subscription box."
+msgstr ""
+
+#: includes/subscriptions-for-woocommerce-common-function.php:1243
+#: includes/subscriptions-for-woocommerce-common-function.php:1313
+#: includes/subscriptions-for-woocommerce-common-function.php:1322
+msgid "Invalid product quantity for this subscription box."
+msgstr ""
+
+#: includes/subscriptions-for-woocommerce-common-function.php:1252
+#: includes/subscriptions-for-woocommerce-common-function.php:1270
+msgid "Invalid product selected for this subscription box."
+msgstr ""
+
+#: includes/subscriptions-for-woocommerce-common-function.php:1281
+msgid "Invalid product price."
+msgstr ""
+
+#: includes/subscriptions-for-woocommerce-common-function.php:1300
+msgid "Invalid subscription request."
 msgstr ""
 
 #: onboarding/templates/subscriptions-for-woocommerce-deactivation-template.php:33
@@ -2552,7 +2575,7 @@ msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:301
 #: public/class-subscriptions-for-woocommerce-public.php:2067
-#: public/class-subscriptions-for-woocommerce-public.php:3004
+#: public/class-subscriptions-for-woocommerce-public.php:2976
 #, php-format
 msgid " For %s "
 msgstr ""
@@ -2733,42 +2756,42 @@ msgstr ""
 msgid "Add to Basket"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3137
+#: public/class-subscriptions-for-woocommerce-public.php:3109
 msgid "View Attached Products"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3186
+#: public/class-subscriptions-for-woocommerce-public.php:3158
 msgid ""
 "You cannot add other products while a Subscription Box is in the cart. "
 "Please remove it first."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3195
+#: public/class-subscriptions-for-woocommerce-public.php:3167
 msgid ""
 "You cannot add a Subscription Box when other products are in the cart. "
 "Please remove them first."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3261
+#: public/class-subscriptions-for-woocommerce-public.php:3233
 msgid "Subscription Interval: "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3267
-#: public/class-subscriptions-for-woocommerce-public.php:3271
+#: public/class-subscriptions-for-woocommerce-public.php:3239
+#: public/class-subscriptions-for-woocommerce-public.php:3243
 msgid "Subscription Expiry: "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3271
+#: public/class-subscriptions-for-woocommerce-public.php:3243
 msgid "Unlimited"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3323
-#: public/class-subscriptions-for-woocommerce-public.php:3343
+#: public/class-subscriptions-for-woocommerce-public.php:3295
+#: public/class-subscriptions-for-woocommerce-public.php:3315
 msgctxt "Order status"
 msgid "Wps Renewal"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3329
+#: public/class-subscriptions-for-woocommerce-public.php:3301
 #, php-format
 msgid "Wps Renewal <span class=\"count\">(%s)</span>"
 msgid_plural "Wps Renewal <span class=\"count\">(%s)</span>"
