@@ -308,6 +308,9 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
+= 1.9.7 - Released on 19 May 2026 =
+* Fix: fatal error caused by undefined WC_Stripe_Logger function
+
 = 1.9.6 - Released on 19 May 2026 =
 * Fix: Vulnerability fixes for Subcription box feature
 
@@ -693,5 +696,5 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 1.9.6 - Released on 19 May 2026 =
-* Fix: Vulnerability fixes for Subcription box feature
+= 1.9.7 - Released on 19 May 2026 =
+* Fix: fatal error caused by undefined WC_Stripe_Logger function

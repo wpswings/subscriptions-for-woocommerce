@@ -140,7 +140,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) && class_exists( 
 							);
 						}
 
-						WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
+						// WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
 
 						/*
 						 * If we're doing a retry and source is chargeable, we need to pass
@@ -191,7 +191,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) && class_exists( 
 							$this->process_response( ( ! empty( $latest_charge ) ) ? $latest_charge : $response, $renewal_order );
 						}
 					} catch ( WC_Stripe_Exception $e ) {
-						WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() );
+						// WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() );
 						do_action( 'wc_gateway_stripe_process_payment_error', $e, $renewal_order );
 					}
 				}
