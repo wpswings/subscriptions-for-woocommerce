@@ -2807,47 +2807,19 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$subscription_product = wc_get_product( $subscription_product_id );
 
-		if ( ! $subscription_product ) {
+		if ( ! $subscription_product || 'subscription_box' !== $subscription_product->get_type() ) {
 			wp_send_json( 'Subscription product not found.' );
 		}
 
-		$server_total        = 0;
-		$attached_products   = array();
+		$validated_products = wps_sfw_validate_subscription_box_products( $subscription_product_id, $products );
 
-		foreach ( $products as $product ) {
-
-			$product_id = isset( $product['product_id'] ) ? absint( $product['product_id'] ) : 0;
-			$quantity   = isset( $product['quantity'] ) ? max( 1, absint( $product['quantity'] ) ) : 1;
-
-			if ( ! $product_id ) {
-				continue;
-			}
-
-			$product_obj = wc_get_product( $product_id );
-
-			if ( ! $product_obj ) {
-				continue;
-			}
-
-			$price = (float) $product_obj->get_price();
-
-			if ( $price <= 0 ) {
-				wp_send_json( 'Invalid product price.' );
-			}
-
-			$server_total += $price * $quantity;
-
-			$attached_products[] = array(
-				'product_id' => $product_id,
-				'name'       => $product_obj->get_name(),
-				'image'      => wp_get_attachment_image_url( $product_obj->get_image_id(), 'thumbnail' ),
-				'quantity'   => $quantity,
-			);
+		if ( empty( $validated_products['success'] ) ) {
+			wp_send_json_error( $validated_products['message'] );
 		}
 
 		// Base subscription price
 		$base_price   = (float) $subscription_product->get_price();
-		$server_total += $base_price;
+		$server_total = (float) $validated_products['total'] + $base_price;
 
 		$wps_sfw_manage_subscription_box_price = wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_manage_subscription_box_price', true );
 		$is_pro = false;
@@ -2878,7 +2850,7 @@ class Subscriptions_For_Woocommerce_Public {
 		$cart_item_data = array(
 			'is_subscription_main'           => true,
 			'wps_sfw_subscription_box_price' => wc_format_decimal( $final_total ),
-			'wps_sfw_attached_products'      => $attached_products,
+			'wps_sfw_attached_products'      => $validated_products['attached_products'],
 
 			'wps_sfw_subscription_number'          => wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_number', true ),
 			'wps_sfw_subscription_interval'        => wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_interval', true ),
@@ -2898,7 +2870,7 @@ class Subscriptions_For_Woocommerce_Public {
 			array(
 				'message' => 'Subscription added to cart!',
 				'total' => $final_total,
-				'products' => $products,
+				'products' => $validated_products['attached_products'],
 			)
 		);
 	}

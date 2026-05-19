@@ -998,6 +998,343 @@ if ( ! function_exists( 'wps_wsp_api_get_secret_key' ) ) {
 		return $wsp_api_secret_key;
 	}
 }
+if ( ! function_exists( 'wps_sfw_subscription_box_resolve_category_ids' ) ) {
+
+	/**
+	 * Normalize subscription box category values to term IDs.
+	 *
+	 * @param array $maybe_terms Category IDs, slugs, or names.
+	 * @return array
+	 */
+	function wps_sfw_subscription_box_resolve_category_ids( $maybe_terms ) {
+		$out = array();
+
+		foreach ( (array) $maybe_terms as $val ) {
+			if ( '' === $val || null === $val ) {
+				continue;
+			}
+
+			if ( is_numeric( $val ) ) {
+				$out[] = absint( $val );
+				continue;
+			}
+
+			$term = get_term_by( 'slug', $val, 'product_cat' );
+			if ( ! $term ) {
+				$term = get_term_by( 'name', $val, 'product_cat' );
+			}
+
+			if ( $term && ! is_wp_error( $term ) ) {
+				$out[] = absint( $term->term_id );
+			}
+		}
+
+		return array_values( array_unique( array_filter( $out ) ) );
+	}
+}
+
+if ( ! function_exists( 'wps_sfw_get_subscription_box_steps' ) ) {
+
+	/**
+	 * Get sanitized subscription box step settings for a product.
+	 *
+	 * @param int $subscription_product_id Subscription box product ID.
+	 * @return array
+	 */
+	function wps_sfw_get_subscription_box_steps( $subscription_product_id ) {
+		$subscription_product_id = absint( $subscription_product_id );
+		$steps                   = get_post_meta( $subscription_product_id, 'wps_sfw_step_settings', true );
+		$steps                   = is_array( $steps ) ? $steps : array();
+
+		if ( empty( $steps ) ) {
+			$legacy_type       = wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_box_setup', true );
+			$legacy_products   = (array) wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_box_products', true );
+			$legacy_categories = (array) wps_sfw_get_meta_data( $subscription_product_id, 'wps_sfw_subscription_box_categories', true );
+
+			if ( $legacy_type || ! empty( $legacy_products ) || ! empty( $legacy_categories ) ) {
+				$steps = array(
+					'step1' => array(
+						'type'         => $legacy_type ? $legacy_type : 'specific_products',
+						'product_ids'  => array_map( 'absint', $legacy_products ),
+						'category_ids' => wps_sfw_subscription_box_resolve_category_ids( $legacy_categories ),
+					),
+				);
+			}
+		}
+
+		if ( empty( $steps ) ) {
+			return array();
+		}
+
+		uksort(
+			$steps,
+			function ( $a, $b ) {
+				$ia = (int) preg_replace( '/\D+/', '', (string) $a );
+				$ib = (int) preg_replace( '/\D+/', '', (string) $b );
+				return $ia <=> $ib;
+			}
+		);
+
+		$clean_steps = array();
+		foreach ( $steps as $step ) {
+			$type = isset( $step['type'] ) ? sanitize_key( $step['type'] ) : 'specific_products';
+			if ( ! in_array( $type, array( 'specific_products', 'specific_categories' ), true ) ) {
+				$type = 'specific_products';
+			}
+
+			$clean_steps[] = array(
+				'type'         => $type,
+				'product_ids'  => isset( $step['product_ids'] ) ? array_values( array_unique( array_filter( array_map( 'absint', (array) $step['product_ids'] ) ) ) ) : array(),
+				'category_ids' => isset( $step['category_ids'] ) ? wps_sfw_subscription_box_resolve_category_ids( $step['category_ids'] ) : array(),
+				'min_num'      => isset( $step['min_num'] ) ? absint( $step['min_num'] ) : 0,
+				'max_num'      => isset( $step['max_num'] ) ? absint( $step['max_num'] ) : 0,
+			);
+		}
+
+		return $clean_steps;
+	}
+}
+
+if ( ! function_exists( 'wps_sfw_get_subscription_box_allowed_steps' ) ) {
+
+	/**
+	 * Get subscription box steps with the product IDs allowed for each step.
+	 *
+	 * @param int $subscription_product_id Subscription box product ID.
+	 * @return array
+	 */
+	function wps_sfw_get_subscription_box_allowed_steps( $subscription_product_id ) {
+		$subscription_product = wc_get_product( $subscription_product_id );
+
+		if ( ! $subscription_product || 'subscription_box' !== $subscription_product->get_type() ) {
+			return array();
+		}
+
+		$steps  = wps_sfw_get_subscription_box_steps( $subscription_product_id );
+		$is_pro = (bool) apply_filters( 'wsp_sfw_check_pro_plugin', false );
+
+		if ( ! $is_pro && ! empty( $steps ) ) {
+			$first_nonempty = array();
+			foreach ( $steps as $step ) {
+				if ( ! empty( $step['product_ids'] ) || ! empty( $step['category_ids'] ) ) {
+					$first_nonempty = $step;
+					break;
+				}
+			}
+			$steps = $first_nonempty ? array( $first_nonempty ) : array();
+		}
+
+		$allowed_steps = array();
+
+		foreach ( $steps as $step ) {
+			$step_product_ids = array();
+
+			if ( 'specific_products' === $step['type'] ) {
+				$step_product_ids = $step['product_ids'];
+			} elseif ( ! empty( $step['category_ids'] ) ) {
+				$q = new WP_Query(
+					array(
+						'post_type'      => 'product',
+						'post_status'    => 'publish',
+						'posts_per_page' => -1,
+						'fields'         => 'ids',
+						'tax_query'      => array(
+							array(
+								'taxonomy' => 'product_cat',
+								'field'    => 'term_id',
+								'terms'    => $step['category_ids'],
+								'operator' => 'IN',
+							),
+						),
+					)
+				);
+
+				if ( $q->have_posts() ) {
+					$step_product_ids = array_map( 'absint', (array) $q->posts );
+				}
+				wp_reset_postdata();
+			}
+
+			$step_product_ids = array_values( array_unique( array_filter( array_map( 'absint', $step_product_ids ) ) ) );
+
+			if ( empty( $step_product_ids ) ) {
+				continue;
+			}
+
+			$step['allowed_product_ids'] = $step_product_ids;
+			$allowed_steps[]            = $step;
+		}
+
+		return $allowed_steps;
+	}
+}
+
+if ( ! function_exists( 'wps_sfw_get_subscription_box_allowed_product_ids' ) ) {
+
+	/**
+	 * Get product IDs that a subscription box is allowed to attach.
+	 *
+	 * @param int $subscription_product_id Subscription box product ID.
+	 * @return array
+	 */
+	function wps_sfw_get_subscription_box_allowed_product_ids( $subscription_product_id ) {
+		$allowed_product_ids = array();
+		$allowed_steps       = wps_sfw_get_subscription_box_allowed_steps( $subscription_product_id );
+
+		foreach ( $allowed_steps as $step ) {
+			$allowed_product_ids = array_merge( $allowed_product_ids, $step['allowed_product_ids'] );
+		}
+
+		return array_values( array_unique( array_filter( array_map( 'absint', $allowed_product_ids ) ) ) );
+	}
+}
+
+if ( ! function_exists( 'wps_sfw_validate_subscription_box_products' ) ) {
+
+	/**
+	 * Validate client-selected subscription box products against the box configuration.
+	 *
+	 * @param int   $subscription_product_id Subscription box product ID.
+	 * @param array $products Requested products.
+	 * @return array
+	 */
+	function wps_sfw_validate_subscription_box_products( $subscription_product_id, $products ) {
+		$allowed_steps       = wps_sfw_get_subscription_box_allowed_steps( $subscription_product_id );
+		$allowed_product_ids = array();
+		$is_pro              = (bool) apply_filters( 'wsp_sfw_check_pro_plugin', false );
+		$step_quantities     = array();
+		$product_quantities  = array();
+
+		foreach ( $allowed_steps as $step_index => $step ) {
+			$allowed_product_ids              = array_merge( $allowed_product_ids, $step['allowed_product_ids'] );
+			$step_quantities[ $step_index ] = 0;
+		}
+
+		$allowed_product_ids = array_values( array_unique( array_filter( array_map( 'absint', $allowed_product_ids ) ) ) );
+
+		if ( empty( $allowed_product_ids ) ) {
+			return array(
+				'success'           => false,
+				'message'           => __( 'No products are configured for this subscription box.', 'subscriptions-for-woocommerce' ),
+				'attached_products' => array(),
+				'total'             => 0,
+			);
+		}
+
+		$total             = 0;
+		$attached_products = array();
+
+		foreach ( (array) $products as $product ) {
+			$product_id = isset( $product['product_id'] ) ? absint( $product['product_id'] ) : 0;
+			$quantity   = isset( $product['quantity'] ) ? max( 1, absint( $product['quantity'] ) ) : 1;
+
+			if ( ! $product_id ) {
+				continue;
+			}
+
+			if ( ! isset( $product_quantities[ $product_id ] ) ) {
+				$product_quantities[ $product_id ] = 0;
+			}
+			$product_quantities[ $product_id ] += $quantity;
+
+			if ( ! $is_pro && $product_quantities[ $product_id ] > 1 ) {
+				return array(
+					'success'           => false,
+					'message'           => __( 'Invalid product quantity for this subscription box.', 'subscriptions-for-woocommerce' ),
+					'attached_products' => array(),
+					'total'             => 0,
+				);
+			}
+
+			if ( ! in_array( $product_id, $allowed_product_ids, true ) ) {
+				return array(
+					'success'           => false,
+					'message'           => __( 'Invalid product selected for this subscription box.', 'subscriptions-for-woocommerce' ),
+					'attached_products' => array(),
+					'total'             => 0,
+				);
+			}
+
+			foreach ( $allowed_steps as $step_index => $step ) {
+				if ( in_array( $product_id, $step['allowed_product_ids'], true ) ) {
+					$step_quantities[ $step_index ] += $quantity;
+					break;
+				}
+			}
+
+			$product_obj = wc_get_product( $product_id );
+
+			if ( ! $product_obj || ! $product_obj->is_purchasable() ) {
+				return array(
+					'success'           => false,
+					'message'           => __( 'Invalid product selected for this subscription box.', 'subscriptions-for-woocommerce' ),
+					'attached_products' => array(),
+					'total'             => 0,
+				);
+			}
+
+			$price = (float) $product_obj->get_price();
+
+			if ( $price <= 0 ) {
+				return array(
+					'success'           => false,
+					'message'           => __( 'Invalid product price.', 'subscriptions-for-woocommerce' ),
+					'attached_products' => array(),
+					'total'             => 0,
+				);
+			}
+
+			$total += $price * $quantity;
+
+			$attached_products[] = array(
+				'product_id' => $product_id,
+				'name'       => $product_obj->get_name(),
+				'image'      => wp_get_attachment_image_url( $product_obj->get_image_id(), 'thumbnail' ),
+				'quantity'   => $quantity,
+			);
+		}
+
+		if ( empty( $attached_products ) ) {
+			return array(
+				'success'           => false,
+				'message'           => __( 'Invalid subscription request.', 'subscriptions-for-woocommerce' ),
+				'attached_products' => array(),
+				'total'             => 0,
+			);
+		}
+
+		if ( $is_pro ) {
+			foreach ( $allowed_steps as $step_index => $step ) {
+				$step_quantity = isset( $step_quantities[ $step_index ] ) ? absint( $step_quantities[ $step_index ] ) : 0;
+
+				if ( ! empty( $step['min_num'] ) && $step_quantity < absint( $step['min_num'] ) ) {
+					return array(
+						'success'           => false,
+						'message'           => __( 'Invalid product quantity for this subscription box.', 'subscriptions-for-woocommerce' ),
+						'attached_products' => array(),
+						'total'             => 0,
+					);
+				}
+
+				if ( ! empty( $step['max_num'] ) && $step_quantity > absint( $step['max_num'] ) ) {
+					return array(
+						'success'           => false,
+						'message'           => __( 'Invalid product quantity for this subscription box.', 'subscriptions-for-woocommerce' ),
+						'attached_products' => array(),
+						'total'             => 0,
+					);
+				}
+			}
+		}
+
+		return array(
+			'success'           => true,
+			'message'           => '',
+			'attached_products' => $attached_products,
+			'total'             => $total,
+		);
+	}
+}
 if ( ! function_exists( 'wps_sfw_add_attached_product_for_subscription_box' ) ) {
 
 	/**
@@ -1015,12 +1352,28 @@ if ( ! function_exists( 'wps_sfw_add_attached_product_for_subscription_box' ) ) 
 		$order = wc_get_order( $order_id );
 
 		foreach ( $order->get_items() as $item_id => $item ) {
+			$subscription_product_id = $item->get_product_id();
+			$subscription_product    = $item->get_product();
+
+			if ( ! $subscription_product || 'subscription_box' !== $subscription_product->get_type() ) {
+				continue;
+			}
+
 			$attached_products = wc_get_order_item_meta( $item_id, 'wps_sfw_attached_products', true );
-			// print_r($attached_products);die('gghfgfgf');
+			$validated         = wps_sfw_validate_subscription_box_products( $subscription_product_id, $attached_products );
+
+			if ( empty( $validated['success'] ) ) {
+				continue;
+			}
+
 			if ( ! empty( $attached_products ) ) {
-				foreach ( $attached_products as $attached_product ) {
-					$product_id = $attached_product['product_id'];
-					$product = wc_get_product( $product_id );
+				foreach ( $validated['attached_products'] as $attached_product ) {
+					$product_id = absint( $attached_product['product_id'] );
+					$product    = wc_get_product( $product_id );
+
+					if ( ! $product ) {
+						continue;
+					}
 
 					// Add attached product as a new order item with WooCommerce functions.
 					$attached_item = new WC_Order_Item_Product();
