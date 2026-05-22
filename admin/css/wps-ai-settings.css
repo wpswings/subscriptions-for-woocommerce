@@ -1,0 +1,106 @@
+.wps-ai-settings-form .wps-sfw-settings-section {
+	margin-bottom: 24px;
+}
+
+.wps-ai-provider-panel {
+	display: none;
+	margin-top: 18px;
+}
+
+.wps-ai-test-row {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 20px;
+}
+
+.wps-ai-test-status {
+	color: #4b5563;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.wps-ai-test-status.is-loading {
+	color: #4f46e5;
+}
+
+.wps-ai-test-status.is-success {
+	color: #047857;
+}
+
+.wps-ai-test-status.is-error {
+	color: #b91c1c;
+}
+
+.wps-ai-inline-number {
+	margin-top: 12px;
+	max-width: 220px;
+}
+
+.wps-ai-custom-model-field {
+	margin-top: 12px;
+}
+
+.wps-ai-workflow-summary {
+	display: grid;
+	gap: 12px;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	margin-top: 18px;
+}
+
+.wps-ai-workflow-summary__item {
+	background: #f8fafc;
+	border: 1px solid #dbe3eb;
+	border-radius: 8px;
+	padding: 14px;
+}
+
+.wps-ai-workflow-summary__item strong {
+	color: #111827;
+	display: block;
+	font-size: 13px;
+	margin-bottom: 6px;
+}
+
+.wps-ai-workflow-summary__item span {
+	color: #475569;
+	display: block;
+	font-size: 13px;
+	line-height: 1.55;
+}
+
+.wps-ai-privacy-note {
+	background: #f8fafc;
+	border: 1px solid #dbe3eb;
+	border-radius: 8px;
+	color: #334155;
+	font-size: 13px;
+	line-height: 1.6;
+	margin: 0 0 20px;
+	padding: 14px 16px;
+}
+
+.wps-ai-pro-locked-section {
+	position: relative;
+}
+
+.wps-ai-pro-locked .wps-sfw-setting-field__control,
+.wps-ai-pro-locked-section .wps-sfw-setting-field__control {
+	opacity: 0.72;
+}
+
+@media screen and (max-width: 782px) {
+	.wps-ai-test-row {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.wps-ai-inline-number {
+		max-width: 100%;
+	}
+
+	.wps-ai-workflow-summary {
+		grid-template-columns: 1fr;
+	}
+}

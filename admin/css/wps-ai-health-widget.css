@@ -1,0 +1,257 @@
+#wps_ai_subscription_health.postbox {
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+}
+
+#wps_ai_subscription_health .postbox-header {
+	display: none;
+}
+
+#wps_ai_subscription_health .hndle,
+#wps_ai_subscription_health .handlediv {
+	display: none;
+}
+
+#wps_ai_subscription_health .inside {
+	margin: 0;
+	padding: 0;
+}
+
+#wps_ai_subscription_health *,
+#wps_ai_subscription_health *::before,
+#wps_ai_subscription_health *::after {
+	box-sizing: border-box;
+}
+
+.wps-ai-health-widget {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+	display: grid;
+	gap: 10px;
+	max-width: 100%;
+	overflow: hidden;
+	padding: 14px;
+	width: 100%;
+}
+
+.wps-ai-health-header {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: space-between;
+	min-width: 0;
+}
+
+.wps-ai-health-header__main {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	min-width: 0;
+	max-width: 100%;
+}
+
+.wps-ai-health-header__main strong {
+	color: #1d2327;
+	font-size: 14px;
+	line-height: 1.35;
+}
+
+.wps-ai-health-spark {
+	color: #6b7280;
+	font-size: 15px;
+	line-height: 1;
+}
+
+.wps-ai-health-badge {
+	background: #bbf7d0;
+	border-radius: 999px;
+	color: #166534;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1;
+	padding: 4px 8px;
+	white-space: nowrap;
+}
+
+.wps-ai-health-generated,
+.wps-ai-health-subtitle,
+.wps-ai-health-footer span {
+	color: #646970;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.wps-ai-health-subtitle {
+	margin: -4px 0 0;
+}
+
+.wps-ai-health-header .button {
+	border-radius: 6px;
+	font-weight: 600;
+	margin-left: auto;
+	min-height: 30px;
+	white-space: nowrap;
+}
+
+.wps-ai-health-notice {
+	background: #fff8e5;
+	border: 1px solid #f0cf76;
+	border-radius: 6px;
+	color: #674600;
+	display: grid;
+	gap: 5px;
+	padding: 12px;
+}
+
+.wps-ai-health-notice--error {
+	background: #fff1f0;
+	border-color: #f0a8a0;
+	color: #8a1f16;
+}
+
+.wps-ai-health-kpis {
+	display: grid;
+	gap: 8px;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 118px), 1fr));
+	min-width: 0;
+}
+
+.wps-ai-health-kpi {
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	min-width: 0;
+	padding: 9px 11px;
+}
+
+.wps-ai-health-kpi span {
+	color: #646970;
+	display: block;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1.35;
+	margin-bottom: 5px;
+}
+
+.wps-ai-health-kpi strong {
+	color: #1d2327;
+	font-size: 21px;
+	line-height: 1;
+}
+
+.wps-ai-health-insights {
+	display: grid;
+	gap: 10px;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+	min-width: 0;
+}
+
+.wps-ai-health-insight-card {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	min-width: 0;
+	padding: 12px 14px;
+}
+
+.wps-ai-health-insight-card__head {
+	align-items: center;
+	display: flex;
+	gap: 8px;
+	margin-bottom: 4px;
+	min-width: 0;
+}
+
+.wps-ai-health-insight-card__dot {
+	background: #2271b1;
+	border-radius: 2px;
+	flex: 0 0 8px;
+	height: 8px;
+	width: 8px;
+}
+
+.wps-ai-health-insight-card--risks .wps-ai-health-insight-card__dot {
+	background: #d63638;
+}
+
+.wps-ai-health-insight-card--opportunities .wps-ai-health-insight-card__dot {
+	background: #008a20;
+}
+
+.wps-ai-health-insight-card--actions .wps-ai-health-insight-card__dot {
+	background: #2271b1;
+}
+
+.wps-ai-health-insight-card--retention .wps-ai-health-insight-card__dot {
+	background: #b7791f;
+}
+
+.wps-ai-health-insight-card--pricing_plans .wps-ai-health-insight-card__dot {
+	background: #674399;
+}
+
+.wps-ai-health-insight-card--forecast .wps-ai-health-insight-card__dot {
+	background: #0c7c8c;
+}
+
+.wps-ai-health-insight-card__head strong {
+	color: #2c3338;
+	font-size: 14px;
+	line-height: 1.35;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+.wps-ai-health-insight-card__head span:last-child {
+	background: #f0f0f1;
+	border-radius: 999px;
+	color: #646970;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1;
+	padding: 4px 8px;
+}
+
+.wps-ai-health-insight-card p {
+	color: #646970;
+	font-size: 12px;
+	line-height: 1.45;
+	margin: 0 0 7px;
+	overflow-wrap: anywhere;
+}
+
+.wps-ai-health-insight-card ul {
+	color: #2c3338;
+	font-size: 13px;
+	line-height: 1.45;
+	list-style: disc;
+	margin: 0 0 0 18px;
+	padding: 0;
+	overflow-wrap: anywhere;
+}
+
+.wps-ai-health-insight-card li {
+	margin: 0 0 5px;
+	padding-left: 2px;
+}
+
+.wps-ai-health-footer {
+	border-top: 1px solid #dcdcde;
+	padding-top: 12px;
+}
+
+@media screen and (max-width: 782px) {
+	.wps-ai-health-widget {
+		padding: 12px;
+	}
+
+	.wps-ai-health-header {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}

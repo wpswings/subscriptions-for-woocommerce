@@ -81,6 +81,11 @@ $page_intro_map   = array(
 		'title'       => esc_html__( 'Subscription Box', 'subscriptions-for-woocommerce' ),
 		'description' => esc_html__( 'Configure bundled subscription-box behavior, product selection flow, and customer-facing presentation.', 'subscriptions-for-woocommerce' ),
 	),
+	'wps-subscriptions-ai-settings'                            => array(
+		'eyebrow'     => esc_html__( 'AI', 'subscriptions-for-woocommerce' ),
+		'title'       => esc_html__( 'AI Settings', 'subscriptions-for-woocommerce' ),
+		'description' => esc_html__( 'Configure the shared AI provider, request limits, and feature toggles used by subscription AI workflows.', 'subscriptions-for-woocommerce' ),
+	),
 	'subscriptions-for-woocommerce-subscriptions-pro-features' => array(
 		'eyebrow'     => esc_html__( 'Upgrade', 'subscriptions-for-woocommerce' ),
 		'title'       => esc_html__( 'Advanced Settings', 'subscriptions-for-woocommerce' ),

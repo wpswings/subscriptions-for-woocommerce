@@ -135,6 +135,7 @@ class Subscriptions_For_Woocommerce {
 		$this->subscriptions_for_woocommerce_public_hooks();
 
 		$this->subscriptions_for_woocommerce_api_hooks();
+		$this->subscriptions_for_woocommerce_ai_hooks();
 		$this->init();
 
 		// Gate payment gateway integration includes to only the requests that need them.
@@ -176,6 +177,7 @@ class Subscriptions_For_Woocommerce {
 			// The class responsible for defining all actions that occur in the admin area.
 			require_once plugin_dir_path( __DIR__ ) . 'admin/class-subscriptions-for-woocommerce-admin.php';
 			require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-talk-to-expert-form.php';
+			require_once plugin_dir_path( __DIR__ ) . 'admin/class-wps-ai-settings.php';
 
 			// The class responsible for on-boarding steps for plugin.
 			if ( is_dir( plugin_dir_path( __DIR__ ) . 'onboarding' ) && ! class_exists( 'Subscriptions_For_Woocommerce_Onboarding_Steps' ) ) {
@@ -201,6 +203,17 @@ class Subscriptions_For_Woocommerce {
 		 * Include the log file.
 		 */
 		require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-log.php';
+
+		/**
+		 * Include shared AI provider.
+		 */
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-wps-ai-provider.php';
+
+		/**
+		 * Include AI Insights widget.
+		 */
+		require_once plugin_dir_path( __DIR__ ) . 'admin/class-wps-ai-health-widget.php';
+
 		/**
 		 * Include the cron file.
 		 */
@@ -305,6 +318,16 @@ class Subscriptions_For_Woocommerce {
 	}
 
 	/**
+	 * Register AI hooks that must be available outside admin requests.
+	 *
+	 * @return void
+	 */
+	private function subscriptions_for_woocommerce_ai_hooks() {
+		$wps_ai_health_widget = new WPS_AI_Health_Widget();
+		$this->loader->add_action( 'wps_sfw_create_renewal_order_schedule', $wps_ai_health_widget, 'refresh_cached_summary' );
+	}
+
+	/**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
@@ -315,11 +338,18 @@ class Subscriptions_For_Woocommerce {
 
 		$sfw_plugin_admin = new Subscriptions_For_Woocommerce_Admin( $this->sfw_get_plugin_name(), $this->sfw_get_version() );
 		$sfw_talk_to_expert = Subscriptions_For_Woocommerce_Talk_To_Expert_Form::get_instance();
+		$wps_ai_settings = new WPS_AI_Settings( $this->sfw_get_version() );
+		$wps_ai_health_widget = new WPS_AI_Health_Widget();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'wps_sfw_admin_enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $sfw_plugin_admin, 'wps_sfw_admin_enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wps_ai_settings, 'enqueue_assets' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wps_ai_health_widget, 'enqueue_assets' );
 		$this->loader->add_action( 'admin_init', $this, 'wps_sfw_register_pro_report_ajax_fallback', 1 );
+		$this->loader->add_action( 'wp_dashboard_setup', $wps_ai_health_widget, 'register_widget' );
 		$this->loader->add_action( 'wp_ajax_' . Subscriptions_For_Woocommerce_Talk_To_Expert_Form::AJAX_ACTION, $sfw_talk_to_expert, 'submit_form_ajax' );
+		$this->loader->add_action( 'wp_ajax_' . WPS_AI_Settings::TEST_CONNECTION_ACTION, $wps_ai_settings, 'test_connection_ajax' );
+		$this->loader->add_action( 'wp_ajax_' . WPS_AI_Health_Widget::REFRESH_ACTION, $wps_ai_health_widget, 'refresh_ajax' );
 
 		// Add settings menu for Subscriptions For Woocommerce.
 		$this->loader->add_action( 'admin_menu', $sfw_plugin_admin, 'wps_sfw_options_page' );
@@ -329,9 +359,11 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_filter( 'wps_add_plugins_menus_array', $sfw_plugin_admin, 'wps_sfw_admin_submenu_page', 15 );
 
 		$this->loader->add_filter( 'wps_sfw_general_settings_array', $sfw_plugin_admin, 'wps_sfw_admin_general_settings_page', 10 );
+		$this->loader->add_filter( 'wps_sfw_sfw_plugin_standard_admin_settings_tabs', $wps_ai_settings, 'add_settings_tab', 20 );
 
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
+		$this->loader->add_action( 'admin_init', $wps_ai_settings, 'save_settings' );
 		// Multistep.
 		$this->loader->add_action( 'wp_ajax_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
 		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
