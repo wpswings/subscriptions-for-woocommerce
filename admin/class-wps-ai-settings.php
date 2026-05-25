@@ -126,10 +126,7 @@ class WPS_AI_Settings {
 		$custom_endpoint = isset( $_POST['wps_ai_custom_endpoint'] ) ? esc_url_raw( $this->get_posted_text( 'wps_ai_custom_endpoint' ) ) : '';
 		update_option( 'wps_ai_custom_endpoint', $custom_endpoint );
 
-		update_option( 'wps_ai_cancel_discount_pct', max( 0, min( 100, absint( $this->get_posted_text( 'wps_ai_cancel_discount_pct', '10' ) ) ) ) );
-		update_option( 'wps_ai_cancel_coupon_expiry_days', max( 1, absint( $this->get_posted_text( 'wps_ai_cancel_coupon_expiry_days', '7' ) ) ) );
-
-		if ( '1' === $main_enabled ) {
+if ( '1' === $main_enabled ) {
 			$config = wps_ai_provider()->get_config();
 			if ( is_wp_error( $config ) ) {
 				update_option( 'wps_ai_main_enabled', '0' );

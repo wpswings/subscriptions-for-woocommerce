@@ -315,6 +315,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 								$wps_new_order->update_status( 'completed' );
 							}
 						}
+
+						// make subscription status on-hold if renewal order payment is not completed or process.
+						if( $wps_new_order->get_status() != 'processing' || $wps_new_order->get_status() != 'completed' ) {
+							wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', 'on-hold' );
+						}
+
 						do_action( 'wps_sfw_after_renewal_payment', $wps_new_order, $subscription_id, $payment_method );
 
 						// hook for par plugin compatible .
@@ -886,6 +892,11 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 							if ( $virtual_order ) {
 								$wps_new_order->update_status( 'completed' );
 							}
+						}
+
+						// make subscription status on-hold if renewal order payment is not completed or process.
+						if( $wps_new_order->get_status() != 'processing' || $wps_new_order->get_status() != 'completed' ) {
+							wps_sfw_update_meta_data( $subscription_id, 'wps_subscription_status', 'on-hold' );
 						}
 						do_action( 'wps_sfw_after_renewal_payment', $wps_new_order, $subscription_id, $payment_method );
 

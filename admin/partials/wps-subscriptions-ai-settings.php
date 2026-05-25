@@ -13,8 +13,6 @@ $provider          = sanitize_key( get_option( 'wps_ai_provider', '' ) );
 $providers         = wps_ai_provider()->get_supported_providers();
 $is_pro_active     = (bool) apply_filters( 'wsp_sfw_check_pro_plugin', false );
 $main_ai_enabled   = '1' === (string) get_option( 'wps_ai_main_enabled', '0' );
-$discount_pct      = absint( get_option( 'wps_ai_cancel_discount_pct', 10 ) );
-$expiry_days       = absint( get_option( 'wps_ai_cancel_coupon_expiry_days', 7 ) );
 $model_options     = array(
 	'openai'      => array(
 		'gpt-4o'       => __( 'gpt-4o (Default)', 'subscriptions-for-woocommerce' ),
@@ -36,9 +34,6 @@ $model_options     = array(
 	),
 );
 
-if ( ! $expiry_days ) {
-	$expiry_days = 7;
-}
 ?>
 <form method="post" class="wps-ai-settings-form">
 	<?php wp_nonce_field( WPS_AI_Settings::NONCE_ACTION, 'wps-ai-settings-nonce-field' ); ?>
@@ -177,40 +172,6 @@ if ( ! $expiry_days ) {
 		</div>
 	</section>
 
-	<section class="wps-sfw-settings-section wps-ai-settings-section<?php echo $is_pro_active ? '' : ' wps-ai-pro-locked-section'; ?>">
-		<div class="wps-sfw-settings-section__head">
-			<div class="wps-sfw-settings-section__eyebrow"><?php esc_html_e( 'Retention', 'subscriptions-for-woocommerce' ); ?></div>
-			<h3><?php esc_html_e( 'Smart Cancel Offer Defaults', 'subscriptions-for-woocommerce' ); ?></h3>
-			<p><?php esc_html_e( 'These values are used when Smart Cancel creates a retention coupon.', 'subscriptions-for-woocommerce' ); ?></p>
-		</div>
-		<div class="wps-sfw-settings-section__body">
-			<div class="wps-sfw-setting-field<?php echo $is_pro_active ? '' : ' wps_pro_settings_tag'; ?>">
-				<div class="wps-sfw-setting-field__label">
-					<label class="wps-sfw-setting-label" for="wps_ai_cancel_discount_pct"><?php esc_html_e( 'Retention Discount %', 'subscriptions-for-woocommerce' ); ?></label>
-					<span class="wps-sfw-setting-subtext"><?php esc_html_e( 'Default recurring coupon discount offered by Smart Cancel.', 'subscriptions-for-woocommerce' ); ?></span>
-				</div>
-				<div class="wps-sfw-setting-field__control">
-					<div class="wps-sfw-input-group wps-ai-inline-number">
-						<span class="wps-sfw-input-label"><?php esc_html_e( 'Percent', 'subscriptions-for-woocommerce' ); ?></span>
-						<input class="wps-sfw-input" name="wps_ai_cancel_discount_pct" id="wps_ai_cancel_discount_pct" type="number" min="0" max="100" value="<?php echo esc_attr( $discount_pct ); ?>" <?php disabled( ! $is_pro_active ); ?>>
-					</div>
-				</div>
-			</div>
-
-			<div class="wps-sfw-setting-field<?php echo $is_pro_active ? '' : ' wps_pro_settings_tag'; ?>">
-				<div class="wps-sfw-setting-field__label">
-					<label class="wps-sfw-setting-label" for="wps_ai_cancel_coupon_expiry_days"><?php esc_html_e( 'Coupon Expiry Days', 'subscriptions-for-woocommerce' ); ?></label>
-					<span class="wps-sfw-setting-subtext"><?php esc_html_e( 'Number of days before a generated retention coupon expires.', 'subscriptions-for-woocommerce' ); ?></span>
-				</div>
-				<div class="wps-sfw-setting-field__control">
-					<div class="wps-sfw-input-group wps-ai-inline-number">
-						<span class="wps-sfw-input-label"><?php esc_html_e( 'Days', 'subscriptions-for-woocommerce' ); ?></span>
-						<input class="wps-sfw-input" name="wps_ai_cancel_coupon_expiry_days" id="wps_ai_cancel_coupon_expiry_days" type="number" min="1" value="<?php echo esc_attr( $expiry_days ); ?>" <?php disabled( ! $is_pro_active ); ?>>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
 
 	<div class="wps-ai-privacy-note">
 		<strong><?php esc_html_e( 'Privacy note:', 'subscriptions-for-woocommerce' ); ?></strong>
