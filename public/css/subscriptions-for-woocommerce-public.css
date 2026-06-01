@@ -449,11 +449,17 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
 }
 
 .wps-sfw-aurora-subscription-card {
-    align-items: center;
+    /* align-items: center;
     display: grid;
     gap: 20px;
     grid-template-columns: minmax(0, 1.7fr) minmax(180px, 0.8fr) minmax(160px, 0.6fr) auto;
-    padding: 18px 20px;
+    padding: 18px 20px; */
+
+        padding: 18px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .wps-sfw-aurora-subscription-card__product {
@@ -553,10 +559,10 @@ div#oceanwp-cart-sidebar-wrap .wps_sfw_subscription_wrapper {
     font-size: 13px;
 }
 
-.wps-sfw-aurora-subscription-card__schedule,
+/* .wps-sfw-aurora-subscription-card__schedule,
 .wps-sfw-aurora-subscription-card__price {
     align-self: center;
-}
+} */
 
 .wps-sfw-aurora-status {
     align-items: center;

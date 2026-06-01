@@ -197,9 +197,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 							$prepared_source->source = '';
 						}
 
-						if ( $this->lock_order_payment( $renewal_order ) ) {
-							return false;
-						}
+						// if ( $this->lock_order_payment( $renewal_order ) ) {
+						// 	return false;
+						// }
 
 						$response                   = $this->create_and_confirm_intent_for_off_session( $renewal_order, $prepared_source, $amount );
 						$is_authentication_required = $this->is_authentication_required_for_payment( $response );

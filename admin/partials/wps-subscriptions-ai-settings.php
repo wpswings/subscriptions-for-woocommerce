@@ -25,9 +25,7 @@ $model_options     = array(
 		'claude-3-haiku-20240307'  => __( 'claude-3-haiku-20240307', 'subscriptions-for-woocommerce' ),
 	),
 	'huggingface' => array(
-		'deepseek-ai/DeepSeek-R1:fastest'        => __( 'deepseek-ai/DeepSeek-R1:fastest (Default)', 'subscriptions-for-woocommerce' ),
 		'meta-llama/Llama-3.1-8B-Instruct:fastest' => __( 'meta-llama/Llama-3.1-8B-Instruct:fastest', 'subscriptions-for-woocommerce' ),
-		'mistralai/Mixtral-8x7B-Instruct-v0.1:fastest' => __( 'mistralai/Mixtral-8x7B-Instruct-v0.1:fastest', 'subscriptions-for-woocommerce' ),
 	),
 	'custom'      => array(
 		'' => __( 'Endpoint default', 'subscriptions-for-woocommerce' ),
