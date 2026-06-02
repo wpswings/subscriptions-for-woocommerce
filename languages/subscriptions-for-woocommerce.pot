@@ -1,8 +1,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriptions For WooCommerce 1.9.6\n"
-"POT-Creation-Date: 2026-05-19 11:12+0530\n"
+"Project-Id-Version: Subscriptions For WooCommerce 1.9.8\n"
+"POT-Creation-Date: 2026-06-02 13:07+0530\n"
 "PO-Revision-Date: 2023-10-03 13:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: Wp Swings\n"
@@ -109,7 +109,7 @@ msgid "Subscriptions For WooCommerce"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:501
-#: admin/class-subscriptions-for-woocommerce-admin.php:1540
+#: admin/class-subscriptions-for-woocommerce-admin.php:1539
 msgid "Master Control"
 msgstr ""
 
@@ -137,19 +137,21 @@ msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:514
 #: admin/class-subscriptions-for-woocommerce-admin.php:655
-#: admin/class-subscriptions-for-woocommerce-admin.php:1552
+#: admin/class-subscriptions-for-woocommerce-admin.php:1551
 #: admin/partials/subscriptions-for-woocommerce-welcome.php:54
-#: includes/class-subscriptions-for-woocommerce.php:1651
+#: admin/partials/wps-subscriptions-ai-settings.php:55
 #: includes/class-subscriptions-for-woocommerce.php:1682
+#: includes/class-subscriptions-for-woocommerce.php:1713
 msgid "Enabled"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:515
 #: admin/class-subscriptions-for-woocommerce-admin.php:656
-#: admin/class-subscriptions-for-woocommerce-admin.php:1553
+#: admin/class-subscriptions-for-woocommerce-admin.php:1552
 #: admin/partials/subscriptions-for-woocommerce-welcome.php:55
-#: includes/class-subscriptions-for-woocommerce.php:1653
+#: admin/partials/wps-subscriptions-ai-settings.php:55
 #: includes/class-subscriptions-for-woocommerce.php:1684
+#: includes/class-subscriptions-for-woocommerce.php:1715
 msgid "Disabled"
 msgstr ""
 
@@ -162,12 +164,12 @@ msgid "All recurring orders are paused until you enable the plugin again."
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:522
-#: admin/class-subscriptions-for-woocommerce-admin.php:1560
+#: admin/class-subscriptions-for-woocommerce-admin.php:1559
 msgid "Storefront Labels"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:523
-#: admin/class-subscriptions-for-woocommerce-admin.php:1561
+#: admin/class-subscriptions-for-woocommerce-admin.php:1560
 msgid "Button Text"
 msgstr ""
 
@@ -327,8 +329,8 @@ msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:618
 #: admin/class-subscriptions-for-woocommerce-admin.php:637
-#: admin/class-subscriptions-for-woocommerce-admin.php:1596
-#: includes/class-subscriptions-for-woocommerce.php:1716
+#: admin/class-subscriptions-for-woocommerce-admin.php:1595
+#: includes/class-subscriptions-for-woocommerce.php:1747
 msgid "Save Settings"
 msgstr ""
 
@@ -408,34 +410,34 @@ msgid "Subscription Settings"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:934
-#: admin/class-subscriptions-for-woocommerce-admin.php:1719
+#: admin/class-subscriptions-for-woocommerce-admin.php:1718
 msgid "Subscriptions Per Interval"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:936
-#: admin/class-subscriptions-for-woocommerce-admin.php:1721
+#: admin/class-subscriptions-for-woocommerce-admin.php:1720
 msgid "Enter subscription interval"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:943
-#: admin/class-subscriptions-for-woocommerce-admin.php:1728
+#: admin/class-subscriptions-for-woocommerce-admin.php:1727
 msgid ""
 "Choose the subscriptions time interval for the product \"for example 10 "
 "days\""
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:949
-#: admin/class-subscriptions-for-woocommerce-admin.php:1734
+#: admin/class-subscriptions-for-woocommerce-admin.php:1733
 msgid "Subscriptions Expiry Interval"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:951
-#: admin/class-subscriptions-for-woocommerce-admin.php:1736
+#: admin/class-subscriptions-for-woocommerce-admin.php:1735
 msgid "Enter subscription expiry"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:958
-#: admin/class-subscriptions-for-woocommerce-admin.php:1743
+#: admin/class-subscriptions-for-woocommerce-admin.php:1742
 msgid ""
 "Choose the subscriptions expiry time interval for the product \"leave empty "
 "for unlimited\""
@@ -476,228 +478,434 @@ msgstr ""
 msgid "Attach LearnPress Courses"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1414
+#: admin/class-subscriptions-for-woocommerce-admin.php:1413
 msgid "Verification Successful"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1541
+#: admin/class-subscriptions-for-woocommerce-admin.php:1540
 msgid "Subscription Box Status"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1542
+#: admin/class-subscriptions-for-woocommerce-admin.php:1541
 msgid ""
 "Enable bundled subscription-box products and control their storefront "
 "behavior."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1545
+#: admin/class-subscriptions-for-woocommerce-admin.php:1544
 msgid "Enable Subscription Box Feature"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1547
+#: admin/class-subscriptions-for-woocommerce-admin.php:1546
 msgid "Enable this to Create and Sell Subscription Box"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1548
+#: admin/class-subscriptions-for-woocommerce-admin.php:1547
 msgid ""
 "Turn this on to create subscription-box products and sell curated recurring "
 "bundles."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1554
+#: admin/class-subscriptions-for-woocommerce-admin.php:1553
 msgid ""
 "Subscription box products can now be configured and sold in your catalog."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1555
+#: admin/class-subscriptions-for-woocommerce-admin.php:1554
 msgid ""
 "Subscription box controls remain unavailable until this feature is enabled."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1562
+#: admin/class-subscriptions-for-woocommerce-admin.php:1561
 msgid ""
 "Control the copy customers see when purchasing subscription-box products."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1565
+#: admin/class-subscriptions-for-woocommerce-admin.php:1564
 msgid "Add To Cart Text For Subscription Box"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1567
+#: admin/class-subscriptions-for-woocommerce-admin.php:1566
 msgid ""
 "Use this option to change add to cart button text For Subscription Box "
 "Product."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1568
+#: admin/class-subscriptions-for-woocommerce-admin.php:1567
 msgid ""
 "Shown on subscription-box product pages in place of the default add to cart "
 "label."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1572
+#: admin/class-subscriptions-for-woocommerce-admin.php:1571
 msgid "Subscription Box Add to cart button text"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1575
+#: admin/class-subscriptions-for-woocommerce-admin.php:1574
 msgid "Place Order Text For Subscription Box"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1577
+#: admin/class-subscriptions-for-woocommerce-admin.php:1576
 msgid ""
 "Use this option to change place order button text For Subscription Box "
 "Product."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1578
+#: admin/class-subscriptions-for-woocommerce-admin.php:1577
 msgid "Shown on checkout when the cart contains a subscription-box item."
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1582
+#: admin/class-subscriptions-for-woocommerce-admin.php:1581
 msgid "Subscription Box Place order button text"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1586
+#: admin/class-subscriptions-for-woocommerce-admin.php:1585
 msgid "To Create Multiple Subscription Box Feature Need Use Pro Version"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1625
+#: admin/class-subscriptions-for-woocommerce-admin.php:1624
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:81
-#: includes/class-subscriptions-for-woocommerce.php:1243
+#: includes/class-subscriptions-for-woocommerce.php:1274
 msgid "Subscription Box"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1644
+#: admin/class-subscriptions-for-woocommerce-admin.php:1643
 msgid "Subscription Box Settings"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1703
+#: admin/class-subscriptions-for-woocommerce-admin.php:1702
 msgid "Subscriptions Setting For Box"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1708
+#: admin/class-subscriptions-for-woocommerce-admin.php:1707
 msgid "Subscriptions Box Price"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1710
+#: admin/class-subscriptions-for-woocommerce-admin.php:1709
 msgid "Enter subscription Box price"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1714
+#: admin/class-subscriptions-for-woocommerce-admin.php:1713
 msgid "Manage subscription box Price through all selected products"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1750
+#: admin/class-subscriptions-for-woocommerce-admin.php:1749
 msgid "Setup For Subscription Box"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1830
+#: admin/class-subscriptions-for-woocommerce-admin.php:1829
 msgid "Box Step Label"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1835
+#: admin/class-subscriptions-for-woocommerce-admin.php:1834
 msgid "Enter step label"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1840
+#: admin/class-subscriptions-for-woocommerce-admin.php:1839
 msgid "Apply Subscription Box To"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1846
+#: admin/class-subscriptions-for-woocommerce-admin.php:1845
 msgid "Specific Products"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1849
+#: admin/class-subscriptions-for-woocommerce-admin.php:1848
 msgid "Specific Categories"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1856
+#: admin/class-subscriptions-for-woocommerce-admin.php:1855
 msgid "Select Products"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1863
+#: admin/class-subscriptions-for-woocommerce-admin.php:1862
 msgid "Search for a product…"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1871
+#: admin/class-subscriptions-for-woocommerce-admin.php:1870
 msgid "Select Categories"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1878
+#: admin/class-subscriptions-for-woocommerce-admin.php:1877
 msgid "Search for categories…"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1886
+#: admin/class-subscriptions-for-woocommerce-admin.php:1885
 msgid "Minimum Number of Product Allow in this step"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1888
+#: admin/class-subscriptions-for-woocommerce-admin.php:1887
 msgid "Enter minimum number"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1892
+#: admin/class-subscriptions-for-woocommerce-admin.php:1891
 msgid "Maximum Number of Product Allow in this step"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1894
+#: admin/class-subscriptions-for-woocommerce-admin.php:1893
 msgid "Enter maximum number"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1906
+#: admin/class-subscriptions-for-woocommerce-admin.php:1905
 msgid "Add Step"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1920
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:260
+#: admin/class-subscriptions-for-woocommerce-admin.php:1919
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:265
 msgid "Upgrade To Subscription For WooCommerce Pro"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1937
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:270
+#: admin/class-subscriptions-for-woocommerce-admin.php:1936
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:275
 msgid ""
 "Subscriptions for WooCommerce Pro plugin add a recurring business model to "
 "your online store, allowing you to provide subscription-based products & "
 "services with simple and variable options"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:1947
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:85
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:277
+#: admin/class-subscriptions-for-woocommerce-admin.php:1946
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:90
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:282
 msgid "Upgrade"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2147
+#: admin/class-subscriptions-for-woocommerce-admin.php:2146
 msgid "Subscription And Renewal Supported"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2169
-#: admin/class-subscriptions-for-woocommerce-admin.php:2174
-#: includes/class-subscriptions-for-woocommerce.php:1384
-#: includes/class-subscriptions-for-woocommerce.php:1387
-#: includes/class-subscriptions-for-woocommerce.php:1390
+#: admin/class-subscriptions-for-woocommerce-admin.php:2168
+#: admin/class-subscriptions-for-woocommerce-admin.php:2173
+#: includes/class-subscriptions-for-woocommerce.php:1415
+#: includes/class-subscriptions-for-woocommerce.php:1418
+#: includes/class-subscriptions-for-woocommerce.php:1421
 msgid "Yes"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2171
-#: admin/class-subscriptions-for-woocommerce-admin.php:2176
-#: includes/class-subscriptions-for-woocommerce.php:1384
-#: includes/class-subscriptions-for-woocommerce.php:1387
-#: includes/class-subscriptions-for-woocommerce.php:1390
+#: admin/class-subscriptions-for-woocommerce-admin.php:2170
+#: admin/class-subscriptions-for-woocommerce-admin.php:2175
+#: includes/class-subscriptions-for-woocommerce.php:1415
+#: includes/class-subscriptions-for-woocommerce.php:1418
+#: includes/class-subscriptions-for-woocommerce.php:1421
 msgid "No"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2199
+#: admin/class-subscriptions-for-woocommerce-admin.php:2198
 msgid "Subscription Relationship"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2221
+#: admin/class-subscriptions-for-woocommerce-admin.php:2220
 msgid "Parent Order"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2225
+#: admin/class-subscriptions-for-woocommerce-admin.php:2224
 #: public/class-subscriptions-for-woocommerce-public.php:2237
 #: public/class-subscriptions-for-woocommerce-public.php:2251
 msgid "Renewal Order"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:44
+#: admin/partials/wps-ai-health-widget.php:26
+#: admin/partials/wps-subscriptions-ai-settings.php:61
+msgid "AI Insights"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:70
+msgid "Regenerating..."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:71
+#: admin/partials/wps-ai-health-widget.php:38
+msgid "Regenerate"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:72
+msgid "Unable to refresh AI Insights."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:96
+msgid "You do not have permission to refresh AI Insights."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:147
+msgid "Enable AI Settings before using AI Insights."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:345
+#, php-format
+msgid ""
+"Your store currently has %1$d active subscriptions and %2$d cancelled "
+"subscriptions. Configure AI settings to generate richer AI Insights."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:364
+#: admin/partials/wps-ai-health-widget.php:16
+msgid "Generated time unavailable"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:369
+msgid "Generated just now"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:374
+#, php-format
+msgid "Generated %s ago"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:396
+msgid "your leading plan"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:401
+msgid "Risks"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:402
+msgid "Revenue or retention issues to watch."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:406
+#, php-format
+msgid ""
+"%1$d subscriptions are on hold and %2$d failed-payment signals need review."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:412
+#, php-format
+msgid "%d subscriptions are expiring in the next 7 days."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:419
+msgid "Opportunities"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:420
+msgid "Signals that can expand MRR."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:424
+#, php-format
+msgid ""
+"%1$d active subscriptions are contributing about %2$s in normalized MRR."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:430
+#, php-format
+msgid "%d new subscriptions were created this week."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:437
+#: public/partials/templates/myaccount/wps-show-subscription-details.php:180
+msgid "Actions"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:438
+msgid "Next steps for this week."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:440
+msgid "Review on-hold and failed subscriptions before the next renewal cycle."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:441
+msgid ""
+"Check upcoming billings and contact customers with payment or expiry risk."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:446
+msgid "Retention"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:447
+msgid "Churn and pause prevention."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:451
+#, php-format
+msgid "Monitor %d on-hold subscriptions closely to prevent future churn."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:456
+#, php-format
+msgid "Prepare renewal reminders for %d subscriptions expiring within 7 days."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:463
+msgid "Pricing & plans"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:464
+msgid "Plan mix and revenue quality."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:468
+#, php-format
+msgid "Evaluate the price and value of %s against your other active plans."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:473
+#, php-format
+msgid "Use the current %s MRR baseline before changing plan prices."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:480
+msgid "Forecast"
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:481
+msgid "Upcoming billing and cash-flow signals."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:485
+#, php-format
+msgid ""
+"%1$d upcoming billings in 30 days represent about %2$s in scheduled value."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:491
+#, php-format
+msgid ""
+"%d renewals completed this week, giving an early signal for recurring cash "
+"flow."
+msgstr ""
+
+#: admin/class-wps-ai-health-widget.php:806
+msgid "Unknown plan"
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:56
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:86
+msgid "AI Settings"
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:99
+msgid "Please select an AI provider before enabling AI settings."
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:174
+msgid "Testing..."
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:175
+msgid "Connected"
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:176
+msgid "Unable to connect. Please check the provider settings."
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:177
+msgid "Select a provider before testing."
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:191
+msgid "You do not have permission to test AI settings."
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:196
+msgid "Please select a valid AI provider."
+msgstr ""
+
+#: admin/class-wps-ai-settings.php:207
+msgid "Connected successfully."
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:55
@@ -778,12 +986,14 @@ msgid "All Statuses"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:490
+#: admin/partials/wps-ai-health-widget.php:57
 #: public/partials/templates/myaccount/wps-show-subscription-details-aurora.php:15
 #: public/partials/templates/myaccount/wps-subscriptions-aurora.php:16
 msgid "Active"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:491
+#: admin/partials/wps-ai-health-widget.php:61
 msgid "On Hold"
 msgstr ""
 
@@ -821,7 +1031,7 @@ msgid "Clear"
 msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:518
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:122
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:127
 #: public/class-subscriptions-for-woocommerce-public.php:1127
 msgid "Subscriptions"
 msgstr ""
@@ -876,7 +1086,7 @@ msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:50
 #, php-format
-msgid "v%s %s"
+msgid "v%1$s %2$s"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:52
@@ -889,14 +1099,14 @@ msgid "Lite"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:56
-#: includes/class-subscriptions-for-woocommerce.php:1224 src/App.js:53
+#: includes/class-subscriptions-for-woocommerce.php:1255 src/App.js:53
 #: src/component/FirstStep.js:16
 msgid "General Settings"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:60
 #: admin/partials/subscriptions-for-woocommerce-overview.php:52
-#: includes/class-subscriptions-for-woocommerce.php:1219
+#: includes/class-subscriptions-for-woocommerce.php:1250
 msgid "Overview"
 msgstr ""
 
@@ -911,7 +1121,7 @@ msgid ""
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:65
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:121
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:126
 #: subscriptions-for-woocommerce.php:393
 msgid "Settings"
 msgstr ""
@@ -931,7 +1141,7 @@ msgid "Operations"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:71
-#: includes/class-subscriptions-for-woocommerce.php:1231
+#: includes/class-subscriptions-for-woocommerce.php:1262
 msgid "Subscription Table"
 msgstr ""
 
@@ -946,7 +1156,7 @@ msgid "Integrations"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:76
-#: includes/class-subscriptions-for-woocommerce.php:1236
+#: includes/class-subscriptions-for-woocommerce.php:1267
 msgid "API Settings"
 msgstr ""
 
@@ -966,200 +1176,211 @@ msgid ""
 "customer-facing presentation."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:86
-#: includes/class-subscriptions-for-woocommerce.php:1251
-msgid "Advanced Settings"
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:85
+#: admin/partials/wps-subscriptions-ai-settings.php:41
+msgid "AI"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:87
+msgid ""
+"Configure the shared AI provider, request limits, and feature toggles used "
+"by subscription AI workflows."
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:91
+#: includes/class-subscriptions-for-woocommerce.php:1282
+msgid "Advanced Settings"
+msgstr ""
+
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:92
 msgid ""
 "Review advanced subscription capabilities available in the pro layer and "
 "decide which workflows need to be unlocked."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:90
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:95
 msgid "Compare"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:91
-#: includes/class-subscriptions-for-woocommerce.php:1258
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:96
+#: includes/class-subscriptions-for-woocommerce.php:1289
 msgid "Free Vs Pro"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:92
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:97
 msgid ""
 "Compare the free and pro layers to understand which subscription workflows "
 "and management tools are included."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:95
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:100
 msgid "Diagnostics"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:96
-#: includes/class-subscriptions-for-woocommerce.php:1265
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:101
+#: includes/class-subscriptions-for-woocommerce.php:1296
 msgid "System Status"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:97
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:102
 msgid ""
 "Inspect environment details, active services, and platform information used "
 "to debug subscription issues quickly."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:100
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:101
-#: includes/class-subscriptions-for-woocommerce.php:1270
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:105
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:106
+#: includes/class-subscriptions-for-woocommerce.php:1301
 msgid "Developer"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:102
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:107
 msgid ""
 "Access developer utilities, implementation notes, and plugin-level "
 "integration tools for custom workflows."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:105
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:110
 msgid "Pro Settings"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:106
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:111
 msgid "Advance Settings"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:107
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:112
 msgid ""
 "Manage advanced pro-level customer controls, retry flows, upgrade paths, and "
 "extended recurring behavior."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:110
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:115
 msgid "Insights"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:111
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:116
 msgid "Report"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:112
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:117
 msgid ""
 "Track subscription revenue, renewals, churn, ARR, and product-level "
 "reporting from the shared admin experience."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:115
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:116
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:120
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:121
 msgid "License"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:117
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:122
 msgid ""
 "Validate the pro license, unlock premium capabilities, and keep the "
 "recurring commerce toolset active."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:123
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:128
 msgid ""
 "Manage plugin settings and subscription workflow controls from the shared "
 "admin dashboard."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:135
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:179
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:140
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:184
 msgid "Settings saved !"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:154
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:159
 msgid "NEW LAYOUT"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:156
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:161
 msgid ""
 "A redesigned subscription workspace is now available across your recurring "
 "commerce flows"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:157
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:162
 msgid ""
 "Configure core settings, pro extensions, reports, and support resources from "
 "one consistent admin experience."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:160
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:165
 msgid "Dismiss"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:164
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:169
 msgid "PRO ACTIVE"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:164
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:169
 msgid "LITE ACTIVE"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:169
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:174
 msgid ""
 "WooCommerce Subscriptions Pro is extending the shared admin experience with "
 "advanced settings, reports, and license management."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:170
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:175
 msgid ""
 "Activate the pro plugin to unlock advanced subscription controls, customer "
 "self-management tools, and recurring commerce reports."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:191
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:196
 msgid "Menu"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:294
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:299
 msgid "Read Documentation"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:328
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:333
 msgid "Need help with this plugin?"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:330
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:335
 msgid "Watch Video"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:331
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:336
 #: subscriptions-for-woocommerce.php:418
 msgid "Documentation"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:332
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:337
 #: subscriptions-for-woocommerce.php:422
 msgid "Support"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:338
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:343
 msgid "Still facing problems?"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:339
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:344
 msgid ""
 "We are ready to resolve workflow, styling, and integration issues across "
 "your store setup."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:340
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:345
 msgid "Contact Us"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:344
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:349
 msgid "Explore more plugins"
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:345
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:350
 msgid ""
 "Discover additional commerce and automation plugins from the same product "
 "family."
 msgstr ""
 
-#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:346
+#: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:351
 msgid "View More Plugins"
 msgstr ""
 
@@ -1565,6 +1786,230 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: admin/partials/wps-ai-health-widget.php:31
+#, php-format
+msgid "%d recommendations"
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:40
+msgid "Short recommendations from aggregated subscription KPIs."
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:44
+msgid "Setup required"
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:45
+msgid "Complete AI Settings to enable AI Insights."
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:46
+msgid "Open AI Settings"
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:50
+msgid "AI Insights unavailable"
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:65
+msgid "New This Week"
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:69
+msgid "Expiring Soon"
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:73
+msgid "Upcoming Renewal"
+msgstr ""
+
+#: admin/partials/wps-ai-health-widget.php:101
+msgid ""
+"Cached until regenerated. Only aggregated KPIs are sent to your AI provider."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:18
+msgid "gpt-4o (Default)"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:19
+msgid "gpt-4o-mini"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:20
+msgid "gpt-4-turbo"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:23
+msgid "claude-sonnet-4-5 (Default)"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:24
+msgid "claude-3-5-sonnet-latest"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:25
+msgid "claude-3-haiku-20240307"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:28
+msgid "meta-llama/Llama-3.1-8B-Instruct:fastest"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:31
+msgid "Endpoint default"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:42
+msgid "Main AI Settings"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:43
+msgid ""
+"Enable subscription AI workflows. AI Insights is available in the free "
+"plugin; Churn Analysis, Forecasting, and Smart Cancel are Pro features."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:48
+msgid "Enable AI Settings"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:49
+msgid ""
+"When enabled, AI Insights summarizes store health, Churn Analysis highlights "
+"cancellation risk, Forecasting estimates recurring revenue trends, and Smart "
+"Cancel can prepare retention offers before cancellation."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:62
+msgid ""
+"Summarizes subscription status counts and highlights store health alerts in "
+"plain language."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:65
+msgid "Churn Analysis"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:66
+msgid ""
+"Reviews subscription behavior to help identify customers at risk of "
+"cancelling."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:69
+msgid "Forecasting"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:70
+msgid ""
+"Estimates recurring revenue trends so store owners can understand upcoming "
+"subscription performance."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:73
+msgid "Smart Cancel"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:74
+msgid ""
+"Prepares retention guidance and offer defaults before a customer "
+"cancellation is completed."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:82
+msgid "Provider"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:83
+msgid "AI Provider Connection"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:84
+msgid ""
+"Choose the hosted AI service used by subscription AI workflows. API keys are "
+"used only in server-side requests."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:89
+msgid "AI Provider"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:90
+msgid "Select one provider before saving settings."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:95
+msgid "Select a provider"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:112
+msgid "Custom"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:117
+msgid "API Key"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:118
+msgid "Leave blank to keep the saved key."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:122
+msgid "No key saved"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:130
+msgid "Model Name"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:131
+msgid "Choose one of the supported models for the selected provider."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:135
+msgid "Model"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:143
+msgid "Custom model"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:144
+msgid "Enter custom model name"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:154
+msgid "Custom Endpoint URL"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:155
+msgid ""
+"Must be a full HTTPS endpoint that accepts the standard WPS AI JSON payload."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:159
+msgid "Endpoint"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:167
+msgid "Test Connection"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:175
+msgid "Privacy note:"
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:176
+msgid ""
+"AI analysis data is anonymised before being sent to the AI provider. No "
+"customer names, email addresses, or payment details are transmitted."
+msgstr ""
+
+#: admin/partials/wps-subscriptions-ai-settings.php:180
+msgid "Save AI Settings"
+msgstr ""
+
 #: emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php:36
 msgid "Cancelled Subscription Email Notification"
 msgstr ""
@@ -1896,7 +2341,7 @@ msgid "Unexpected Error Occured"
 msgstr ""
 
 #: includes/class-subscriptions-for-woocommerce-scheduler.php:268
-#: includes/class-subscriptions-for-woocommerce-scheduler.php:840
+#: includes/class-subscriptions-for-woocommerce-scheduler.php:841
 #: public/class-subscriptions-for-woocommerce-public.php:2221
 #, php-format
 msgid "This renewal order belongs to Subscription #%s"
@@ -2042,80 +2487,80 @@ msgstr ""
 msgid "Invalid form submission."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:505
+#: includes/class-subscriptions-for-woocommerce.php:536
 msgid "No Renewal"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1293
+#: includes/class-subscriptions-for-woocommerce.php:1324
 #, php-format
 msgid ""
 "Unable to locate file at location \"%s\". Some features may not work "
 "properly in this plugin. Please contact us!"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1360
+#: includes/class-subscriptions-for-woocommerce.php:1391
 msgid "N/A (phpversion function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1369
+#: includes/class-subscriptions-for-woocommerce.php:1400
 msgid "N/A (make sure exec function is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1372
+#: includes/class-subscriptions-for-woocommerce.php:1403
 msgid "N/A (ABSPATH constant not defined)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1375
+#: includes/class-subscriptions-for-woocommerce.php:1406
 msgid "N/A (php_uname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1378
+#: includes/class-subscriptions-for-woocommerce.php:1409
 msgid "N/A (get_bloginfo function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1381
+#: includes/class-subscriptions-for-woocommerce.php:1412
 msgid "N/A (get_option function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1393
+#: includes/class-subscriptions-for-woocommerce.php:1424
 msgid "N/A (count_users function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1399
-#: includes/class-subscriptions-for-woocommerce.php:1405
-#: includes/class-subscriptions-for-woocommerce.php:1408
+#: includes/class-subscriptions-for-woocommerce.php:1430
 #: includes/class-subscriptions-for-woocommerce.php:1436
 #: includes/class-subscriptions-for-woocommerce.php:1439
+#: includes/class-subscriptions-for-woocommerce.php:1467
+#: includes/class-subscriptions-for-woocommerce.php:1470
 msgid "N/A (ini_get function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1402
-#: includes/class-subscriptions-for-woocommerce.php:1443
+#: includes/class-subscriptions-for-woocommerce.php:1433
+#: includes/class-subscriptions-for-woocommerce.php:1474
 msgid "N/A"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1420
+#: includes/class-subscriptions-for-woocommerce.php:1451
 msgid "N/A (gethostname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1423
-#: includes/class-subscriptions-for-woocommerce.php:1432
+#: includes/class-subscriptions-for-woocommerce.php:1454
+#: includes/class-subscriptions-for-woocommerce.php:1463
 msgid "N/A (make sure exec is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1655
+#: includes/class-subscriptions-for-woocommerce.php:1686
 msgid "This setting is active."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1657
+#: includes/class-subscriptions-for-woocommerce.php:1688
 msgid "This setting is inactive."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1686
+#: includes/class-subscriptions-for-woocommerce.php:1717
 msgid "This setting is enabled."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1688
+#: includes/class-subscriptions-for-woocommerce.php:1719
 msgid "This setting is disabled."
 msgstr ""
 
@@ -2310,6 +2755,67 @@ msgstr ""
 #: includes/class-wc-gateway-wps-paypal-integration.php:936
 #: includes/class-wc-gateway-wps-paypal-integration.php:943
 msgid "Could not fetch payment token."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:74
+msgid "AI prompt cannot be empty."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:101
+msgid "AI provider request is invalid."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:148
+msgid "AI response was not valid JSON."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:193
+msgid "Please select an AI provider."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:197
+#: includes/class-wps-ai-provider.php:430
+msgid "Selected AI provider is not supported."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:206
+msgid "Please enter a valid HTTPS custom AI endpoint."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:211
+msgid "Please enter the API key for the selected AI provider."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:234
+msgid "ChatGPT / OpenAI"
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:235
+msgid "Anthropic (Claude)"
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:236
+msgid "HuggingFace"
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:237
+msgid "Custom Endpoint"
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:341
+msgid "Daily AI limit reached. Resets at midnight."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:588
+msgid "AI provider returned invalid JSON."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:632
+msgid "AI provider returned an empty response."
+msgstr ""
+
+#: includes/class-wps-ai-provider.php:656
+msgid "AI provider request failed."
 msgstr ""
 
 #: includes/class-wps-paypal-block-support.php:82
@@ -2999,10 +3505,6 @@ msgstr ""
 
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:173
 msgid "Add Payment Method"
-msgstr ""
-
-#: public/partials/templates/myaccount/wps-show-subscription-details.php:180
-msgid "Actions"
 msgstr ""
 
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:208
