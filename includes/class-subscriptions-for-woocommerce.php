@@ -227,6 +227,10 @@ class Subscriptions_For_Woocommerce {
 		require_once $wps_mem_dir . 'functions-membership-core.php';
 		require_once $wps_mem_dir . 'functions-membership-plan.php';
 		require_once $wps_mem_dir . 'functions-user-membership.php';
+		require_once $wps_mem_dir . 'class-wps-membership-sync.php';
+		require_once $wps_mem_dir . 'class-wps-membership-order-grant.php';
+		new WPS_Membership_Sync();
+		new WPS_Membership_Order_Grant();
 	}
 	/**
 	 * The function is used to include email class.
