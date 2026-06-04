@@ -218,6 +218,15 @@ class Subscriptions_For_Woocommerce {
 		 * Include the cron file.
 		 */
 		require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-scheduler.php';
+
+		/**
+		 * Membership layer — core utilities (data model constants, schema version,
+		 * product→plan map builder, slug uniqueness utility).
+		 */
+		$wps_mem_dir = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/membership/';
+		require_once $wps_mem_dir . 'functions-membership-core.php';
+		require_once $wps_mem_dir . 'functions-membership-plan.php';
+		require_once $wps_mem_dir . 'functions-user-membership.php';
 	}
 	/**
 	 * The function is used to include email class.
