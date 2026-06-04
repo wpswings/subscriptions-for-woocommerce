@@ -231,6 +231,18 @@ class Subscriptions_For_Woocommerce {
 		require_once $wps_mem_dir . 'class-wps-membership-order-grant.php';
 		new WPS_Membership_Sync();
 		new WPS_Membership_Order_Grant();
+
+		// Membership layer — Week 2–4 stubs (hooks registered via Loader in
+		// subscriptions_for_woocommerce_admin_hooks / _public_hooks below).
+		require_once $wps_mem_dir . 'class-wps-membership-plan-cpt.php';
+		require_once $wps_mem_dir . 'functions-access-rules.php';
+		require_once $wps_mem_dir . 'class-wps-access-rules-engine.php';
+		require_once $wps_mem_dir . 'class-wps-restriction-enforcer.php';
+		require_once $wps_mem_dir . 'class-wps-myaccount-memberships.php';
+		$wps_adm_mem_dir = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/membership/';
+		require_once $wps_adm_mem_dir . 'class-wps-membership-plans-admin.php';
+		require_once $wps_adm_mem_dir . 'class-wps-members-admin.php';
+		require_once $wps_adm_mem_dir . 'class-wps-access-rules-admin.php';
 	}
 	/**
 	 * The function is used to include email class.
@@ -436,6 +448,40 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_filter( 'woocommerce_payment_gateways_setting_columns', $sfw_plugin_admin, 'wps_sfw_subscription_support_in_payment_gateway' );
 		// 'Upsell Support' content on payment gateways page.
 		$this->loader->add_action( 'woocommerce_payment_gateways_setting_column_wps_sub_renewal', $sfw_plugin_admin, 'wps_sfw_subscription_content_in_payment_gateway' );
+
+		// Membership admin hooks — Weeks 2–3 (stubs wired Day 5; filled in Days 6–12).
+		$wps_mem_plans_admin = new WPS_Membership_Plans_Admin();
+		$tabs_filter         = 'wps_sfw_sfw_plugin_standard_admin_settings_tabs';
+		$this->loader->add_filter( $tabs_filter, $wps_mem_plans_admin, 'register_tab', 25 );
+
+		$wps_mem_plan_cpt = new WPS_Membership_Plan_CPT();
+		$this->loader->add_action( 'init', $wps_mem_plan_cpt, 'register', 5 );
+		$this->loader->add_action( 'save_post', $wps_mem_plan_cpt, 'save_meta_boxes', 10, 2 );
+
+		$wps_members_admin = new WPS_Members_Admin();
+		$this->loader->add_filter( $tabs_filter, $wps_members_admin, 'register_tab', 30 );
+		$this->loader->add_action( 'show_user_profile', $wps_members_admin, 'render_profile_section' );
+		$this->loader->add_action( 'edit_user_profile', $wps_members_admin, 'render_profile_section' );
+		$this->loader->add_action( 'personal_options_update', $wps_members_admin, 'save_profile_section' );
+		$this->loader->add_action( 'edit_user_profile_update', $wps_members_admin, 'save_profile_section' );
+		$this->loader->add_action(
+			'wp_ajax_wps_membership_admin_action',
+			$wps_members_admin,
+			'handle_admin_actions'
+		);
+
+		$wps_access_rules_admin = new WPS_Access_Rules_Admin();
+		$this->loader->add_filter( $tabs_filter, $wps_access_rules_admin, 'register_tab', 35 );
+		$this->loader->add_action(
+			'wp_ajax_wps_search_plan_products',
+			$wps_access_rules_admin,
+			'ajax_search_plan_products'
+		);
+		$this->loader->add_action(
+			'wp_ajax_wps_search_rule_targets',
+			$wps_access_rules_admin,
+			'ajax_search_rule_targets'
+		);
 	}
 
 	/**
@@ -1168,6 +1214,40 @@ class Subscriptions_For_Woocommerce {
 
 			// subscription box.
 
+			// Membership public hooks — Weeks 3–4 (stubs wired Day 5; filled in Days 13–14).
+			$wps_restriction_enforcer = new WPS_Restriction_Enforcer();
+			$this->loader->add_filter( 'the_content', $wps_restriction_enforcer, 'maybe_restrict_content', 99 );
+			$this->loader->add_action( 'template_redirect', $wps_restriction_enforcer, 'maybe_redirect', 99 );
+			$this->loader->add_filter(
+				'woocommerce_is_purchasable',
+				$wps_restriction_enforcer,
+				'maybe_restrict_purchasability',
+				99,
+				2
+			);
+			$this->loader->add_filter(
+				'woocommerce_variation_is_purchasable',
+				$wps_restriction_enforcer,
+				'maybe_restrict_purchasability',
+				99,
+				2
+			);
+			$this->loader->add_action( 'init', $wps_restriction_enforcer, 'register_shortcode', 5 );
+
+			$wps_myaccount_memberships = new WPS_Myaccount_Memberships();
+			$this->loader->add_action( 'init', $wps_myaccount_memberships, 'register_endpoint', 5 );
+			$this->loader->add_filter( 'query_vars', $wps_myaccount_memberships, 'add_query_var' );
+			$this->loader->add_filter(
+				'woocommerce_account_menu_items',
+				$wps_myaccount_memberships,
+				'add_menu_item'
+			);
+			$this->loader->add_action(
+				'woocommerce_account_memberships_endpoint',
+				$wps_myaccount_memberships,
+				'render_tab'
+			);
+
 		}
 	}
 
@@ -1179,9 +1259,23 @@ class Subscriptions_For_Woocommerce {
 	 * @param Array $emails emails.
 	 */
 	public function wps_sfw_woocommerce_email_classes( $emails ) {
-		$emails['wps_sfw_cancel_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
-		$emails['wps_sfw_expired_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
-		$emails['wps_sfw_onhold_active_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-onhold-active-subscription-email.php';
+		$emails_dir = plugin_dir_path( __DIR__ ) . 'emails/';
+
+		require_once $emails_dir . 'class-subscriptions-for-woocommerce-cancel-subscription-email.php';
+		$emails['wps_sfw_cancel_subscription'] = new Subscriptions_For_Woocommerce_Cancel_Subscription_Email();
+
+		require_once $emails_dir . 'class-subscriptions-for-woocommerce-expired-subscription-email.php';
+		$emails['wps_sfw_expired_subscription'] = new Subscriptions_For_Woocommerce_Expired_Subscription_Email();
+
+		require_once $emails_dir . 'class-subscriptions-for-woocommerce-onhold-active-subscription-email.php';
+		$emails['wps_sfw_onhold_active_subscription'] =
+			new Subscriptions_For_Woocommerce_Onhold_Active_Subscription_Email();
+
+		// Membership emails (Day 10 stubs — triggers wired on Day 10).
+		$emails['wps_membership_activated'] = require_once $emails_dir . 'class-wps-membership-activated-email.php';
+		$emails['wps_membership_onhold']    = require_once $emails_dir . 'class-wps-membership-onhold-email.php';
+		$emails['wps_membership_cancelled'] = require_once $emails_dir . 'class-wps-membership-cancelled-email.php';
+		$emails['wps_membership_expired']   = require_once $emails_dir . 'class-wps-membership-expired-email.php';
 
 		return apply_filters( 'wps_sfw_email_classes', $emails );
 	}
