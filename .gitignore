@@ -22,3 +22,6 @@ vendor/*
 *.rar
 *.tar
 *.zip
+
+/script
+/docs
