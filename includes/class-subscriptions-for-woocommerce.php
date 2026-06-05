@@ -456,6 +456,8 @@ class Subscriptions_For_Woocommerce {
 
 		$wps_mem_plan_cpt = new WPS_Membership_Plan_CPT();
 		$this->loader->add_action( 'init', $wps_mem_plan_cpt, 'register', 5 );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wps_mem_plan_cpt, 'enqueue_admin_scripts' );
+		$this->loader->add_action( 'add_meta_boxes', $wps_mem_plan_cpt, 'add_meta_boxes' );
 		$this->loader->add_action( 'save_post', $wps_mem_plan_cpt, 'save_meta_boxes', 10, 2 );
 
 		$wps_members_admin = new WPS_Members_Admin();

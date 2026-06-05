@@ -225,10 +225,9 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 			);
 
 			if ( ! empty( $item['color'] ) ) {
-				$title .= sprintf(
-					'<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:%s;margin-left:6px;vertical-align:middle;"></span>',
-					esc_attr( $item['color'] )
-				);
+				$title .= '<span style="display:inline-block;width:10px;height:10px;border-radius:50%'
+					. ';background:' . esc_attr( $item['color'] )
+					. ';margin-left:6px;vertical-align:middle;"></span>';
 			}
 
 			return $title . $this->row_actions( $actions );
@@ -248,7 +247,31 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 					return '<code>' . esc_html( $item['slug'] ) . '</code>';
 
 				case 'products':
-					return absint( $item['product_count'] );
+					if ( empty( $item['products'] ) ) {
+						return '—';
+					}
+					$wps_names = array();
+					$wps_show  = array_slice( $item['products'], 0, 2 );
+					foreach ( $wps_show as $wps_pid ) {
+						$wps_product = wc_get_product( $wps_pid );
+						if ( $wps_product ) {
+							$wps_names[] = '<a href="'
+								. esc_url( get_edit_post_link( $wps_pid ) )
+								. '">'
+								. esc_html( $wps_product->get_name() )
+								. '</a>';
+						}
+					}
+					$wps_extra = count( $item['products'] ) - 2;
+					$wps_out   = implode( ', ', $wps_names );
+					if ( $wps_extra > 0 ) {
+						$wps_out .= ' <span class="description">+'
+							. absint( $wps_extra )
+							. ' '
+							. esc_html__( 'more', 'subscriptions-for-woocommerce' )
+							. '</span>';
+					}
+					return $wps_out;
 
 				case 'active_members':
 					return absint( $item['active_members'] );
