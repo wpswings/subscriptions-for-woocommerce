@@ -683,3 +683,65 @@ if ( ! function_exists( 'wps_user_is_member' ) ) {
 		return wps_user_has_plan( absint( $user_id ), 'any' );
 	}
 }
+
+// ---------------------------------------------------------------------------
+// Delete
+// ---------------------------------------------------------------------------
+
+if ( ! function_exists( 'wps_remove_user_membership' ) ) {
+	/**
+	 * Permanently delete a membership record for a user.
+	 *
+	 * Removes the entry from `wps_memberships`, deletes the flat queryable key
+	 * `wps_member_of_{slug}`, and cleans up the subscription pointer when set.
+	 * This is a hard delete — use `wps_update_membership_status()` to cancel
+	 * without removing the record.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param  int    $user_id   WordPress user ID.
+	 * @param  string $plan_slug Plan slug.
+	 * @return bool True when a record was found and removed, false otherwise.
+	 */
+	function wps_remove_user_membership( $user_id, $plan_slug ) {
+		$user_id   = absint( $user_id );
+		$plan_slug = sanitize_key( $plan_slug );
+
+		if ( ! $user_id || empty( $plan_slug ) ) {
+			return false;
+		}
+
+		$memberships = wps_read_user_memberships_meta( $user_id );
+
+		if ( ! isset( $memberships[ $plan_slug ] ) ) {
+			return false;
+		}
+
+		$removed_row = $memberships[ $plan_slug ];
+		unset( $memberships[ $plan_slug ] );
+
+		// Persist the array (also re-writes every remaining flat key).
+		wps_write_user_memberships_meta( $user_id, $memberships );
+
+		// The flat key for the removed plan is no longer in the array — delete it.
+		delete_user_meta( $user_id, 'wps_member_of_' . $plan_slug );
+
+		// Clean up the subscription pointer when present.
+		if ( ! empty( $removed_row['subscription_id'] ) ) {
+			delete_user_meta( $user_id, 'wps_sub_membership_' . absint( $removed_row['subscription_id'] ) );
+		}
+
+		/**
+		 * Fires after a membership record is permanently removed.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param int    $user_id   WordPress user ID.
+		 * @param string $plan_slug Plan slug that was removed.
+		 * @param array  $row       The membership row that was deleted.
+		 */
+		do_action( 'wps_membership_removed', $user_id, $plan_slug, $removed_row );
+
+		return true;
+	}
+}
