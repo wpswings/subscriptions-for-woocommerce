@@ -36,7 +36,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
-
 use Automattic\WooCommerce\Utilities\OrderUtil;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $old_pro_exists = false;
@@ -877,3 +876,4 @@ function wps_sfw_banner_notification_html() {
 		}
 	}
 }
+

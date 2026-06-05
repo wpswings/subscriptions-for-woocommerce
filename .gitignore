@@ -26,3 +26,5 @@ vendor/*
 /script
 /docs
 /pull_requests
+# PHPUnit
+.phpunit.result.cache

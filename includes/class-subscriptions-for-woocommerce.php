@@ -315,11 +315,11 @@ class Subscriptions_For_Woocommerce {
 	 */
 	public function wps_sfw_maybe_init_payment_integration() {
 		if ( $this->wps_sfw_payment_integration_loaded ) {
-			return;
+			//return;
 		}
-
+		
 		if ( ! $this->wps_sfw_should_load_payment_integration() ) {
-			return;
+			//return;
 		}
 
 		$this->wps_sfw_payment_integration_loaded = true;
