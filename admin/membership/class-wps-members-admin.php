@@ -1,10 +1,10 @@
 <?php
 /**
- * Membership Layer — Members Admin Tab + User Profile Section (Day 09 stub)
+ * Membership Layer — Members Admin Tab + User Profile Section (Day 08/09)
  *
  * Registers the central "Members" settings tab and the per-user profile section
  * that lets admins grant, edit, and revoke memberships.
- * Full implementation lands on Day 09 (June 16).
+ * Tab registration and list table wired on Day 08; profile section + AJAX on Day 09.
  *
  * @since      2.0.0
  * @package    Subscriptions_For_Woocommerce
@@ -28,14 +28,17 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 		 * Add the "Members" tab to the plugin settings navigation.
 		 *
 		 * Hooked to `wps_sfw_sfw_plugin_standard_admin_settings_tabs` at priority 30.
-		 * Full implementation: Day 09.
 		 *
 		 * @since  2.0.0
 		 * @param  array $tabs Existing settings tabs.
 		 * @return array
 		 */
 		public function register_tab( $tabs ) {
-			// Day 09: add 'membership-members' tab entry.
+			$tabs['wps-membership-members'] = array(
+				'title'     => esc_html__( 'Members', 'subscriptions-for-woocommerce' ),
+				'name'      => 'wps-membership-members',
+				'file_path' => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
+			);
 			return $tabs;
 		}
 
