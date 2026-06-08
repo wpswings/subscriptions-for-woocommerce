@@ -1,0 +1,574 @@
+/**
+ * Access Rules admin tab — card layout styles.
+ *
+ * @since   2.0.0
+ * @package Subscriptions_For_Woocommerce
+ */
+
+/* ============================================================
+   Section wrapper (Global Defaults card + Rules card)
+   ============================================================ */
+
+.wps-access-section {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 10px;
+	margin-bottom: 24px;
+	box-shadow: 0 1px 4px rgba( 0, 0, 0, .07 );
+	overflow: hidden;
+}
+
+.wps-access-section__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 18px;
+	border-bottom: 1px solid #e0e0e0;
+	background: #f6f7f7;
+}
+
+.wps-access-section__title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.wps-access-section__desc {
+	margin: 0;
+	font-size: 12px;
+	color: #646970;
+}
+
+.wps-access-section__body {
+	padding: 18px 20px;
+}
+
+/* ============================================================
+   Global Defaults — two-column grid
+   ============================================================ */
+
+.wps-defaults-grid {
+	display: grid;
+	grid-template-columns: 200px 1fr;
+	align-items: start;
+	row-gap: 0;
+}
+
+.wps-defaults-grid__label,
+.wps-defaults-grid__field {
+	padding: 12px 0;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.wps-defaults-grid__label:last-of-type,
+.wps-defaults-grid__field:last-of-type {
+	border-bottom: none;
+	padding-bottom: 0;
+}
+
+.wps-defaults-grid__label {
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+	padding-right: 16px;
+}
+
+.wps-defaults-grid__field .description {
+	margin: 4px 0 0;
+	font-size: 11px;
+	color: #888;
+}
+
+.wps-defaults-grid__field select,
+.wps-defaults-grid__field input[type="url"],
+.wps-defaults-grid__field textarea {
+	width: 100%;
+	max-width: 480px;
+}
+
+/* Merge-tag copy button */
+.wps-copy-tag {
+	display: inline-block;
+	background: #e8f0fe;
+	color: #1a56db;
+	font-family: Consolas, monospace;
+	font-size: 11px;
+	padding: 1px 6px;
+	border-radius: 5px;
+	cursor: pointer;
+	border: 1px solid #c6d6fb;
+	margin-left: 4px;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+.wps-copy-tag:hover {
+	background: #d2e3fc;
+	color: #1a56db;
+}
+
+.wps-copy-tag--copied {
+	background: #e6f4ea;
+	color: #188038;
+	border-color: #a8d5b0;
+}
+
+/* ============================================================
+   Toggle switch (replaces native checkbox everywhere)
+   ============================================================ */
+
+.wps-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	user-select: none;
+}
+
+/* Hide the native checkbox visually but keep it accessible */
+.wps-toggle input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
+/* The sliding track */
+.wps-toggle__slider {
+	position: relative;
+	flex-shrink: 0;
+	width: 40px;
+	height: 22px;
+	background: #c3c4c7;
+	border-radius: 11px;
+	transition: background 0.2s ease;
+}
+
+/* The thumb / knob */
+.wps-toggle__slider::after {
+	content: '';
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	background: #fff;
+	border-radius: 50%;
+	top: 2px;
+	left: 2px;
+	transition: transform 0.2s ease;
+	box-shadow: 0 1px 4px rgba( 0, 0, 0, .25 );
+}
+
+/* Checked state */
+.wps-toggle input:checked + .wps-toggle__slider {
+	background: #2271b1;
+}
+
+.wps-toggle input:checked + .wps-toggle__slider::after {
+	transform: translateX( 18px );
+}
+
+/* Focus ring */
+.wps-toggle:focus-within .wps-toggle__slider {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2271b1;
+}
+
+/* Label text */
+.wps-toggle__text {
+	font-size: 13px;
+	color: #1d2327;
+	line-height: 1.4;
+}
+
+/* Toggle list (stacked) */
+.wps-toggle-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* ============================================================
+   Rule cards
+   ============================================================ */
+
+#wps-rules-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.wps-rule-card {
+	border: 1px solid #c3c4c7;
+	border-radius: 10px;
+	background: #fff;
+	overflow: hidden;
+	transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.wps-rule-card:hover {
+	box-shadow: 0 3px 10px rgba( 0, 0, 0, .1 );
+}
+
+.wps-rule-card--warn {
+	border-left: 3px solid #dba617;
+}
+
+/* Header (collapsed view) */
+.wps-rule-card__header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 14px;
+	background: #f9f9f9;
+	cursor: pointer;
+	user-select: none;
+	min-height: 48px;
+}
+
+.wps-rule-card--open > .wps-rule-card__header {
+	border-bottom: 1px solid #e8e8e8;
+}
+
+/* Drag handle */
+.wps-rule-card__drag {
+	flex-shrink: 0;
+	color: #bbb;
+	font-size: 18px;
+	line-height: 1;
+	cursor: grab;
+	letter-spacing: -3px;
+}
+
+.wps-rule-card__drag::before {
+	content: "⠿";
+}
+
+/* Summary text */
+.wps-rule-card__summary {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	font-size: 13px;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.wps-rule-card__target-lbl {
+	font-weight: 600;
+	color: #1d2327;
+	white-space: nowrap;
+}
+
+.wps-rule-card__sep {
+	color: #b4b9be;
+	flex-shrink: 0;
+}
+
+.wps-rule-card__plans-lbl {
+	color: #50575e;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 180px;
+}
+
+/* Behavior badge */
+.wps-badge {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 20px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: .4px;
+	flex-shrink: 0;
+}
+
+.wps-badge--message {
+	background: #e6f4ea;
+	color: #188038;
+}
+
+.wps-badge--redirect {
+	background: #fff3e0;
+	color: #b45309;
+}
+
+/* Priority label */
+.wps-rule-card__prio {
+	font-size: 12px;
+	color: #9ea3a8;
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+/* Actions */
+.wps-rule-card__actions {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
+}
+
+.wps-rule-card__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 20px;
+	padding: 4px 12px;
+	font-size: 12px;
+	color: #50575e;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.wps-rule-card__toggle:hover {
+	background: #f0f0f1;
+	border-color: #999;
+}
+
+.wps-rule-card__toggle .wps-chevron {
+	display: inline-block;
+	transition: transform 0.2s;
+	font-style: normal;
+}
+
+.wps-rule-card--open .wps-rule-card__toggle .wps-chevron {
+	transform: rotate( 180deg );
+}
+
+.wps-rule-card__remove-btn {
+	background: none;
+	border: none;
+	padding: 4px 7px;
+	cursor: pointer;
+	color: #b32d2e;
+	font-size: 18px;
+	line-height: 1;
+	border-radius: 50%;
+}
+
+.wps-rule-card__remove-btn:hover {
+	background: #fce8e8;
+}
+
+/* Body (expanded edit form) */
+.wps-rule-card__body {
+	padding: 16px 18px 18px;
+}
+
+.wps-rule-card__body[hidden] {
+	display: none;
+}
+
+.wps-rule-fields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 14px 28px;
+}
+
+@media ( max-width: 1100px ) {
+	.wps-rule-fields {
+		grid-template-columns: 1fr;
+	}
+}
+
+.wps-field-group {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.wps-field-group--full {
+	grid-column: 1 / -1;
+}
+
+.wps-field-group > .wps-field-label {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .5px;
+	color: #646970;
+}
+
+.wps-field-group select,
+.wps-field-group input[type="url"],
+.wps-field-group input[type="number"],
+.wps-field-group textarea {
+	width: 100%;
+}
+
+.wps-field-group .description {
+	margin: 0;
+	font-size: 11px;
+	color: #888;
+}
+
+/* Plan toggles list */
+.wps-plans-list {
+	border: 1px solid #e0e0e0;
+	border-radius: 10px;
+	padding: 10px 12px;
+	background: #fafafa;
+	max-height: 160px;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+/* Behavior radios */
+.wps-behavior-radios {
+	display: flex;
+	gap: 18px;
+}
+
+.wps-behavior-radios label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	cursor: pointer;
+	color: #1d2327;
+	font-weight: normal;
+}
+
+/* Tag chips */
+.wps-tag-container {
+	min-height: 38px;
+	border: 1px solid #c3c4c7;
+	border-radius: 10px;
+	padding: 6px 8px;
+	background: #fff;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	align-content: flex-start;
+}
+
+.wps-tag {
+	display: inline-flex;
+	align-items: center;
+	background: #e8f0fe;
+	color: #1a56db;
+	padding: 3px 10px;
+	border-radius: 20px;
+	font-size: 12px;
+	gap: 4px;
+	white-space: nowrap;
+}
+
+.wps-remove-tag {
+	background: none;
+	border: none;
+	padding: 0;
+	line-height: 1;
+	font-size: 14px;
+	cursor: pointer;
+	color: #1a56db;
+	opacity: 0.65;
+	text-decoration: none;
+}
+
+.wps-remove-tag:hover {
+	opacity: 1;
+}
+
+/* AJAX search */
+.wps-search-wrap {
+	position: relative;
+}
+
+.wps-search-wrap .wps-ajax-search {
+	padding-right: 28px;
+}
+
+.wps-search-spinner {
+	position: absolute;
+	right: 7px;
+	top: 50%;
+	transform: translateY( -50% );
+	width: 16px;
+	height: 16px;
+	border: 2px solid #c3c4c7;
+	border-top-color: #2271b1;
+	border-radius: 50%;
+	animation: wps-spin .6s linear infinite;
+	display: none;
+}
+
+.wps-search-spinner.is-active {
+	display: block;
+}
+
+@keyframes wps-spin {
+	to { transform: translateY( -50% ) rotate( 360deg ); }
+}
+
+.wps-search-results {
+	position: absolute;
+	z-index: 9999;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 10px;
+	min-width: 260px;
+	margin: 4px 0 0;
+	padding: 4px 0;
+	list-style: none;
+	max-height: 200px;
+	overflow-y: auto;
+	box-shadow: 0 6px 18px rgba( 0, 0, 0, .12 );
+	display: none;
+}
+
+.wps-search-results li {
+	padding: 7px 14px;
+	cursor: pointer;
+	font-size: 13px;
+	border-bottom: 1px solid #f4f4f4;
+	color: #1d2327;
+}
+
+.wps-search-results li:first-child {
+	border-radius: 10px 10px 0 0;
+}
+
+.wps-search-results li:last-child {
+	border-bottom: none;
+	border-radius: 0 0 10px 10px;
+}
+
+.wps-search-results li:hover {
+	background: #f0f6fc;
+}
+
+.wps-search-results li.wps-no-results {
+	color: #888;
+	cursor: default;
+}
+
+.wps-search-results li.wps-no-results:hover {
+	background: none;
+}
+
+/* Empty state */
+.wps-rules-empty {
+	text-align: center;
+	padding: 36px 24px;
+	color: #888;
+	font-size: 13px;
+}
+
+/* Toolbar */
+.wps-rules-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 14px;
+}
