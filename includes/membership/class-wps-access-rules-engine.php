@@ -53,6 +53,11 @@ if ( ! class_exists( 'WPS_Access_Rules_Engine' ) ) {
 					continue;
 				}
 
+				// Skip rules that have been disabled via the admin toggle.
+				if ( isset( $rule['enabled'] ) && '0' === (string) $rule['enabled'] ) {
+					continue;
+				}
+
 				$id          = $rule['id'];
 				$target_type = isset( $rule['target_type'] ) ? $rule['target_type'] : '';
 
@@ -175,6 +180,9 @@ if ( ! class_exists( 'WPS_Access_Rules_Engine' ) ) {
 			$matched     = array();
 
 			foreach ( $all_rules as $rule ) {
+				if ( isset( $rule['enabled'] ) && '0' === (string) $rule['enabled'] ) {
+					continue;
+				}
 				if ( isset( $rule['id'] ) && in_array( $rule['id'], $matched_ids, true ) ) {
 					$matched[] = $rule;
 				}

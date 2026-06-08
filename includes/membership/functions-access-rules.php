@@ -81,6 +81,7 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 			'message'      => isset( $raw['message'] ) ? wp_kses_post( $raw['message'] ) : '',
 			'redirect_url' => isset( $raw['redirect_url'] ) ? esc_url_raw( $raw['redirect_url'] ) : '',
 			'priority'     => isset( $raw['priority'] ) ? absint( $raw['priority'] ) : 10,
+			'enabled'      => ( isset( $raw['enabled'] ) && '0' === (string) $raw['enabled'] ) ? '0' : '1',
 		);
 	}
 }

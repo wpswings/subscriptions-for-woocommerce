@@ -27,6 +27,193 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 		const NONCE_FIELD  = 'wps_plan_meta_nonce';
 
 		/**
+		 * Search subscription products for the Select2 field on the plan edit screen.
+		 *
+		 * Hooked to `wp_ajax_wps_search_subscription_products`.
+		 * Uses the same WC data-store search that powers the standard product search,
+		 * then filters results to only products that are WPS subscriptions:
+		 * simple subscriptions (`_wps_sfw_product = 'yes'`) or variable
+		 * subscriptions (`wps_sfw_variable_product = 'yes'`).
+		 *
+		 * @since 2.0.0
+		 */
+		public function ajax_search_subscription_products() {
+			check_ajax_referer( 'search-products', 'security' );
+
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_die( -1 );
+			}
+
+			$term = isset( $_GET['term'] )
+				? wc_clean( sanitize_text_field( wp_unslash( $_GET['term'] ) ) )
+				: '';
+
+			if ( '' === $term ) {
+				wp_send_json( array() );
+			}
+
+			// Search parent products only — variation titles are empty in the DB,
+			// so searching product_variation post types yields nothing useful.
+			$parent_ids = get_posts(
+				array(
+					'post_type'      => 'product',
+					'post_status'    => 'publish',
+					'posts_per_page' => 30,
+					's'              => $term,
+					'fields'         => 'ids',
+					'no_found_rows'  => true,
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'meta_query'     => array(
+						'relation' => 'OR',
+						array(
+							'key'   => '_wps_sfw_product',
+							'value' => 'yes',
+						),
+						array(
+							'key'   => 'wps_sfw_variable_product',
+							'value' => 'yes',
+						),
+					),
+				)
+			);
+
+			$results = array();
+			foreach ( $parent_ids as $parent_id ) {
+				$product = wc_get_product( absint( $parent_id ) );
+				if ( ! $product ) {
+					continue;
+				}
+
+				if ( $product->is_type( 'variable' ) ) {
+					// Expand variable products into their individual variations.
+					foreach ( $product->get_children() as $variation_id ) {
+						$variation = wc_get_product( absint( $variation_id ) );
+						if ( $variation && 'publish' === $variation->get_status() ) {
+							$results[ $variation_id ] = rawurldecode(
+								wp_strip_all_tags( $variation->get_formatted_name() )
+							);
+						}
+					}
+				} else {
+					$results[ $parent_id ] = rawurldecode(
+						wp_strip_all_tags( $product->get_formatted_name() )
+					);
+				}
+			}
+
+			wp_send_json( $results );
+		}
+
+		/**
+		 * Return billing details for a single subscription product.
+		 *
+		 * Hooked to `wp_ajax_wps_get_subscription_duration`.
+		 * Used by the Grant Methods meta box to populate the Access Length
+		 * preview panel when the "Active Subscription" method is selected.
+		 *
+		 * @since 2.0.0
+		 */
+		public function ajax_get_subscription_duration() {
+			check_ajax_referer( 'wps_membership_admin_nonce', 'security' );
+
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_die( -1 );
+			}
+
+			$product_id = isset( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
+			if ( ! $product_id ) {
+				wp_send_json_error();
+			}
+
+			$product = wc_get_product( $product_id );
+			if ( ! $product ) {
+				wp_send_json_error();
+			}
+
+			// Subscription meta is stored on the variation post itself; fall back
+			// to parent only when the variation has no value set.
+			$meta_id  = $product->get_id();
+			$number   = (int) get_post_meta( $meta_id, 'wps_sfw_subscription_number', true );
+			$interval = get_post_meta( $meta_id, 'wps_sfw_subscription_interval', true );
+			if ( $product->is_type( 'variation' ) && ! $number ) {
+				$parent_id = $product->get_parent_id();
+				$number    = (int) get_post_meta( $parent_id, 'wps_sfw_subscription_number', true );
+				$interval  = get_post_meta( $parent_id, 'wps_sfw_subscription_interval', true );
+			}
+			$exp_num = (int) get_post_meta( $meta_id, 'wps_sfw_subscription_expiry_number', true );
+			$exp_int = get_post_meta( $meta_id, 'wps_sfw_subscription_expiry_interval', true );
+			if ( $product->is_type( 'variation' ) && ! $exp_num ) {
+				$parent_id = $product->get_parent_id();
+				$exp_num   = (int) get_post_meta( $parent_id, 'wps_sfw_subscription_expiry_number', true );
+				$exp_int   = get_post_meta( $parent_id, 'wps_sfw_subscription_expiry_interval', true );
+			}
+
+			$interval_labels = array(
+				'day'   => array(
+					__( 'day', 'subscriptions-for-woocommerce' ),
+					__( 'days', 'subscriptions-for-woocommerce' ),
+				),
+				'week'  => array(
+					__( 'week', 'subscriptions-for-woocommerce' ),
+					__( 'weeks', 'subscriptions-for-woocommerce' ),
+				),
+				'month' => array(
+					__( 'month', 'subscriptions-for-woocommerce' ),
+					__( 'months', 'subscriptions-for-woocommerce' ),
+				),
+				'year'  => array(
+					__( 'year', 'subscriptions-for-woocommerce' ),
+					__( 'years', 'subscriptions-for-woocommerce' ),
+				),
+			);
+
+			$billing = '';
+			if ( $number && $interval && isset( $interval_labels[ $interval ] ) ) {
+				$unit    = 1 === $number
+					? $interval_labels[ $interval ][0]
+					: $interval_labels[ $interval ][1];
+				$billing = sprintf(
+					/* translators: 1: billing number, 2: period unit */
+					__( 'Every %1$s %2$s', 'subscriptions-for-woocommerce' ),
+					$number,
+					$unit
+				);
+			}
+
+			$duration = __( 'No fixed expiry — access while subscription is active', 'subscriptions-for-woocommerce' );
+			if ( $exp_num && $exp_int && isset( $interval_labels[ $exp_int ] ) ) {
+				$unit     = 1 === $exp_num
+					? $interval_labels[ $exp_int ][0]
+					: $interval_labels[ $exp_int ][1];
+				$duration = sprintf(
+					/* translators: 1: expiry number, 2: period unit */
+					__( 'Expires after %1$s %2$s', 'subscriptions-for-woocommerce' ),
+					$exp_num,
+					$unit
+				);
+			}
+
+			$thumbnail_id  = $product->get_image_id();
+			$thumbnail_url = $thumbnail_id
+				? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail' )
+				: wc_placeholder_img_src( 'thumbnail' );
+
+			wp_send_json_success(
+				array(
+					'billing'       => $billing,
+					'duration'      => $duration,
+					'name'          => wp_strip_all_tags( $product->get_formatted_name() ),
+					'price_html'    => html_entity_decode(
+						wp_strip_all_tags( $product->get_price_html() ),
+						ENT_QUOTES | ENT_HTML5,
+						'UTF-8'
+					),
+					'thumbnail_url' => esc_url_raw( $thumbnail_url ),
+				)
+			);
+		}
+
+		/**
 		 * Enqueue WooCommerce admin assets on the plan CPT edit screen.
 		 *
 		 * Hooked to `admin_enqueue_scripts`.
@@ -40,6 +227,12 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 			}
 			wp_enqueue_script( 'wc-enhanced-select' );
 			wp_enqueue_style( 'woocommerce_admin_styles' );
+			wp_enqueue_style(
+				'wps-plan-grant-methods',
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/wps-plan-grant-methods.css',
+				array(),
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
+			);
 		}
 
 		/**
@@ -114,7 +307,7 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 
 			add_meta_box(
 				'wps-plan-products',
-				esc_html__( 'Linked Products', 'subscriptions-for-woocommerce' ),
+				esc_html__( 'Grant Methods', 'subscriptions-for-woocommerce' ),
 				array( $this, 'render_products_meta_box' ),
 				$cpt,
 				'normal',
@@ -242,15 +435,40 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 				: array();
 			update_post_meta( $post_id, '_wps_plan_access_length', wps_sanitize_access_length( $raw_length ) );
 
-			// Products — rebuild map only when the list changes.
+			// Grant method — single mutually exclusive selection.
+			$allowed_methods = array( 'purchase', 'subscription', 'auto_enroll' );
+			$grant_method    = isset( $_POST['_wps_plan_grant_method'] )
+				? sanitize_key( wp_unslash( $_POST['_wps_plan_grant_method'] ) )
+				: 'purchase';
+			if ( ! in_array( $grant_method, $allowed_methods, true ) ) {
+				$grant_method = 'purchase';
+			}
+			update_post_meta( $post_id, '_wps_plan_grant_method', $grant_method );
+
+			// Purchase products — rebuild map only when the list changes.
 			$old_products = (array) get_post_meta( $post_id, '_wps_plan_products', true );
 			$products     = isset( $_POST['_wps_plan_products'] ) && is_array( $_POST['_wps_plan_products'] )
 				? array_values( array_filter( array_map( 'absint', wp_unslash( $_POST['_wps_plan_products'] ) ) ) )
 				: array();
 			update_post_meta( $post_id, '_wps_plan_products', $products );
-			if ( $products !== $old_products ) {
+
+			// Subscription product — single selection stored as a one-element array.
+			$old_sub_products = (array) get_post_meta( $post_id, '_wps_plan_sub_products', true );
+			$sub_product_id   = isset( $_POST['_wps_plan_sub_product'] )
+				? absint( $_POST['_wps_plan_sub_product'] )
+				: 0;
+			$sub_products     = $sub_product_id ? array( $sub_product_id ) : array();
+			update_post_meta( $post_id, '_wps_plan_sub_products', $sub_products );
+
+			if ( $products !== $old_products || $sub_products !== $old_sub_products ) {
 				wps_rebuild_product_plan_map();
 			}
+
+			// Auto-enroll.
+			$auto_enroll = isset( $_POST['_wps_plan_auto_enroll'] )
+				&& '1' === sanitize_text_field( wp_unslash( $_POST['_wps_plan_auto_enroll'] ) )
+				? '1' : '0';
+			update_post_meta( $post_id, '_wps_plan_auto_enroll', $auto_enroll );
 		}
 	}
 }

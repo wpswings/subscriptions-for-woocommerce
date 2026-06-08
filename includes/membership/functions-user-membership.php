@@ -33,7 +33,16 @@ if ( ! defined( 'WPS_MEMBERSHIP_CACHE_GROUP' ) ) {
 define( 'WPS_MEMBERSHIP_STATUSES', array( 'active', 'on-hold', 'cancelled', 'expired', 'paused' ) );
 
 /** Source privilege order — higher index wins when collapsing duplicates. */
-define( 'WPS_MEMBERSHIP_SOURCE_PRIORITY', array( 'manual' => 1, 'order' => 2, 'subscription' => 3 ) );
+define(
+	'WPS_MEMBERSHIP_SOURCE_PRIORITY',
+	array(
+		'manual'       => 1,
+		'order'        => 2,
+		'subscription' => 3,
+		'registration' => 4,
+		'invite_code'  => 5,
+	)
+);
 
 // ---------------------------------------------------------------------------
 // Cache helpers

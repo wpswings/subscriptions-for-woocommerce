@@ -206,6 +206,42 @@
 	}
 
 	// -----------------------------------------------------------------------
+	// Plan pills — grant method contextual notice
+	// -----------------------------------------------------------------------
+
+	function updatePlanNotices( card ) {
+		var notice = card.querySelector( '.wps-plan-pills__notice' );
+		if ( ! notice ) { return; }
+
+		var anyCheck = card.querySelector( '.wps-plan-any-check' );
+		if ( anyCheck && anyCheck.checked ) {
+			notice.style.display = 'none';
+			return;
+		}
+
+		var checks  = card.querySelectorAll( '.wps-plan-specific-check:checked' );
+		var hasSub  = false;
+		var hasAuto = false;
+		checks.forEach( function ( c ) {
+			var m = c.getAttribute( 'data-grant-method' );
+			if ( 'subscription' === m ) { hasSub  = true; }
+			if ( 'auto_enroll'  === m ) { hasAuto = true; }
+		} );
+
+		if ( hasSub ) {
+			notice.textContent   = cfg.subGrantNotice  || 'Access tied to subscription lifecycle.';
+			notice.className     = 'wps-plan-pills__notice';
+			notice.style.display = '';
+		} else if ( hasAuto ) {
+			notice.textContent   = cfg.autoGrantNotice || 'Auto-Enroll plan: access granted on registration.';
+			notice.className     = 'wps-plan-pills__notice wps-plan-pills__notice--auto';
+			notice.style.display = '';
+		} else {
+			notice.style.display = 'none';
+		}
+	}
+
+	// -----------------------------------------------------------------------
 	// "Any Plan" mutual exclusion
 	// -----------------------------------------------------------------------
 
@@ -219,6 +255,7 @@
 			if ( this.checked ) {
 				specificChecks.forEach( function ( c ) { c.checked = false; } );
 			}
+			updatePlanNotices( card );
 		} );
 
 		specificChecks.forEach( function ( c ) {
@@ -226,8 +263,12 @@
 				if ( this.checked && anyCheck.checked ) {
 					anyCheck.checked = false;
 				}
+				updatePlanNotices( card );
 			} );
 		} );
+
+		// Apply initial state on page load.
+		updatePlanNotices( card );
 	}
 
 	// -----------------------------------------------------------------------
@@ -529,6 +570,62 @@
 
 		// Wire global copy-tag buttons.
 		wireCopyTagButtons( document );
+
+		// -----------------------------------------------------------------------
+		// Global Defaults — collapsible section
+		// -----------------------------------------------------------------------
+		var defaultsToggle = document.getElementById( 'wps-defaults-toggle' );
+		var defaultsBody   = document.querySelector( '.wps-defaults-body' );
+
+		if ( defaultsToggle && defaultsBody ) {
+			function openDefaults() {
+				defaultsBody.removeAttribute( 'hidden' );
+				defaultsToggle.setAttribute( 'aria-expanded', 'true' );
+			}
+			function closeDefaults() {
+				defaultsBody.setAttribute( 'hidden', '' );
+				defaultsToggle.setAttribute( 'aria-expanded', 'false' );
+			}
+			defaultsToggle.addEventListener( 'click', function () {
+				if ( 'true' === defaultsToggle.getAttribute( 'aria-expanded' ) ) {
+					closeDefaults();
+				} else {
+					openDefaults();
+				}
+			} );
+			defaultsToggle.addEventListener( 'keydown', function ( e ) {
+				if ( 'Enter' === e.key || ' ' === e.key ) {
+					e.preventDefault();
+					defaultsToggle.click();
+				}
+			} );
+		}
+
+		// -----------------------------------------------------------------------
+		// Global Defaults — behavior radio shows/hides messages vs redirect URL
+		// -----------------------------------------------------------------------
+		var defBehaviorRadios = document.querySelectorAll(
+			'[name="wps_access_default_behavior"]'
+		);
+		var defMessagesRow  = document.querySelector( '.wps-defaults-messages' );
+		var defRedirectRow  = document.querySelector( '.wps-defaults-redirect' );
+
+		if ( defBehaviorRadios.length && defMessagesRow && defRedirectRow ) {
+			function applyDefaultBehavior( value ) {
+				if ( 'redirect' === value ) {
+					defMessagesRow.style.display = 'none';
+					defRedirectRow.style.display  = '';
+				} else {
+					defMessagesRow.style.display = '';
+					defRedirectRow.style.display  = 'none';
+				}
+			}
+			defBehaviorRadios.forEach( function ( r ) {
+				r.addEventListener( 'change', function () {
+					applyDefaultBehavior( this.value );
+				} );
+			} );
+		}
 
 		// Add-rule button.
 		if ( addBtn && tpl ) {

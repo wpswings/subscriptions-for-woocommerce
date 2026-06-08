@@ -1506,3 +1506,125 @@ a.wps_sfw_sub_detail_back {
     font-size: 20px !important;
     line-height: 1.25;
 }
+
+/* -----------------------------------------------------------------------
+   Variable subscription product — billing info + membership card
+   ----------------------------------------------------------------------- */
+
+.wps-variable-sub-info {
+    margin: 8px 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.wps-variation-sub-billing {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.wps-variation-sub-billing .wps_sfw_interval,
+.wps-variation-sub-billing .wps_sfw_expiry_interval {
+    font-weight: 600;
+    color: #333;
+}
+
+/* -----------------------------------------------------------------------
+   "MEMBERSHIP INCLUDED" card
+   ----------------------------------------------------------------------- */
+
+.wps-membership-included {
+    margin: 10px 0;
+    border: 1px solid #b2dfb4;
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.wps-membership-included__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #2e7d32;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.wps-membership-included__header svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.wps-membership-included__body {
+    padding: 12px 14px;
+    background: #f1f8f1;
+}
+
+.wps-membership-included__subtitle {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: #555;
+}
+
+.wps-membership-included__plan {
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid #c8e6c9;
+    border-left: 4px solid #2e7d32;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.wps-membership-included__plan:last-child {
+    margin-bottom: 0;
+}
+
+.wps-membership-included__plan-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.wps-membership-included__dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.wps-membership-included__plan-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    flex: 1;
+}
+
+.wps-membership-included__badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #c8e6c9;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.wps-membership-included__desc {
+    margin: 4px 0 0 16px;
+    font-size: 12px;
+    color: #646970;
+}

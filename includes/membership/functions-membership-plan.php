@@ -37,20 +37,42 @@ if ( ! function_exists( 'wps_membership_plan_row' ) ) {
 		$access_length = get_post_meta( $post->ID, '_wps_plan_access_length', true );
 		$products      = get_post_meta( $post->ID, '_wps_plan_products', true );
 		$status        = get_post_meta( $post->ID, '_wps_plan_status', true );
+		$sub_products  = get_post_meta( $post->ID, '_wps_plan_sub_products', true );
+
+		// Single grant method — mutually exclusive.
+		// Default to 'purchase' for backward compat with plans saved before this field.
+		$grant_method  = get_post_meta( $post->ID, '_wps_plan_grant_method', true );
+		$valid_methods = array( 'purchase', 'subscription', 'auto_enroll' );
+		if ( ! in_array( $grant_method, $valid_methods, true ) ) {
+			$grant_method = 'purchase';
+		}
 
 		return array(
-			'id'            => $post->ID,
-			'name'          => $post->post_title,
-			'slug'          => get_post_meta( $post->ID, '_wps_plan_slug', true ),
-			'description'   => $post->post_content,
-			'status'        => in_array( $status, array( 'active', 'inactive' ), true ) ? $status : 'active',
-			'color'         => get_post_meta( $post->ID, '_wps_plan_color', true ),
-			'access_length' => is_array( $access_length ) ? $access_length : array(
+			'id'                    => $post->ID,
+			'name'                  => $post->post_title,
+			'slug'                  => get_post_meta( $post->ID, '_wps_plan_slug', true ),
+			'description'           => $post->post_content,
+			'status'                => in_array( $status, array( 'active', 'inactive' ), true )
+				? $status
+				: 'active',
+			'color'                 => get_post_meta( $post->ID, '_wps_plan_color', true ),
+			'access_length'         => is_array( $access_length ) ? $access_length : array(
 				'type'  => 'lifetime',
 				'value' => 0,
 				'unit'  => 'day',
 			),
-			'products'      => is_array( $products ) ? array_map( 'absint', $products ) : array(),
+			'products'              => is_array( $products )
+				? array_map( 'absint', $products )
+				: array(),
+			'subscription_products' => is_array( $sub_products )
+				? array_map( 'absint', $sub_products )
+				: array(),
+			'grant_method'          => $grant_method,
+			// Convenience booleans derived from grant_method — used by callers
+			// that check enabled flags (order grant, sync, badge, enforcer).
+			'purchase_enabled'      => 'purchase' === $grant_method,
+			'subscription_enabled'  => 'subscription' === $grant_method,
+			'auto_enroll'           => 'auto_enroll' === $grant_method,
 		);
 	}
 }
@@ -65,7 +87,7 @@ if ( ! function_exists( 'wps_create_plan' ) ) {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $args {
+	 * @param array $args Plan arguments. {
 	 *   @type string $name          Required. Plan display name.
 	 *   @type string $slug          Optional. Auto-generated from name if omitted.
 	 *   @type string $description   Optional. Plan description (wp_kses_post applied).
@@ -227,6 +249,61 @@ if ( ! function_exists( 'wps_get_all_plans' ) ) {
 		$posts = get_posts( $args );
 
 		return array_map( 'wps_membership_plan_row', $posts );
+	}
+}
+
+if ( ! function_exists( 'wps_get_plans_for_product' ) ) {
+	/**
+	 * Return all active plans that list a given product (via any grant method).
+	 *
+	 * Checks the purchase product list (`products`) for purchase-grant plans and
+	 * the subscription product list (`subscription_products`) for subscription-grant
+	 * plans. Auto-enroll plans are not linked to specific products.
+	 *
+	 * @since  2.0.0
+	 * @param  int $product_id WC product or variation ID.
+	 * @return array Filtered array of plan arrays from wps_membership_plan_row().
+	 */
+	function wps_get_plans_for_product( $product_id ) {
+		$product_id = absint( $product_id );
+		$all_plans  = wps_get_all_plans( 'active' );
+		return array_values(
+			array_filter(
+				$all_plans,
+				function ( $plan ) use ( $product_id ) {
+					if ( 'purchase' === $plan['grant_method'] ) {
+						return in_array( $product_id, $plan['products'], true );
+					}
+					if ( 'subscription' === $plan['grant_method'] ) {
+						return in_array( $product_id, $plan['subscription_products'], true );
+					}
+					return false;
+				}
+			)
+		);
+	}
+}
+
+if ( ! function_exists( 'wps_get_plans_for_subscription_product' ) ) {
+	/**
+	 * Return all active subscription-grant plans that list a given product.
+	 *
+	 * @since  2.0.0
+	 * @param  int $product_id WC product (or variation) ID.
+	 * @return array Filtered array of plan arrays from wps_membership_plan_row().
+	 */
+	function wps_get_plans_for_subscription_product( $product_id ) {
+		$product_id = absint( $product_id );
+		$all_plans  = wps_get_all_plans( 'active' );
+		return array_values(
+			array_filter(
+				$all_plans,
+				function ( $plan ) use ( $product_id ) {
+					return 'subscription' === $plan['grant_method']
+						&& in_array( $product_id, $plan['subscription_products'], true );
+				}
+			)
+		);
 	}
 }
 
@@ -532,6 +609,49 @@ if ( ! function_exists( 'wps_get_plan_by_product' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wps_product_actively_grants_membership' ) ) {
+	/**
+	 * Return the plan slug only when the product is linked AND the relevant
+	 * grant method (purchase or subscription) is currently enabled.
+	 *
+	 * Use this wherever UI or enforcement decisions depend on whether the
+	 * grant is live — badge display, product page panel, purchasability bypass.
+	 * `wps_get_plan_by_product()` is intentionally left as a raw map lookup so
+	 * the sync/order-grant layer can still read the plan even when the method
+	 * is temporarily disabled (those callers check the flag themselves).
+	 *
+	 * @since  2.0.0
+	 * @param  int $product_id WC product ID.
+	 * @return string|null Plan slug if an enabled method links this product,
+	 *                     null otherwise.
+	 */
+	function wps_product_actively_grants_membership( $product_id ) {
+		$product_id = absint( $product_id );
+		$plan_slug  = wps_get_plan_by_product( $product_id );
+		if ( ! $plan_slug ) {
+			return null;
+		}
+
+		$plan = wps_get_plan_by_slug( $plan_slug );
+		if ( ! $plan ) {
+			return null;
+		}
+
+		// Product is in the one-time purchase list and that method is on.
+		if ( $plan['purchase_enabled'] && in_array( $product_id, $plan['products'], true ) ) {
+			return $plan_slug;
+		}
+
+		// Product is in the subscription list and that method is on.
+		if ( $plan['subscription_enabled']
+			&& in_array( $product_id, $plan['subscription_products'], true ) ) {
+			return $plan_slug;
+		}
+
+		return null;
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Purchase CTA helpers
 // ---------------------------------------------------------------------------
@@ -677,5 +797,113 @@ if ( ! function_exists( 'wps_sanitize_access_length' ) ) {
 			'value' => $value,
 			'unit'  => $unit,
 		);
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Front-end card builder
+// ---------------------------------------------------------------------------
+
+if ( ! function_exists( 'wps_build_membership_card_html' ) ) {
+	/**
+	 * Build the "MEMBERSHIP INCLUDED" card HTML for a set of plans.
+	 *
+	 * Used on single product pages for both subscription-grant and
+	 * purchase-grant products. The returned string contains no unescaped
+	 * user content — all values are escaped inline.
+	 *
+	 * @since  2.0.0
+	 * @param  array  $plans        Array of plan arrays from wps_membership_plan_row().
+	 * @param  string $product_type WC product type — affects the subtitle copy.
+	 * @return string HTML string (may be empty when $plans is empty).
+	 */
+	function wps_build_membership_card_html( array $plans, $product_type = 'simple' ) {
+		if ( empty( $plans ) ) {
+			return '';
+		}
+
+		$is_subscription = ( 'variation' === $product_type || 'subscription' === $product_type );
+
+		if ( $is_subscription ) {
+			$subtitle = esc_html__(
+				'Active subscription grants you the following membership:',
+				'subscriptions-for-woocommerce'
+			);
+		} else {
+			$subtitle = esc_html__(
+				'Purchasing this product will grant you the following membership:',
+				'subscriptions-for-woocommerce'
+			);
+		}
+
+		$unit_singular = array(
+			'day'   => __( 'Day', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Month', 'subscriptions-for-woocommerce' ),
+			'year'  => __( 'Year', 'subscriptions-for-woocommerce' ),
+		);
+		$unit_plural   = array(
+			'day'   => __( 'Days', 'subscriptions-for-woocommerce' ),
+			'month' => __( 'Months', 'subscriptions-for-woocommerce' ),
+			'year'  => __( 'Years', 'subscriptions-for-woocommerce' ),
+		);
+
+		$html  = '<div class="wps-membership-included">';
+		$html .= '<div class="wps-membership-included__header">';
+		$html .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"'
+			. ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
+			. ' stroke-linejoin="round" aria-hidden="true">'
+			. '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77'
+			. ' 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>'
+			. '</svg>';
+		$html .= '<span>' . esc_html__( 'MEMBERSHIP INCLUDED', 'subscriptions-for-woocommerce' ) . '</span>';
+		$html .= '</div>';
+
+		$html .= '<div class="wps-membership-included__body">';
+		$html .= '<p class="wps-membership-included__subtitle">' . $subtitle . '</p>';
+
+		foreach ( $plans as $plan ) {
+			$color        = ! empty( $plan['color'] ) ? $plan['color'] : '#2e7d32';
+			$al           = isset( $plan['access_length'] ) ? $plan['access_length'] : array();
+			$al_type      = isset( $al['type'] ) ? $al['type'] : 'lifetime';
+			$al_val       = isset( $al['value'] ) ? absint( $al['value'] ) : 0;
+			$al_unit      = isset( $al['unit'] ) ? $al['unit'] : 'day';
+			$grant_method = isset( $plan['grant_method'] ) ? $plan['grant_method'] : 'purchase';
+
+			if ( 'subscription' === $grant_method ) {
+				$badge = esc_html__( 'While Subscribed', 'subscriptions-for-woocommerce' );
+			} elseif ( 'fixed' === $al_type && $al_val ) {
+				$ul    = 1 === $al_val
+					? ( isset( $unit_singular[ $al_unit ] ) ? $unit_singular[ $al_unit ] : $al_unit )
+					: ( isset( $unit_plural[ $al_unit ] ) ? $unit_plural[ $al_unit ] : $al_unit );
+				$badge = $al_val . ' ' . $ul . ' ' . esc_html__( 'Access', 'subscriptions-for-woocommerce' );
+			} else {
+				$badge = esc_html__( 'Lifetime Access', 'subscriptions-for-woocommerce' );
+			}
+
+			$desc = ! empty( $plan['description'] )
+				? wp_strip_all_tags( $plan['description'] )
+				: '';
+
+			$html .= '<div class="wps-membership-included__plan"'
+				. ' style="border-left-color:' . esc_attr( $color ) . ';">';
+			$html .= '<div class="wps-membership-included__plan-main">';
+			$html .= '<span class="wps-membership-included__dot"'
+				. ' style="background:' . esc_attr( $color ) . ';"></span>';
+			$html .= '<strong class="wps-membership-included__plan-name">'
+				. esc_html( $plan['name'] ) . '</strong>';
+			$html .= '<span class="wps-membership-included__badge">'
+				. esc_html( $badge ) . '</span>';
+			$html .= '</div>';
+			if ( $desc ) {
+				$html .= '<p class="wps-membership-included__desc">'
+					. esc_html( $desc ) . '</p>';
+			}
+			$html .= '</div>';
+		}
+
+		$html .= '</div>';
+		$html .= '</div>';
+
+		return $html;
 	}
 }

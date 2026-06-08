@@ -28,6 +28,38 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
+	// Variable subscription product page — update billing info and membership card
+	// when a specific variation is selected.
+	jQuery( document ).on( 'found_variation', function( event, variation ) {
+		var $info = jQuery( '.wps-variable-sub-info' );
+		var html  = '';
+
+		if ( variation.wps_subscription_price_html || variation.wps_subscription_expiry_html ) {
+			html += '<p class="wps-variation-sub-billing">';
+			if ( variation.wps_subscription_price_html ) {
+				html += variation.wps_subscription_price_html;
+			}
+			if ( variation.wps_subscription_expiry_html ) {
+				html += variation.wps_subscription_expiry_html;
+			}
+			html += '</p>';
+		}
+
+		if ( variation.wps_membership_grants_html ) {
+			html += variation.wps_membership_grants_html;
+		}
+
+		if ( html ) {
+			$info.html( html ).show();
+		} else {
+			$info.hide().empty();
+		}
+	} );
+
+	jQuery( document ).on( 'reset_data', function() {
+		jQuery( '.wps-variable-sub-info' ).hide().empty();
+	} );
+
 	jQuery(document).ready(function($) {
 		$('.wps_sfw_subs_box-button').on('click', function(e) {
 			e.preventDefault();

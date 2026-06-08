@@ -297,13 +297,7 @@
 	color: #b45309;
 }
 
-/* Priority label */
-.wps-rule-card__prio {
-	font-size: 12px;
-	color: #9ea3a8;
-	white-space: nowrap;
-	flex-shrink: 0;
-}
+/* (Legacy .wps-rule-card__prio removed — replaced by .wps-rule-prio-label + .wps-rule-priority) */
 
 /* Actions */
 .wps-rule-card__actions {
@@ -571,4 +565,309 @@
 	align-items: center;
 	justify-content: space-between;
 	margin-top: 14px;
+}
+
+/* -----------------------------------------------------------------------
+   Enable/disable toggle in rule card header
+   ----------------------------------------------------------------------- */
+
+.wps-rule-enable-toggle {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+	cursor: pointer;
+	margin-right: 4px;
+}
+
+.wps-rule-enable-toggle input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
+.wps-rule-enable-toggle input[type="hidden"] {
+	display: none;
+}
+
+/* Disabled card — muted appearance */
+.wps-rule-card--disabled .wps-rule-card__summary {
+	opacity: 0.45;
+}
+
+.wps-rule-card--disabled .wps-rule-card__header {
+	background: #f6f7f7;
+}
+
+/* -----------------------------------------------------------------------
+   Priority inline input in card header
+   ----------------------------------------------------------------------- */
+
+.wps-rule-prio-label {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+	margin-left: 8px;
+}
+
+.wps-rule-priority {
+	width: 54px !important;
+	height: 28px !important;
+	padding: 2px 6px !important;
+	font-size: 12px !important;
+	text-align: center;
+	border-radius: 6px !important;
+	border: 1px solid #c3c4c7 !important;
+	background: #fff !important;
+	color: #50575e !important;
+}
+
+/* -----------------------------------------------------------------------
+   Segmented control (behavior selector)
+   ----------------------------------------------------------------------- */
+
+.wps-seg-control {
+	display: inline-flex;
+	border: 1px solid #c3c4c7;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.wps-seg-control__option {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.wps-seg-control__option input[type="radio"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.wps-seg-control__option span {
+	display: block;
+	padding: 5px 14px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #50575e;
+	background: #fff;
+	border-right: 1px solid #c3c4c7;
+	transition: background 0.15s, color 0.15s;
+	white-space: nowrap;
+}
+
+.wps-seg-control__option:last-child span {
+	border-right: none;
+}
+
+.wps-seg-control__option input[type="radio"]:checked + span {
+	background: #2271b1;
+	color: #fff;
+	font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------
+   Plan pills (replaces toggle switches in rule card plan list)
+   ----------------------------------------------------------------------- */
+
+.wps-plan-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.wps-plan-pill {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.wps-plan-pill input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.wps-plan-pill span {
+	display: block;
+	padding: 4px 13px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #50575e;
+	background: #f6f7f7;
+	border: 1.5px solid #c3c4c7;
+	border-radius: 20px;
+	transition: background 0.15s, color 0.15s, border-color 0.15s;
+	white-space: nowrap;
+	user-select: none;
+}
+
+.wps-plan-pill input[type="checkbox"]:checked + span {
+	background: #2271b1;
+	color: #fff;
+	border-color: #2271b1;
+	font-weight: 600;
+}
+
+.wps-plan-pill:hover span {
+	border-color: #2271b1;
+	color: #2271b1;
+}
+
+.wps-plan-pill input[type="checkbox"]:checked + span:hover {
+	color: #fff;
+}
+
+/* Color dot inside plan pill */
+.wps-plan-pill__dot {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	margin-right: 4px;
+	vertical-align: middle;
+	flex-shrink: 0;
+}
+
+/* Method badge inside plan pill */
+.wps-plan-pill__method {
+	display: inline-block;
+	font-style: normal;
+	font-size: 10px;
+	font-weight: 700;
+	margin-left: 5px;
+	padding: 1px 5px;
+	border-radius: 4px;
+	vertical-align: middle;
+	line-height: 1.4;
+	background: rgba( 0, 0, 0, .08 );
+	color: inherit;
+}
+
+.wps-plan-pill__method--subscription {
+	background: #dceefb;
+	color: #1d4b8f;
+}
+
+.wps-plan-pill__method--auto_enroll {
+	background: #dff0e0;
+	color: #1e6e2a;
+}
+
+.wps-plan-pill input[type="checkbox"]:checked + span .wps-plan-pill__method {
+	background: rgba( 255, 255, 255, .22 );
+	color: #fff;
+}
+
+/* Plan pills contextual notice */
+.wps-plan-pills__notice {
+	margin-top: 6px;
+	padding: 6px 10px;
+	border-left: 3px solid #2271b1;
+	background: #f0f6fc;
+	font-size: 12px;
+	color: #1d4b8f;
+	border-radius: 0 4px 4px 0;
+}
+
+.wps-plan-pills__notice--auto {
+	border-left-color: #2a7a33;
+	background: #edfaef;
+	color: #1e6e2a;
+}
+
+/* -----------------------------------------------------------------------
+   Global Defaults — collapsible section + compact rows
+   ----------------------------------------------------------------------- */
+
+.wps-access-section__head--collapsible {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 6px;
+	user-select: none;
+}
+
+.wps-access-section__head--collapsible .wps-access-section__desc {
+	flex: 1 1 100%;
+	margin: 0;
+}
+
+.wps-section-chevron {
+	margin-left: auto;
+	flex-shrink: 0;
+	font-style: normal;
+	transition: transform 0.2s;
+}
+
+.wps-access-section__head--collapsible[aria-expanded="true"] .wps-section-chevron {
+	transform: rotate(180deg);
+}
+
+.wps-defaults-body {
+	border-top: 1px solid #e0e0e0;
+}
+
+.wps-defaults-row {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 12px 16px;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.wps-defaults-row:last-child {
+	border-bottom: none;
+}
+
+.wps-defaults-row__label {
+	flex-shrink: 0;
+	width: 130px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+	padding-top: 5px;
+}
+
+.wps-defaults-row__field {
+	flex: 1;
+}
+
+.wps-defaults-row__field input[type="url"],
+.wps-defaults-row__field textarea {
+	width: 100%;
+	max-width: 600px;
+}
+
+.wps-defaults-messages-cols {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+	max-width: 700px;
+}
+
+.wps-defaults-messages-cols > p {
+	grid-column: 1 / -1;
+	margin: 0;
+	font-size: 12px;
+}
+
+.wps-defaults-sub-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 600;
+	color: #646970;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	margin-bottom: 4px;
+}
+
+.wps-defaults-tag-hint {
+	font-size: 12px;
+	color: #646970;
 }

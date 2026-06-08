@@ -83,6 +83,30 @@ $wps_is_fixed = 'fixed' === $wps_type;
 
 </div>
 
+<!-- Shown when grant method = subscription; hidden otherwise -->
+<div id="wps-access-sub-preview" style="display:none;">
+	<div class="wps-access-sub-preview__header">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+			stroke="currentColor" stroke-width="2" stroke-linecap="round"
+			stroke-linejoin="round" aria-hidden="true">
+			<polyline points="23 4 23 10 17 10"></polyline>
+			<polyline points="1 20 1 14 7 14"></polyline>
+			<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+		</svg>
+		<?php esc_html_e( 'Subscription Billing', 'subscriptions-for-woocommerce' ); ?>
+	</div>
+	<div id="wps-access-sub-preview__body">
+		<p class="wps-access-sub-preview__empty">
+			<?php
+			esc_html_e(
+				'Select a subscription product above to preview its billing period.',
+				'subscriptions-for-woocommerce'
+			);
+			?>
+		</p>
+	</div>
+</div>
+
 <script>
 ( function () {
 	var radios = document.querySelectorAll( '.wps-access-type-radio' );

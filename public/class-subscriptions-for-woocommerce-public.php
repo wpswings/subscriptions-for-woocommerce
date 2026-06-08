@@ -256,6 +256,10 @@ class Subscriptions_For_Woocommerce_Public {
 			return $price;
 		}
 		$product_type = $product->get_type();
+		// Variable products: billing info shown per-variation via JS (found_variation event).
+		if ( 'variable' === $product_type ) {
+			return $price;
+		}
 		$product_id = $product->get_id();
 		$wps_sfw_manage_subscription_box_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_manage_subscription_box_price', true );
 		$is_pro = apply_filters( 'wsp_sfw_check_pro_plugin', false );
@@ -3351,6 +3355,109 @@ class Subscriptions_For_Woocommerce_Public {
 	 * @param string $new_status as new status.
 	 * @return void
 	 */
+	/**
+	 * Embed subscription billing data into each variation's available JSON so the
+	 * front-end can show it live when a variation is selected.
+	 *
+	 * @param array      $data      Variation data passed to JS.
+	 * @param WC_Product $product   Parent variable product.
+	 * @param WC_Product $variation Variation product.
+	 * @return array
+	 */
+	public function wps_sfw_add_variation_subscription_data( $data, $product, $variation ) {
+		if ( ! wps_sfw_check_product_is_subscription( $variation ) ) {
+			return $data;
+		}
+
+		$variation_id = $variation->get_id();
+		$number       = (int) wps_sfw_get_meta_data( $variation_id, 'wps_sfw_subscription_number', true );
+		$interval     = wps_sfw_get_meta_data( $variation_id, 'wps_sfw_subscription_interval', true );
+
+		if ( $number && $interval ) {
+			$price_html = wps_sfw_get_time_interval_for_price( $number, $interval );
+			/* translators: %s: billing interval (e.g. "1 month") */
+			$data['wps_subscription_price_html'] = sprintf(
+				'<span class="wps_sfw_interval"> / %s</span>',
+				esc_html( $price_html )
+			);
+		}
+
+		$exp_num = (int) wps_sfw_get_meta_data( $variation_id, 'wps_sfw_subscription_expiry_number', true );
+		if ( $exp_num ) {
+			$exp_int      = wps_sfw_get_meta_data( $variation_id, 'wps_sfw_subscription_expiry_interval', true );
+			$exp_html     = wps_sfw_get_time_interval( $exp_num, $exp_int );
+			/* translators: %s: expiry interval (e.g. "6 months") */
+			$data['wps_subscription_expiry_html'] = sprintf(
+				'<span class="wps_sfw_expiry_interval"> %s</span>',
+				sprintf(
+					esc_html__( 'For %s', 'subscriptions-for-woocommerce' ),
+					esc_html( $exp_html )
+				)
+			);
+		}
+
+		// Membership plan card for this variation.
+		if ( function_exists( 'wps_get_plans_for_product' ) ) {
+			$plans = wps_get_plans_for_product( $variation_id );
+			if ( ! empty( $plans ) ) {
+				$data['wps_membership_grants_html'] = $this->wps_sfw_build_membership_card_html(
+					$plans,
+					$variation->get_type()
+				);
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Build the "MEMBERSHIP INCLUDED" card HTML for a set of plans.
+	 *
+	 * Delegates to the standalone wps_build_membership_card_html() so the same
+	 * template is reused across subscription and purchase-grant products.
+	 *
+	 * @param  array  $plans        Array of plan arrays from wps_membership_plan_row().
+	 * @param  string $product_type WC product type — affects the subtitle copy.
+	 * @return string HTML string.
+	 */
+	public function wps_sfw_build_membership_card_html( $plans, $product_type = 'simple' ) {
+		if ( function_exists( 'wps_build_membership_card_html' ) ) {
+			return wps_build_membership_card_html( $plans, $product_type );
+		}
+		return '';
+	}
+
+	/**
+	 * Output subscription info on single product pages.
+	 *
+	 * - Variable subscription: empty placeholder populated by JS on `found_variation`.
+	 * - Simple subscription: renders the MEMBERSHIP INCLUDED card immediately.
+	 */
+	public function wps_sfw_variable_subscription_info_placeholder() {
+		global $product;
+		if ( ! $product ) {
+			return;
+		}
+		if ( ! wps_sfw_check_product_is_subscription( $product ) ) {
+			return;
+		}
+
+		if ( $product->is_type( 'variable' ) ) {
+			echo '<div class="wps-variable-sub-info" style="display:none;"></div>';
+			return;
+		}
+
+		if ( ! function_exists( 'wps_get_plans_for_product' ) ) {
+			return;
+		}
+		$plans = wps_get_plans_for_product( $product->get_id() );
+		if ( empty( $plans ) ) {
+			return;
+		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $this->wps_sfw_build_membership_card_html( $plans, $product->get_type() );
+	}
+
 	public function wps_sfw_woocommerce_affiliate_commision_renewal( $order_id, $old_status, $new_status ) {
 		if ( ! class_exists( 'WPAM_Commission_Tracking' ) ) {
 			return;

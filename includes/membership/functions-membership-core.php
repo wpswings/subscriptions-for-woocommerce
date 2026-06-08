@@ -79,17 +79,30 @@ if ( ! function_exists( 'wps_rebuild_product_plan_map' ) ) {
 		);
 
 		foreach ( $plans as $plan_id ) {
-			$slug     = sanitize_key( get_post_meta( $plan_id, '_wps_plan_slug', true ) );
-			$products = get_post_meta( $plan_id, '_wps_plan_products', true );
-
-			if ( empty( $slug ) || empty( $products ) || ! is_array( $products ) ) {
+			$slug = sanitize_key( get_post_meta( $plan_id, '_wps_plan_slug', true ) );
+			if ( empty( $slug ) ) {
 				continue;
 			}
 
-			foreach ( $products as $product_id ) {
-				$product_id = absint( $product_id );
-				if ( $product_id > 0 ) {
-					$map[ $product_id ] = $slug;
+			// Purchase products.
+			$products = get_post_meta( $plan_id, '_wps_plan_products', true );
+			if ( is_array( $products ) ) {
+				foreach ( $products as $product_id ) {
+					$product_id = absint( $product_id );
+					if ( $product_id > 0 ) {
+						$map[ $product_id ] = $slug;
+					}
+				}
+			}
+
+			// Subscription products (separate selector).
+			$sub_products = get_post_meta( $plan_id, '_wps_plan_sub_products', true );
+			if ( is_array( $sub_products ) ) {
+				foreach ( $sub_products as $product_id ) {
+					$product_id = absint( $product_id );
+					if ( $product_id > 0 ) {
+						$map[ $product_id ] = $slug;
+					}
 				}
 			}
 		}

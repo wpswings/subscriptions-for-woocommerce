@@ -115,10 +115,9 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		 * Handle admin / system cancellation.
 		 *
 		 * @since 2.0.0
-		 * @param int    $subscription_id Subscription post / order ID.
-		 * @param string $reason          Reason string (unused).
+		 * @param int $subscription_id Subscription post / order ID.
 		 */
-		public function on_subscription_cancelled( $subscription_id, $reason ) {
+		public function on_subscription_cancelled( $subscription_id ) {
 			$this->process_subscription( absint( $subscription_id ), 'cancelled' );
 		}
 
@@ -127,9 +126,8 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		 *
 		 * @since 2.0.0
 		 * @param int $subscription_id Subscription post / order ID.
-		 * @param int $user_id         WordPress user ID (unused — resolved internally).
 		 */
-		public function on_subscription_cancelled_user( $subscription_id, $user_id ) {
+		public function on_subscription_cancelled_user( $subscription_id ) {
 			$this->process_subscription( absint( $subscription_id ), 'cancelled' );
 		}
 
@@ -150,11 +148,10 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		 * the time this hook fires.
 		 *
 		 * @since 2.0.0
-		 * @param WC_Order $renewal_order    The newly created renewal order object.
-		 * @param int      $subscription_id  Subscription post / order ID.
-		 * @param string   $payment_method   Payment method ID (unused).
+		 * @param WC_Order $renewal_order   The newly created renewal order object.
+		 * @param int      $subscription_id Subscription post / order ID.
 		 */
-		public function on_renewal_payment( $renewal_order, $subscription_id, $payment_method ) {
+		public function on_renewal_payment( $renewal_order, $subscription_id ) {
 			$subscription_id = absint( $subscription_id );
 			$expiry          = absint( wps_sfw_get_meta_data( $subscription_id, 'wps_next_payment_date', true ) );
 			$this->process_subscription( $subscription_id, 'active', $expiry ? $expiry : null );
@@ -231,7 +228,7 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		 * @param int|null $expiry_date       Unix timestamp for expiry, or null for lifetime.
 		 */
 		private function process_subscription( $subscription_id, $normalized_status, $expiry_date = null ) {
-			$subscription_id  = absint( $subscription_id );
+			$subscription_id   = absint( $subscription_id );
 			$normalized_status = sanitize_key( $normalized_status );
 
 			if ( ! $subscription_id ) {
@@ -247,6 +244,14 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 			$plan_slug = wps_get_plan_by_product( $product_id );
 			if ( ! $plan_slug ) {
 				// No linked plan — backward-compat guarantee: touch nothing.
+				return;
+			}
+
+			// Respect the "Active Subscription" enabled toggle.
+			$plan_data = function_exists( 'wps_get_plan_by_slug' )
+				? wps_get_plan_by_slug( $plan_slug )
+				: null;
+			if ( $plan_data && ! $plan_data['subscription_enabled'] ) {
 				return;
 			}
 
@@ -299,7 +304,7 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		 * @return int|null Unix timestamp of the next payment, or null on failure.
 		 */
 		private function compute_expiry_from_subscription( $subscription_id ) {
-			$current_time = (int) current_time( 'timestamp' );
+			$current_time = time();
 
 			$trial_end = (int) wps_sfw_get_meta_data(
 				$subscription_id,

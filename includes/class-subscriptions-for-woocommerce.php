@@ -239,6 +239,7 @@ class Subscriptions_For_Woocommerce {
 		require_once $wps_mem_dir . 'class-wps-access-rules-engine.php';
 		require_once $wps_mem_dir . 'class-wps-restriction-enforcer.php';
 		require_once $wps_mem_dir . 'class-wps-myaccount-memberships.php';
+		require_once $wps_mem_dir . 'class-wps-product-badge.php';
 		$wps_adm_mem_dir = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/membership/';
 		require_once $wps_adm_mem_dir . 'class-wps-membership-plans-admin.php';
 		require_once $wps_adm_mem_dir . 'class-wps-members-admin.php';
@@ -459,6 +460,16 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'admin_enqueue_scripts', $wps_mem_plan_cpt, 'enqueue_admin_scripts' );
 		$this->loader->add_action( 'add_meta_boxes', $wps_mem_plan_cpt, 'add_meta_boxes' );
 		$this->loader->add_action( 'save_post', $wps_mem_plan_cpt, 'save_meta_boxes', 10, 2 );
+		$this->loader->add_action(
+			'wp_ajax_wps_search_subscription_products',
+			$wps_mem_plan_cpt,
+			'ajax_search_subscription_products'
+		);
+		$this->loader->add_action(
+			'wp_ajax_wps_get_subscription_duration',
+			$wps_mem_plan_cpt,
+			'ajax_get_subscription_duration'
+		);
 
 		$wps_members_admin = new WPS_Members_Admin();
 		$this->loader->add_filter( $tabs_filter, $wps_members_admin, 'register_tab', 30 );
@@ -1119,6 +1130,19 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'wps_sfw_public_enqueue_scripts' );
 
 			$this->loader->add_filter( 'woocommerce_get_price_html', $sfw_plugin_public, 'wps_sfw_price_html_subscription_product', 10, 2 );
+			$this->loader->add_filter(
+				'woocommerce_available_variation',
+				$sfw_plugin_public,
+				'wps_sfw_add_variation_subscription_data',
+				10,
+				3
+			);
+			$this->loader->add_action(
+				'woocommerce_single_product_summary',
+				$sfw_plugin_public,
+				'wps_sfw_variable_subscription_info_placeholder',
+				25
+			);
 			$this->loader->add_filter( 'woocommerce_product_single_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_product_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_order_button_text', $sfw_plugin_public, 'wps_sfw_woocommerce_order_button_text' );
@@ -1248,6 +1272,21 @@ class Subscriptions_For_Woocommerce {
 				'woocommerce_account_memberships_endpoint',
 				$wps_myaccount_memberships,
 				'render_tab'
+			);
+
+			$wps_product_badge = new WPS_Product_Badge();
+			$this->loader->add_action( 'wp_enqueue_scripts', $wps_product_badge, 'enqueue_styles' );
+			$this->loader->add_action(
+				'woocommerce_before_shop_loop_item_title',
+				$wps_product_badge,
+				'render_shop_badge',
+				5
+			);
+			$this->loader->add_action(
+				'woocommerce_single_product_summary',
+				$wps_product_badge,
+				'render_product_page_plans',
+				25
 			);
 
 		}

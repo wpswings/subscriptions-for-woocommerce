@@ -102,6 +102,14 @@ if ( ! class_exists( 'WPS_Membership_Order_Grant' ) ) {
 					continue;
 				}
 
+				// Respect the "Product Purchase" enabled toggle.
+				$plan_data = function_exists( 'wps_get_plan_by_slug' )
+					? wps_get_plan_by_slug( $plan_slug )
+					: null;
+				if ( $plan_data && ! $plan_data['purchase_enabled'] ) {
+					continue;
+				}
+
 				// Idempotency: skip if this order already granted this membership.
 				$existing = wps_get_membership( $user_id, $plan_slug );
 				if ( $existing

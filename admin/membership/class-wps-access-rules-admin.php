@@ -94,11 +94,19 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 				'wps-access-rules',
 				'wpsAccessRules',
 				array(
-					'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'wps_membership_admin_nonce' ),
-					'searching'  => esc_html__( 'Searching…', 'subscriptions-for-woocommerce' ),
-					'noResults'  => esc_html__( 'No results found.', 'subscriptions-for-woocommerce' ),
-					'removeItem' => esc_html__( '×', 'subscriptions-for-woocommerce' ),
+					'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
+					'nonce'           => wp_create_nonce( 'wps_membership_admin_nonce' ),
+					'searching'       => esc_html__( 'Searching…', 'subscriptions-for-woocommerce' ),
+					'noResults'       => esc_html__( 'No results found.', 'subscriptions-for-woocommerce' ),
+					'removeItem'      => esc_html__( '×', 'subscriptions-for-woocommerce' ),
+					'subGrantNotice'  => esc_html__(
+						'Access duration follows the subscription lifecycle — the Access Length setting is ignored.',
+						'subscriptions-for-woocommerce'
+					),
+					'autoGrantNotice' => esc_html__(
+						'Auto-Enroll plan: access is granted automatically on registration.',
+						'subscriptions-for-woocommerce'
+					),
 				)
 			);
 		}

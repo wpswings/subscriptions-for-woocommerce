@@ -147,6 +147,26 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 				return $purchasable;
 			}
 
+			// Plan-granting products must stay purchasable only while their grant
+			// method is enabled. If purchase/subscription is disabled the product
+			// is no longer a grant vehicle, so normal access rules apply to it.
+			// Use wps_product_actively_grants_membership() which checks both the
+			// map and the per-method enabled flag in one call.
+			if ( function_exists( 'wps_product_actively_grants_membership' )
+				&& null !== wps_product_actively_grants_membership( $post_id )
+			) {
+				return true;
+			}
+			// Stale-map fallback: rebuild and re-check with the enabled-aware helper.
+			if ( function_exists( 'wps_rebuild_product_plan_map' )
+				&& function_exists( 'wps_product_actively_grants_membership' )
+			) {
+				wps_rebuild_product_plan_map();
+				if ( null !== wps_product_actively_grants_membership( $post_id ) ) {
+					return true;
+				}
+			}
+
 			$post = get_post( $post_id );
 			if ( ! $post instanceof WP_Post ) {
 				return $purchasable;
