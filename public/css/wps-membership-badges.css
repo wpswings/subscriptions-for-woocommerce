@@ -51,11 +51,11 @@ ul.products li.product {
    ----------------------------------------------------------------------- */
 
 .wps-membership-gate {
-	margin: 16px 0 20px;
-	border: 1.5px solid #dce6f0;
-	border-radius: 10px;
+	margin: 20px 0;
+	border: 1px solid #dce6f0;
+	border-radius: 8px;
+	background: #fafcff;
 	overflow: hidden;
-	background: #f8fafd;
 }
 
 /* Header row */
@@ -64,23 +64,21 @@ ul.products li.product {
 	align-items: center;
 	gap: 8px;
 	padding: 11px 16px;
-	background: linear-gradient(135deg, #1a56a8 0%, #2271b1 100%);
+	background: #edf3fb;
+	border-bottom: 1px solid #dce6f0;
 }
 
 .wps-membership-gate__lock {
 	width: 15px;
 	height: 15px;
 	flex-shrink: 0;
-	color: #ffffff;
-	opacity: 0.9;
+	color: #2271b1;
 }
 
 .wps-membership-gate__title {
 	font-size: 13px;
 	font-weight: 700;
-	color: #ffffff;
-	letter-spacing: 0.03em;
-	text-transform: uppercase;
+	color: #1d2327;
 }
 
 /* Intro line */
@@ -89,7 +87,7 @@ ul.products li.product {
 	padding: 10px 16px 8px;
 	font-size: 13px;
 	color: #50575e;
-	border-bottom: 1px solid #dce6f0;
+	border-bottom: 1px solid #e8eef6;
 }
 
 /* Plans wrapper */
@@ -212,8 +210,14 @@ ul.products li.product {
    ----------------------------------------------------------------------- */
 
 .wps-members-badge--grant {
-	background: linear-gradient(135deg, #1a7f4b 0%, #2e9e60 100%);
-	box-shadow: 0 2px 8px rgba(30, 127, 75, 0.40);
+	background: var(--badge-color, #2271b1);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-members-badge--grant {
+		box-shadow: 0 2px 8px color-mix(in srgb, var(--badge-color, #2271b1) 55%, transparent);
+	}
 }
 
 /* -----------------------------------------------------------------------
@@ -221,11 +225,11 @@ ul.products li.product {
    ----------------------------------------------------------------------- */
 
 .wps-membership-grant {
-	margin: 16px 0 20px;
-	border: 1.5px solid #c3e6d0;
-	border-radius: 10px;
+	margin: 20px 0;
+	border: 1px solid #c6e8d3;
+	border-radius: 8px;
+	background: #f6fbf8;
 	overflow: hidden;
-	background: #f4fbf7;
 }
 
 .wps-membership-grant__header {
@@ -233,31 +237,29 @@ ul.products li.product {
 	align-items: center;
 	gap: 8px;
 	padding: 11px 16px;
-	background: linear-gradient(135deg, #1a7f4b 0%, #2e9e60 100%);
+	background: #eaf6ef;
+	border-bottom: 1px solid #c6e8d3;
 }
 
 .wps-membership-grant__icon {
 	width: 15px;
 	height: 15px;
 	flex-shrink: 0;
-	color: #ffffff;
-	opacity: 0.9;
+	color: #1a7f4b;
 }
 
 .wps-membership-grant__title {
 	font-size: 13px;
 	font-weight: 700;
-	color: #ffffff;
-	letter-spacing: 0.03em;
-	text-transform: uppercase;
+	color: #1d2327;
 }
 
 .wps-membership-grant__intro {
 	margin: 0;
 	padding: 10px 16px 8px;
 	font-size: 13px;
-	color: #3c434a;
-	border-bottom: 1px solid #c3e6d0;
+	color: #50575e;
+	border-bottom: 1px solid #d9f0e3;
 }
 
 .wps-membership-grant__plan {
@@ -265,16 +267,15 @@ ul.products li.product {
 }
 
 /* -----------------------------------------------------------------------
-   "MEMBERSHIP INCLUDED" card — shared between subscription and
-   purchase-grant product pages.
+   "Membership Included" card — rendered on purchase/subscription product
+   pages when the product actively grants a membership plan.
    ----------------------------------------------------------------------- */
 
 .wps-membership-included {
-	margin: 10px 0;
-	border: 1px solid #b2dfb4;
-	border-radius: 6px;
+	margin: 16px 0;
+	border: 1px solid #e2eaf4;
+	border-radius: 8px;
 	overflow: hidden;
-	font-size: 14px;
 }
 
 .wps-membership-included__header {
@@ -282,39 +283,58 @@ ul.products li.product {
 	align-items: center;
 	gap: 8px;
 	padding: 10px 14px;
-	background: #2e7d32;
-	color: #fff;
-	font-size: 12px;
-	font-weight: 700;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
+	background: #edf9f3;
+	border-bottom: 1px solid #e2eaf4;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-membership-included__header {
+		background: color-mix(in srgb, var(--plan-color, #1a7f4b) 8%, #ffffff);
+		border-bottom-color: color-mix(in srgb, var(--plan-color, #1a7f4b) 20%, #e0e0e0);
+	}
 }
 
 .wps-membership-included__header svg {
-	width: 15px;
-	height: 15px;
+	width: 14px;
+	height: 14px;
 	flex-shrink: 0;
+	color: var(--plan-color, #1a7f4b);
 	pointer-events: none;
+}
+
+.wps-membership-included__header span {
+	font-size: 12px;
+	font-weight: 700;
+	color: #1d2327;
+	letter-spacing: 0.02em;
 }
 
 .wps-membership-included__body {
 	padding: 12px 14px;
-	background: #f1f8f1;
+	background: #ffffff;
 }
 
 .wps-membership-included__subtitle {
 	margin: 0 0 10px;
 	font-size: 13px;
-	color: #555;
+	color: #50575e;
 }
 
 .wps-membership-included__plan {
 	padding: 10px 12px;
-	background: #fff;
-	border: 1px solid #c8e6c9;
-	border-left: 4px solid #2e7d32;
-	border-radius: 4px;
+	background: #fafcff;
+	border: 1px solid #e2eaf4;
+	border-left: 3px solid var(--plan-color, #1a7f4b);
+	border-radius: 6px;
 	margin-bottom: 8px;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-membership-included__plan {
+		background: color-mix(in srgb, var(--plan-color, #1a7f4b) 4%, #ffffff);
+		border-color: color-mix(in srgb, var(--plan-color, #1a7f4b) 18%, #e0e0e0);
+		border-left-color: var(--plan-color, #1a7f4b);
+	}
 }
 
 .wps-membership-included__plan:last-child {
@@ -326,16 +346,14 @@ ul.products li.product {
 	align-items: center;
 	justify-content: space-between;
 	gap: 8px;
-	margin-bottom: 2px;
+}
+
+.wps-membership-included__plan-main:not(:last-child) {
+	margin-bottom: 4px;
 }
 
 .wps-membership-included__dot {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	flex-shrink: 0;
-	margin-right: 6px;
+	display: none;
 }
 
 .wps-membership-included__plan-name {
@@ -347,19 +365,28 @@ ul.products li.product {
 
 .wps-membership-included__badge {
 	display: inline-block;
-	padding: 2px 10px;
-	border-radius: 12px;
-	background: #e8f5e9;
-	color: #2e7d32;
-	font-size: 12px;
-	font-weight: 600;
-	border: 1px solid #c8e6c9;
+	padding: 2px 9px;
+	border-radius: 20px;
+	background: #edf2f9;
+	color: #2271b1;
+	border: 1px solid #c3d9f0;
+	font-size: 11px;
+	font-weight: 700;
 	white-space: nowrap;
 	flex-shrink: 0;
 }
 
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-membership-included__badge {
+		background: color-mix(in srgb, var(--plan-color, #1a7f4b) 10%, #ffffff);
+		color: var(--plan-color, #1a7f4b);
+		border-color: color-mix(in srgb, var(--plan-color, #1a7f4b) 28%, #e0e0e0);
+	}
+}
+
 .wps-membership-included__desc {
-	margin: 4px 0 0 16px;
+	margin: 2px 0 0;
 	font-size: 12px;
 	color: #646970;
+	line-height: 1.5;
 }

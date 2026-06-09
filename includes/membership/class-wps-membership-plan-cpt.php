@@ -439,11 +439,15 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 			}
 			update_post_meta( $post_id, '_wps_plan_grant_method', $grant_method );
 
-			// Purchase products — rebuild map only when the list changes.
+			// Purchase products.
+			// Hidden panels still submit via POST; only keep products for the active method.
 			$old_products = (array) get_post_meta( $post_id, '_wps_plan_products', true );
 			$products     = isset( $_POST['_wps_plan_products'] ) && is_array( $_POST['_wps_plan_products'] )
 				? array_values( array_filter( array_map( 'absint', wp_unslash( $_POST['_wps_plan_products'] ) ) ) )
 				: array();
+			if ( 'purchase' !== $grant_method ) {
+				$products = array();
+			}
 			update_post_meta( $post_id, '_wps_plan_products', $products );
 
 			// Subscription product — single selection stored as a one-element array.
@@ -452,6 +456,9 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 				? absint( $_POST['_wps_plan_sub_product'] )
 				: 0;
 			$sub_products     = $sub_product_id ? array( $sub_product_id ) : array();
+			if ( 'subscription' !== $grant_method ) {
+				$sub_products = array();
+			}
 			update_post_meta( $post_id, '_wps_plan_sub_products', $sub_products );
 
 			if ( $products !== $old_products || $sub_products !== $old_sub_products ) {

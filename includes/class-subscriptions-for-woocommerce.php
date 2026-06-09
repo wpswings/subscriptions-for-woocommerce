@@ -1263,13 +1263,14 @@ class Subscriptions_For_Woocommerce {
 			$wps_myaccount_memberships = new WPS_Myaccount_Memberships();
 			$this->loader->add_action( 'init', $wps_myaccount_memberships, 'register_endpoint', 5 );
 			$this->loader->add_filter( 'query_vars', $wps_myaccount_memberships, 'add_query_var' );
+			$this->loader->add_action( 'wp_enqueue_scripts', $wps_myaccount_memberships, 'enqueue_styles' );
 			$this->loader->add_filter(
 				'woocommerce_account_menu_items',
 				$wps_myaccount_memberships,
 				'add_menu_item'
 			);
 			$this->loader->add_action(
-				'woocommerce_account_memberships_endpoint',
+				'woocommerce_account_wps_memberships_endpoint',
 				$wps_myaccount_memberships,
 				'render_tab'
 			);

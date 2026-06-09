@@ -75,6 +75,8 @@ if ( ! function_exists( 'wps_rebuild_product_plan_map' ) ) {
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
 				'no_found_rows'  => true,
+				'orderby'        => 'ID',
+				'order'          => 'ASC',
 			)
 		);
 

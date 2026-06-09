@@ -84,20 +84,52 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 
 			$product_id = $product->get_id();
 
-			// Plan-granting products → green "Unlocks Membership" badge.
+			// Plan-granting products → green badge (text varies by grant method).
 			if ( function_exists( 'wps_product_actively_grants_membership' ) ) {
 				$grant_slug = wps_product_actively_grants_membership( $product_id );
 				if ( null !== $grant_slug ) {
-					echo '<span class="wps-members-badge wps-members-badge--grant">'
-						. '<svg class="wps-members-badge__icon" xmlns="http://www.w3.org/2000/svg"'
-						. ' viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-						. ' stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"'
-						. ' aria-hidden="true">'
-						. '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77'
-						. 'l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>'
-						. '</svg>'
-						. esc_html__( 'Unlocks Membership', 'subscriptions-for-woocommerce' )
-						. '</span>';
+					$grant_plan   = function_exists( 'wps_get_plan_by_slug' )
+						? wps_get_plan_by_slug( $grant_slug )
+						: null;
+					$grant_method = $grant_plan
+						? ( isset( $grant_plan['grant_method'] ) ? $grant_plan['grant_method'] : 'purchase' )
+						: 'purchase';
+					$badge_color  = $grant_plan && ! empty( $grant_plan['color'] )
+						? sanitize_hex_color( $grant_plan['color'] )
+						: '';
+
+					if ( 'subscription' === $grant_method ) {
+						// Subscription product — key icon + "Includes Membership".
+						$badge_icon = '<svg class="wps-members-badge__icon"'
+							. ' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"'
+							. ' fill="none" stroke="currentColor" stroke-width="2.5"'
+							. ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+							. '<circle cx="7.5" cy="15.5" r="5.5"/>'
+							. '<path d="M21 2l-9.6 9.6M15.5 7.5l3 3"/>'
+							. '</svg>';
+						$badge_text = esc_html__( 'Includes Membership', 'subscriptions-for-woocommerce' );
+						$badge_mod  = 'wps-members-badge--grant';
+					} else {
+						// One-time purchase — star icon + "Unlocks Membership".
+						$badge_icon = '<svg class="wps-members-badge__icon"'
+							. ' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"'
+							. ' fill="none" stroke="currentColor" stroke-width="2.5"'
+							. ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+							. '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88'
+							. 'L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>'
+							. '</svg>';
+						$badge_text = esc_html__( 'Unlocks Membership', 'subscriptions-for-woocommerce' );
+						$badge_mod  = 'wps-members-badge--grant';
+					}
+
+					$badge_style = $badge_color
+						? ' style="--badge-color:' . esc_attr( $badge_color ) . ';"'
+						: '';
+
+					// $badge_icon is hardcoded SVG; $badge_text is pre-escaped by esc_html__().
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<span class="wps-members-badge ' . esc_attr( $badge_mod ) . '"' . $badge_style . '>'
+						. $badge_icon . $badge_text . '</span>';
 					return;
 				}
 			}

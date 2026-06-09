@@ -579,6 +579,7 @@
 	margin-right: 4px;
 }
 
+/* Hide native checkbox — same as .wps-toggle */
 .wps-rule-enable-toggle input[type="checkbox"] {
 	position: absolute;
 	opacity: 0;
@@ -591,13 +592,49 @@
 	display: none;
 }
 
-/* Disabled card — muted appearance */
-.wps-rule-card--disabled .wps-rule-card__summary {
-	opacity: 0.45;
+/* Checked state — knob slides right + track turns blue */
+.wps-rule-enable-toggle input[type="checkbox"]:checked + .wps-toggle__slider {
+	background: #2271b1;
+}
+
+.wps-rule-enable-toggle input[type="checkbox"]:checked + .wps-toggle__slider::after {
+	transform: translateX( 18px );
+}
+
+/* Focus ring */
+.wps-rule-enable-toggle:focus-within .wps-toggle__slider {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2271b1;
+}
+
+/* Disabled card — dimmed header, muted summary, left-border accent */
+.wps-rule-card--disabled {
+	border-left: 3px solid #c3c4c7;
+	opacity: 0.72;
 }
 
 .wps-rule-card--disabled .wps-rule-card__header {
 	background: #f6f7f7;
+}
+
+.wps-rule-card--disabled .wps-rule-card__summary {
+	opacity: 0.55;
+}
+
+.wps-rule-card--disabled .wps-rule-card__target-lbl {
+	text-decoration: line-through;
+	color: #787c82;
+}
+
+/* "Disabled" chip shown on disabled cards */
+.wps-rule-card--disabled .wps-badge--disabled-chip {
+	display: inline-block;
+}
+
+.wps-badge--disabled-chip {
+	display: none;
+	background: #f0f0f1;
+	color: #787c82;
+	border: 1px solid #c3c4c7;
 }
 
 /* -----------------------------------------------------------------------

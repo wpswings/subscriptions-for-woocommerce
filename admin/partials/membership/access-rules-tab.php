@@ -309,6 +309,9 @@ foreach ( $wps_all_plans as $wps_p ) {
 						<span class="wps-badge wps-badge--<?php echo esc_attr( $wps_smry['behavior'] ); ?>">
 							<?php echo esc_html( $wps_behavior_lbl ); ?>
 						</span>
+						<span class="wps-badge wps-badge--disabled-chip">
+							<?php esc_html_e( 'Disabled', 'subscriptions-for-woocommerce' ); ?>
+						</span>
 					</div>
 
 					<label class="wps-rule-prio-label"
@@ -764,6 +767,9 @@ foreach ( $wps_all_plans as $wps_p ) {
 					</span>
 					<span class="wps-badge wps-badge--message wps-rule-card__behavior-badge">
 						<?php esc_html_e( 'Message', 'subscriptions-for-woocommerce' ); ?>
+					</span>
+					<span class="wps-badge wps-badge--disabled-chip">
+						<?php esc_html_e( 'Disabled', 'subscriptions-for-woocommerce' ); ?>
 					</span>
 				</div>
 

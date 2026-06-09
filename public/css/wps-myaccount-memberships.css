@@ -1,0 +1,249 @@
+/**
+ * My Account — Memberships tab card layout.
+ *
+ * @since 2.0.0
+ */
+
+/* -----------------------------------------------------------------------
+   Page heading
+   ----------------------------------------------------------------------- */
+
+.wps-myaccount-memberships__heading {
+	margin: 0 0 20px;
+	font-size: 18px;
+	font-weight: 700;
+	color: #1d2327;
+}
+
+/* -----------------------------------------------------------------------
+   Empty state
+   ----------------------------------------------------------------------- */
+
+.wps-myaccount-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 56px 24px;
+	text-align: center;
+	background: #f8fafd;
+	border: 1.5px dashed #c8d8ec;
+	border-radius: 12px;
+}
+
+.wps-myaccount-empty__icon {
+	width: 44px;
+	height: 44px;
+	color: #b8cce0;
+	margin-bottom: 14px;
+}
+
+.wps-myaccount-empty__text {
+	margin: 0 0 18px;
+	font-size: 14px;
+	color: #646970;
+}
+
+.wps-myaccount-empty__cta.button {
+	font-size: 14px;
+	padding: 9px 26px;
+	border-radius: 6px;
+}
+
+/* -----------------------------------------------------------------------
+   Cards grid
+   ----------------------------------------------------------------------- */
+
+.wps-membership-cards {
+	display: grid;
+	grid-template-columns: repeat( auto-fill, minmax( 280px, 1fr ) );
+	gap: 18px;
+}
+
+/* -----------------------------------------------------------------------
+   Card shell
+   Left accent stripe communicates the plan color without competing with
+   the status badge; the hero background tint reinforces it subtly.
+   ----------------------------------------------------------------------- */
+
+.wps-membership-card {
+	background: #ffffff;
+	border: 1px solid #e4ecf4;
+	border-left: 4px solid var( --plan-color, #2271b1 );
+	border-radius: 8px;
+	overflow: hidden;
+	transition: box-shadow 0.18s ease, transform 0.14s ease;
+}
+
+.wps-membership-card:hover {
+	box-shadow: 0 8px 28px rgba( 0, 0, 0, 0.09 );
+	transform: translateY( -2px );
+}
+
+.wps-membership-card--cancelled,
+.wps-membership-card--expired {
+	opacity: 0.7;
+	filter: grayscale( 0.25 );
+}
+
+/* -----------------------------------------------------------------------
+   Hero section — plan name + status + optional description
+   Subtle plan-color tint creates a natural "header zone".
+   color-mix() provides the tint; a flat fallback covers older browsers.
+   ----------------------------------------------------------------------- */
+
+.wps-membership-card__hero {
+	padding: 18px 20px 16px;
+	background: #f7f9fc;
+	border-bottom: 1px solid #edf1f7;
+}
+
+@supports ( color: color-mix( in srgb, red, blue ) ) {
+	.wps-membership-card__hero {
+		background: color-mix( in srgb, var( --plan-color, #2271b1 ) 6%, #ffffff );
+		border-bottom-color: color-mix( in srgb, var( --plan-color, #2271b1 ) 14%, #e8eef6 );
+	}
+}
+
+/* Head row: name left, status badge right */
+.wps-membership-card__head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.wps-membership-card__name {
+	flex: 1;
+	margin: 0;
+	padding: 0;
+	font-size: 15px;
+	font-weight: 700;
+	color: #1d2327;
+	line-height: 1.3;
+	border: none;
+}
+
+/* Description — subordinate to name, italic */
+.wps-membership-card__desc {
+	margin: 6px 0 0;
+	font-size: 12.5px;
+	font-style: italic;
+	line-height: 1.55;
+	color: #7a8494;
+}
+
+/* -----------------------------------------------------------------------
+   Status badge — dot + text only, no background fill.
+   Each modifier sets its own color; the ::before dot inherits it.
+   This avoids repeating the plan color that's already in the stripe.
+   ----------------------------------------------------------------------- */
+
+.wps-mem-status {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	flex-shrink: 0;
+	margin-top: 2px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.wps-mem-status::before {
+	content: '';
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+	flex-shrink: 0;
+}
+
+.wps-mem-status--active    { color: #16a34a; }
+.wps-mem-status--on-hold   { color: #d97706; }
+.wps-mem-status--cancelled { color: #9ca3af; }
+.wps-mem-status--expired   { color: #ef4444; }
+.wps-mem-status--paused    { color: #818cf8; }
+
+/* -----------------------------------------------------------------------
+   Meta grid
+   display:contents on each row div makes dt/dd participate directly in
+   the parent 2-column grid — values align across all rows perfectly.
+   ----------------------------------------------------------------------- */
+
+.wps-membership-card__meta {
+	margin: 0;
+	padding: 16px 20px 18px;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	column-gap: 20px;
+	row-gap: 8px;
+	align-items: baseline;
+}
+
+.wps-membership-card__meta-row {
+	display: contents;
+}
+
+.wps-membership-card__meta-row dt {
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #a0aab4;
+	white-space: nowrap;
+	padding-top: 1px;
+}
+
+.wps-membership-card__meta-row dd {
+	margin: 0;
+	font-size: 13px;
+	color: #1d2327;
+}
+
+.wps-membership-card__meta-row dd a {
+	color: var( --plan-color, #2271b1 );
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.wps-membership-card__meta-row dd a:hover {
+	text-decoration: underline;
+}
+
+/* -----------------------------------------------------------------------
+   "Expiring soon" inline badge — warm amber, compact
+   ----------------------------------------------------------------------- */
+
+.wps-membership-card__meta-soon {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.wps-membership-card__soon-badge {
+	display: inline-block;
+	padding: 1px 7px;
+	background: #fff7ed;
+	color: #7c3509;
+	border: 1px solid #fed7aa;
+	border-radius: 10px;
+	font-size: 9.5px;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+/* -----------------------------------------------------------------------
+   Responsive
+   ----------------------------------------------------------------------- */
+
+@media ( max-width: 600px ) {
+	.wps-membership-cards {
+		grid-template-columns: 1fr;
+	}
+}

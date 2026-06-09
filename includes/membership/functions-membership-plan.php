@@ -869,8 +869,13 @@ if ( ! function_exists( 'wps_build_membership_card_html' ) ) {
 			'year'  => __( 'Years', 'subscriptions-for-woocommerce' ),
 		);
 
+		$first_color = ! empty( $plans[0]['color'] )
+			? sanitize_hex_color( $plans[0]['color'] )
+			: '#2e7d32';
+
 		$html  = '<div class="wps-membership-included">';
-		$html .= '<div class="wps-membership-included__header">';
+		$html .= '<div class="wps-membership-included__header"'
+			. ' style="--plan-color:' . esc_attr( $first_color ) . ';">';
 		$html .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"'
 			. ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
 			. ' stroke-linejoin="round" aria-hidden="true">'
@@ -907,10 +912,8 @@ if ( ! function_exists( 'wps_build_membership_card_html' ) ) {
 				: '';
 
 			$html .= '<div class="wps-membership-included__plan"'
-				. ' style="border-left-color:' . esc_attr( $color ) . ';">';
+				. ' style="--plan-color:' . esc_attr( $color ) . ';">';
 			$html .= '<div class="wps-membership-included__plan-main">';
-			$html .= '<span class="wps-membership-included__dot"'
-				. ' style="background:' . esc_attr( $color ) . ';"></span>';
 			$html .= '<strong class="wps-membership-included__plan-name">'
 				. esc_html( $plan['name'] ) . '</strong>';
 			$html .= '<span class="wps-membership-included__badge">'

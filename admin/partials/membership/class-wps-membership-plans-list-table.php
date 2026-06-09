@@ -63,7 +63,7 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 				'cb'              => '<input type="checkbox" />',
 				'name'            => __( 'Name', 'subscriptions-for-woocommerce' ),
 				'access_duration' => __( 'Access Duration', 'subscriptions-for-woocommerce' ),
-				'products'        => __( 'Products', 'subscriptions-for-woocommerce' ),
+				'products'        => __( 'Linked Products', 'subscriptions-for-woocommerce' ),
 				'active_members'  => __( 'Active Members', 'subscriptions-for-woocommerce' ),
 				'status'          => __( 'Status', 'subscriptions-for-woocommerce' ),
 			);
@@ -224,12 +224,6 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 				esc_html( $item['name'] )
 			);
 
-			if ( ! empty( $item['color'] ) ) {
-				$title .= '<span style="display:inline-block;width:10px;height:10px;border-radius:50%'
-					. ';background:' . esc_attr( $item['color'] )
-					. ';margin-left:6px;vertical-align:middle;"></span>';
-			}
-
 			return $title . $this->row_actions( $actions );
 		}
 
@@ -246,7 +240,7 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 				case 'access_duration':
 					$wps_method = isset( $item['grant_method'] ) ? $item['grant_method'] : 'purchase';
 					if ( 'subscription' === $wps_method ) {
-						return esc_html__( 'Follows Subscription', 'subscriptions-for-woocommerce' );
+						return esc_html__( 'While Subscribed', 'subscriptions-for-woocommerce' );
 					}
 					if ( 'auto_enroll' === $wps_method ) {
 						return esc_html__( 'Immediate', 'subscriptions-for-woocommerce' );
@@ -269,6 +263,58 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 					return esc_html__( 'Lifetime', 'subscriptions-for-woocommerce' );
 
 				case 'products':
+					$wps_method = isset( $item['grant_method'] ) ? $item['grant_method'] : 'purchase';
+
+					if ( 'auto_enroll' === $wps_method ) {
+						return '<span class="wps-grant-chip wps-grant-chip--auto">'
+							. '<svg width="10" height="10" viewBox="0 0 24 24" fill="none"'
+							. ' stroke="currentColor" stroke-width="2.5" aria-hidden="true">'
+							. '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>'
+							. '<circle cx="9" cy="7" r="4"/>'
+							. '<path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'
+							. '</svg>'
+							. esc_html__( 'All users — auto-enrolled', 'subscriptions-for-woocommerce' )
+							. '</span>';
+					}
+
+					// subscription grant — show subscription products.
+					if ( 'subscription' === $wps_method ) {
+						$wps_sub_prods = isset( $item['subscription_products'] )
+							? $item['subscription_products']
+							: array();
+						if ( empty( $wps_sub_prods ) ) {
+							return '<span class="wps-grant-chip wps-grant-chip--sub">'
+								. '<svg width="10" height="10" viewBox="0 0 24 24" fill="none"'
+								. ' stroke="currentColor" stroke-width="2.5" aria-hidden="true">'
+								. '<path d="M21.5 2v6h-6M2.5 22v-6h6"/>'
+								. '<path d="M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>'
+								. '</svg>'
+								. esc_html__( 'Via subscription — no products linked', 'subscriptions-for-woocommerce' )
+								. '</span>';
+						}
+						$wps_names = array();
+						foreach ( array_slice( $wps_sub_prods, 0, 2 ) as $wps_pid ) {
+							$wps_product = wc_get_product( $wps_pid );
+							if ( $wps_product ) {
+								$wps_names[] = '<a href="' . esc_url( get_edit_post_link( $wps_pid ) ) . '">'
+									. esc_html( $wps_product->get_name() ) . '</a>';
+							}
+						}
+						$wps_extra = count( $wps_sub_prods ) - 2;
+						$wps_out   = implode( ', ', $wps_names );
+						if ( $wps_extra > 0 ) {
+							$wps_out .= ' <span class="description">+'
+								. absint( $wps_extra ) . ' '
+								. esc_html__( 'more', 'subscriptions-for-woocommerce' ) . '</span>';
+						}
+						$wps_chip = '<span class="wps-grant-chip wps-grant-chip--sub"'
+							. ' style="margin-bottom:4px;display:block;">'
+							. esc_html__( 'Subscription', 'subscriptions-for-woocommerce' )
+							. '</span>';
+						return $wps_out ? $wps_chip . $wps_out : '—';
+					}
+
+					// purchase grant — existing behavior.
 					if ( empty( $item['products'] ) ) {
 						return '—';
 					}
@@ -293,7 +339,7 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 							. esc_html__( 'more', 'subscriptions-for-woocommerce' )
 							. '</span>';
 					}
-					return $wps_out;
+					return $wps_out ? $wps_out : '—';
 
 				case 'active_members':
 					return absint( $item['active_members'] );

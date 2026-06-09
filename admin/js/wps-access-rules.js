@@ -385,11 +385,28 @@
 			} );
 		}
 
-		// Header click (excluding action buttons).
+		// Enable/disable toggle — update card class + disabled chip visibility.
+		var enableCheck = card.querySelector( '.wps-rule-enabled-check' );
+		if ( enableCheck ) {
+			enableCheck.addEventListener( 'change', function () {
+				var disabled = ! this.checked;
+				card.classList.toggle( 'wps-rule-card--disabled', disabled );
+				var chip = card.querySelector( '.wps-badge--disabled-chip' );
+				if ( chip ) { chip.style.display = disabled ? '' : 'none'; }
+			} );
+			// Sync chip visibility to server-rendered state on load.
+			( function () {
+				var chip = card.querySelector( '.wps-badge--disabled-chip' );
+				if ( chip ) { chip.style.display = enableCheck.checked ? 'none' : ''; }
+			}() );
+		}
+
+		// Header click (excluding action buttons and enable toggle).
 		var header = card.querySelector( '.wps-rule-card__header' );
 		if ( header ) {
 			header.addEventListener( 'click', function ( e ) {
 				if ( e.target.closest( '.wps-rule-card__actions' ) ) { return; }
+				if ( e.target.closest( '.wps-rule-enable-toggle' ) ) { return; }
 				if ( card.classList.contains( 'wps-rule-card--open' ) ) {
 					closeCard( card );
 				} else {

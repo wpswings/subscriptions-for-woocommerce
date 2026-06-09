@@ -36,18 +36,18 @@ if ( ! class_exists( 'WPS_Myaccount_Memberships' ) ) {
 		 * @since 2.0.0
 		 */
 		public function register_endpoint() {
-			add_rewrite_endpoint( 'memberships', EP_PAGES );
+			add_rewrite_endpoint( 'wps_memberships', EP_PAGES );
 		}
 
 		/**
-		 * Add `memberships` to the WP query vars so WC recognises the endpoint.
+		 * Add `wps_memberships` to the WP query vars so WC recognises the endpoint.
 		 *
 		 * @since  2.0.0
 		 * @param  array $vars Registered query vars.
 		 * @return array
 		 */
 		public function add_query_var( $vars ) {
-			$vars[] = 'memberships';
+			$vars[] = 'wps_memberships';
 			return $vars;
 		}
 
@@ -68,23 +68,42 @@ if ( ! class_exists( 'WPS_Myaccount_Memberships' ) ) {
 			$pos   = array_search( 'wps_subscriptions', $keys, true );
 
 			if ( false !== $pos ) {
-				// Insert directly after the Subscriptions item.
 				$before = array_slice( $items, 0, $pos + 1, true );
 				$after  = array_slice( $items, $pos + 1, null, true );
-				return array_merge( $before, array( 'memberships' => $label ), $after );
+				return array_merge( $before, array( 'wps_memberships' => $label ), $after );
 			}
 
-			// Fallback: insert before customer-logout.
 			if ( isset( $items['customer-logout'] ) ) {
 				$logout = $items['customer-logout'];
 				unset( $items['customer-logout'] );
-				$items['memberships']     = $label;
+				$items['wps_memberships'] = $label;
 				$items['customer-logout'] = $logout;
 				return $items;
 			}
 
-			$items['memberships'] = $label;
+			$items['wps_memberships'] = $label;
 			return $items;
+		}
+
+		// -----------------------------------------------------------------------
+		// Assets
+		// -----------------------------------------------------------------------
+
+		/**
+		 * Enqueue the Memberships tab stylesheet on the My Account page.
+		 *
+		 * @since 2.0.0
+		 */
+		public function enqueue_styles() {
+			if ( ! is_account_page() ) {
+				return;
+			}
+			wp_enqueue_style(
+				'wps-myaccount-memberships',
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/css/wps-myaccount-memberships.css',
+				array(),
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
+			);
 		}
 
 		// -----------------------------------------------------------------------

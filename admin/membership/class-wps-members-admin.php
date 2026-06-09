@@ -40,6 +40,7 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'handle_row_actions' ) );
+			add_action( 'admin_init', array( $this, 'handle_profile_row_actions' ) );
 		}
 
 		/**
@@ -390,6 +391,50 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 			}
 
 			wp_die();
+		}
+
+		/**
+		 * Handle GET-based row actions on the user profile / user edit page.
+		 *
+		 * Triggered from nonce-secured links rendered in user-profile-memberships.php.
+		 * Hooked to `admin_init`.
+		 *
+		 * @since 2.0.0
+		 */
+		public function handle_profile_row_actions() {
+			if ( ! isset( $_GET['wps_profile_mem_action'], $_GET['user_id'], $_GET['wps_profile_action_plan'] ) ) {
+				return;
+			}
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+				return;
+			}
+
+			$action    = sanitize_key( wp_unslash( $_GET['wps_profile_mem_action'] ) );
+			$user_id   = absint( $_GET['user_id'] );
+			$plan_slug = sanitize_key( wp_unslash( $_GET['wps_profile_action_plan'] ) );
+			$nonce     = isset( $_GET['_wpnonce'] )
+				? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) )
+				: '';
+
+			if ( ! wp_verify_nonce( $nonce, 'wps_profile_mem_' . $action . '_' . $user_id . '_' . $plan_slug ) ) {
+				wp_die( esc_html__( 'Security check failed.', 'subscriptions-for-woocommerce' ) );
+			}
+
+			switch ( $action ) {
+				case 'revoke':
+					wps_update_membership_status( $user_id, $plan_slug, 'cancelled' );
+					break;
+				case 'reactivate':
+					wps_update_membership_status( $user_id, $plan_slug, 'active' );
+					break;
+				case 'remove':
+					wps_remove_user_membership( $user_id, $plan_slug );
+					break;
+			}
+
+			wp_safe_redirect( get_edit_user_link( $user_id ) );
+			exit;
 		}
 
 		// -----------------------------------------------------------------------
