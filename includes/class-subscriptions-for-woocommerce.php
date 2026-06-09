@@ -454,12 +454,14 @@ class Subscriptions_For_Woocommerce {
 		$wps_mem_plans_admin = new WPS_Membership_Plans_Admin();
 		$tabs_filter         = 'wps_sfw_sfw_plugin_standard_admin_settings_tabs';
 		$this->loader->add_filter( $tabs_filter, $wps_mem_plans_admin, 'register_tab', 25 );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wps_mem_plans_admin, 'enqueue_scripts' );
 
 		$wps_mem_plan_cpt = new WPS_Membership_Plan_CPT();
 		$this->loader->add_action( 'init', $wps_mem_plan_cpt, 'register', 5 );
 		$this->loader->add_action( 'admin_enqueue_scripts', $wps_mem_plan_cpt, 'enqueue_admin_scripts' );
 		$this->loader->add_action( 'add_meta_boxes', $wps_mem_plan_cpt, 'add_meta_boxes' );
 		$this->loader->add_action( 'save_post', $wps_mem_plan_cpt, 'save_meta_boxes', 10, 2 );
+		$this->loader->add_filter( 'redirect_post_location', $wps_mem_plan_cpt, 'redirect_after_save', 10, 2 );
 		$this->loader->add_action(
 			'wp_ajax_wps_search_subscription_products',
 			$wps_mem_plan_cpt,
@@ -472,7 +474,6 @@ class Subscriptions_For_Woocommerce {
 		);
 
 		$wps_members_admin = new WPS_Members_Admin();
-		$this->loader->add_filter( $tabs_filter, $wps_members_admin, 'register_tab', 30 );
 		$this->loader->add_action( 'show_user_profile', $wps_members_admin, 'render_profile_section' );
 		$this->loader->add_action( 'edit_user_profile', $wps_members_admin, 'render_profile_section' );
 		$this->loader->add_action( 'personal_options_update', $wps_members_admin, 'save_profile_section' );
@@ -484,7 +485,6 @@ class Subscriptions_For_Woocommerce {
 		);
 
 		$wps_access_rules_admin = new WPS_Access_Rules_Admin();
-		$this->loader->add_filter( $tabs_filter, $wps_access_rules_admin, 'register_tab', 35 );
 		$this->loader->add_action(
 			'wp_ajax_wps_search_plan_products',
 			$wps_access_rules_admin,

@@ -75,7 +75,9 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 				return;
 			}
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( ! isset( $_GET['sfw_tab'] ) || self::TAB_KEY !== $_GET['sfw_tab'] ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$sfw_tab = isset( $_GET['sfw_tab'] ) ? sanitize_key( wp_unslash( $_GET['sfw_tab'] ) ) : '';
+			if ( 'wps-membership-manage' !== $sfw_tab ) {
 				return;
 			}
 			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
@@ -83,7 +85,7 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 			}
 
 			$tab_url = admin_url(
-				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=' . self::TAB_KEY
+				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-manage&wps_mem_tab=members'
 			);
 
 			// ---- CSV export ----

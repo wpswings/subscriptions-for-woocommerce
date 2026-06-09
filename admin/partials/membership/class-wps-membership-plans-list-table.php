@@ -48,7 +48,7 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 				)
 			);
 			$this->tab_url = admin_url(
-				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-plans'
+				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-manage&wps_mem_tab=plans'
 			);
 		}
 
@@ -60,12 +60,12 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 		 */
 		public function get_columns() {
 			return array(
-				'cb'             => '<input type="checkbox" />',
-				'name'           => __( 'Name', 'subscriptions-for-woocommerce' ),
-				'slug'           => __( 'Slug', 'subscriptions-for-woocommerce' ),
-				'products'       => __( 'Products', 'subscriptions-for-woocommerce' ),
-				'active_members' => __( 'Active Members', 'subscriptions-for-woocommerce' ),
-				'status'         => __( 'Status', 'subscriptions-for-woocommerce' ),
+				'cb'              => '<input type="checkbox" />',
+				'name'            => __( 'Name', 'subscriptions-for-woocommerce' ),
+				'access_duration' => __( 'Access Duration', 'subscriptions-for-woocommerce' ),
+				'products'        => __( 'Products', 'subscriptions-for-woocommerce' ),
+				'active_members'  => __( 'Active Members', 'subscriptions-for-woocommerce' ),
+				'status'          => __( 'Status', 'subscriptions-for-woocommerce' ),
 			);
 		}
 
@@ -243,8 +243,30 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 		 */
 		public function column_default( $item, $column_name ) {
 			switch ( $column_name ) {
-				case 'slug':
-					return '<code>' . esc_html( $item['slug'] ) . '</code>';
+				case 'access_duration':
+					$wps_method = isset( $item['grant_method'] ) ? $item['grant_method'] : 'purchase';
+					if ( 'subscription' === $wps_method ) {
+						return esc_html__( 'Follows Subscription', 'subscriptions-for-woocommerce' );
+					}
+					if ( 'auto_enroll' === $wps_method ) {
+						return esc_html__( 'Immediate', 'subscriptions-for-woocommerce' );
+					}
+					$wps_len  = isset( $item['access_length'] ) ? $item['access_length'] : array();
+					$wps_type = isset( $wps_len['type'] ) ? $wps_len['type'] : 'lifetime';
+					if ( 'fixed' === $wps_type ) {
+						$wps_val         = isset( $wps_len['value'] ) ? absint( $wps_len['value'] ) : 1;
+						$wps_unit        = isset( $wps_len['unit'] ) ? $wps_len['unit'] : 'month';
+						$wps_unit_labels = array(
+							'day'   => _n( 'Day', 'Days', $wps_val, 'subscriptions-for-woocommerce' ),
+							'month' => _n( 'Month', 'Months', $wps_val, 'subscriptions-for-woocommerce' ),
+							'year'  => _n( 'Year', 'Years', $wps_val, 'subscriptions-for-woocommerce' ),
+						);
+						$wps_unit_lbl    = isset( $wps_unit_labels[ $wps_unit ] )
+							? $wps_unit_labels[ $wps_unit ]
+							: $wps_unit;
+						return absint( $wps_val ) . ' ' . esc_html( $wps_unit_lbl );
+					}
+					return esc_html__( 'Lifetime', 'subscriptions-for-woocommerce' );
 
 				case 'products':
 					if ( empty( $item['products'] ) ) {
@@ -300,8 +322,8 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 				esc_html_e( 'No plans match your search.', 'subscriptions-for-woocommerce' );
 			} else {
 				printf(
-					/* translators: %s: link to create new plan */
 					wp_kses(
+						/* translators: %s: link to create new plan */
 						__( 'No membership plans yet. <a href="%s">Create your first plan</a>.', 'subscriptions-for-woocommerce' ),
 						array( 'a' => array( 'href' => array() ) )
 					),

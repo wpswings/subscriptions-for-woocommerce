@@ -137,6 +137,12 @@ if ( ! function_exists( 'wps_create_plan' ) ) {
 		update_post_meta( $post_id, '_wps_plan_color', $color ? $color : '' );
 		update_post_meta( $post_id, '_wps_plan_access_length', $access_length );
 
+		$valid_methods = array( 'purchase', 'subscription', 'auto_enroll' );
+		$grant_method  = isset( $args['grant_method'] ) && in_array( $args['grant_method'], $valid_methods, true )
+			? $args['grant_method']
+			: 'purchase';
+		update_post_meta( $post_id, '_wps_plan_grant_method', $grant_method );
+
 		$products = isset( $args['products'] ) && is_array( $args['products'] )
 			? array_values( array_filter( array_map( 'absint', $args['products'] ) ) )
 			: array();
@@ -237,13 +243,29 @@ if ( ! function_exists( 'wps_get_all_plans' ) ) {
 		);
 
 		if ( 'all' !== $status ) {
-			$meta_value         = ( 'inactive' === $status ) ? 'inactive' : 'active';
-			$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				array(
-					'key'   => '_wps_plan_status',
-					'value' => $meta_value,
-				),
-			);
+			if ( 'inactive' === $status ) {
+				$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					array(
+						'key'     => '_wps_plan_status',
+						'value'   => 'inactive',
+						'compare' => '=',
+					),
+				);
+			} else {
+				// Plans with no status meta default to 'active' per wps_membership_plan_row().
+				$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'OR',
+					array(
+						'key'     => '_wps_plan_status',
+						'value'   => 'active',
+						'compare' => '=',
+					),
+					array(
+						'key'     => '_wps_plan_status',
+						'compare' => 'NOT EXISTS',
+					),
+				);
+			}
 		}
 
 		$posts = get_posts( $args );

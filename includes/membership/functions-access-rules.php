@@ -65,23 +65,31 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 			$plans = array( 'any' );
 		}
 
+		$wps_flag = function ( $key, $raw ) {
+			return ( isset( $raw[ $key ] ) && '1' === (string) $raw[ $key ] ) ? '1' : '0';
+		};
+
 		return array(
-			'id'           => isset( $raw['id'] ) ? sanitize_key( $raw['id'] ) : '',
-			'target_type'  => $target_type,
-			'post_type'    => isset( $raw['post_type'] ) ? sanitize_key( $raw['post_type'] ) : '',
-			'object_ids'   => isset( $raw['object_ids'] ) && is_array( $raw['object_ids'] )
+			'id'                           => isset( $raw['id'] ) ? sanitize_key( $raw['id'] ) : '',
+			'target_type'                  => $target_type,
+			'post_type'                    => isset( $raw['post_type'] ) ? sanitize_key( $raw['post_type'] ) : '',
+			'object_ids'                   => isset( $raw['object_ids'] ) && is_array( $raw['object_ids'] )
 				? array_values( array_filter( array_map( 'absint', $raw['object_ids'] ) ) )
 				: array(),
-			'taxonomy'     => isset( $raw['taxonomy'] ) ? sanitize_key( $raw['taxonomy'] ) : '',
-			'term_ids'     => isset( $raw['term_ids'] ) && is_array( $raw['term_ids'] )
+			'taxonomy'                     => isset( $raw['taxonomy'] ) ? sanitize_key( $raw['taxonomy'] ) : '',
+			'term_ids'                     => isset( $raw['term_ids'] ) && is_array( $raw['term_ids'] )
 				? array_values( array_filter( array_map( 'absint', $raw['term_ids'] ) ) )
 				: array(),
-			'plans'        => $plans,
-			'behavior'     => $behavior,
-			'message'      => isset( $raw['message'] ) ? wp_kses_post( $raw['message'] ) : '',
-			'redirect_url' => isset( $raw['redirect_url'] ) ? esc_url_raw( $raw['redirect_url'] ) : '',
-			'priority'     => isset( $raw['priority'] ) ? absint( $raw['priority'] ) : 10,
-			'enabled'      => ( isset( $raw['enabled'] ) && '0' === (string) $raw['enabled'] ) ? '0' : '1',
+			'plans'                        => $plans,
+			'behavior'                     => $behavior,
+			'message'                      => isset( $raw['message'] ) ? wp_kses_post( $raw['message'] ) : '',
+			'redirect_url'                 => isset( $raw['redirect_url'] ) ? esc_url_raw( $raw['redirect_url'] ) : '',
+			'priority'                     => isset( $raw['priority'] ) ? absint( $raw['priority'] ) : 10,
+			'enabled'                      => ( isset( $raw['enabled'] ) && '0' === (string) $raw['enabled'] ) ? '0' : '1',
+			'restrict_comments'            => $wps_flag( 'restrict_comments', $raw ),
+			'include_archive'              => $wps_flag( 'include_archive', $raw ),
+			'show_cta'                     => $wps_flag( 'show_cta', $raw ),
+			'restrict_product_description' => $wps_flag( 'restrict_product_description', $raw ),
 		);
 	}
 }

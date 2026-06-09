@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$wps_slug   = $wps_plan ? esc_attr( $wps_plan['slug'] ) : '';
 $wps_status = $wps_plan ? $wps_plan['status'] : 'active';
 $wps_color  = $wps_plan ? esc_attr( $wps_plan['color'] ) : '';
 
@@ -23,26 +22,6 @@ wp_nonce_field( WPS_Membership_Plan_CPT::NONCE_ACTION, WPS_Membership_Plan_CPT::
 ?>
 <table class="form-table wps-plan-details-table">
 	<tbody>
-
-		<tr>
-			<th scope="row">
-				<label for="wps_plan_slug">
-					<?php esc_html_e( 'Slug', 'subscriptions-for-woocommerce' ); ?>
-				</label>
-			</th>
-			<td>
-				<input
-					type="text"
-					id="wps_plan_slug"
-					name="_wps_plan_slug"
-					value="<?php echo $wps_slug; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
-					class="regular-text"
-				/>
-				<p class="description">
-					<?php esc_html_e( 'Unique identifier used in code. Auto-generated from the plan name if left unchanged.', 'subscriptions-for-woocommerce' ); ?>
-				</p>
-			</td>
-		</tr>
 
 		<tr>
 			<th scope="row">

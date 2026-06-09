@@ -97,6 +97,61 @@ class PlanCrudTest extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 42, $map );
 	}
 
+	/**
+	 * Grant method defaults to purchase when not supplied.
+	 *
+	 * @covers wps_create_plan
+	 */
+	public function test_create_plan_defaults_grant_method_to_purchase() {
+		$plan_id = wps_create_plan( array( 'name' => 'Default Grant Plan' ) );
+		$this->assertSame( 'purchase', get_post_meta( $plan_id, '_wps_plan_grant_method', true ) );
+	}
+
+	/**
+	 * Auto-enroll grant method is persisted to post meta.
+	 *
+	 * @covers wps_create_plan
+	 */
+	public function test_create_plan_stores_auto_enroll_grant_method() {
+		$plan_id = wps_create_plan(
+			array(
+				'name'         => 'Auto Enroll Plan',
+				'grant_method' => 'auto_enroll',
+			)
+		);
+		$this->assertSame( 'auto_enroll', get_post_meta( $plan_id, '_wps_plan_grant_method', true ) );
+	}
+
+	/**
+	 * Subscription grant method is persisted to post meta.
+	 *
+	 * @covers wps_create_plan
+	 */
+	public function test_create_plan_stores_subscription_grant_method() {
+		$plan_id = wps_create_plan(
+			array(
+				'name'         => 'Sub Grant Plan',
+				'grant_method' => 'subscription',
+			)
+		);
+		$this->assertSame( 'subscription', get_post_meta( $plan_id, '_wps_plan_grant_method', true ) );
+	}
+
+	/**
+	 * An unrecognised grant method falls back to purchase.
+	 *
+	 * @covers wps_create_plan
+	 */
+	public function test_create_plan_rejects_invalid_grant_method_and_defaults_to_purchase() {
+		$plan_id = wps_create_plan(
+			array(
+				'name'         => 'Bad Method Plan',
+				'grant_method' => 'magic',
+			)
+		);
+		$this->assertSame( 'purchase', get_post_meta( $plan_id, '_wps_plan_grant_method', true ) );
+	}
+
 	// -----------------------------------------------------------------------
 	// wps_get_plan()
 	// -----------------------------------------------------------------------
@@ -159,6 +214,34 @@ class PlanCrudTest extends WP_UnitTestCase {
 		$this->assertCount( 1, $inactive_plans );
 		$this->assertSame( $active_id, $active_plans[0]['id'] );
 		$this->assertSame( $inactive_id, $inactive_plans[0]['id'] );
+	}
+
+	/**
+	 * Plans saved without _wps_plan_status meta are treated as active.
+	 *
+	 * @covers wps_get_all_plans
+	 */
+	public function test_get_all_plans_active_includes_plans_with_no_status_meta() {
+		$plan_id = wps_create_plan( array( 'name' => 'No Status Plan' ) );
+		delete_post_meta( $plan_id, '_wps_plan_status' );
+
+		$active_plans = wps_get_all_plans( 'active' );
+		$ids          = array_column( $active_plans, 'id' );
+		$this->assertContains( $plan_id, $ids );
+	}
+
+	/**
+	 * Plans without _wps_plan_status meta are not returned for inactive query.
+	 *
+	 * @covers wps_get_all_plans
+	 */
+	public function test_get_all_plans_inactive_excludes_plans_with_no_status_meta() {
+		$plan_id = wps_create_plan( array( 'name' => 'No Status Plan 2' ) );
+		delete_post_meta( $plan_id, '_wps_plan_status' );
+
+		$inactive_plans = wps_get_all_plans( 'inactive' );
+		$ids            = array_column( $inactive_plans, 'id' );
+		$this->assertNotContains( $plan_id, $ids );
 	}
 
 	public function test_get_all_plans_returns_all_when_status_is_all() {

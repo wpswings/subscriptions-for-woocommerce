@@ -62,6 +62,7 @@ $wps_is_fixed = 'fixed' === $wps_type;
 			step="1"
 			style="width:70px;"
 			class="small-text"
+			<?php echo $wps_is_fixed ? '' : 'disabled'; ?>
 		/>
 
 		<select name="_wps_plan_access_length[unit]">
@@ -109,12 +110,17 @@ $wps_is_fixed = 'fixed' === $wps_type;
 
 <script>
 ( function () {
-	var radios = document.querySelectorAll( '.wps-access-type-radio' );
-	var row    = document.getElementById( 'wps-fixed-duration-row' );
+	var radios  = document.querySelectorAll( '.wps-access-type-radio' );
+	var row     = document.getElementById( 'wps-fixed-duration-row' );
 	if ( ! row ) return;
+	var numInput = row.querySelector( 'input[type="number"]' );
 	radios.forEach( function ( radio ) {
 		radio.addEventListener( 'change', function () {
-			row.style.display = ( 'fixed' === this.value ) ? '' : 'none';
+			var isFixed = ( 'fixed' === this.value );
+			row.style.display = isFixed ? '' : 'none';
+			if ( numInput ) {
+				numInput.disabled = ! isFixed;
+			}
 		} );
 	} );
 } )();

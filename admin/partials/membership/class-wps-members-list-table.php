@@ -51,7 +51,7 @@ if ( ! class_exists( 'WPS_Members_List_Table' ) ) {
 				)
 			);
 			$this->tab_url = admin_url(
-				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-members'
+				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-manage&wps_mem_tab=members'
 			);
 		}
 

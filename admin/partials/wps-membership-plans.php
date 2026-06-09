@@ -25,7 +25,16 @@ require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH
 $wps_plans_status = isset( $_GET['status'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	? sanitize_key( wp_unslash( $_GET['status'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	: '';
+
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$wps_plan_saved = ! empty( $_GET['wps_plan_saved'] );
 ?>
+
+<?php if ( $wps_plan_saved ) : ?>
+<div class="notice notice-success inline" style="margin:0 0 16px;">
+	<p><?php esc_html_e( 'Plan saved.', 'subscriptions-for-woocommerce' ); ?></p>
+</div>
+<?php endif; ?>
 
 <div class="wps_sfw_subscription_table_inner_wrap">
 	<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wps_membership_plan' ) ); ?>"
@@ -36,7 +45,8 @@ $wps_plans_status = isset( $_GET['status'] ) // phpcs:ignore WordPress.Security.
 
 <form method="get">
 	<input type="hidden" name="page" value="subscriptions_for_woocommerce_menu">
-	<input type="hidden" name="sfw_tab" value="wps-membership-plans">
+	<input type="hidden" name="sfw_tab" value="wps-membership-manage">
+	<input type="hidden" name="wps_mem_tab" value="plans">
 	<?php if ( ! empty( $wps_plans_status ) ) : ?>
 		<input type="hidden" name="status"
 			value="<?php echo esc_attr( $wps_plans_status ); ?>">

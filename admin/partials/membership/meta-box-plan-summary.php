@@ -25,7 +25,7 @@ $wps_active_members = WPS_Membership_Plans_Admin::get_active_member_count( $wps_
 $wps_product_count  = count( $wps_plan['products'] );
 $wps_created        = get_post_field( 'post_date', $post->ID );
 $wps_list_url       = admin_url(
-	'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-plans'
+	'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-manage&wps_mem_tab=plans'
 );
 ?>
 <table class="wps-plan-summary-table" style="width:100%;border-collapse:collapse;">

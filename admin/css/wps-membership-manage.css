@@ -1,0 +1,297 @@
+/**
+ * Manage Membership — modern admin UI styles.
+ *
+ * Scoped to .wps-mem-wrap so nothing leaks into other tabs.
+ *
+ * @since 2.0.0
+ */
+
+/* ── Outer wrap ──────────────────────────────────────────────────────────── */
+
+.wps-mem-wrap {
+	width: 100%;
+}
+
+/* ── Sub-tab nav (WP native nav-tab-wrapper style) ───────────────────────── */
+
+.wps-mem-tab-nav {
+	margin: 0 0 20px;
+	border-bottom: 1px solid #c3c4c7;
+	padding-bottom: 0;
+}
+
+.wps-mem-tab-nav .nav-tab {
+	font-size: 14px;
+	font-weight: 500;
+	padding: 8px 18px;
+}
+
+/* ── Multi-step wizard ───────────────────────────────────────────────────── */
+
+.wps-wizard {
+	padding: 16px 18px;
+}
+
+.wps-wizard__steps {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin-bottom: 20px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #f0f0f1;
+	flex-wrap: wrap;
+}
+
+.wps-wizard__step {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: none;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #8c8f94;
+	cursor: pointer;
+	transition: background 0.12s, color 0.12s;
+}
+
+.wps-wizard__step:hover {
+	background: #f0f0f1;
+	color: #1d2327;
+}
+
+.wps-wizard__step-num {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #dcdcde;
+	color: #50575e;
+	font-size: 11px;
+	font-weight: 700;
+	flex-shrink: 0;
+}
+
+.wps-wizard__step--active .wps-wizard__step-num {
+	background: #2271b1;
+	color: #fff;
+}
+
+.wps-wizard__step--active {
+	color: #1d2327;
+	font-weight: 600;
+}
+
+.wps-wizard__step--done .wps-wizard__step-num {
+	background: #00a32a;
+	color: #fff;
+}
+
+.wps-wizard__step--done {
+	color: #50575e;
+}
+
+.wps-wizard__sep {
+	color: #c3c4c7;
+	font-size: 14px;
+	padding: 0 2px;
+	user-select: none;
+}
+
+.wps-wizard__panel {
+	min-height: 80px;
+	margin-bottom: 16px;
+}
+
+.wps-wizard__nav {
+	display: flex;
+	gap: 8px;
+	padding-top: 12px;
+	border-top: 1px solid #f0f0f1;
+}
+
+/* ── Content area ────────────────────────────────────────────────────────── */
+
+.wps-mem-content {
+	animation: wps-mem-fade 0.15s ease;
+}
+
+@keyframes wps-mem-fade {
+	from { opacity: 0; transform: translateY(4px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Action toolbar (Add New / Export / Grant row) ───────────────────────── */
+
+.wps-mem-wrap .wps_sfw_subscription_table_inner_wrap {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	padding: 0 0 16px;
+	margin: 0 0 4px;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+/* ── All buttons ─────────────────────────────────────────────────────────── */
+
+.wps-mem-wrap .button,
+.wps-mem-wrap input[type="submit"].button,
+.wps-mem-wrap input[type="submit"] {
+	border-radius: 6px !important;
+	font-size: 13px;
+	line-height: 1;
+	height: auto;
+	padding: 7px 14px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.wps-mem-wrap .button-primary {
+	background: #2271b1 !important;
+	border-color: #2271b1 !important;
+	color: #fff !important;
+	font-weight: 600;
+	box-shadow: none;
+	text-shadow: none;
+}
+
+.wps-mem-wrap .button-primary:hover,
+.wps-mem-wrap .button-primary:focus {
+	background: #135e96 !important;
+	border-color: #135e96 !important;
+	color: #fff !important;
+}
+
+.wps-mem-wrap .button:not(.button-primary) {
+	border-color: #c3c4c7;
+	color: #2c3338;
+}
+
+.wps-mem-wrap .button:not(.button-primary):hover {
+	border-color: #8c8f94;
+	color: #1d2327;
+}
+
+/* ── List table card container ───────────────────────────────────────────── */
+
+.wps-mem-wrap .wps_sfw_list_table {
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.wps-mem-wrap .wp-list-table {
+	border: none;
+	margin: 0;
+	border-radius: 0;
+}
+
+/* Table head */
+.wps-mem-wrap .wp-list-table thead th,
+.wps-mem-wrap .wp-list-table tfoot th {
+	background: #f6f7f7;
+	border-bottom: 1px solid #e0e0e0;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #50575e;
+	padding: 10px 14px;
+}
+
+.wps-mem-wrap .wp-list-table tfoot th {
+	border-top: 1px solid #e0e0e0;
+	border-bottom: none;
+}
+
+/* Table rows */
+.wps-mem-wrap .wp-list-table tbody tr:hover td,
+.wps-mem-wrap .wp-list-table tbody tr:hover th {
+	background: #f6f7f7;
+}
+
+.wps-mem-wrap .wp-list-table tbody td,
+.wps-mem-wrap .wp-list-table tbody th {
+	padding: 11px 14px;
+	vertical-align: middle;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.wps-mem-wrap .wp-list-table tbody tr:last-child td,
+.wps-mem-wrap .wp-list-table tbody tr:last-child th {
+	border-bottom: none;
+}
+
+/* ── Tablenav (bulk actions + pagination bars) ───────────────────────────── */
+
+.wps-mem-wrap .tablenav {
+	padding: 8px 12px;
+}
+
+.wps-mem-wrap .tablenav.top {
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.wps-mem-wrap .tablenav.bottom {
+	border-top: 1px solid #f0f0f1;
+}
+
+.wps-mem-wrap .bulkactions select,
+.wps-mem-wrap .tablenav select {
+	border-radius: 6px !important;
+	font-size: 13px;
+}
+
+/* Pagination */
+.wps-mem-wrap .tablenav-pages a,
+.wps-mem-wrap .tablenav-pages .tablenav-pages-navspan {
+	border-radius: 5px !important;
+}
+
+/* ── Search box ──────────────────────────────────────────────────────────── */
+
+.wps-mem-wrap .search-box {
+	margin: 0;
+}
+
+.wps-mem-wrap .search-box input[type="search"] {
+	border-radius: 6px 0 0 6px !important;
+	border-right: none;
+	height: 30px;
+	line-height: 30px;
+}
+
+.wps-mem-wrap .search-box input[type="submit"] {
+	border-radius: 0 6px 6px 0 !important;
+	margin-left: -1px;
+	height: 32px;
+	line-height: 30px;
+}
+
+/* ── Plan filter select (members tab) ───────────────────────────────────── */
+
+.wps-mem-wrap .wps-member-plan-filter select {
+	border-radius: 6px !important;
+	font-size: 13px;
+}
+
+/* ── Access-rules save button override ───────────────────────────────────── */
+
+.wps-mem-wrap .wps-rules-save-bar .button-primary {
+	border-radius: 6px !important;
+}
+
+/* ── Grant membership form ───────────────────────────────────────────────── */
+
+.wps-mem-wrap #wps-grant-form input,
+.wps-mem-wrap #wps-grant-form select {
+	border-radius: 6px;
+}

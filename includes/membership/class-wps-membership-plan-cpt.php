@@ -403,16 +403,10 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 				return;
 			}
 
-			// Slug — regenerate for uniqueness only when the value changes.
-			if ( isset( $_POST['_wps_plan_slug'] ) ) {
-				$new_slug = sanitize_title( wp_unslash( $_POST['_wps_plan_slug'] ) );
-				$old_slug = get_post_meta( $post_id, '_wps_plan_slug', true );
-				if ( $new_slug !== $old_slug ) {
-					$new_slug = wps_generate_unique_plan_slug(
-						$new_slug ? $new_slug : $post->post_title,
-						$post_id
-					);
-				}
+			// Slug — auto-generate from title; never exposed as an editable field.
+			$existing_slug = get_post_meta( $post_id, '_wps_plan_slug', true );
+			if ( ! $existing_slug ) {
+				$new_slug = wps_generate_unique_plan_slug( $post->post_title, $post_id );
 				update_post_meta( $post_id, '_wps_plan_slug', $new_slug );
 			}
 
@@ -469,6 +463,27 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 				&& '1' === sanitize_text_field( wp_unslash( $_POST['_wps_plan_auto_enroll'] ) )
 				? '1' : '0';
 			update_post_meta( $post_id, '_wps_plan_auto_enroll', $auto_enroll );
+		}
+
+		/**
+		 * Redirect to the Plans management tab after a plan post is saved.
+		 *
+		 * Hooked to `redirect_post_location` at priority 10.
+		 *
+		 * @since  2.0.0
+		 * @param  string $location The default redirect URL WordPress computed.
+		 * @param  int    $post_id  ID of the post that was saved.
+		 * @return string
+		 */
+		public function redirect_after_save( $location, $post_id ) {
+			$post = get_post( $post_id );
+			if ( ! $post || WPS_MEMBERSHIP_PLAN_CPT !== $post->post_type ) {
+				return $location;
+			}
+			return admin_url(
+				'admin.php?page=subscriptions_for_woocommerce_menu'
+				. '&sfw_tab=wps-membership-manage&wps_mem_tab=plans&wps_plan_saved=1'
+			);
 		}
 	}
 }

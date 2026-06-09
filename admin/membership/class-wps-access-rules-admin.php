@@ -71,7 +71,9 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 		public function enqueue_scripts() {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$tab = isset( $_GET['sfw_tab'] ) ? sanitize_key( wp_unslash( $_GET['sfw_tab'] ) ) : '';
-			if ( self::TAB_KEY !== $tab ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$sub_tab = isset( $_GET['wps_mem_tab'] ) ? sanitize_key( wp_unslash( $_GET['wps_mem_tab'] ) ) : '';
+			if ( 'wps-membership-manage' !== $tab || 'access-rules' !== $sub_tab ) {
 				return;
 			}
 
@@ -136,11 +138,13 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 			}
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$tab = isset( $_GET['sfw_tab'] ) ? sanitize_key( wp_unslash( $_GET['sfw_tab'] ) ) : '';
-			if ( self::TAB_KEY !== $tab ) {
+			if ( 'wps-membership-manage' !== $tab ) {
 				return;
 			}
 			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
-				wp_die( esc_html__( 'You do not have permission to perform this action.', 'subscriptions-for-woocommerce' ) );
+				wp_die(
+					esc_html__( 'You do not have permission to perform this action.', 'subscriptions-for-woocommerce' )
+				);
 			}
 			if ( ! isset( $_POST[ self::NONCE_FIELD ] )
 				|| ! wp_verify_nonce(
@@ -151,10 +155,12 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 				wp_die( esc_html__( 'Security check failed.', 'subscriptions-for-woocommerce' ) );
 			}
 
-			$this->persist_global_defaults();
 			$this->persist_rules();
 
-			$tab_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=' . self::TAB_KEY );
+			$tab_url = admin_url(
+				'admin.php?page=subscriptions_for_woocommerce_menu'
+				. '&sfw_tab=wps-membership-manage&wps_mem_tab=access-rules'
+			);
 			wp_safe_redirect( add_query_arg( 'wps_saved', '1', $tab_url ) );
 			exit;
 		}

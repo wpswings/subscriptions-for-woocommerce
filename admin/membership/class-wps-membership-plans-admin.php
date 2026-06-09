@@ -24,7 +24,7 @@ if ( ! class_exists( 'WPS_Membership_Plans_Admin' ) ) {
 	 */
 	class WPS_Membership_Plans_Admin {
 
-		const TAB_KEY      = 'wps-membership-plans';
+		const TAB_KEY      = 'wps-membership-manage';
 		const NONCE_ACTION = 'wps-membership-plans-bulk';
 		const NONCE_FIELD  = 'wps_membership_plans_nonce';
 
@@ -38,7 +38,32 @@ if ( ! class_exists( 'WPS_Membership_Plans_Admin' ) ) {
 		}
 
 		/**
-		 * Add the "Membership Plans" tab to the plugin settings navigation.
+		 * Enqueue the Manage Membership stylesheet and hide the WP sidebar.
+		 *
+		 * Hooked to `admin_enqueue_scripts`.
+		 *
+		 * @since 2.0.0
+		 */
+		public function enqueue_scripts() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$tab = isset( $_GET['sfw_tab'] ) ? sanitize_key( wp_unslash( $_GET['sfw_tab'] ) ) : '';
+			if ( 'wps-membership-manage' !== $tab ) {
+				return;
+			}
+			wp_enqueue_style(
+				'wps-membership-manage',
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/wps-membership-manage.css',
+				array(),
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
+			);
+			wp_add_inline_style(
+				'wps-membership-manage',
+				'#adminmenuback,#adminmenuwrap{display:none!important;}#wpcontent{margin-left:0!important;}'
+			);
+		}
+
+		/**
+		 * Add the "Manage Membership" tab to the plugin settings navigation.
 		 *
 		 * Hooked to `wps_sfw_sfw_plugin_standard_admin_settings_tabs` at priority 25.
 		 *
@@ -48,7 +73,7 @@ if ( ! class_exists( 'WPS_Membership_Plans_Admin' ) ) {
 		 */
 		public function register_tab( $tabs ) {
 			$tabs[ self::TAB_KEY ] = array(
-				'title'     => esc_html__( 'Membership Plans', 'subscriptions-for-woocommerce' ),
+				'title'     => esc_html__( 'Manage Membership', 'subscriptions-for-woocommerce' ),
 				'name'      => self::TAB_KEY,
 				'file_path' => SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH,
 			);
@@ -75,7 +100,9 @@ if ( ! class_exists( 'WPS_Membership_Plans_Admin' ) ) {
 				return;
 			}
 
-			$tab_url = admin_url( 'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=' . self::TAB_KEY );
+			$tab_url = admin_url(
+				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=' . self::TAB_KEY . '&wps_mem_tab=plans'
+			);
 
 			// ---- single-row action (GET) ----
 			if ( isset( $_GET['wps_plan_action'], $_GET['plan_id'] ) ) {
