@@ -690,7 +690,32 @@ if ( ! function_exists( 'wps_get_plan_purchasable_products' ) ) {
 	 * @return WC_Product[] Array of purchasable WC_Product objects (may be empty).
 	 */
 	function wps_get_plan_purchasable_products( $plan_slug ) {
-		$product_ids = wps_get_plan_products( $plan_slug );
+		$plan = wps_get_plan_by_slug( sanitize_key( $plan_slug ) );
+		if ( ! $plan ) {
+			return array();
+		}
+
+		// A plan grants access through one method: a one-time purchase or a
+		// subscription. Surface the products for whichever method is active so
+		// subscription-granted plans show their products in the purchase CTA —
+		// not just plans that use one-time products.
+		$product_ids = array();
+		if ( ! empty( $plan['purchase_enabled'] ) ) {
+			$product_ids = array_merge( $product_ids, (array) $plan['products'] );
+		}
+		if ( ! empty( $plan['subscription_enabled'] ) ) {
+			$product_ids = array_merge( $product_ids, (array) $plan['subscription_products'] );
+		}
+		// Fallback for legacy/edge data where no grant-method flag matched but
+		// products were still linked.
+		if ( empty( $product_ids ) ) {
+			$product_ids = array_merge(
+				(array) $plan['products'],
+				(array) $plan['subscription_products']
+			);
+		}
+		$product_ids = array_values( array_unique( array_filter( array_map( 'absint', $product_ids ) ) ) );
+
 		$purchasable = array();
 
 		foreach ( $product_ids as $product_id ) {

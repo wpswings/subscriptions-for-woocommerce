@@ -397,9 +397,10 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 				$message .= $cta;
 			}
 
-			$html = '<div class="wps-restricted-content">'
-				. wpautop( wp_kses_post( $message ) )
-				. '</div>';
+			$body = wpautop( wp_kses_post( $message ) );
+			$html = function_exists( 'wps_restriction_notice_html' )
+				? wps_restriction_notice_html( $body )
+				: '<div class="wps-restricted-content">' . $body . '</div>';
 
 			/**
 			 * Filter the full restriction HTML before it replaces post content.

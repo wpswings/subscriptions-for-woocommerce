@@ -240,6 +240,7 @@ class Subscriptions_For_Woocommerce {
 		require_once $wps_mem_dir . 'class-wps-restriction-enforcer.php';
 		require_once $wps_mem_dir . 'class-wps-myaccount-memberships.php';
 		require_once $wps_mem_dir . 'class-wps-product-badge.php';
+		require_once $wps_mem_dir . 'class-wps-membership-block-editor.php';
 		$wps_adm_mem_dir = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/membership/';
 		require_once $wps_adm_mem_dir . 'class-wps-membership-plans-admin.php';
 		require_once $wps_adm_mem_dir . 'class-wps-members-admin.php';
@@ -487,6 +488,12 @@ class Subscriptions_For_Woocommerce {
 			$wps_access_rules_admin,
 			'ajax_search_rule_targets'
 		);
+
+		// Gutenberg block restriction — editor controls (always rendered; the
+		// Pro plugin enforces on the frontend). Day 17.
+		$wps_block_editor = new WPS_Membership_Block_Editor();
+		$this->loader->add_filter( 'register_block_type_args', $wps_block_editor, 'add_block_attributes', 10, 2 );
+		$this->loader->add_action( 'enqueue_block_editor_assets', $wps_block_editor, 'enqueue_editor_assets' );
 	}
 
 	/**
@@ -1266,6 +1273,13 @@ class Subscriptions_For_Woocommerce {
 				'woocommerce_account_wps_memberships_endpoint',
 				$wps_myaccount_memberships,
 				'render_tab'
+			);
+
+			$wps_block_restriction_styles = new WPS_Membership_Block_Editor();
+			$this->loader->add_action(
+				'wp_enqueue_scripts',
+				$wps_block_restriction_styles,
+				'maybe_enqueue_frontend_styles'
 			);
 
 			$wps_product_badge = new WPS_Product_Badge();

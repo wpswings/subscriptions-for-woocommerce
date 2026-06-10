@@ -413,6 +413,48 @@ if ( ! function_exists( 'wps_object_is_restricted' ) ) {
 }
 
 // ---------------------------------------------------------------------------
+// Restriction notice markup
+// ---------------------------------------------------------------------------
+
+if ( ! function_exists( 'wps_restriction_notice_html' ) ) {
+	/**
+	 * Wrap restriction notice content in the shared "locked content" card.
+	 *
+	 * Produces a consistent panel — a header bar with a lock icon + title, and a
+	 * body holding the (already-escaped, already-wpautop'd) message HTML — used
+	 * by both the content-restriction enforcer and the Pro block-restriction
+	 * notice so they look identical. Styling lives in
+	 * public/css/wps-membership-badges.css (`.wps-restricted-content*`).
+	 *
+	 * @since  2.0.0
+	 * @param  string $body_html   Inner message HTML (caller sanitizes/escapes).
+	 * @param  string $extra_class Optional extra class on the wrapper.
+	 * @param  string $title       Optional header title. Defaults to "Members Only".
+	 * @return string
+	 */
+	function wps_restriction_notice_html( $body_html, $extra_class = '', $title = '' ) {
+		if ( '' === $title ) {
+			$title = __( 'Members Only', 'subscriptions-for-woocommerce' );
+		}
+
+		$classes = 'wps-restricted-content' . ( '' !== $extra_class ? ' ' . $extra_class : '' );
+
+		$lock = '<svg class="wps-restricted-content__lock" viewBox="0 0 24 24" fill="none" '
+			. 'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+			. 'aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>'
+			. '<path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+
+		return '<div class="' . esc_attr( $classes ) . '">'
+			. '<div class="wps-restricted-content__head">'
+			. $lock
+			. '<span class="wps-restricted-content__title">' . esc_html( $title ) . '</span>'
+			. '</div>'
+			. '<div class="wps-restricted-content__msg">' . $body_html . '</div>'
+			. '</div>';
+	}
+}
+
+// ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
 
