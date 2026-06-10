@@ -1242,6 +1242,7 @@ class Subscriptions_For_Woocommerce {
 
 			// Membership public hooks — Weeks 3–4 (stubs wired Day 5; filled in Days 13–14).
 			$wps_restriction_enforcer = new WPS_Restriction_Enforcer();
+			$this->loader->add_action( 'wp_enqueue_scripts', $wps_restriction_enforcer, 'enqueue_styles' );
 			$this->loader->add_filter( 'the_content', $wps_restriction_enforcer, 'maybe_restrict_content', 99 );
 			$this->loader->add_action( 'template_redirect', $wps_restriction_enforcer, 'maybe_redirect', 99 );
 			$this->loader->add_filter(

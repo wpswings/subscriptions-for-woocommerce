@@ -1,6 +1,10 @@
 /**
  * My Account — Memberships tab card layout.
  *
+ * Membership-pass styling: a plan monogram token carries the plan color,
+ * a time-remaining bar surfaces validity at a glance, and a quiet footer
+ * holds the supporting facts. Per-plan color flows through --plan-color.
+ *
  * @since 2.0.0
  */
 
@@ -56,105 +60,112 @@
 
 .wps-membership-cards {
 	display: grid;
-	grid-template-columns: repeat( auto-fill, minmax( 280px, 1fr ) );
+	grid-template-columns: repeat( auto-fill, minmax( 300px, 1fr ) );
 	gap: 18px;
 }
 
 /* -----------------------------------------------------------------------
    Card shell
-   Left accent stripe communicates the plan color without competing with
-   the status badge; the hero background tint reinforces it subtly.
    ----------------------------------------------------------------------- */
 
-.wps-membership-card {
+.wps-mcard {
+	display: flex;
+	flex-direction: column;
+	padding: 18px 18px 0;
 	background: #ffffff;
-	border: 1px solid #e4ecf4;
-	border-left: 4px solid var( --plan-color, #2271b1 );
-	border-radius: 8px;
-	overflow: hidden;
-	transition: box-shadow 0.18s ease, transform 0.14s ease;
+	border: 1px solid #e6e9ef;
+	border-radius: 14px;
+	box-shadow: 0 1px 2px rgba( 18, 32, 54, 0.04 );
+	transition: box-shadow 0.18s ease, transform 0.16s ease, border-color 0.18s ease;
 }
 
-.wps-membership-card:hover {
-	box-shadow: 0 8px 28px rgba( 0, 0, 0, 0.09 );
+.wps-mcard:hover {
+	border-color: #d7dde7;
+	box-shadow: 0 12px 30px rgba( 18, 32, 54, 0.10 );
 	transform: translateY( -2px );
 }
 
-.wps-membership-card--cancelled,
-.wps-membership-card--expired {
-	opacity: 0.7;
-	filter: grayscale( 0.25 );
+.wps-mcard--cancelled,
+.wps-mcard--expired {
+	opacity: 0.72;
 }
 
 /* -----------------------------------------------------------------------
-   Hero section — plan name + status + optional description
-   Subtle plan-color tint creates a natural "header zone".
-   color-mix() provides the tint; a flat fallback covers older browsers.
+   Head — monogram token + plan identity + status
    ----------------------------------------------------------------------- */
 
-.wps-membership-card__hero {
-	padding: 18px 20px 16px;
-	background: #f7f9fc;
-	border-bottom: 1px solid #edf1f7;
-}
-
-@supports ( color: color-mix( in srgb, red, blue ) ) {
-	.wps-membership-card__hero {
-		background: color-mix( in srgb, var( --plan-color, #2271b1 ) 6%, #ffffff );
-		border-bottom-color: color-mix( in srgb, var( --plan-color, #2271b1 ) 14%, #e8eef6 );
-	}
-}
-
-/* Head row: name left, status badge right */
-.wps-membership-card__head {
+.wps-mcard__head {
 	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
+	align-items: center;
 	gap: 12px;
 }
 
-.wps-membership-card__name {
+.wps-mcard__token {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	flex-shrink: 0;
+	border-radius: 11px;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1;
+	color: var( --plan-color, #2271b1 );
+	background: #eef3f9;
+	box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.04 );
+}
+
+@supports ( color: color-mix( in srgb, red, blue ) ) {
+	.wps-mcard__token {
+		color: var( --plan-color, #2271b1 );
+		background: color-mix( in srgb, var( --plan-color, #2271b1 ) 14%, #ffffff );
+		box-shadow: inset 0 0 0 1px color-mix( in srgb, var( --plan-color, #2271b1 ) 22%, transparent );
+	}
+}
+
+.wps-mcard__id {
 	flex: 1;
+	min-width: 0;
+}
+
+.wps-mcard__name {
 	margin: 0;
 	padding: 0;
 	font-size: 15px;
 	font-weight: 700;
-	color: #1d2327;
 	line-height: 1.3;
+	color: #1d2327;
 	border: none;
 }
 
-/* Description — subordinate to name, italic */
-.wps-membership-card__desc {
-	margin: 6px 0 0;
-	font-size: 12.5px;
-	font-style: italic;
-	line-height: 1.55;
-	color: #7a8494;
+.wps-mcard__kind {
+	display: block;
+	margin-top: 2px;
+	font-size: 11.5px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: #8a93a0;
 }
 
-/* -----------------------------------------------------------------------
-   Status badge — dot + text only, no background fill.
-   Each modifier sets its own color; the ::before dot inherits it.
-   This avoids repeating the plan color that's already in the stripe.
-   ----------------------------------------------------------------------- */
-
-.wps-mem-status {
+/* Status pill — tinted per state, independent of the plan color */
+.wps-mcard__status {
 	display: inline-flex;
 	align-items: center;
 	gap: 5px;
 	flex-shrink: 0;
-	margin-top: 2px;
-	font-size: 11px;
+	align-self: flex-start;
+	padding: 4px 10px;
+	border-radius: 20px;
+	font-size: 10.5px;
 	font-weight: 700;
-	letter-spacing: 0.04em;
+	letter-spacing: 0.05em;
 	text-transform: uppercase;
 	white-space: nowrap;
 }
 
-.wps-mem-status::before {
+.wps-mcard__status::before {
 	content: '';
-	display: inline-block;
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
@@ -162,80 +173,157 @@
 	flex-shrink: 0;
 }
 
-.wps-mem-status--active    { color: #16a34a; }
-.wps-mem-status--on-hold   { color: #d97706; }
-.wps-mem-status--cancelled { color: #9ca3af; }
-.wps-mem-status--expired   { color: #ef4444; }
-.wps-mem-status--paused    { color: #818cf8; }
+.wps-mcard__status--active {
+	color: #15803d;
+	background: #e7f6ec;
+}
+
+.wps-mcard__status--on-hold {
+	color: #b45309;
+	background: #fdf2e3;
+}
+
+.wps-mcard__status--paused {
+	color: #4f46e5;
+	background: #eef0fe;
+}
+
+.wps-mcard__status--cancelled {
+	color: #6b7280;
+	background: #f1f3f5;
+}
+
+.wps-mcard__status--expired {
+	color: #dc2626;
+	background: #fdecec;
+}
 
 /* -----------------------------------------------------------------------
-   Meta grid
-   display:contents on each row div makes dt/dd participate directly in
-   the parent 2-column grid — values align across all rows perfectly.
+   Description
    ----------------------------------------------------------------------- */
 
-.wps-membership-card__meta {
-	margin: 0;
-	padding: 16px 20px 18px;
-	display: grid;
-	grid-template-columns: auto 1fr;
-	column-gap: 20px;
-	row-gap: 8px;
-	align-items: baseline;
-}
-
-.wps-membership-card__meta-row {
-	display: contents;
-}
-
-.wps-membership-card__meta-row dt {
-	font-size: 10px;
-	font-weight: 700;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: #a0aab4;
-	white-space: nowrap;
-	padding-top: 1px;
-}
-
-.wps-membership-card__meta-row dd {
-	margin: 0;
+.wps-mcard__desc {
+	margin: 14px 0 0;
 	font-size: 13px;
+	line-height: 1.55;
+	color: #5d6671;
+}
+
+/* -----------------------------------------------------------------------
+   Time-remaining bar
+   ----------------------------------------------------------------------- */
+
+.wps-mcard__bar {
+	margin-top: 16px;
+}
+
+.wps-mcard__bar-info {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 7px;
+}
+
+.wps-mcard__bar-left {
+	font-size: 12.5px;
+	font-weight: 700;
 	color: #1d2327;
 }
 
-.wps-membership-card__meta-row dd a {
-	color: var( --plan-color, #2271b1 );
-	text-decoration: none;
-	font-weight: 500;
+.wps-mcard__bar-date {
+	font-size: 11.5px;
+	color: #8a93a0;
+	white-space: nowrap;
 }
 
-.wps-membership-card__meta-row dd a:hover {
-	text-decoration: underline;
+.wps-mcard__track {
+	height: 6px;
+	border-radius: 6px;
+	background: #eef1f5;
+	overflow: hidden;
+}
+
+.wps-mcard__fill {
+	display: block;
+	height: 100%;
+	border-radius: 6px;
+	background: var( --plan-color, #2271b1 );
+	transition: width 0.4s ease;
+}
+
+/* Urgent state — last 30 days */
+.wps-mcard__bar--soon .wps-mcard__bar-left {
+	color: #c2410c;
+}
+
+.wps-mcard__bar--soon .wps-mcard__fill {
+	background: #ea580c;
 }
 
 /* -----------------------------------------------------------------------
-   "Expiring soon" inline badge — warm amber, compact
+   Facts footer — quiet supporting meta, divided from the body
    ----------------------------------------------------------------------- */
 
-.wps-membership-card__meta-soon {
-	display: inline-flex;
-	align-items: center;
-	gap: 7px;
+.wps-mcard__facts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 18px 26px;
+	margin: 16px -18px 0;
+	padding: 14px 18px;
+	border-top: 1px solid #eef1f5;
 }
 
-.wps-membership-card__soon-badge {
-	display: inline-block;
-	padding: 1px 7px;
-	background: #fff7ed;
-	color: #7c3509;
-	border: 1px solid #fed7aa;
-	border-radius: 10px;
+.wps-mcard__fact {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.wps-mcard__fact dt {
+	margin: 0;
 	font-size: 9.5px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #a4adb9;
+}
+
+.wps-mcard__fact dd {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 500;
+	color: #2c3338;
+}
+
+.wps-mcard__fact dd a {
+	color: var( --plan-color, #2271b1 );
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.wps-mcard__fact dd a:hover {
+	text-decoration: underline;
+}
+
+/* Inline "soon" flag on the Expires fact (non-bar cards) */
+.wps-mcard__fact--soon dd,
+.wps-mcard__fact dd.wps-mcard__fact--soon {
+	color: #c2410c;
+}
+
+.wps-mcard__soon {
+	display: inline-block;
+	margin-left: 6px;
+	padding: 1px 7px;
+	border-radius: 10px;
+	background: #fff3e9;
+	color: #c2410c;
+	font-size: 9px;
 	font-weight: 700;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
-	white-space: nowrap;
+	vertical-align: middle;
 }
 
 /* -----------------------------------------------------------------------

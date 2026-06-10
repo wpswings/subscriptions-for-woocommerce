@@ -429,6 +429,63 @@ class PlanCrudTest extends WP_UnitTestCase {
 	}
 
 	// -----------------------------------------------------------------------
+	// wps_get_plan_access_label()
+	// -----------------------------------------------------------------------
+
+	public function test_access_label_empty_for_non_array() {
+		$this->assertSame( '', wps_get_plan_access_label( null ) );
+	}
+
+	public function test_access_label_subscription_is_while_subscribed() {
+		$plan = array( 'grant_method' => 'subscription' );
+		$this->assertSame( 'Access while subscribed', wps_get_plan_access_label( $plan ) );
+	}
+
+	public function test_access_label_lifetime_when_not_fixed() {
+		$plan = array(
+			'grant_method'  => 'purchase',
+			'access_length' => array( 'type' => 'lifetime' ),
+		);
+		$this->assertSame( 'Lifetime access', wps_get_plan_access_label( $plan ) );
+	}
+
+	public function test_access_label_fixed_duration_is_pluralised() {
+		$plan = array(
+			'grant_method'  => 'purchase',
+			'access_length' => array(
+				'type'  => 'fixed',
+				'value' => 30,
+				'unit'  => 'day',
+			),
+		);
+		$this->assertSame( '30 days of access', wps_get_plan_access_label( $plan ) );
+	}
+
+	public function test_access_label_fixed_singular_unit() {
+		$plan = array(
+			'grant_method'  => 'purchase',
+			'access_length' => array(
+				'type'  => 'fixed',
+				'value' => 1,
+				'unit'  => 'year',
+			),
+		);
+		$this->assertSame( '1 year of access', wps_get_plan_access_label( $plan ) );
+	}
+
+	public function test_access_label_fixed_with_zero_value_falls_back_to_lifetime() {
+		$plan = array(
+			'grant_method'  => 'purchase',
+			'access_length' => array(
+				'type'  => 'fixed',
+				'value' => 0,
+				'unit'  => 'day',
+			),
+		);
+		$this->assertSame( 'Lifetime access', wps_get_plan_access_label( $plan ) );
+	}
+
+	// -----------------------------------------------------------------------
 	// Teardown
 	// -----------------------------------------------------------------------
 

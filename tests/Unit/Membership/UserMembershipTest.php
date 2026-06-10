@@ -527,4 +527,76 @@ class UserMembershipTest extends WP_UnitTestCase {
 		$merged = wps_merge_membership_rows( $existing, $incoming );
 		$this->assertSame( 500, $merged['start_date'] );
 	}
+
+	// -----------------------------------------------------------------------
+	// wps_resolve_membership_expiry() — subscription expiry derives from the
+	// subscription's own end date, not the stored value.
+	// -----------------------------------------------------------------------
+
+	public function test_resolve_expiry_subscription_uses_subscription_end_date() {
+		$sub_id  = $this->factory->post->create();
+		$sub_end = time() + DAY_IN_SECONDS * 365;
+		update_post_meta( $sub_id, 'wps_susbcription_end', $sub_end );
+
+		// Stored expiry is deliberately different to prove it is ignored.
+		$row = array(
+			'plan_slug'       => 'p',
+			'status'          => 'active',
+			'source'          => 'subscription',
+			'subscription_id' => $sub_id,
+			'expiry_date'     => time() + DAY_IN_SECONDS, // stale next-payment style value.
+		);
+
+		$this->assertSame( $sub_end, wps_resolve_membership_expiry( $row ) );
+	}
+
+	public function test_resolve_expiry_subscription_without_end_is_null() {
+		$sub_id = $this->factory->post->create();
+		// No wps_susbcription_end meta => perpetual subscription.
+
+		$row = array(
+			'plan_slug'       => 'p',
+			'status'          => 'active',
+			'source'          => 'subscription',
+			'subscription_id' => $sub_id,
+			'expiry_date'     => time() + DAY_IN_SECONDS, // should be overridden to null.
+		);
+
+		$this->assertNull( wps_resolve_membership_expiry( $row ) );
+	}
+
+	public function test_resolve_expiry_order_source_keeps_stored_value() {
+		$stored = time() + DAY_IN_SECONDS * 10;
+		$row    = array(
+			'plan_slug'       => 'p',
+			'status'          => 'active',
+			'source'          => 'order',
+			'subscription_id' => null,
+			'order_id'        => 5,
+			'expiry_date'     => $stored,
+		);
+
+		$this->assertSame( $stored, wps_resolve_membership_expiry( $row ) );
+	}
+
+	public function test_get_user_memberships_applies_subscription_end_to_expiry() {
+		$sub_id  = $this->factory->post->create();
+		$sub_end = time() + DAY_IN_SECONDS * 200;
+		update_post_meta( $sub_id, 'wps_susbcription_end', $sub_end );
+
+		wps_create_user_membership(
+			$this->user_id,
+			array(
+				'plan_slug'       => 'sub-plan',
+				'status'          => 'active',
+				'source'          => 'subscription',
+				'subscription_id' => $sub_id,
+				'expiry_date'     => null,
+			)
+		);
+
+		$rows = wps_get_user_memberships( $this->user_id );
+		$this->assertCount( 1, $rows );
+		$this->assertSame( $sub_end, $rows[0]['expiry_date'] );
+	}
 }

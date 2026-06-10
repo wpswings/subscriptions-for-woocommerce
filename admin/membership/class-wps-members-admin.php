@@ -7,7 +7,6 @@
  *
  * Handles:
  *   - Single-row GET actions (cancel / reactivate / remove) via admin_init.
- *   - CSV export via admin_init (before headers are sent).
  *   - User profile membership section (render + save).
  *   - AJAX handler for the grant form and user search.
  *
@@ -34,7 +33,7 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 		const PROFILE_NONCE_ACTION = 'wps_profile_membership_';
 
 		/**
-		 * Wire admin_init for row actions and CSV export.
+		 * Wire admin_init for row actions.
 		 *
 		 * @since 2.0.0
 		 */
@@ -62,11 +61,10 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 		}
 
 		/**
-		 * Process single-row GET actions and CSV export.
+		 * Process single-row GET actions.
 		 *
 		 * Row action URLs are built by WPS_Members_List_Table with per-action nonces.
-		 * CSV export uses a separate nonce in the URL query string.
-		 * Both paths require `manage_woocommerce`.
+		 * Requires `manage_woocommerce`.
 		 *
 		 * @since 2.0.0
 		 */
@@ -88,19 +86,6 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 			$tab_url = admin_url(
 				'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-manage&wps_mem_tab=members'
 			);
-
-			// ---- CSV export ----
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET['wps_export_members'] ) ) {
-				$nonce = isset( $_GET['_wpnonce'] )
-					? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) )
-					: '';
-				if ( ! wp_verify_nonce( $nonce, 'wps_export_members' ) ) {
-					wp_die( esc_html__( 'Security check failed.', 'subscriptions-for-woocommerce' ) );
-				}
-				$this->output_csv_export();
-				exit;
-			}
 
 			// ---- Single-row action (GET) ----
 			if ( ! isset( $_GET['wps_member_action'], $_GET['user_id'], $_GET['plan_slug'] ) ) {
@@ -435,100 +420,6 @@ if ( ! class_exists( 'WPS_Members_Admin' ) ) {
 
 			wp_safe_redirect( get_edit_user_link( $user_id ) );
 			exit;
-		}
-
-		// -----------------------------------------------------------------------
-		// Private helpers
-		// -----------------------------------------------------------------------
-
-		/**
-		 * Stream all membership rows as a CSV download.
-		 *
-		 * Reads every user with a `wps_memberships` meta key and flattens to
-		 * one row per user × plan combination. Streams directly without buffering
-		 * the full dataset in memory.
-		 *
-		 * @since 2.0.0
-		 */
-		private function output_csv_export() {
-			$filename = 'members-export-' . gmdate( 'Y-m-d' ) . '.csv';
-
-			header( 'Content-Type: text/csv; charset=utf-8' );
-			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-			header( 'Pragma: no-cache' );
-			header( 'Expires: 0' );
-
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
-			$output = fopen( 'php://output', 'w' );
-
-			// BOM for Excel UTF-8.
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fputs
-			fputs( $output, "\xEF\xBB\xBF" );
-
-			fputcsv(
-				$output,
-				array(
-					__( 'User ID', 'subscriptions-for-woocommerce' ),
-					__( 'Name', 'subscriptions-for-woocommerce' ),
-					__( 'Email', 'subscriptions-for-woocommerce' ),
-					__( 'Plan', 'subscriptions-for-woocommerce' ),
-					__( 'Status', 'subscriptions-for-woocommerce' ),
-					__( 'Source', 'subscriptions-for-woocommerce' ),
-					__( 'Since', 'subscriptions-for-woocommerce' ),
-					__( 'Expires', 'subscriptions-for-woocommerce' ),
-					__( 'Subscription ID', 'subscriptions-for-woocommerce' ),
-					__( 'Order ID', 'subscriptions-for-woocommerce' ),
-				)
-			);
-
-			$date_format = get_option( 'date_format' );
-
-			$users = get_users(
-				array(
-					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-					'meta_key'    => 'wps_memberships',
-					'number'      => -1,
-					'count_total' => false,
-					'fields'      => array( 'ID', 'display_name', 'user_email' ),
-				)
-			);
-
-			foreach ( $users as $csv_user ) {
-				$memberships = wps_get_user_memberships( $csv_user->ID, 'all' );
-				foreach ( $memberships as $row ) {
-					$plan_name = $row['plan_slug'];
-					$plan      = wps_get_plan_by_slug( $row['plan_slug'] );
-					if ( $plan ) {
-						$plan_name = $plan['name'];
-					}
-
-					$since   = ! empty( $row['start_date'] )
-						? date_i18n( $date_format, $row['start_date'] )
-						: '';
-					$expires = empty( $row['expiry_date'] )
-						? __( 'Lifetime', 'subscriptions-for-woocommerce' )
-						: date_i18n( $date_format, $row['expiry_date'] );
-
-					fputcsv(
-						$output,
-						array(
-							$csv_user->ID,
-							$csv_user->display_name,
-							$csv_user->user_email,
-							$plan_name,
-							$row['status'],
-							$row['source'],
-							$since,
-							$expires,
-							isset( $row['subscription_id'] ) ? $row['subscription_id'] : '',
-							isset( $row['order_id'] ) ? $row['order_id'] : '',
-						)
-					);
-				}
-			}
-
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-			fclose( $output );
 		}
 	}
 }

@@ -143,105 +143,156 @@ $wps_status_map = array(
 					'mod'   => 'cancelled',
 				);
 
-			$wps_is_active  = in_array( $wps_status, array( 'active', 'on-hold' ), true );
-			$wps_status_cls = 'wps-membership-card__status wps-mem-status wps-mem-status--'
-				. $wps_status_info['mod'];
+			$wps_is_active = in_array( $wps_status, array( 'active', 'on-hold' ), true );
+
+			// Plan monogram — carries the plan color as the card's visual anchor.
+			$wps_initial = function_exists( 'mb_substr' )
+				? mb_strtoupper( mb_substr( $wps_plan_name, 0, 1 ) )
+				: strtoupper( substr( $wps_plan_name, 0, 1 ) );
+
+			// Access-type subtitle shown beneath the plan name.
+			if ( 'subscription' === $wps_method ) {
+				$wps_kind = __( 'Recurring access', 'subscriptions-for-woocommerce' );
+			} elseif ( isset( $wps_al['type'] ) && 'fixed' === $wps_al['type'] ) {
+				$wps_kind = sprintf(
+					/* translators: %s: access duration, e.g. "20 days" */
+					__( '%s access', 'subscriptions-for-woocommerce' ),
+					$wps_duration
+				);
+			} else {
+				$wps_kind = __( 'Lifetime access', 'subscriptions-for-woocommerce' );
+			}
+
+			// Time-remaining bar — only for fixed-term memberships still running.
+			$wps_show_bar  = false;
+			$wps_remaining = 0;
+			$wps_days_left = 0;
+			if ( $wps_is_active && $wps_start_ts && $wps_expiry_ts && $wps_expiry_ts > $wps_start_ts ) {
+				$wps_now       = time();
+				$wps_span      = $wps_expiry_ts - $wps_start_ts;
+				$wps_left_secs = max( 0, $wps_expiry_ts - $wps_now );
+				$wps_remaining = (int) round( min( $wps_span, $wps_left_secs ) / $wps_span * 100 );
+				$wps_days_left = (int) ceil( $wps_left_secs / DAY_IN_SECONDS );
+				$wps_show_bar  = true;
+			}
 			?>
 
-			<div class="wps-membership-card wps-membership-card--<?php echo esc_attr( $wps_status_info['mod'] ); ?>"
+			<article class="wps-mcard wps-mcard--<?php echo esc_attr( $wps_status_info['mod'] ); ?>"
 				style="--plan-color: <?php echo esc_attr( $wps_color ); ?>">
 
-				<div class="wps-membership-card__hero">
-
-					<div class="wps-membership-card__head">
-						<h3 class="wps-membership-card__name">
-							<?php echo esc_html( $wps_plan_name ); ?>
-						</h3>
-						<span class="<?php echo esc_attr( $wps_status_cls ); ?>">
-							<?php echo esc_html( $wps_status_info['label'] ); ?>
-						</span>
+				<div class="wps-mcard__head">
+					<span class="wps-mcard__token" aria-hidden="true"><?php echo esc_html( $wps_initial ); ?></span>
+					<div class="wps-mcard__id">
+						<h3 class="wps-mcard__name"><?php echo esc_html( $wps_plan_name ); ?></h3>
+						<span class="wps-mcard__kind"><?php echo esc_html( $wps_kind ); ?></span>
 					</div>
-
-					<?php if ( $wps_plan_desc ) : ?>
-						<p class="wps-membership-card__desc">
-							<?php echo esc_html( $wps_plan_desc ); ?>
-						</p>
-					<?php endif; ?>
-
+					<span class="wps-mcard__status
+						wps-mcard__status--<?php echo esc_attr( $wps_status_info['mod'] ); ?>">
+						<?php echo esc_html( $wps_status_info['label'] ); ?>
+					</span>
 				</div>
 
-				<dl class="wps-membership-card__meta">
+				<?php if ( $wps_plan_desc ) : ?>
+					<p class="wps-mcard__desc"><?php echo esc_html( $wps_plan_desc ); ?></p>
+				<?php endif; ?>
 
-						<div class="wps-membership-card__meta-row">
-							<dt><?php esc_html_e( 'Access', 'subscriptions-for-woocommerce' ); ?></dt>
-							<dd><?php echo esc_html( $wps_duration ); ?></dd>
+				<?php if ( $wps_show_bar ) : ?>
+					<?php
+					$wps_left_lbl = sprintf(
+						/* translators: %d: number of days remaining */
+						_n( '%d day left', '%d days left', $wps_days_left, 'subscriptions-for-woocommerce' ),
+						$wps_days_left
+					);
+					?>
+					<div class="wps-mcard__bar<?php echo esc_attr( $wps_is_soon ? ' wps-mcard__bar--soon' : '' ); ?>">
+						<div class="wps-mcard__bar-info">
+							<span class="wps-mcard__bar-left"><?php echo esc_html( $wps_left_lbl ); ?></span>
+							<span class="wps-mcard__bar-date">
+								<?php
+								printf(
+									/* translators: %s: expiry date */
+									esc_html__( 'Expires %s', 'subscriptions-for-woocommerce' ),
+									esc_html( $wps_expiry_str )
+								);
+								?>
+							</span>
 						</div>
-
-						<div class="wps-membership-card__meta-row">
-							<dt><?php esc_html_e( 'Started', 'subscriptions-for-woocommerce' ); ?></dt>
-							<dd><?php echo esc_html( $wps_start_str ); ?></dd>
+						<div class="wps-mcard__track">
+							<span class="wps-mcard__fill"
+								style="width: <?php echo esc_attr( $wps_remaining ); ?>%"></span>
 						</div>
+					</div>
+				<?php endif; ?>
 
-						<div class="wps-membership-card__meta-row">
+				<dl class="wps-mcard__facts">
+
+					<div class="wps-mcard__fact">
+						<dt><?php esc_html_e( 'Started', 'subscriptions-for-woocommerce' ); ?></dt>
+						<dd><?php echo esc_html( $wps_start_str ); ?></dd>
+					</div>
+
+					<?php if ( ! $wps_show_bar ) : ?>
+						<div class="wps-mcard__fact">
 							<dt><?php esc_html_e( 'Expires', 'subscriptions-for-woocommerce' ); ?></dt>
-							<dd class="<?php echo $wps_is_soon ? 'wps-membership-card__meta-soon' : ''; ?>">
+							<dd class="<?php echo $wps_is_soon ? 'wps-mcard__fact--soon' : ''; ?>">
 								<?php echo esc_html( $wps_expiry_str ); ?>
 								<?php if ( $wps_is_soon ) : ?>
-									<span class="wps-membership-card__soon-badge">
-										<?php esc_html_e( 'Expiring soon', 'subscriptions-for-woocommerce' ); ?>
+									<span class="wps-mcard__soon">
+										<?php esc_html_e( 'Soon', 'subscriptions-for-woocommerce' ); ?>
 									</span>
 								<?php endif; ?>
 							</dd>
 						</div>
+					<?php endif; ?>
 
-						<div class="wps-membership-card__meta-row">
-							<dt><?php esc_html_e( 'Source', 'subscriptions-for-woocommerce' ); ?></dt>
-							<dd>
-								<?php if ( 'subscription' === $wps_source && $wps_sub_id ) : ?>
-									<?php
-									$wps_src_url = wc_get_endpoint_url(
-										'show-subscription',
-										$wps_sub_id,
-										wc_get_page_permalink( 'myaccount' )
-									);
-									$wps_src_lbl = sprintf(
-										/* translators: %d: subscription ID */
-										__( 'Subscription #%d', 'subscriptions-for-woocommerce' ),
-										$wps_sub_id
-									);
-									?>
-									<a href="<?php echo esc_url( $wps_src_url ); ?>">
-										<?php echo esc_html( $wps_src_lbl ); ?>
-									</a>
-								<?php elseif ( 'order' === $wps_source && $wps_order_id ) : ?>
-									<?php
-									$wps_src_url = wc_get_endpoint_url(
-										'view-order',
-										$wps_order_id,
-										wc_get_page_permalink( 'myaccount' )
-									);
-									$wps_src_lbl = sprintf(
-										/* translators: %d: order ID */
-										__( 'Order #%d', 'subscriptions-for-woocommerce' ),
-										$wps_order_id
-									);
-									?>
-									<a href="<?php echo esc_url( $wps_src_url ); ?>">
-										<?php echo esc_html( $wps_src_lbl ); ?>
-									</a>
-								<?php elseif ( 'subscription' === $wps_source ) : ?>
-									<?php esc_html_e( 'Subscription', 'subscriptions-for-woocommerce' ); ?>
-								<?php elseif ( 'order' === $wps_source ) : ?>
-									<?php esc_html_e( 'Order', 'subscriptions-for-woocommerce' ); ?>
-								<?php else : ?>
-									<?php esc_html_e( 'Manual grant', 'subscriptions-for-woocommerce' ); ?>
-								<?php endif; ?>
-							</dd>
-						</div>
+					<div class="wps-mcard__fact">
+						<dt><?php esc_html_e( 'Source', 'subscriptions-for-woocommerce' ); ?></dt>
+						<dd>
+							<?php if ( 'subscription' === $wps_source && $wps_sub_id ) : ?>
+								<?php
+								$wps_src_url = wc_get_endpoint_url(
+									'show-subscription',
+									$wps_sub_id,
+									wc_get_page_permalink( 'myaccount' )
+								);
+								$wps_src_lbl = sprintf(
+									/* translators: %d: subscription ID */
+									__( 'Subscription #%d', 'subscriptions-for-woocommerce' ),
+									$wps_sub_id
+								);
+								?>
+								<a href="<?php echo esc_url( $wps_src_url ); ?>">
+									<?php echo esc_html( $wps_src_lbl ); ?>
+								</a>
+							<?php elseif ( 'order' === $wps_source && $wps_order_id ) : ?>
+								<?php
+								$wps_src_url = wc_get_endpoint_url(
+									'view-order',
+									$wps_order_id,
+									wc_get_page_permalink( 'myaccount' )
+								);
+								$wps_src_lbl = sprintf(
+									/* translators: %d: order ID */
+									__( 'Order #%d', 'subscriptions-for-woocommerce' ),
+									$wps_order_id
+								);
+								?>
+								<a href="<?php echo esc_url( $wps_src_url ); ?>">
+									<?php echo esc_html( $wps_src_lbl ); ?>
+								</a>
+							<?php elseif ( 'subscription' === $wps_source ) : ?>
+								<?php esc_html_e( 'Subscription', 'subscriptions-for-woocommerce' ); ?>
+							<?php elseif ( 'order' === $wps_source ) : ?>
+								<?php esc_html_e( 'Order', 'subscriptions-for-woocommerce' ); ?>
+							<?php else : ?>
+								<?php esc_html_e( 'Manual grant', 'subscriptions-for-woocommerce' ); ?>
+							<?php endif; ?>
+						</dd>
+					</div>
 
 				</dl>
 
-			</div>
+			</article>
 
 		<?php endforeach; ?>
 	</div>

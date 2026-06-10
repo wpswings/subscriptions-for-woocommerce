@@ -5,7 +5,7 @@
  * Loaded by the tab system via:
  *   SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/partials/wps-membership-members.php'
  *
- * Day 09 additions: CSV export link, Grant Membership button + form
+ * Day 09 additions: Grant Membership button + form
  * (sourced from admin/partials/membership/members-tab.php).
  *
  * @since      2.0.0
@@ -30,27 +30,12 @@ $wps_status_filter = isset( $_GET['member_status'] ) ? sanitize_key( wp_unslash(
 $wps_plan_filter = isset( $_GET['plan_slug'] ) ? sanitize_key( wp_unslash( $_GET['plan_slug'] ) ) : '';
 
 $wps_all_plans = wps_get_all_plans( 'active' );
-
-$wps_export_url = wp_nonce_url(
-	add_query_arg(
-		array(
-			'page'               => 'subscriptions_for_woocommerce_menu',
-			'sfw_tab'            => 'wps-membership-members',
-			'wps_export_members' => '1',
-		),
-		admin_url( 'admin.php' )
-	),
-	'wps_export_members'
-);
 ?>
 
 <div class="wps_sfw_subscription_table_inner_wrap">
 	<a href="<?php echo esc_url( admin_url( 'user-new.php' ) ); ?>"
 		class="button button-primary">
 		<?php esc_html_e( 'Add New User', 'subscriptions-for-woocommerce' ); ?>
-	</a>
-	<a href="<?php echo esc_url( $wps_export_url ); ?>" class="button">
-		<?php esc_html_e( 'Export CSV', 'subscriptions-for-woocommerce' ); ?>
 	</a>
 	<button type="button" class="button" id="wps-toggle-grant-form">
 		<?php esc_html_e( 'Grant Membership', 'subscriptions-for-woocommerce' ); ?>

@@ -374,9 +374,46 @@ if ( ! function_exists( 'wps_get_membership_by_subscription' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wps_resolve_membership_expiry' ) ) {
+	/**
+	 * Resolve the effective expiry timestamp for a membership row.
+	 *
+	 * A subscription-granted membership is valid for exactly as long as the
+	 * subscription itself, so its expiry is read live from the subscription's
+	 * own end date (`wps_susbcription_end` meta) rather than from a stored value
+	 * or the plan's fixed access length. A subscription with no configured end
+	 * date runs until it is cancelled, which resolves to null (no hard expiry).
+	 *
+	 * Order- and manually-granted memberships keep their stored expiry_date.
+	 *
+	 * @since  2.0.0
+	 * @param  array $row Membership row (as stored / sanitised).
+	 * @return int|null Unix timestamp of expiry, or null for lifetime / ongoing.
+	 */
+	function wps_resolve_membership_expiry( array $row ) {
+		$stored = isset( $row['expiry_date'] ) && is_numeric( $row['expiry_date'] )
+			? absint( $row['expiry_date'] )
+			: null;
+
+		$is_sub = isset( $row['source'] ) && 'subscription' === $row['source'];
+		$sub_id = isset( $row['subscription_id'] ) ? absint( $row['subscription_id'] ) : 0;
+
+		if ( $is_sub && $sub_id && function_exists( 'wps_sfw_get_meta_data' ) ) {
+			$sub_end = absint( wps_sfw_get_meta_data( $sub_id, 'wps_susbcription_end', true ) );
+			return $sub_end > 0 ? $sub_end : null;
+		}
+
+		return $stored;
+	}
+}
+
 if ( ! function_exists( 'wps_get_user_memberships' ) ) {
 	/**
 	 * Return all memberships for a user, optionally filtered by status.
+	 *
+	 * Each row's `expiry_date` is passed through wps_resolve_membership_expiry()
+	 * so subscription-granted memberships always reflect the live subscription
+	 * end date — keeping the admin members table and the My Account view in sync.
 	 *
 	 * @since  2.0.0
 	 * @param  int    $user_id WordPress user ID.
@@ -392,18 +429,22 @@ if ( ! function_exists( 'wps_get_user_memberships' ) ) {
 			return array();
 		}
 
+		$rows = array();
 		if ( 'all' === $status ) {
-			return array_values( $memberships );
-		}
-
-		$filtered = array();
-		foreach ( $memberships as $row ) {
-			if ( isset( $row['status'] ) && $status === $row['status'] ) {
-				$filtered[] = $row;
+			$rows = array_values( $memberships );
+		} else {
+			foreach ( $memberships as $row ) {
+				if ( isset( $row['status'] ) && $status === $row['status'] ) {
+					$rows[] = $row;
+				}
 			}
 		}
 
-		return $filtered;
+		foreach ( $rows as $index => $row ) {
+			$rows[ $index ]['expiry_date'] = wps_resolve_membership_expiry( $row );
+		}
+
+		return $rows;
 	}
 }
 

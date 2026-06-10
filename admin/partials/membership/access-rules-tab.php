@@ -152,8 +152,12 @@ foreach ( $wps_all_plans as $wps_p ) {
 ?>
 
 <?php if ( $wps_saved ) : ?>
-	<div class="notice notice-success inline" style="margin:10px 0 16px;">
-		<p><?php esc_html_e( 'Access Rules saved.', 'subscriptions-for-woocommerce' ); ?></p>
+	<div class="wps-mem-toast wps-mem-toast--success" role="status">
+		<svg class="wps-mem-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+			stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<path d="M20 6 9 17l-5-5"/>
+		</svg>
+		<span><?php esc_html_e( 'Access Rules saved.', 'subscriptions-for-woocommerce' ); ?></span>
 	</div>
 <?php endif; ?>
 

@@ -877,3 +877,32 @@ function wps_sfw_banner_notification_html() {
 	}
 }
 
+/**
+ * Add setup future usage for parent order if subscription exist in order and setup future usage is missing in request.
+ *
+ * @param array    $request            The request array.
+ * @param WC_Order $order              The order object.
+ * @param array    $prepared_source    The prepared source array.
+ * @param bool     $is_setup_intent    Whether it's a setup intent or not.
+ *
+ * @return array The modified request array.
+ */
+add_filter( 'wc_stripe_generate_create_intent_request', function( $request, $order, $prepared_source, $is_setup_intent = false ){
+	if ( ! $order instanceof WC_Order ) {
+		return $request;
+	}
+
+	$order_id = $order->get_id();
+
+	$is_renewal = 'yes' === wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
+	$has_subscription = function_exists( 'wps_sfw_order_has_subscription' ) && wps_sfw_order_has_subscription( $order_id );
+
+	$is_parent_order  = $has_subscription && ! $is_renewal;
+	$missing_future_usage = empty($request['setup_future_usage']);
+
+	if ( $is_parent_order && $missing_future_usage ) {
+		$request['setup_future_usage'] = 'off_session';
+	}
+
+	return $request;
+}, 50, 4 );

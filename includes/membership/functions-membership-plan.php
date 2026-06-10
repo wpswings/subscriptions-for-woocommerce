@@ -716,72 +716,201 @@ if ( ! function_exists( 'wps_get_plan_purchasable_products' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wps_get_plan_access_label' ) ) {
+	/**
+	 * Human-readable access-duration label for a plan.
+	 *
+	 * Examples: "Lifetime access", "30 days of access", "Access while subscribed".
+	 *
+	 * @since  2.0.0
+	 * @param  array|null $plan Plan array from wps_get_plan_by_slug(), or null.
+	 * @return string Label, or empty string when $plan is not an array.
+	 */
+	function wps_get_plan_access_label( $plan ) {
+		if ( ! is_array( $plan ) ) {
+			return '';
+		}
+
+		$method = isset( $plan['grant_method'] ) ? $plan['grant_method'] : 'purchase';
+
+		if ( 'subscription' === $method ) {
+			return __( 'Access while subscribed', 'subscriptions-for-woocommerce' );
+		}
+
+		$al   = isset( $plan['access_length'] ) ? $plan['access_length'] : array();
+		$type = isset( $al['type'] ) ? $al['type'] : 'lifetime';
+		$val  = isset( $al['value'] ) ? absint( $al['value'] ) : 0;
+		$unit = isset( $al['unit'] ) ? $al['unit'] : 'day';
+
+		if ( 'fixed' === $type && $val > 0 ) {
+			$units    = array(
+				'day'   => _n( 'day', 'days', $val, 'subscriptions-for-woocommerce' ),
+				'month' => _n( 'month', 'months', $val, 'subscriptions-for-woocommerce' ),
+				'year'  => _n( 'year', 'years', $val, 'subscriptions-for-woocommerce' ),
+			);
+			$unit_lbl = isset( $units[ $unit ] ) ? $units[ $unit ] : $unit;
+
+			return sprintf(
+				/* translators: 1: number, 2: time unit (day/days/month/months/year/years) */
+				__( '%1$d %2$s of access', 'subscriptions-for-woocommerce' ),
+				$val,
+				$unit_lbl
+			);
+		}
+
+		return __( 'Lifetime access', 'subscriptions-for-woocommerce' );
+	}
+}
+
 if ( ! function_exists( 'wps_render_plan_purchase_cta' ) ) {
 	/**
-	 * Render an HTML "Get access" block for one or more plan slugs.
+	 * Render the "Unlock this content" purchase block for one or more plans.
 	 *
-	 * Collects all purchasable products across the given plan(s) (de-duped by
-	 * product ID), then renders a list with name, price, and an add-to-cart
-	 * link for each. The final HTML is passed through the
-	 * `wps_plan_purchase_cta_html` filter so themes and Pro can customise it.
+	 * Groups purchasable products under the plan that grants them (de-duped by
+	 * product ID), and presents each plan with its name, access duration, a short
+	 * description, and a buy button per product showing the name and price. The
+	 * final HTML is passed through the `wps_plan_purchase_cta_html` filter so
+	 * themes and Pro can customise it.
+	 *
+	 * The markup is intentionally kses-safe (no <svg>/<style>) because the
+	 * restriction layer runs the output through wp_kses_post() before display.
 	 *
 	 * @since  2.0.0
 	 * @param  string|string[] $plan_slugs One or more plan slugs.
 	 * @return string HTML string (empty string when no purchasable products exist).
 	 */
 	function wps_render_plan_purchase_cta( $plan_slugs ) {
-		$plan_slugs = (array) $plan_slugs;
-		$seen       = array();
-		$products   = array();
+		$plan_slugs   = (array) $plan_slugs;
+		$seen         = array();
+		$groups       = array();
+		$all_products = array();
 
 		foreach ( $plan_slugs as $slug ) {
-			foreach ( wps_get_plan_purchasable_products( sanitize_key( $slug ) ) as $product ) {
+			$slug = sanitize_key( $slug );
+
+			$plan_products = array();
+			foreach ( wps_get_plan_purchasable_products( $slug ) as $product ) {
 				$pid = $product->get_id();
-				if ( ! isset( $seen[ $pid ] ) ) {
-					$seen[ $pid ] = true;
-					$products[]   = $product;
+				if ( isset( $seen[ $pid ] ) ) {
+					continue;
 				}
+				$seen[ $pid ]    = true;
+				$plan_products[] = $product;
+				$all_products[]  = $product;
 			}
+
+			if ( empty( $plan_products ) ) {
+				continue;
+			}
+
+			$groups[] = array(
+				'plan'     => function_exists( 'wps_get_plan_by_slug' ) ? wps_get_plan_by_slug( $slug ) : null,
+				'slug'     => $slug,
+				'products' => $plan_products,
+			);
 		}
 
-		if ( empty( $products ) ) {
+		if ( empty( $groups ) ) {
 			return '';
 		}
+
+		/**
+		 * Filter the purchase-CTA heading text.
+		 *
+		 * @since 2.0.0
+		 * @param string $heading Heading text.
+		 */
+		$heading = apply_filters(
+			'wps_plan_purchase_cta_heading',
+			__( 'Unlock this content', 'subscriptions-for-woocommerce' )
+		);
+
+		/**
+		 * Filter the purchase-CTA subtitle text.
+		 *
+		 * @since 2.0.0
+		 * @param string $subtitle Subtitle text.
+		 */
+		$subtitle = apply_filters(
+			'wps_plan_purchase_cta_subtitle',
+			_n(
+				'Get instant access with the membership below.',
+				'Choose a membership below to get instant access.',
+				count( $groups ),
+				'subscriptions-for-woocommerce'
+			)
+		);
 
 		ob_start();
 		?>
 		<div class="wps-plan-purchase-cta">
-			<p class="wps-plan-purchase-cta__heading">
-				<?php esc_html_e( 'Get access:', 'subscriptions-for-woocommerce' ); ?>
-			</p>
-			<ul class="wps-plan-purchase-cta__list">
-				<?php foreach ( $products as $product ) : ?>
-					<li class="wps-plan-purchase-cta__item">
-						<a href="<?php echo esc_url( $product->add_to_cart_url() ); ?>"
-							class="wps-plan-purchase-cta__link button">
-							<?php
-							echo esc_html( $product->get_name() );
-							echo ' &mdash; ';
-							echo wp_kses_post( wc_price( $product->get_price() ) );
-							?>
-						</a>
-					</li>
+			<p class="wps-plan-purchase-cta__heading"><?php echo esc_html( $heading ); ?></p>
+			<p class="wps-plan-purchase-cta__sub"><?php echo esc_html( $subtitle ); ?></p>
+
+			<div class="wps-plan-purchase-cta__plans">
+				<?php foreach ( $groups as $group ) : ?>
+					<?php
+					$plan   = $group['plan'];
+					$name   = $plan && ! empty( $plan['name'] ) ? $plan['name'] : ucfirst( $group['slug'] );
+					$access = wps_get_plan_access_label( $plan );
+					$desc   = $plan && ! empty( $plan['description'] )
+						? wp_trim_words( wp_strip_all_tags( $plan['description'] ), 24, '…' )
+						: '';
+					?>
+					<div class="wps-plan-purchase-cta__plan">
+						<div class="wps-plan-purchase-cta__plan-head">
+							<span class="wps-plan-purchase-cta__plan-name">
+								<?php echo esc_html( $name ); ?>
+							</span>
+							<?php if ( $access ) : ?>
+								<span class="wps-plan-purchase-cta__plan-access">
+									<?php echo esc_html( $access ); ?>
+								</span>
+							<?php endif; ?>
+						</div>
+
+						<?php if ( $desc ) : ?>
+							<p class="wps-plan-purchase-cta__plan-desc"><?php echo esc_html( $desc ); ?></p>
+						<?php endif; ?>
+
+						<div class="wps-plan-purchase-cta__buys">
+							<?php foreach ( $group['products'] as $product ) : ?>
+								<a class="wps-plan-purchase-cta__buy"
+									href="<?php echo esc_url( $product->add_to_cart_url() ); ?>">
+									<span class="wps-plan-purchase-cta__buy-name">
+										<?php echo esc_html( $product->get_name() ); ?>
+									</span>
+									<span class="wps-plan-purchase-cta__buy-price">
+										<?php echo wp_kses_post( wc_price( $product->get_price() ) ); ?>
+									</span>
+								</a>
+							<?php endforeach; ?>
+						</div>
+					</div>
 				<?php endforeach; ?>
-			</ul>
+			</div>
 		</div>
 		<?php
 		$html = ob_get_clean();
+
+		// Flatten the template's newlines to single spaces. The restriction layer
+		// passes this HTML through wpautop(), which would otherwise convert the
+		// formatting newlines into <br> tags — and inside the inline buy <a> those
+		// become stray flex items that break the row alignment. Replacing with a
+		// space (not nothing) keeps multi-line tags valid; whitespace-only gaps
+		// between flex items are ignored by the browser.
+		$html = trim( preg_replace( '/\n\s*/', ' ', $html ) );
 
 		/**
 		 * Filter the purchase CTA HTML before output.
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param string       $html       The generated HTML.
-		 * @param WC_Product[] $products   The purchasable products included.
-		 * @param string[]     $plan_slugs The plan slugs that were requested.
+		 * @param string       $html         The generated HTML.
+		 * @param WC_Product[] $all_products The purchasable products included.
+		 * @param string[]     $plan_slugs   The plan slugs that were requested.
 		 */
-		return apply_filters( 'wps_plan_purchase_cta_html', $html, $products, $plan_slugs );
+		return apply_filters( 'wps_plan_purchase_cta_html', $html, $all_products, $plan_slugs );
 	}
 }
 

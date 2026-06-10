@@ -292,6 +292,38 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertSame( 'active', $membership['status'] );
 	}
 
+	// -----------------------------------------------------------------------
+	// CSV export removal
+	// -----------------------------------------------------------------------
+
+	public function test_csv_export_handler_method_is_removed() {
+		$this->assertFalse(
+			method_exists( $this->admin, 'output_csv_export' ),
+			'CSV export was removed from the Members tab; output_csv_export() should not exist.'
+		);
+	}
+
+	public function test_export_request_does_not_short_circuit_row_actions() {
+		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'noexport-plan' ) );
+
+		$admin_user = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $admin_user );
+
+		// An export GET request is no longer recognised — handler must return
+		// harmlessly without exiting or emitting a CSV, leaving data untouched.
+		$_GET = array(
+			'page'               => 'subscriptions_for_woocommerce_menu',
+			'sfw_tab'            => 'wps-membership-manage',
+			'wps_export_members' => '1',
+			'_wpnonce'           => wp_create_nonce( 'wps_export_members' ),
+		);
+
+		$this->admin->handle_row_actions();
+
+		$membership = wps_get_membership( $this->user_id, 'noexport-plan' );
+		$this->assertSame( 'active', $membership['status'] );
+	}
+
 	public function tearDown(): void {
 		$_POST = array();
 		$_GET  = array();

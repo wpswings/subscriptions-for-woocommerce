@@ -80,8 +80,8 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		/**
 		 * Handle initial subscription activation.
 		 *
-		 * Fires before `wps_next_payment_date` is written to meta, so expiry is
-		 * computed directly from the subscription's interval/number metas.
+		 * Fires before `wps_susbcription_end` is written to meta, so the expiry is
+		 * computed directly from the subscription's expiry number/interval metas.
 		 *
 		 * @since 2.0.0
 		 * @param string $status          The status string ('active' or filtered value).
@@ -98,8 +98,10 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		/**
 		 * Handle reactivation / completion (fires after all meta has been written).
 		 *
-		 * Reads the already-persisted `wps_next_payment_date` so the expiry is
-		 * accurate; merges with any entry written by on_subscription_active().
+		 * Reads the already-persisted `wps_susbcription_end` (the subscription's
+		 * own end date) so the membership expiry matches the subscription. An
+		 * empty value means the subscription has no fixed end (runs until
+		 * cancelled), which maps to a null/lifetime membership expiry.
 		 *
 		 * @since 2.0.0
 		 * @param int $order_id        Parent / renewal order ID.
@@ -107,7 +109,7 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		 */
 		public function on_order_status_changed( $order_id, $subscription_id ) {
 			$subscription_id = absint( $subscription_id );
-			$expiry          = absint( wps_sfw_get_meta_data( $subscription_id, 'wps_next_payment_date', true ) );
+			$expiry          = absint( wps_sfw_get_meta_data( $subscription_id, 'wps_susbcription_end', true ) );
 			$this->process_subscription( $subscription_id, 'active', $expiry ? $expiry : null );
 		}
 
@@ -144,8 +146,9 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		/**
 		 * Handle a successful renewal payment (scheduler path).
 		 *
-		 * `wps_next_payment_date` has already been updated on the subscription by
-		 * the time this hook fires.
+		 * The membership expiry tracks the subscription's own end date
+		 * (`wps_susbcription_end`), which is fixed for the life of the
+		 * subscription and unaffected by individual renewal cycles.
 		 *
 		 * @since 2.0.0
 		 * @param WC_Order $renewal_order   The newly created renewal order object.
@@ -153,7 +156,7 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		 */
 		public function on_renewal_payment( $renewal_order, $subscription_id ) {
 			$subscription_id = absint( $subscription_id );
-			$expiry          = absint( wps_sfw_get_meta_data( $subscription_id, 'wps_next_payment_date', true ) );
+			$expiry          = absint( wps_sfw_get_meta_data( $subscription_id, 'wps_susbcription_end', true ) );
 			$this->process_subscription( $subscription_id, 'active', $expiry ? $expiry : null );
 		}
 
@@ -175,7 +178,7 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 				return;
 			}
 
-			$expiry = absint( wps_sfw_get_meta_data( $subscription_id, 'wps_next_payment_date', true ) );
+			$expiry = absint( wps_sfw_get_meta_data( $subscription_id, 'wps_susbcription_end', true ) );
 			$this->process_subscription( $subscription_id, 'active', $expiry ? $expiry : null );
 		}
 
@@ -294,14 +297,16 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 		// -----------------------------------------------------------------------
 
 		/**
-		 * Compute the next-payment expiry timestamp from subscription metas.
+		 * Compute the subscription's own end-date timestamp from its metas.
 		 *
-		 * Used when `wps_next_payment_date` hasn't been persisted yet (i.e. during
-		 * `wps_wsp_after_subscription_active` which fires before the meta write).
+		 * Used when `wps_susbcription_end` hasn't been persisted yet (i.e. during
+		 * `wps_wsp_after_subscription_active`, which fires before the meta write).
+		 * A subscription with no configured expiry number has no fixed end and
+		 * therefore returns null (the membership runs until cancellation).
 		 *
 		 * @since  2.0.0
 		 * @param  int $subscription_id Subscription post / order ID.
-		 * @return int|null Unix timestamp of the next payment, or null on failure.
+		 * @return int|null Unix timestamp of the subscription end, or null when none.
 		 */
 		private function compute_expiry_from_subscription( $subscription_id ) {
 			$current_time = time();
@@ -312,13 +317,13 @@ if ( ! class_exists( 'WPS_Membership_Sync' ) ) {
 				true
 			);
 
-			$next_payment = (int) wps_sfw_next_payment_date(
+			$sub_end = (int) wps_sfw_susbcription_expiry_date(
 				$subscription_id,
 				$current_time,
 				$trial_end
 			);
 
-			return $next_payment > 0 ? $next_payment : null;
+			return $sub_end > 0 ? $sub_end : null;
 		}
 	}
 }

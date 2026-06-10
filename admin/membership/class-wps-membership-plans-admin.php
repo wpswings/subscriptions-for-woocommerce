@@ -38,7 +38,7 @@ if ( ! class_exists( 'WPS_Membership_Plans_Admin' ) ) {
 		}
 
 		/**
-		 * Enqueue the Manage Membership stylesheet and hide the WP sidebar.
+		 * Enqueue the Manage Membership stylesheet.
 		 *
 		 * Hooked to `admin_enqueue_scripts`.
 		 *
@@ -55,10 +55,6 @@ if ( ! class_exists( 'WPS_Membership_Plans_Admin' ) ) {
 				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/wps-membership-manage.css',
 				array(),
 				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
-			);
-			wp_add_inline_style(
-				'wps-membership-manage',
-				'#adminmenuback,#adminmenuwrap{display:none!important;}#wpcontent{margin-left:0!important;}'
 			);
 		}
 

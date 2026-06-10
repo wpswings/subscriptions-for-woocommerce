@@ -32,6 +32,39 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 		// -----------------------------------------------------------------------
 
 		/**
+		 * Enqueue the membership frontend stylesheet on restricted singular views.
+		 *
+		 * The purchase CTA and restriction notice can surface on any singular
+		 * post, page, or product — not only WooCommerce pages — so the styles are
+		 * loaded here whenever the queried object is actually restricted.
+		 *
+		 * Hooked to `wp_enqueue_scripts`.
+		 *
+		 * @since 2.0.0
+		 */
+		public function enqueue_styles() {
+			if ( is_admin() || ! is_singular() ) {
+				return;
+			}
+
+			$post = get_queried_object();
+			if ( ! $post instanceof WP_Post ) {
+				return;
+			}
+
+			if ( null === wps_object_is_restricted( $post, get_current_user_id() ) ) {
+				return;
+			}
+
+			wp_enqueue_style(
+				'wps-membership-badges',
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/css/wps-membership-badges.css',
+				array(),
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
+			);
+		}
+
+		/**
 		 * Filter post content, replacing it with a restriction notice when the
 		 * current user lacks the required plan membership.
 		 *

@@ -28,6 +28,7 @@ $is_full_width_tab     = in_array(
 	array(
 		'subscriptions-for-woocommerce-subscriptions-table',
 		'woocommerce-subscriptions-pro-report',
+		'wps-membership-manage',
 	),
 	true
 ) || $is_renewal_table_view;

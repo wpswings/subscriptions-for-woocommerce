@@ -52,7 +52,7 @@ class MyaccountMembershipsTest extends WP_UnitTestCase {
 	public function test_add_query_var_appends_memberships() {
 		$result = $this->tab->add_query_var( array( 'existing' ) );
 
-		$this->assertContains( 'memberships', $result );
+		$this->assertContains( 'wps_memberships', $result );
 	}
 
 	/** The original vars are preserved. */
@@ -80,7 +80,7 @@ class MyaccountMembershipsTest extends WP_UnitTestCase {
 		$keys   = array_keys( $result );
 
 		$sub_pos  = array_search( 'wps_subscriptions', $keys, true );
-		$mem_pos  = array_search( 'memberships', $keys, true );
+		$mem_pos  = array_search( 'wps_memberships', $keys, true );
 
 		$this->assertNotFalse( $mem_pos, "'memberships' key must exist in result." );
 		$this->assertSame( $sub_pos + 1, $mem_pos, "'memberships' must follow 'wps_subscriptions'." );
@@ -97,7 +97,7 @@ class MyaccountMembershipsTest extends WP_UnitTestCase {
 		$result = $this->tab->add_menu_item( $items );
 		$keys   = array_keys( $result );
 
-		$mem_pos    = array_search( 'memberships', $keys, true );
+		$mem_pos    = array_search( 'wps_memberships', $keys, true );
 		$logout_pos = array_search( 'customer-logout', $keys, true );
 
 		$this->assertNotFalse( $mem_pos );
@@ -122,8 +122,8 @@ class MyaccountMembershipsTest extends WP_UnitTestCase {
 		$items  = array( 'customer-logout' => 'Logout' );
 		$result = $this->tab->add_menu_item( $items );
 
-		$this->assertArrayHasKey( 'memberships', $result );
-		$this->assertSame( 'Memberships', $result['memberships'] );
+		$this->assertArrayHasKey( 'wps_memberships', $result );
+		$this->assertSame( 'Memberships', $result['wps_memberships'] );
 	}
 
 	/** Existing items are not removed or reordered (beyond the insertion). */
@@ -153,7 +153,7 @@ class MyaccountMembershipsTest extends WP_UnitTestCase {
 		$this->tab->render_tab();
 		$html = ob_get_clean();
 
-		$this->assertStringContainsString( 'wps-no-memberships', $html );
+		$this->assertStringContainsString( 'wps-myaccount-empty', $html );
 		$this->assertStringNotContainsString( '<table', $html );
 	}
 
@@ -166,8 +166,8 @@ class MyaccountMembershipsTest extends WP_UnitTestCase {
 		$this->tab->render_tab();
 		$html = ob_get_clean();
 
-		$this->assertStringContainsString( 'wps-memberships-table', $html );
-		$this->assertStringNotContainsString( 'wps-no-memberships', $html );
+		$this->assertStringContainsString( 'wps-membership-cards', $html );
+		$this->assertStringNotContainsString( 'wps-myaccount-empty', $html );
 	}
 
 	/** Each membership row contains the plan slug (or name) and status. */
