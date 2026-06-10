@@ -1,12 +1,28 @@
 /**
  * My Account — Memberships tab card layout.
  *
- * Membership-pass styling: a plan monogram token carries the plan color,
- * a time-remaining bar surfaces validity at a glance, and a quiet footer
- * holds the supporting facts. Per-plan color flows through --plan-color.
+ * Each membership renders as a "pass": a plan-colored gradient header carries
+ * the identity and status, a ticket-style perforation separates it from the
+ * body, a time-remaining bar surfaces validity, and a divided footer holds the
+ * supporting facts with line-icons. The plan color flows through --plan-color
+ * and an auto-contrast --plan-ink (computed in PHP) keeps header text legible
+ * on any color. color-mix() drives gradients/tints with solid fallbacks.
  *
  * @since 2.0.0
  */
+
+/* -----------------------------------------------------------------------
+   Tokens
+   ----------------------------------------------------------------------- */
+
+.wps-membership-cards {
+	--wps-ink: #1d2327;
+	--wps-ink-soft: #5d6671;
+	--wps-ink-faint: #8a93a0;
+	--wps-line: #e6e9ef;
+	--wps-line-soft: #eef1f5;
+	--wps-card-bg: #ffffff;
+}
 
 /* -----------------------------------------------------------------------
    Page heading
@@ -14,8 +30,9 @@
 
 .wps-myaccount-memberships__heading {
 	margin: 0 0 20px;
-	font-size: 18px;
+	font-size: 19px;
 	font-weight: 700;
+	letter-spacing: -0.01em;
 	color: #1d2327;
 }
 
@@ -32,7 +49,7 @@
 	text-align: center;
 	background: #f8fafd;
 	border: 1.5px dashed #c8d8ec;
-	border-radius: 12px;
+	border-radius: 14px;
 }
 
 .wps-myaccount-empty__icon {
@@ -60,8 +77,8 @@
 
 .wps-membership-cards {
 	display: grid;
-	grid-template-columns: repeat( auto-fill, minmax( 300px, 1fr ) );
-	gap: 18px;
+	grid-template-columns: repeat( auto-fill, minmax( 320px, 1fr ) );
+	gap: 22px;
 }
 
 /* -----------------------------------------------------------------------
@@ -69,59 +86,65 @@
    ----------------------------------------------------------------------- */
 
 .wps-mcard {
+	position: relative;
 	display: flex;
 	flex-direction: column;
-	padding: 18px 18px 0;
-	background: #ffffff;
-	border: 1px solid #e6e9ef;
-	border-radius: 14px;
-	box-shadow: 0 1px 2px rgba( 18, 32, 54, 0.04 );
-	transition: box-shadow 0.18s ease, transform 0.16s ease, border-color 0.18s ease;
+	background: var( --wps-card-bg );
+	border: 1px solid var( --wps-line );
+	border-radius: 18px;
+	overflow: hidden;
+	box-shadow: 0 1px 2px rgba( 18, 32, 54, 0.05 );
+	transition: box-shadow 0.2s ease, transform 0.18s ease, border-color 0.2s ease;
 }
 
 .wps-mcard:hover {
 	border-color: #d7dde7;
-	box-shadow: 0 12px 30px rgba( 18, 32, 54, 0.10 );
-	transform: translateY( -2px );
+	transform: translateY( -4px );
+	box-shadow: 0 16px 34px rgba( 18, 32, 54, 0.13 );
+}
+
+@supports ( box-shadow: 0 0 0 color-mix( in srgb, red, blue ) ) {
+	.wps-mcard:hover {
+		box-shadow: 0 18px 38px color-mix( in srgb, var( --plan-color, #2271b1 ) 26%, transparent );
+	}
 }
 
 .wps-mcard--cancelled,
 .wps-mcard--expired {
-	opacity: 0.72;
+	opacity: 0.82;
 }
 
 /* -----------------------------------------------------------------------
-   Head — monogram token + plan identity + status
+   Header band — plan-colored, carries identity + status
    ----------------------------------------------------------------------- */
 
 .wps-mcard__head {
+	position: relative;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
+	justify-content: space-between;
 	gap: 12px;
+	padding: 18px 18px 16px;
+	color: var( --plan-ink, #ffffff );
+	background: var( --plan-color, #2271b1 );
 }
 
-.wps-mcard__token {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 42px;
-	height: 42px;
-	flex-shrink: 0;
-	border-radius: 11px;
-	font-size: 18px;
-	font-weight: 700;
-	line-height: 1;
-	color: var( --plan-color, #2271b1 );
-	background: #eef3f9;
-	box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.04 );
-}
-
-@supports ( color: color-mix( in srgb, red, blue ) ) {
-	.wps-mcard__token {
-		color: var( --plan-color, #2271b1 );
-		background: color-mix( in srgb, var( --plan-color, #2271b1 ) 14%, #ffffff );
-		box-shadow: inset 0 0 0 1px color-mix( in srgb, var( --plan-color, #2271b1 ) 22%, transparent );
+@supports ( background: color-mix( in srgb, red, blue ) ) {
+	.wps-mcard__head {
+		background: linear-gradient(
+			135deg,
+			color-mix( in srgb, var( --plan-color, #2271b1 ) 86%, #ffffff ),
+			var( --plan-color, #2271b1 ) 55%,
+			color-mix( in srgb, var( --plan-color, #2271b1 ) 78%, #000000 )
+		);
 	}
+}
+
+/* Ended memberships drop the brand color for a neutral, quieter band */
+.wps-mcard--cancelled .wps-mcard__head,
+.wps-mcard--expired .wps-mcard__head {
+	color: #ffffff;
+	background: linear-gradient( 135deg, #9aa1ac, #7b828d );
 }
 
 .wps-mcard__id {
@@ -132,36 +155,40 @@
 .wps-mcard__name {
 	margin: 0;
 	padding: 0;
-	font-size: 15px;
+	font-size: 17px;
 	font-weight: 700;
 	line-height: 1.3;
-	color: #1d2327;
+	letter-spacing: -0.01em;
+	color: inherit;
 	border: none;
+	word-break: break-word;
 }
 
 .wps-mcard__kind {
 	display: block;
-	margin-top: 2px;
-	font-size: 11.5px;
+	margin-top: 4px;
+	font-size: 12px;
 	font-weight: 600;
-	letter-spacing: 0.02em;
-	color: #8a93a0;
+	letter-spacing: 0.01em;
+	opacity: 0.82;
 }
 
-/* Status pill — tinted per state, independent of the plan color */
+/* Status pill — solid white chip so it stays legible on any header color */
 .wps-mcard__status {
 	display: inline-flex;
 	align-items: center;
 	gap: 5px;
 	flex-shrink: 0;
 	align-self: flex-start;
-	padding: 4px 10px;
+	padding: 5px 11px 5px 9px;
 	border-radius: 20px;
 	font-size: 10.5px;
 	font-weight: 700;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
 	white-space: nowrap;
+	background: #ffffff;
+	box-shadow: 0 1px 3px rgba( 18, 32, 54, 0.16 );
 }
 
 .wps-mcard__status::before {
@@ -175,81 +202,134 @@
 
 .wps-mcard__status--active {
 	color: #15803d;
-	background: #e7f6ec;
 }
 
 .wps-mcard__status--on-hold {
 	color: #b45309;
-	background: #fdf2e3;
 }
 
 .wps-mcard__status--paused {
 	color: #4f46e5;
-	background: #eef0fe;
 }
 
 .wps-mcard__status--cancelled {
 	color: #6b7280;
-	background: #f1f3f5;
 }
 
 .wps-mcard__status--expired {
 	color: #dc2626;
-	background: #fdecec;
 }
 
 /* -----------------------------------------------------------------------
-   Description
+   Ticket perforation — sits on the seam between header and body
    ----------------------------------------------------------------------- */
 
+.wps-mcard__rip {
+	position: relative;
+	z-index: 2;
+	height: 16px;
+	margin-top: -8px;
+	background-image: repeating-linear-gradient(
+		90deg,
+		#b7c0cd 0 5px,
+		transparent 5px 11px
+	);
+	background-size: calc( 100% - 34px ) 2px;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+/* Semicircle notches bitten out of the card edges at the seam */
+.wps-mcard__rip::before,
+.wps-mcard__rip::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	width: 16px;
+	height: 16px;
+	background: var( --wps-card-bg );
+	border-radius: 50%;
+}
+
+.wps-mcard__rip::before {
+	left: 0;
+	transform: translate( -50%, -50% );
+}
+
+.wps-mcard__rip::after {
+	right: 0;
+	transform: translate( 50%, -50% );
+}
+
+/* -----------------------------------------------------------------------
+   Body — description + time-remaining bar
+   ----------------------------------------------------------------------- */
+
+.wps-mcard__body {
+	padding: 14px 18px 16px;
+}
+
 .wps-mcard__desc {
-	margin: 14px 0 0;
+	margin: 0;
 	font-size: 13px;
 	line-height: 1.55;
-	color: #5d6671;
+	color: var( --wps-ink-soft );
+}
+
+.wps-mcard__desc + .wps-mcard__bar {
+	margin-top: 16px;
 }
 
 /* -----------------------------------------------------------------------
    Time-remaining bar
    ----------------------------------------------------------------------- */
 
-.wps-mcard__bar {
-	margin-top: 16px;
-}
-
 .wps-mcard__bar-info {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
 	gap: 10px;
-	margin-bottom: 7px;
+	margin-bottom: 8px;
 }
 
 .wps-mcard__bar-left {
-	font-size: 12.5px;
+	font-size: 13px;
 	font-weight: 700;
-	color: #1d2327;
+	color: var( --wps-ink );
 }
 
 .wps-mcard__bar-date {
 	font-size: 11.5px;
-	color: #8a93a0;
+	color: var( --wps-ink-faint );
 	white-space: nowrap;
 }
 
 .wps-mcard__track {
-	height: 6px;
-	border-radius: 6px;
+	position: relative;
+	height: 8px;
+	border-radius: 8px;
 	background: #eef1f5;
+	box-shadow: inset 0 1px 2px rgba( 18, 32, 54, 0.08 );
 	overflow: hidden;
 }
 
 .wps-mcard__fill {
 	display: block;
 	height: 100%;
-	border-radius: 6px;
+	min-width: 8px;
+	border-radius: 8px;
 	background: var( --plan-color, #2271b1 );
 	transition: width 0.4s ease;
+}
+
+@supports ( background: color-mix( in srgb, red, blue ) ) {
+	.wps-mcard__fill {
+		background: linear-gradient(
+			90deg,
+			color-mix( in srgb, var( --plan-color, #2271b1 ) 80%, #000000 ),
+			var( --plan-color, #2271b1 )
+		);
+	}
 }
 
 /* Urgent state — last 30 days */
@@ -258,29 +338,77 @@
 }
 
 .wps-mcard__bar--soon .wps-mcard__fill {
-	background: #ea580c;
+	background: linear-gradient( 90deg, #ea580c, #f97316 );
 }
 
 /* -----------------------------------------------------------------------
-   Facts footer — quiet supporting meta, divided from the body
+   Facts footer — quiet supporting meta in icon-led columns
    ----------------------------------------------------------------------- */
 
 .wps-mcard__facts {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 18px 26px;
-	margin: 16px -18px 0;
+	gap: 14px 24px;
+	margin: auto 0 0;
 	padding: 14px 18px;
-	border-top: 1px solid #eef1f5;
+	background: #fbfcfe;
+	border-top: 1px solid var( --wps-line-soft );
 }
 
 .wps-mcard__fact {
-	display: flex;
-	flex-direction: column;
-	gap: 3px;
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-template-rows: auto auto;
+	column-gap: 9px;
+	align-items: center;
+}
+
+.wps-mcard__fact-ic {
+	grid-row: 1 / 3;
+	width: 17px;
+	height: 17px;
+	background-color: var( --plan-color, #2271b1 );
+	opacity: 0.85;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+.wps-mcard--cancelled .wps-mcard__fact-ic,
+.wps-mcard--expired .wps-mcard__fact-ic {
+	background-color: #9aa3af;
+}
+
+.wps-mcard__fact-ic--calendar {
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+}
+
+.wps-mcard__fact-ic--infinity {
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 16c-2.2 0-4-1.8-4-4s1.8-4 4-4c3 0 5 8 8 8 2.2 0 4-1.8 4-4s-1.8-4-4-4c-3 0-5 8-8 8z'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 16c-2.2 0-4-1.8-4-4s1.8-4 4-4c3 0 5 8 8 8 2.2 0 4-1.8 4-4s-1.8-4-4-4c-3 0-5 8-8 8z'/%3E%3C/svg%3E");
+}
+
+.wps-mcard__fact-ic--subscription {
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 0 1 15-6.7L21 8'/%3E%3Cpath d='M21 3v5h-5'/%3E%3Cpath d='M21 12a9 9 0 0 1-15 6.7L3 16'/%3E%3Cpath d='M3 21v-5h5'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 0 1 15-6.7L21 8'/%3E%3Cpath d='M21 3v5h-5'/%3E%3Cpath d='M21 12a9 9 0 0 1-15 6.7L3 16'/%3E%3Cpath d='M3 21v-5h5'/%3E%3C/svg%3E");
+}
+
+.wps-mcard__fact-ic--order {
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'/%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M16 10a4 4 0 0 1-8 0'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'/%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M16 10a4 4 0 0 1-8 0'/%3E%3C/svg%3E");
+}
+
+.wps-mcard__fact-ic--manual {
+	-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z'/%3E%3Ccircle cx='7' cy='7' r='1.4'/%3E%3C/svg%3E");
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z'/%3E%3Ccircle cx='7' cy='7' r='1.4'/%3E%3C/svg%3E");
 }
 
 .wps-mcard__fact dt {
+	grid-column: 2;
 	margin: 0;
 	font-size: 9.5px;
 	font-weight: 700;
@@ -290,10 +418,12 @@
 }
 
 .wps-mcard__fact dd {
+	grid-column: 2;
 	margin: 0;
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: 600;
 	color: #2c3338;
+	white-space: nowrap;
 }
 
 .wps-mcard__fact dd a {

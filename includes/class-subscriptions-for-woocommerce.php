@@ -309,21 +309,13 @@ class Subscriptions_For_Woocommerce {
 		return (bool) apply_filters( 'wps_sfw_should_load_payment_integration', $should_load );
 	}
 
+
 	/**
 	 * Load payment gateway integrations when needed (once per request).
 	 *
 	 * @return void
 	 */
 	public function wps_sfw_maybe_init_payment_integration() {
-		if ( $this->wps_sfw_payment_integration_loaded ) {
-			//return;
-		}
-		
-		if ( ! $this->wps_sfw_should_load_payment_integration() ) {
-			//return;
-		}
-
-		$this->wps_sfw_payment_integration_loaded = true;
 		$this->wps_sfw_init_payment_integration();
 	}
 

@@ -307,11 +307,12 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 								. absint( $wps_extra ) . ' '
 								. esc_html__( 'more', 'subscriptions-for-woocommerce' ) . '</span>';
 						}
-						$wps_chip = '<span class="wps-grant-chip wps-grant-chip--sub"'
-							. ' style="margin-bottom:4px;display:block;">'
+						$wps_chip = '<span class="wps-grant-chip wps-grant-chip--sub">'
 							. esc_html__( 'Subscription', 'subscriptions-for-woocommerce' )
 							. '</span>';
-						return $wps_out ? $wps_chip . $wps_out : '—';
+						return $wps_out
+							? $wps_chip . '<span class="wps-linked-products">' . $wps_out . '</span>'
+							: '—';
 					}
 
 					// purchase grant — existing behavior.

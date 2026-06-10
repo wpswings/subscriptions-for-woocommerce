@@ -6,6 +6,26 @@
  */
 
 /* ============================================================
+   Rounded corners for every form field in the Access Rules tab
+   (safety net — individual rules below may set tighter radii)
+   ============================================================ */
+
+.wps-access-section input[type="text"],
+.wps-access-section input[type="url"],
+.wps-access-section input[type="number"],
+.wps-access-section input[type="search"],
+.wps-access-section select,
+.wps-access-section textarea,
+.wps-rule-card input[type="text"],
+.wps-rule-card input[type="url"],
+.wps-rule-card input[type="number"],
+.wps-rule-card input[type="search"],
+.wps-rule-card select,
+.wps-rule-card textarea {
+	border-radius: 8px;
+}
+
+/* ============================================================
    Section wrapper (Global Defaults card + Rules card)
    ============================================================ */
 
@@ -85,6 +105,7 @@
 .wps-defaults-grid__field textarea {
 	width: 100%;
 	max-width: 480px;
+	border-radius: 8px;
 }
 
 /* Merge-tag copy button */
@@ -228,20 +249,6 @@
 
 .wps-rule-card--open > .wps-rule-card__header {
 	border-bottom: 1px solid #e8e8e8;
-}
-
-/* Drag handle */
-.wps-rule-card__drag {
-	flex-shrink: 0;
-	color: #bbb;
-	font-size: 18px;
-	line-height: 1;
-	cursor: grab;
-	letter-spacing: -3px;
-}
-
-.wps-rule-card__drag::before {
-	content: "⠿";
 }
 
 /* Summary text */
@@ -394,8 +401,10 @@
 .wps-field-group select,
 .wps-field-group input[type="url"],
 .wps-field-group input[type="number"],
+.wps-field-group input[type="text"],
 .wps-field-group textarea {
 	width: 100%;
+	border-radius: 8px;
 }
 
 .wps-field-group .description {
@@ -481,6 +490,7 @@
 
 .wps-search-wrap .wps-ajax-search {
 	padding-right: 28px;
+	border-radius: 8px;
 }
 
 .wps-search-spinner {
@@ -876,9 +886,12 @@
 }
 
 .wps-defaults-row__field input[type="url"],
+.wps-defaults-row__field input[type="text"],
+.wps-defaults-row__field select,
 .wps-defaults-row__field textarea {
 	width: 100%;
 	max-width: 600px;
+	border-radius: 8px;
 }
 
 .wps-defaults-messages-cols {

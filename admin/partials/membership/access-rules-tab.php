@@ -298,10 +298,6 @@ foreach ( $wps_all_plans as $wps_p ) {
 						<span class="wps-toggle__slider"></span>
 					</label>
 
-					<span class="wps-rule-card__drag"
-						title="<?php esc_attr_e( 'Drag to reorder', 'subscriptions-for-woocommerce' ); ?>">
-					</span>
-
 					<div class="wps-rule-card__summary">
 						<span class="wps-rule-card__target-lbl">
 							<?php echo esc_html( $wps_smry['target_lbl'] ); ?>
@@ -605,9 +601,8 @@ foreach ( $wps_all_plans as $wps_p ) {
 									<textarea
 										name="<?php echo $wps_fld_message; // phpcs:ignore; ?>"
 										rows="3"
-										placeholder="<?php echo esc_attr( $wps_ph_msg ); ?>">
-										<?php echo esc_textarea( $wps_rule_msg ); ?>
-									</textarea>
+										placeholder="<?php echo esc_attr( $wps_ph_msg ); ?>"
+									><?php echo esc_textarea( $wps_rule_msg ); ?></textarea>
 									<p class="description" style="margin-top:4px;">
 										<button type="button" class="wps-copy-tag" data-tag="{purchase_options}">
 											{purchase_options}
@@ -758,8 +753,6 @@ foreach ( $wps_all_plans as $wps_p ) {
 						class="wps-rule-enabled-check" checked>
 					<span class="wps-toggle__slider"></span>
 				</label>
-
-				<span class="wps-rule-card__drag"></span>
 
 				<div class="wps-rule-card__summary">
 					<span class="wps-rule-card__target-lbl">
@@ -991,8 +984,8 @@ foreach ( $wps_all_plans as $wps_p ) {
 								?>
 								<textarea name="wps_rules[__IDX__][message]"
 									rows="3"
-									placeholder="<?php echo esc_attr( $wps_ph_msg ); ?>">
-								</textarea>
+									placeholder="<?php echo esc_attr( $wps_ph_msg ); ?>"
+								></textarea>
 								<p class="description" style="margin-top:4px;">
 									<button type="button" class="wps-copy-tag" data-tag="{purchase_options}">
 										{purchase_options}

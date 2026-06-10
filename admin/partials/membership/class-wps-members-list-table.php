@@ -160,7 +160,7 @@ if ( ! class_exists( 'WPS_Members_List_Table' ) ) {
 			$user         = get_userdata( $item['user_id'] );
 			$profile_url  = admin_url( 'user-edit.php?user_id=' . absint( $item['user_id'] ) );
 			$display_name = $user ? esc_html( $user->display_name ) : esc_html__( '(deleted)', 'subscriptions-for-woocommerce' );
-			$email        = $user ? '<br><span class="description">' . esc_html( $user->user_email ) . '</span>' : '';
+			$email        = $user ? '<span class="description">' . esc_html( $user->user_email ) . '</span>' : '';
 
 			$cancel_url = wp_nonce_url(
 				add_query_arg(

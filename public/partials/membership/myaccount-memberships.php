@@ -145,10 +145,20 @@ $wps_status_map = array(
 
 			$wps_is_active = in_array( $wps_status, array( 'active', 'on-hold' ), true );
 
-			// Plan monogram — carries the plan color as the card's visual anchor.
-			$wps_initial = function_exists( 'mb_substr' )
-				? mb_strtoupper( mb_substr( $wps_plan_name, 0, 1 ) )
-				: strtoupper( substr( $wps_plan_name, 0, 1 ) );
+			// Readable ink for the plan-colored header (WCAG relative luminance).
+			$wps_hex = ltrim( (string) $wps_color, '#' );
+			if ( 3 === strlen( $wps_hex ) ) {
+				$wps_hex = $wps_hex[0] . $wps_hex[0] . $wps_hex[1] . $wps_hex[1] . $wps_hex[2] . $wps_hex[2];
+			}
+			$wps_lum = (
+				0.299 * hexdec( substr( $wps_hex, 0, 2 ) )
+				+ 0.587 * hexdec( substr( $wps_hex, 2, 2 ) )
+				+ 0.114 * hexdec( substr( $wps_hex, 4, 2 ) )
+			) / 255;
+
+			$wps_on_color = $wps_lum > 0.62 ? '#1d2327' : '#ffffff';
+
+			$wps_card_style = '--plan-color: ' . $wps_color . '; --plan-ink: ' . $wps_on_color . ';';
 
 			// Access-type subtitle shown beneath the plan name.
 			if ( 'subscription' === $wps_method ) {
@@ -178,10 +188,10 @@ $wps_status_map = array(
 			?>
 
 			<article class="wps-mcard wps-mcard--<?php echo esc_attr( $wps_status_info['mod'] ); ?>"
-				style="--plan-color: <?php echo esc_attr( $wps_color ); ?>">
+				style="<?php echo esc_attr( $wps_card_style ); ?>">
 
-				<div class="wps-mcard__head">
-					<span class="wps-mcard__token" aria-hidden="true"><?php echo esc_html( $wps_initial ); ?></span>
+
+				<header class="wps-mcard__head">
 					<div class="wps-mcard__id">
 						<h3 class="wps-mcard__name"><?php echo esc_html( $wps_plan_name ); ?></h3>
 						<span class="wps-mcard__kind"><?php echo esc_html( $wps_kind ); ?></span>
@@ -190,49 +200,65 @@ $wps_status_map = array(
 						wps-mcard__status--<?php echo esc_attr( $wps_status_info['mod'] ); ?>">
 						<?php echo esc_html( $wps_status_info['label'] ); ?>
 					</span>
-				</div>
+				</header>
 
-				<?php if ( $wps_plan_desc ) : ?>
-					<p class="wps-mcard__desc"><?php echo esc_html( $wps_plan_desc ); ?></p>
-				<?php endif; ?>
+				<div class="wps-mcard__rip" aria-hidden="true"></div>
 
-				<?php if ( $wps_show_bar ) : ?>
-					<?php
-					$wps_left_lbl = sprintf(
-						/* translators: %d: number of days remaining */
-						_n( '%d day left', '%d days left', $wps_days_left, 'subscriptions-for-woocommerce' ),
-						$wps_days_left
-					);
-					?>
-					<div class="wps-mcard__bar<?php echo esc_attr( $wps_is_soon ? ' wps-mcard__bar--soon' : '' ); ?>">
-						<div class="wps-mcard__bar-info">
-							<span class="wps-mcard__bar-left"><?php echo esc_html( $wps_left_lbl ); ?></span>
-							<span class="wps-mcard__bar-date">
-								<?php
-								printf(
-									/* translators: %s: expiry date */
-									esc_html__( 'Expires %s', 'subscriptions-for-woocommerce' ),
-									esc_html( $wps_expiry_str )
-								);
-								?>
-							</span>
-						</div>
-						<div class="wps-mcard__track">
-							<span class="wps-mcard__fill"
-								style="width: <?php echo esc_attr( $wps_remaining ); ?>%"></span>
-						</div>
+				<?php if ( $wps_plan_desc || $wps_show_bar ) : ?>
+					<div class="wps-mcard__body">
+
+						<?php if ( $wps_plan_desc ) : ?>
+							<p class="wps-mcard__desc"><?php echo esc_html( $wps_plan_desc ); ?></p>
+						<?php endif; ?>
+
+						<?php if ( $wps_show_bar ) : ?>
+							<?php
+							$wps_left_lbl = sprintf(
+								/* translators: %d: number of days remaining */
+								_n( '%d day left', '%d days left', $wps_days_left, 'subscriptions-for-woocommerce' ),
+								$wps_days_left
+							);
+							$wps_bar_class = $wps_is_soon ? 'wps-mcard__bar wps-mcard__bar--soon' : 'wps-mcard__bar';
+							?>
+							<div class="<?php echo esc_attr( $wps_bar_class ); ?>">
+								<div class="wps-mcard__bar-info">
+									<span class="wps-mcard__bar-left"><?php echo esc_html( $wps_left_lbl ); ?></span>
+									<span class="wps-mcard__bar-date">
+										<?php
+										printf(
+											/* translators: %s: expiry date */
+											esc_html__( 'Expires %s', 'subscriptions-for-woocommerce' ),
+											esc_html( $wps_expiry_str )
+										);
+										?>
+									</span>
+								</div>
+								<div class="wps-mcard__track">
+									<span class="wps-mcard__fill"
+										style="width: <?php echo esc_attr( $wps_remaining ); ?>%"></span>
+								</div>
+							</div>
+						<?php endif; ?>
+
 					</div>
 				<?php endif; ?>
 
 				<dl class="wps-mcard__facts">
 
 					<div class="wps-mcard__fact">
+						<span class="wps-mcard__fact-ic wps-mcard__fact-ic--calendar"></span>
 						<dt><?php esc_html_e( 'Started', 'subscriptions-for-woocommerce' ); ?></dt>
 						<dd><?php echo esc_html( $wps_start_str ); ?></dd>
 					</div>
 
 					<?php if ( ! $wps_show_bar ) : ?>
+						<?php
+						$wps_exp_ic = $wps_expiry_ts
+							? 'wps-mcard__fact-ic--calendar'
+							: 'wps-mcard__fact-ic--infinity';
+						?>
 						<div class="wps-mcard__fact">
+							<span class="wps-mcard__fact-ic <?php echo esc_attr( $wps_exp_ic ); ?>"></span>
 							<dt><?php esc_html_e( 'Expires', 'subscriptions-for-woocommerce' ); ?></dt>
 							<dd class="<?php echo $wps_is_soon ? 'wps-mcard__fact--soon' : ''; ?>">
 								<?php echo esc_html( $wps_expiry_str ); ?>
@@ -245,7 +271,17 @@ $wps_status_map = array(
 						</div>
 					<?php endif; ?>
 
+					<?php
+					if ( 'subscription' === $wps_source ) {
+						$wps_src_ic = 'wps-mcard__fact-ic--subscription';
+					} elseif ( 'order' === $wps_source ) {
+						$wps_src_ic = 'wps-mcard__fact-ic--order';
+					} else {
+						$wps_src_ic = 'wps-mcard__fact-ic--manual';
+					}
+					?>
 					<div class="wps-mcard__fact">
+						<span class="wps-mcard__fact-ic <?php echo esc_attr( $wps_src_ic ); ?>"></span>
 						<dt><?php esc_html_e( 'Source', 'subscriptions-for-woocommerce' ); ?></dt>
 						<dd>
 							<?php if ( 'subscription' === $wps_source && $wps_sub_id ) : ?>
