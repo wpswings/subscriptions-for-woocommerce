@@ -362,9 +362,9 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 		/**
 		 * Build the full restriction notice HTML for a blocked user.
 		 *
-		 * Resolves message text (rule-specific or global default), replaces the
-		 * {purchase_options} merge tag, optionally appends a CTA when auto-append
-		 * is on, then wraps everything in a container div.
+		 * A rule-specific (custom) message is rendered exactly as entered — no
+		 * "Members Only" card chrome and no auto CTA. Otherwise the global/default
+		 * message is wrapped in the shared card with the optional purchase CTA.
 		 *
 		 * @since  2.0.0
 		 * @param  array   $rule    The first failing access rule.
@@ -373,34 +373,45 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 		 * @return string HTML output.
 		 */
 		private function build_message_html( array $rule, WP_Post $post, $user_id ) {
-			$message = $this->resolve_message_text( $rule, $user_id );
-			$cta     = $this->resolve_purchase_options( $rule );
+			$cta = $this->resolve_purchase_options( $rule );
 
-			// Replace {purchase_options} merge tag wherever it appears.
-			$message = str_replace( '{purchase_options}', $cta, $message );
+			if ( ! empty( $rule['message'] ) ) {
+				// Custom (rule-specific) message: render exactly what the admin
+				// entered — no "Members Only" card chrome and no auto-appended CTA,
+				// the custom message is authoritative. The {purchase_options} tag
+				// still expands so a buy-link can be added on demand.
+				$message = str_replace( '{purchase_options}', $cta, $rule['message'] );
+				$html    = '<div class="wps-restricted-message">' . wpautop( wp_kses_post( $message ) ) . '</div>';
+			} else {
+				// No custom message: fall back to the global/default text wrapped in
+				// the shared "Members Only" card, with the optional auto-appended CTA.
+				$message = $this->resolve_message_text( $rule, $user_id );
 
-			// Auto-append CTA when tag is absent, CTA is non-empty, and option is on.
-			$tag_was_used = false !== strpos( $rule['message'] ?? '', '{purchase_options}' )
-				|| false !== strpos(
+				// Replace {purchase_options} merge tag wherever it appears.
+				$message = str_replace( '{purchase_options}', $cta, $message );
+
+				// Auto-append CTA when tag is absent, CTA is non-empty, and option is on.
+				$tag_was_used = false !== strpos(
 					get_option( 'wps_access_logged_out_message', '' ),
 					'{purchase_options}'
 				)
-				|| false !== strpos(
-					get_option( 'wps_access_wrong_plan_message', '' ),
-					'{purchase_options}'
-				);
+					|| false !== strpos(
+						get_option( 'wps_access_wrong_plan_message', '' ),
+						'{purchase_options}'
+					);
 
-			if ( ! $tag_was_used
-				&& ! empty( $cta )
-				&& '1' === get_option( 'wps_access_show_purchase_cta', '0' )
-			) {
-				$message .= $cta;
+				if ( ! $tag_was_used
+					&& ! empty( $cta )
+					&& '1' === get_option( 'wps_access_show_purchase_cta', '0' )
+				) {
+					$message .= $cta;
+				}
+
+				$body = wpautop( wp_kses_post( $message ) );
+				$html = function_exists( 'wps_restriction_notice_html' )
+					? wps_restriction_notice_html( $body )
+					: '<div class="wps-restricted-content">' . $body . '</div>';
 			}
-
-			$body = wpautop( wp_kses_post( $message ) );
-			$html = function_exists( 'wps_restriction_notice_html' )
-				? wps_restriction_notice_html( $body )
-				: '<div class="wps-restricted-content">' . $body . '</div>';
 
 			/**
 			 * Filter the full restriction HTML before it replaces post content.

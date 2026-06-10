@@ -242,6 +242,53 @@ class TemplateRestrictionTest extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Bespoke locked notice.', $out );
 	}
 
+	public function test_custom_message_renders_without_card_or_auto_cta() {
+		$this->require_pro();
+		// Global auto-CTA on: a custom message must still suppress both the
+		// "Members Only" card chrome and the auto-appended purchase CTA.
+		update_option( 'wps_access_show_purchase_cta', '1' );
+
+		$post = get_post( $this->factory->post->create() );
+		$pro  = new WPS_Template_Restriction();
+
+		$out = $pro->build_message_html(
+			array(
+				'plans'    => array( 'gold' ),
+				'behavior' => 'template',
+				'message'  => 'Just my words.',
+			),
+			$post,
+			0
+		);
+
+		$this->assertStringContainsString( 'Just my words.', $out );
+		$this->assertStringNotContainsString( 'wps-restricted-content__head', $out );
+		$this->assertStringNotContainsString( 'Members Only', $out );
+		$this->assertStringNotContainsString( 'wps-plan-purchase-cta', $out );
+
+		delete_option( 'wps_access_show_purchase_cta' );
+	}
+
+	public function test_custom_message_still_expands_purchase_options_tag() {
+		$this->require_pro();
+		$post = get_post( $this->factory->post->create() );
+		$pro  = new WPS_Template_Restriction();
+
+		$out = $pro->build_message_html(
+			array(
+				'plans'    => array( 'gold' ),
+				'behavior' => 'template',
+				'message'  => 'Buy here: {purchase_options}',
+			),
+			$post,
+			0
+		);
+
+		// The literal tag must never reach the page even in a custom message.
+		$this->assertStringContainsString( 'Buy here:', $out );
+		$this->assertStringNotContainsString( '{purchase_options}', $out );
+	}
+
 	// -----------------------------------------------------------------------
 	// Pro — template_include swap
 	// -----------------------------------------------------------------------
@@ -263,6 +310,34 @@ class TemplateRestrictionTest extends WP_UnitTestCase {
 		$ctx = WPS_Template_Restriction::context();
 		$this->assertIsArray( $ctx );
 		$this->assertSame( (int) $post_id, (int) $ctx['post']->ID );
+	}
+
+	public function test_template_swapped_for_page_post_type() {
+		$this->require_pro();
+		$page_id = $this->factory->post->create( array( 'post_type' => 'page' ) );
+		// Rule targets the whole 'page' post type with template behavior.
+		wps_save_access_rules(
+			array(
+				array(
+					'id'          => 'r_page_tpl',
+					'target_type' => 'post_type',
+					'post_type'   => 'page',
+					'plans'       => array( 'gold' ),
+					'behavior'    => 'template',
+					'priority'    => 10,
+				),
+			)
+		);
+		wp_cache_flush();
+
+		wp_set_current_user( 0 );
+		$this->go_to( get_permalink( $page_id ) );
+		wp_cache_flush();
+
+		$pro = new WPS_Template_Restriction();
+		$out = $pro->maybe_use_restricted_template( '/theme/page.php' );
+
+		$this->assertStringEndsWith( 'restricted-content.php', $out );
 	}
 
 	public function test_template_not_swapped_for_message_behavior() {

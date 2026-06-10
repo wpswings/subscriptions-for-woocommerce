@@ -270,6 +270,178 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( '{purchase_options}', $result );
 	}
 
+	/**
+	 * A custom rule message renders on its own — no "Members Only" card chrome
+	 * and no auto-appended CTA, even when the global show-CTA option is on.
+	 */
+	public function test_custom_message_has_no_card_or_auto_cta() {
+		$this->add_gold_rule( array( 'message' => 'Just my words.' ) );
+		update_option( 'wps_access_show_purchase_cta', '1' );
+		wp_set_current_user( 0 );
+		$this->go_to( get_permalink( $this->post_id ) );
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		$this->assertStringContainsString( 'Just my words.', $result );
+		$this->assertStringNotContainsString( 'wps-restricted-content__head', $result );
+		$this->assertStringNotContainsString( 'wps-plan-purchase-cta', $result );
+	}
+
+	/** The default (no custom message) path keeps the shared "Members Only" card. */
+	public function test_default_message_keeps_card_chrome() {
+		$this->add_gold_rule(); // empty message → default path.
+		wp_set_current_user( 0 );
+		$this->go_to( get_permalink( $this->post_id ) );
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		$this->assertStringContainsString( 'wps-restricted-content__head', $result );
+	}
+
+	// -----------------------------------------------------------------------
+	// Behavior is consistent across post types & target configurations
+	// (not limited to blog posts)
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Create a published object of a given post type and a rule that restricts it,
+	 * then return its ID. Visits the object as a guest.
+	 *
+	 * @param string $post_type Post type slug.
+	 * @param array  $rule      Rule overrides (target/message/etc.).
+	 * @return int Object ID.
+	 */
+	private function restricted_object( $post_type, array $rule ) {
+		$id = $this->factory->post->create(
+			array(
+				'post_type'    => $post_type,
+				'post_status'  => 'publish',
+				'post_content' => 'Secret content.',
+			)
+		);
+
+		$base = array(
+			'id'       => 'r_' . $post_type,
+			'plans'    => array( 'gold' ),
+			'behavior' => 'message',
+			'priority' => 10,
+		);
+		wps_save_access_rules( array( array_merge( $base, $rule ) ) );
+		wp_cache_flush();
+
+		wp_set_current_user( 0 );
+		$this->go_to( get_permalink( $id ) );
+		wp_cache_flush();
+
+		return $id;
+	}
+
+	/** Custom message renders raw on a PAGE (post_type target). */
+	public function test_custom_message_renders_on_a_page() {
+		$this->restricted_object(
+			'page',
+			array(
+				'target_type' => 'post_type',
+				'post_type'   => 'page',
+				'message'     => 'Page members only.',
+			)
+		);
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		$this->assertStringContainsString( 'Page members only.', $result );
+		$this->assertStringNotContainsString( 'Secret content.', $result );
+		$this->assertStringNotContainsString( 'wps-restricted-content__head', $result );
+	}
+
+	/** Custom message renders raw on a PRODUCT (post_type target). */
+	public function test_custom_message_renders_on_a_product() {
+		if ( ! post_type_exists( 'product' ) ) {
+			$this->markTestSkipped( 'WooCommerce product post type not registered.' );
+		}
+
+		$this->restricted_object(
+			'product',
+			array(
+				'target_type' => 'post_type',
+				'post_type'   => 'product',
+				'message'     => 'Product members only.',
+			)
+		);
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		$this->assertStringContainsString( 'Product members only.', $result );
+		$this->assertStringNotContainsString( 'wps-restricted-content__head', $result );
+	}
+
+	/** Custom message renders raw when the rule targets a TAXONOMY term. */
+	public function test_custom_message_renders_for_taxonomy_target() {
+		$term_id = $this->factory->term->create(
+			array( 'taxonomy' => 'category', 'name' => 'Premium' )
+		);
+		$post_id = $this->factory->post->create(
+			array( 'post_status' => 'publish', 'post_content' => 'Secret content.' )
+		);
+		wp_set_object_terms( $post_id, array( (int) $term_id ), 'category' );
+
+		wps_save_access_rules(
+			array(
+				array(
+					'id'          => 'r_tax',
+					'target_type' => 'taxonomy',
+					'taxonomy'    => 'category',
+					'term_ids'    => array( (int) $term_id ),
+					'plans'       => array( 'gold' ),
+					'behavior'    => 'message',
+					'message'     => 'Category members only.',
+					'priority'    => 10,
+				),
+			)
+		);
+		wp_cache_flush();
+
+		wp_set_current_user( 0 );
+		$this->go_to( get_permalink( $post_id ) );
+		wp_cache_flush();
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		$this->assertStringContainsString( 'Category members only.', $result );
+		$this->assertStringNotContainsString( 'wps-restricted-content__head', $result );
+	}
+
+	/** Custom message renders raw for a "Specific Page" (object-ID target). */
+	public function test_custom_message_renders_for_specific_page_target() {
+		$id = $this->factory->post->create(
+			array( 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => 'Secret content.' )
+		);
+
+		wps_save_access_rules(
+			array(
+				array(
+					'id'          => 'r_page_obj',
+					'target_type' => 'page',
+					'object_ids'  => array( (int) $id ),
+					'plans'       => array( 'gold' ),
+					'behavior'    => 'message',
+					'message'     => 'Specific page locked.',
+					'priority'    => 10,
+				),
+			)
+		);
+		wp_cache_flush();
+
+		wp_set_current_user( 0 );
+		$this->go_to( get_permalink( $id ) );
+		wp_cache_flush();
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		$this->assertStringContainsString( 'Specific page locked.', $result );
+		$this->assertStringNotContainsString( 'wps-restricted-content__head', $result );
+	}
+
 	// -----------------------------------------------------------------------
 	// maybe_restrict_purchasability
 	// -----------------------------------------------------------------------
