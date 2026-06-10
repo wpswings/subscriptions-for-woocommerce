@@ -707,6 +707,12 @@ foreach ( $wps_all_plans as $wps_p ) {
 										</span>
 									</label>
 								</div>
+								<?php
+								// Advanced (Pro) controls: drip scheduling + exclusions.
+								$wps_idx      = $wps_ri;
+								$wps_rule_adv = $wps_rule;
+								require __DIR__ . '/access-rules-advanced-fields.php';
+								?>
 							</div>
 						</div>
 
@@ -1071,6 +1077,12 @@ foreach ( $wps_all_plans as $wps_p ) {
 									</span>
 								</label>
 							</div>
+							<?php
+							// Advanced (Pro) controls for the cloned-row template.
+							$wps_idx      = '__IDX__';
+							$wps_rule_adv = array();
+							require __DIR__ . '/access-rules-advanced-fields.php';
+							?>
 						</div>
 					</div>
 

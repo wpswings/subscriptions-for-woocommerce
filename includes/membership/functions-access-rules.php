@@ -34,6 +34,18 @@ define( 'WPS_ACCESS_RULE_TARGET_TYPES', array( 'post', 'page', 'product', 'post_
 /** Allowed restriction behavior values. */
 define( 'WPS_ACCESS_RULE_BEHAVIORS', array( 'message', 'redirect' ) );
 
+/**
+ * Allowed drip/scheduled-access modes (Pro — Day 16).
+ *
+ *  'none' — no scheduling; the rule grants immediately to plan holders.
+ *  'days' — content unlocks N days after the user's membership start.
+ *  'date' — content unlocks on a fixed calendar date for everyone.
+ *
+ * The values are persisted by the Free plugin regardless of whether Pro is
+ * active; only the Pro plugin's enforcement layer acts on them.
+ */
+define( 'WPS_ACCESS_RULE_DRIP_MODES', array( 'none', 'days', 'date' ) );
+
 // ---------------------------------------------------------------------------
 // Sanitization helper
 // ---------------------------------------------------------------------------
@@ -69,6 +81,32 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 			return ( isset( $raw[ $key ] ) && '1' === (string) $raw[ $key ] ) ? '1' : '0';
 		};
 
+		// Advanced scheduling (Pro — Day 16). Persisted by Free; enforced by Pro.
+		$drip_mode = isset( $raw['drip_mode'] ) && in_array( $raw['drip_mode'], WPS_ACCESS_RULE_DRIP_MODES, true )
+			? $raw['drip_mode']
+			: 'none';
+
+		$drip_date = '';
+		if ( isset( $raw['drip_date'] ) ) {
+			$candidate = sanitize_text_field( $raw['drip_date'] );
+			// Accept only an ISO Y-m-d date; anything else is discarded.
+			if ( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $candidate ) ) {
+				$drip_date = $candidate;
+			}
+		}
+
+		// Rule exclusions (Pro — Day 16): specific post IDs exempted from a
+		// broad (post-type / taxonomy) rule. Accepts either an array of IDs or
+		// a comma-separated string (the admin field is a plain text input);
+		// always stored as a clean, de-duplicated int list.
+		$exclude_raw = isset( $raw['exclude_ids'] ) ? $raw['exclude_ids'] : array();
+		if ( is_string( $exclude_raw ) ) {
+			$exclude_raw = explode( ',', $exclude_raw );
+		}
+		$exclude_ids = is_array( $exclude_raw )
+			? array_values( array_unique( array_filter( array_map( 'absint', $exclude_raw ) ) ) )
+			: array();
+
 		return array(
 			'id'                           => isset( $raw['id'] ) ? sanitize_key( $raw['id'] ) : '',
 			'target_type'                  => $target_type,
@@ -90,6 +128,10 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 			'include_archive'              => $wps_flag( 'include_archive', $raw ),
 			'show_cta'                     => $wps_flag( 'show_cta', $raw ),
 			'restrict_product_description' => $wps_flag( 'restrict_product_description', $raw ),
+			'drip_mode'                    => $drip_mode,
+			'drip_days'                    => isset( $raw['drip_days'] ) ? absint( $raw['drip_days'] ) : 0,
+			'drip_date'                    => $drip_date,
+			'exclude_ids'                  => $exclude_ids,
 		);
 	}
 }
@@ -324,6 +366,7 @@ if ( ! function_exists( 'wps_object_is_restricted' ) ) {
 			return null;
 		}
 
+		$result = null;
 		foreach ( $rules as $rule ) {
 			$plans = isset( $rule['plans'] ) ? (array) $rule['plans'] : array( 'any' );
 
@@ -332,13 +375,40 @@ if ( ! function_exists( 'wps_object_is_restricted' ) ) {
 				: false;
 
 			if ( ! $granted ) {
-				wp_cache_set( $cache_key, $rule, WPS_ACCESS_RULES_CACHE_GROUP );
-				return $rule;
+				$result = $rule;
+				break;
 			}
 		}
 
-		wp_cache_set( $cache_key, 'granted', WPS_ACCESS_RULES_CACHE_GROUP );
-		return null;
+		/**
+		 * Filter the resolved restriction for a post/user pair.
+		 *
+		 * Lets advanced (Pro) logic override the core decision after the base
+		 * plan check has run — e.g. drip/scheduled access can restrict a post
+		 * for a plan holder, and rule exclusions can exempt a specific post
+		 * from an otherwise-matching broad rule. Receives every matching rule
+		 * (priority-ordered) so the callback can re-evaluate from scratch.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param array|null $result  First failing rule, or null when access is granted.
+		 * @param WP_Post    $post    The post being checked.
+		 * @param int        $user_id Current user ID (0 = guest).
+		 * @param array      $rules   All matching rules in priority order.
+		 */
+		$result = apply_filters( 'wps_object_is_restricted', $result, $post, $user_id, $rules );
+
+		if ( ! is_array( $result ) ) {
+			$result = null;
+		}
+
+		wp_cache_set(
+			$cache_key,
+			null === $result ? 'granted' : $result,
+			WPS_ACCESS_RULES_CACHE_GROUP
+		);
+
+		return $result;
 	}
 }
 

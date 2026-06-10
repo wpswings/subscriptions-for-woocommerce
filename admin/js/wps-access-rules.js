@@ -442,6 +442,19 @@
 			} );
 		} );
 
+		// Drip / scheduled-access mode (Pro): show only the relevant sub-field.
+		var dripMode = card.querySelector( '.wps-rule-drip-mode' );
+		if ( dripMode ) {
+			var syncDrip = function ( mode ) {
+				var daysField = card.querySelector( '.wps-drip-days-field' );
+				var dateField = card.querySelector( '.wps-drip-date-field' );
+				if ( daysField ) { daysField.style.display = ( 'days' === mode ) ? '' : 'none'; }
+				if ( dateField ) { dateField.style.display = ( 'date' === mode ) ? '' : 'none'; }
+			};
+			dripMode.addEventListener( 'change', function () { syncDrip( this.value ); } );
+			syncDrip( dripMode.value );
+		}
+
 		// Any-plan mutual exclusion.
 		wireAnyPlan( card );
 		card.querySelectorAll( '.wps-plan-any-check, .wps-plan-specific-check' )
