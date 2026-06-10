@@ -31,8 +31,31 @@ if ( ! defined( 'WPS_ACCESS_RULES_CACHE_GROUP' ) ) {
 /** Allowed target type values. */
 define( 'WPS_ACCESS_RULE_TARGET_TYPES', array( 'post', 'page', 'product', 'post_type', 'taxonomy' ) );
 
-/** Allowed restriction behavior values. */
-define( 'WPS_ACCESS_RULE_BEHAVIORS', array( 'message', 'redirect' ) );
+/**
+ * Allowed restriction behavior values.
+ *
+ *  'message'  — replace the content with the restriction notice (Free).
+ *  'redirect' — send non-members to a configured URL (Free).
+ *  'template' — render a dedicated full-page template with an optional teaser
+ *               then the restriction notice (Pro — Day 18).
+ *
+ * 'template' is persisted by the Free plugin regardless of whether Pro is
+ * active; only the Pro plugin's enforcement layer (`template_include`) acts on
+ * it. When Pro is inactive a 'template' rule falls back to message behavior in
+ * the Free enforcer (which treats any non-'redirect' value as 'message').
+ */
+define( 'WPS_ACCESS_RULE_BEHAVIORS', array( 'message', 'redirect', 'template' ) );
+
+/**
+ * Allowed teaser modes for the 'template' behavior (Pro — Day 18).
+ *
+ *  'none'  — no teaser; show the restriction notice only.
+ *  'words' — show the first N words of the content (wp_trim_words).
+ *
+ * Persisted by the Free plugin; only the Pro plugin's template enforcement
+ * acts on these values.
+ */
+define( 'WPS_ACCESS_RULE_TEASER_MODES', array( 'none', 'words' ) );
 
 /**
  * Allowed drip/scheduled-access modes (Pro — Day 16).
@@ -107,6 +130,10 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 			? array_values( array_unique( array_filter( array_map( 'absint', $exclude_raw ) ) ) )
 			: array();
 
+		// Template behavior teaser (Pro — Day 18). Persisted by Free; enforced by Pro.
+		$raw_teaser  = isset( $raw['teaser_mode'] ) ? $raw['teaser_mode'] : '';
+		$teaser_mode = in_array( $raw_teaser, WPS_ACCESS_RULE_TEASER_MODES, true ) ? $raw_teaser : 'none';
+
 		return array(
 			'id'                           => isset( $raw['id'] ) ? sanitize_key( $raw['id'] ) : '',
 			'target_type'                  => $target_type,
@@ -132,6 +159,8 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 			'drip_days'                    => isset( $raw['drip_days'] ) ? absint( $raw['drip_days'] ) : 0,
 			'drip_date'                    => $drip_date,
 			'exclude_ids'                  => $exclude_ids,
+			'teaser_mode'                  => $teaser_mode,
+			'teaser_words'                 => isset( $raw['teaser_words'] ) ? absint( $raw['teaser_words'] ) : 0,
 		);
 	}
 }

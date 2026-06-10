@@ -149,6 +149,21 @@ foreach ( $wps_all_plans as $wps_p ) {
 		'color'  => isset( $wps_p['color'] ) ? $wps_p['color'] : '',
 	);
 }
+
+/**
+ * Whether Subscriptions for WooCommerce Pro is active.
+ *
+ * Drives the locked/disabled state of Pro-only controls (e.g. the "Template"
+ * restriction behavior, Day 18). Computed once and reused by every rule card
+ * and the JS clone template so all instances share one source of truth.
+ *
+ * @since 2.0.0
+ *
+ * @param bool $is_active Default false; Pro flips this true when present.
+ */
+$wps_is_pro       = (bool) apply_filters( 'wsp_sfw_check_pro_plugin', false );
+$wps_tpl_lock_cls = $wps_is_pro ? '' : ' wps_pro_settings_tag wps-ai-pro-locked';
+$wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 ?>
 
 <?php if ( $wps_saved ) : ?>
@@ -239,15 +254,19 @@ foreach ( $wps_all_plans as $wps_p ) {
 						)
 					)
 				);
-				$wps_behavior_lbl  = 'redirect' === $wps_smry['behavior']
-					? esc_html__( 'Redirect', 'subscriptions-for-woocommerce' )
-					: esc_html__( 'Message', 'subscriptions-for-woocommerce' );
-				$wps_rule_msg      = isset( $wps_rule['message'] ) ? $wps_rule['message'] : '';
-				$wps_rule_redir    = isset( $wps_rule['redirect_url'] ) ? $wps_rule['redirect_url'] : '';
-				$wps_opt_comments  = isset( $wps_rule['restrict_comments'] ) ? $wps_rule['restrict_comments'] : '0';
-				$wps_opt_archive   = isset( $wps_rule['include_archive'] ) ? $wps_rule['include_archive'] : '0';
-				$wps_opt_cta       = isset( $wps_rule['show_cta'] ) ? $wps_rule['show_cta'] : '0';
-				$wps_opt_proddesc  = isset( $wps_rule['restrict_product_description'] )
+				if ( 'redirect' === $wps_smry['behavior'] ) {
+					$wps_behavior_lbl = esc_html__( 'Redirect', 'subscriptions-for-woocommerce' );
+				} elseif ( 'template' === $wps_smry['behavior'] ) {
+					$wps_behavior_lbl = esc_html__( 'Template', 'subscriptions-for-woocommerce' );
+				} else {
+					$wps_behavior_lbl = esc_html__( 'Message', 'subscriptions-for-woocommerce' );
+				}
+				$wps_rule_msg     = isset( $wps_rule['message'] ) ? $wps_rule['message'] : '';
+				$wps_rule_redir   = isset( $wps_rule['redirect_url'] ) ? $wps_rule['redirect_url'] : '';
+				$wps_opt_comments = isset( $wps_rule['restrict_comments'] ) ? $wps_rule['restrict_comments'] : '0';
+				$wps_opt_archive  = isset( $wps_rule['include_archive'] ) ? $wps_rule['include_archive'] : '0';
+				$wps_opt_cta      = isset( $wps_rule['show_cta'] ) ? $wps_rule['show_cta'] : '0';
+				$wps_opt_proddesc = isset( $wps_rule['restrict_product_description'] )
 					? $wps_rule['restrict_product_description']
 					: '0';
 
@@ -273,8 +292,13 @@ foreach ( $wps_all_plans as $wps_p ) {
 					? ' style="display:none;"'
 					: '';
 				$wps_div_tax      = 'taxonomy' !== $wps_rule_type ? ' style="display:none;"' : '';
-				$wps_div_msg      = 'message' !== $wps_rule_behavior ? ' style="display:none;"' : '';
-				$wps_div_redir    = 'redirect' !== $wps_rule_behavior ? ' style="display:none;"' : '';
+				// The message textarea doubles as the restriction notice for the
+				// 'template' behavior, so it stays visible for both message + template.
+				$wps_msg_visible = in_array( $wps_rule_behavior, array( 'message', 'template' ), true );
+				$wps_div_msg     = $wps_msg_visible ? '' : ' style="display:none;"';
+				$wps_div_redir   = 'redirect' !== $wps_rule_behavior ? ' style="display:none;"' : '';
+				// Pro-lock vars ($wps_tpl_lock_cls / $wps_tpl_disabled) are computed
+				// once above the rules loop and reused here for the Template option.
 				?>
 			<div class="<?php echo esc_attr( $wps_card_classes ); ?>"
 				data-index="<?php echo esc_attr( $wps_ri ); ?>">
@@ -588,13 +612,24 @@ foreach ( $wps_all_plans as $wps_p ) {
 											<?php esc_html_e( 'Redirect', 'subscriptions-for-woocommerce' ); ?>
 										</span>
 									</label>
+									<label class="wps-seg-control__option<?php echo esc_attr( $wps_tpl_lock_cls ); ?>">
+										<input type="radio"
+											name="<?php echo $wps_fld_behavior; // phpcs:ignore; ?>"
+											value="template"
+											class="wps-rule-behavior-radio"
+											<?php checked( $wps_rule_behavior, 'template' ); ?>
+											<?php echo $wps_tpl_disabled; // phpcs:ignore ?>>
+										<span>
+											<?php esc_html_e( 'Template', 'subscriptions-for-woocommerce' ); ?>
+										</span>
+									</label>
 								</div>
 
 								<div class="wps-behavior-message"
 									<?php echo $wps_div_msg; // phpcs:ignore ?>>
 									<?php
 									$wps_ph_msg = __(
-										'Leave blank to use the global default message.',
+										'Leave blank to show the default members-only message.',
 										'subscriptions-for-woocommerce'
 									);
 									?>
@@ -615,7 +650,7 @@ foreach ( $wps_all_plans as $wps_p ) {
 									<?php echo $wps_div_redir; // phpcs:ignore ?>>
 									<?php
 									$wps_ph_url = __(
-										'Leave blank to use the global default URL.',
+										'URL to send non-members to — e.g. a pricing or login page.',
 										'subscriptions-for-woocommerce'
 									);
 									?>
@@ -624,6 +659,13 @@ foreach ( $wps_all_plans as $wps_p ) {
 										value="<?php echo esc_attr( $wps_rule_redir ); ?>"
 										placeholder="<?php echo esc_attr( $wps_ph_url ); ?>">
 								</div>
+								<?php
+								// Template-behavior teaser fields (Pro): word-count teaser.
+								$wps_idx      = $wps_ri;
+								$wps_rule_tpl = $wps_rule;
+								$wps_tpl_show = 'template' === $wps_rule_behavior;
+								require __DIR__ . '/access-rules-template-fields.php';
+								?>
 							</div>
 						</div>
 
@@ -980,11 +1022,21 @@ foreach ( $wps_all_plans as $wps_p ) {
 										<?php esc_html_e( 'Redirect', 'subscriptions-for-woocommerce' ); ?>
 									</span>
 								</label>
+								<label class="wps-seg-control__option<?php echo esc_attr( $wps_tpl_lock_cls ); ?>">
+									<input type="radio"
+										name="wps_rules[__IDX__][behavior]"
+										value="template"
+										class="wps-rule-behavior-radio"
+										<?php echo $wps_tpl_disabled; // phpcs:ignore ?>>
+									<span>
+										<?php esc_html_e( 'Template', 'subscriptions-for-woocommerce' ); ?>
+									</span>
+								</label>
 							</div>
 							<div class="wps-behavior-message">
 								<?php
 								$wps_ph_msg = __(
-									'Leave blank to use the global default message.',
+									'Leave blank to show the default members-only message.',
 									'subscriptions-for-woocommerce'
 								);
 								?>
@@ -1002,7 +1054,7 @@ foreach ( $wps_all_plans as $wps_p ) {
 							<div class="wps-behavior-redirect" style="display:none;">
 								<?php
 								$wps_ph_url = __(
-									'Leave blank to use the global default URL.',
+									'URL to send non-members to — e.g. a pricing or login page.',
 									'subscriptions-for-woocommerce'
 								);
 								?>
@@ -1010,6 +1062,13 @@ foreach ( $wps_all_plans as $wps_p ) {
 									name="wps_rules[__IDX__][redirect_url]"
 									placeholder="<?php echo esc_attr( $wps_ph_url ); ?>">
 							</div>
+							<?php
+							// Template-behavior teaser fields (Pro) for the cloned-row template.
+							$wps_idx      = '__IDX__';
+							$wps_rule_tpl = array();
+							$wps_tpl_show = false;
+							require __DIR__ . '/access-rules-template-fields.php';
+							?>
 						</div>
 					</div>
 

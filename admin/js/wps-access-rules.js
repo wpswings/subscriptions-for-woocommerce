@@ -162,9 +162,13 @@
 				if ( r.checked ) { behavior = r.value; }
 			} );
 			badge.className = 'wps-badge wps-badge--' + behavior;
-			badge.textContent = 'redirect' === behavior
-				? ( cfg.redirectLabel || 'Redirect' )
-				: ( cfg.messageLabel || 'Message' );
+			if ( 'redirect' === behavior ) {
+				badge.textContent = cfg.redirectLabel || 'Redirect';
+			} else if ( 'template' === behavior ) {
+				badge.textContent = cfg.templateLabel || 'Template';
+			} else {
+				badge.textContent = cfg.messageLabel || 'Message';
+			}
 		}
 
 		// Update priority label.
@@ -201,8 +205,12 @@
 	function switchBehaviorField( card, behavior ) {
 		var msgEl  = card.querySelector( '.wps-behavior-message' );
 		var redEl  = card.querySelector( '.wps-behavior-redirect' );
+		var tplEl  = card.querySelector( '.wps-behavior-template' );
+		// The message textarea doubles as the restriction notice for the
+		// 'template' behavior, so it shows for both 'message' and 'template'.
 		if ( msgEl ) { msgEl.style.display = 'redirect' === behavior ? 'none' : ''; }
 		if ( redEl ) { redEl.style.display = 'redirect' === behavior ? '' : 'none'; }
+		if ( tplEl ) { tplEl.style.display = 'template' === behavior ? '' : 'none'; }
 	}
 
 	// -----------------------------------------------------------------------
@@ -453,6 +461,18 @@
 			};
 			dripMode.addEventListener( 'change', function () { syncDrip( this.value ); } );
 			syncDrip( dripMode.value );
+		}
+
+		// Teaser mode (Pro, template behavior): show the word-count field only
+		// when the word-count mode is selected.
+		var teaserMode = card.querySelector( '.wps-rule-teaser-mode' );
+		if ( teaserMode ) {
+			var syncTeaser = function ( mode ) {
+				var wordsField = card.querySelector( '.wps-teaser-words-field' );
+				if ( wordsField ) { wordsField.style.display = ( 'words' === mode ) ? '' : 'none'; }
+			};
+			teaserMode.addEventListener( 'change', function () { syncTeaser( this.value ); } );
+			syncTeaser( teaserMode.value );
 		}
 
 		// Any-plan mutual exclusion.
