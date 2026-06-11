@@ -68,6 +68,10 @@ if ( ! function_exists( 'wps_membership_plan_row' ) ) {
 				? array_map( 'absint', $sub_products )
 				: array(),
 			'grant_method'          => $grant_method,
+			// Role assignment per plan (Pro enforcement — Day 19). Consumed by the
+			// Pro WPS_Membership_Roles class on membership lifecycle events.
+			'user_role'             => get_post_meta( $post->ID, '_wps_plan_user_role', true ),
+			'remove_role'           => get_post_meta( $post->ID, '_wps_plan_remove_role', true ),
 			// Convenience booleans derived from grant_method — used by callers
 			// that check enabled flags (order grant, sync, badge, enforcer).
 			'purchase_enabled'      => 'purchase' === $grant_method,

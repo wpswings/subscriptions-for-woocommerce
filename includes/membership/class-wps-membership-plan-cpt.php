@@ -470,6 +470,22 @@ if ( ! class_exists( 'WPS_Membership_Plan_CPT' ) ) {
 				&& '1' === sanitize_text_field( wp_unslash( $_POST['_wps_plan_auto_enroll'] ) )
 				? '1' : '0';
 			update_post_meta( $post_id, '_wps_plan_auto_enroll', $auto_enroll );
+
+			// Member role assignment (Pro enforcement — Day 19). The Free plugin
+			// owns persistence; the Pro plugin applies/removes the role on
+			// membership lifecycle events. Only a real registered role is stored.
+			$user_role = isset( $_POST['_wps_plan_user_role'] )
+				? sanitize_key( wp_unslash( $_POST['_wps_plan_user_role'] ) )
+				: '';
+			if ( $user_role && ! wp_roles()->is_role( $user_role ) ) {
+				$user_role = '';
+			}
+			update_post_meta( $post_id, '_wps_plan_user_role', $user_role );
+
+			$remove_role = isset( $_POST['_wps_plan_remove_role'] )
+				&& '1' === sanitize_text_field( wp_unslash( $_POST['_wps_plan_remove_role'] ) )
+				? '1' : '0';
+			update_post_meta( $post_id, '_wps_plan_remove_role', $remove_role );
 		}
 
 		/**
