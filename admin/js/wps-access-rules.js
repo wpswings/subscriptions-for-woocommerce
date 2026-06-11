@@ -96,10 +96,15 @@
 			var type = targetSel.value;
 			var targetText = '';
 			if ( 'post_type' === type ) {
-				var ptLabel = ptSel
-					? ptSel.options[ ptSel.selectedIndex ].text
-					: '';
-				targetText = ( cfg.postTypeLabel || 'Post Type' ) + ': ' + ptLabel;
+				if ( 'product' === card.dataset.kind ) {
+					// Product card "All Products" has no post-type picker.
+					targetText = cfg.allProductsLabel || 'All Products';
+				} else {
+					var ptLabel = ptSel
+						? ptSel.options[ ptSel.selectedIndex ].text
+						: '';
+					targetText = ( cfg.postTypeLabel || 'Post Type' ) + ': ' + ptLabel;
+				}
 			} else if ( 'taxonomy' === type ) {
 				var taxLabel = taxSel
 					? taxSel.options[ taxSel.selectedIndex ].text
@@ -155,8 +160,9 @@
 			setText( plansLbl, plansText );
 		}
 
-		// Determine behavior.
-		if ( badge ) {
+		// Determine behavior. Product cards have no behavior radios — their badge
+		// is server-rendered ("Blocks purchase") and must not be overwritten.
+		if ( badge && behaviorRadios.length ) {
 			var behavior = 'message';
 			behaviorRadios.forEach( function ( r ) {
 				if ( r.checked ) { behavior = r.value; }
@@ -347,6 +353,12 @@
 	// Tag chip add
 	// -----------------------------------------------------------------------
 
+	// Empty tag containers stay hidden (no stray bordered box) until a chip exists.
+	function syncTagContainer( container ) {
+		if ( ! container ) { return; }
+		container.style.display = container.querySelector( '.wps-tag' ) ? '' : 'none';
+	}
+
 	function addTag( container, inputName, id, label ) {
 		if ( container.querySelector( 'input[value="' + id + '"]' ) ) { return; }
 
@@ -365,12 +377,87 @@
 		btn.setAttribute( 'aria-label', cfg.removeLabel || 'Remove' );
 		btn.addEventListener( 'click', function () {
 			span.parentNode.removeChild( span );
+			syncTagContainer( container );
 		} );
 
 		span.appendChild( document.createTextNode( label + ' ' ) );
 		span.appendChild( hidden );
 		span.appendChild( btn );
 		container.appendChild( span );
+		syncTagContainer( container );
+	}
+
+	// -----------------------------------------------------------------------
+	// Preview modal
+	// -----------------------------------------------------------------------
+
+	// Pull every wps_rules[idx][key] field in the card into a flat FormData
+	// keyed as rule[key] / rule[key][] so the server can sanitize it like a
+	// real saved rule.
+	function collectRuleData( card ) {
+		var data   = new FormData();
+		var fields = card.querySelectorAll( 'input, select, textarea' );
+
+		fields.forEach( function ( field ) {
+			var name = field.name || '';
+			var m    = name.match( /^wps_rules\[[^\]]*\]\[([^\]]+)\](\[\])?$/ );
+			if ( ! m ) { return; }
+
+			// Skip unchecked checkboxes/radios (the hidden "0" companions stay).
+			if ( ( 'checkbox' === field.type || 'radio' === field.type ) && ! field.checked ) {
+				return;
+			}
+
+			var key   = m[1];
+			var isArr = !! m[2];
+			data.append( 'rule[' + key + ']' + ( isArr ? '[]' : '' ), field.value );
+		} );
+
+		return data;
+	}
+
+	function openPreviewModal() {
+		var modal = document.getElementById( 'wps-preview-modal' );
+		if ( modal ) { modal.removeAttribute( 'hidden' ); }
+	}
+
+	function closePreviewModal() {
+		var modal = document.getElementById( 'wps-preview-modal' );
+		if ( modal ) { modal.setAttribute( 'hidden', '' ); }
+	}
+
+	function previewRule( card ) {
+		var modal = document.getElementById( 'wps-preview-modal' );
+		if ( ! modal ) { return; }
+
+		var titleEl = modal.querySelector( '.wps-preview-modal__title' );
+		var introEl = modal.querySelector( '.wps-preview-modal__intro' );
+		var bodyEl  = modal.querySelector( '.wps-preview-modal__body' );
+
+		setText( titleEl, cfg.previewTitle || 'Non-member preview' );
+		setText( introEl, cfg.previewIntro || '' );
+		bodyEl.innerHTML = '<p class="wps-preview-loading">' +
+			( cfg.previewLoading || 'Building preview…' ) + '</p>';
+		openPreviewModal();
+
+		var data = collectRuleData( card );
+		data.append( 'action', 'wps_preview_access_rule' );
+		data.append( 'nonce', NONCE );
+
+		fetch( AJAX, { method: 'POST', body: data } )
+			.then( function ( r ) { return r.json(); } )
+			.then( function ( res ) {
+				if ( res && res.success && res.data && res.data.html ) {
+					bodyEl.innerHTML = res.data.html;
+				} else {
+					bodyEl.innerHTML = '<p class="wps-preview-empty">' +
+						( cfg.previewEmpty || 'Nothing to preview yet.' ) + '</p>';
+				}
+			} )
+			.catch( function () {
+				bodyEl.innerHTML = '<p class="wps-preview-error">' +
+					( cfg.previewError || 'Could not build the preview.' ) + '</p>';
+			} );
 	}
 
 	// -----------------------------------------------------------------------
@@ -429,6 +516,15 @@
 			removeBtn.addEventListener( 'click', function () {
 				card.parentNode.removeChild( card );
 				toggleEmptyState();
+			} );
+		}
+
+		// Preview button — render the non-member view in a modal.
+		var previewBtn = card.querySelector( '.wps-preview-rule' );
+		if ( previewBtn ) {
+			previewBtn.addEventListener( 'click', function ( e ) {
+				e.stopPropagation();
+				previewRule( card );
 			} );
 		}
 
@@ -554,9 +650,11 @@
 		card.querySelectorAll( '.wps-remove-tag' ).forEach( function ( btn ) {
 			btn.addEventListener( 'click', function ( e ) {
 				e.preventDefault();
-				var tag = btn.closest( '.wps-tag' );
+				var tag       = btn.closest( '.wps-tag' );
+				var container = btn.closest( '.wps-tag-container' );
 				if ( tag ) {
 					tag.parentNode.removeChild( tag );
+					syncTagContainer( container );
 					updateSummary( card );
 				}
 			} );
@@ -609,9 +707,8 @@
 	// -----------------------------------------------------------------------
 
 	document.addEventListener( 'DOMContentLoaded', function () {
-		var list   = document.getElementById( 'wps-rules-list' );
-		var addBtn = document.getElementById( 'wps-add-rule' );
-		var tpl    = document.getElementById( 'wps-rule-row-template' );
+		var list    = document.getElementById( 'wps-rules-list' );
+		var addBtns = document.querySelectorAll( '#wps-add-content-rule, #wps-add-product-rule' );
 
 		if ( ! list ) { return; }
 
@@ -620,6 +717,19 @@
 
 		// Wire global copy-tag buttons.
 		wireCopyTagButtons( document );
+
+		// Preview modal close handlers (overlay click, × button, Esc).
+		var modal = document.getElementById( 'wps-preview-modal' );
+		if ( modal ) {
+			var closeBtn = modal.querySelector( '.wps-preview-modal__close' );
+			if ( closeBtn ) { closeBtn.setAttribute( 'aria-label', cfg.closeLabel || 'Close' ); }
+			modal.addEventListener( 'click', function ( e ) {
+				if ( e.target.closest( '[data-close]' ) ) { closePreviewModal(); }
+			} );
+			document.addEventListener( 'keydown', function ( e ) {
+				if ( 'Escape' === e.key && ! modal.hasAttribute( 'hidden' ) ) { closePreviewModal(); }
+			} );
+		}
 
 		// -----------------------------------------------------------------------
 		// Global Defaults — collapsible section
@@ -677,14 +787,17 @@
 			} );
 		}
 
-		// Add-rule button.
-		if ( addBtn && tpl ) {
+		// Add-rule buttons — each clones the template named in its data-template.
+		addBtns.forEach( function ( addBtn ) {
+			var tpl = document.getElementById( addBtn.dataset.template );
+			if ( ! tpl ) { return; }
+
 			addBtn.addEventListener( 'click', function () {
 				var nextIdx  = list.querySelectorAll( '.wps-rule-card' ).length;
 				var fragment = tpl.content.cloneNode( true );
 				var newCard  = fragment.querySelector( '.wps-rule-card' );
 
-				newCard.innerHTML    = newCard.innerHTML.replace( /__IDX__/g, nextIdx );
+				newCard.innerHTML     = newCard.innerHTML.replace( /__IDX__/g, nextIdx );
 				newCard.dataset.index = nextIdx;
 
 				list.appendChild( newCard );
@@ -696,6 +809,6 @@
 				// Scroll new card into view.
 				inserted.scrollIntoView( { behavior: 'smooth', block: 'nearest' } );
 			} );
-		}
+		} );
 	} );
 }() );

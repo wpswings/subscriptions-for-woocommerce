@@ -122,14 +122,6 @@ ul.products li.product {
 	margin-bottom: 6px;
 }
 
-.wps-plan-card__dot {
-	width: 9px;
-	height: 9px;
-	border-radius: 50%;
-	background: var(--plan-color, #2271b1);
-	flex-shrink: 0;
-}
-
 .wps-plan-card__name {
 	font-size: 14px;
 	font-weight: 700;
@@ -217,6 +209,16 @@ ul.products li.product {
 	.wps-members-badge--grant {
 		box-shadow: 0 2px 8px color-mix(in srgb, var(--badge-color, #2271b1) 55%, transparent);
 	}
+}
+
+/* -----------------------------------------------------------------------
+   "Membership Active" badge variant — shown once the visitor already holds
+   the plan that this product grants (success/green, regardless of color).
+   ----------------------------------------------------------------------- */
+
+.wps-members-badge--active {
+	background: #1a7f4b;
+	box-shadow: 0 2px 8px rgba(26, 127, 75, 0.4);
 }
 
 /* -----------------------------------------------------------------------
@@ -379,6 +381,15 @@ ul.products li.product {
 		color: var(--plan-color, #1a7f4b);
 		border-color: color-mix(in srgb, var(--plan-color, #1a7f4b) 28%, #e0e0e0);
 	}
+}
+
+/* Active state — the visitor already holds the plan this product grants. The
+   "✓ Active" badge always reads as success/green, overriding the plan color.
+   Declared after the color-mix rule above so it wins the cascade. */
+.wps-membership-included__badge--active {
+	background: #e6f4ea;
+	color: #1a7f4b;
+	border-color: #a8d5ba;
 }
 
 .wps-membership-included__desc {

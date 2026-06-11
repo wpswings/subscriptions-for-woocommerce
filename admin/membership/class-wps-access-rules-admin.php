@@ -77,10 +77,19 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 				return;
 			}
 
+			// Front-end membership styles so the Preview modal renders the
+			// restriction notice exactly as a visitor sees it.
+			wp_enqueue_style(
+				'wps-membership-badges',
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'public/css/wps-membership-badges.css',
+				array(),
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
+			);
+
 			wp_enqueue_style(
 				'wps-access-rules',
 				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/wps-access-rules.css',
-				array(),
+				array( 'wps-membership-badges' ),
 				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
 			);
 
@@ -96,19 +105,33 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 				'wps-access-rules',
 				'wpsAccessRules',
 				array(
-					'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
-					'nonce'           => wp_create_nonce( 'wps_membership_admin_nonce' ),
-					'searching'       => esc_html__( 'Searching…', 'subscriptions-for-woocommerce' ),
-					'noResults'       => esc_html__( 'No results found.', 'subscriptions-for-woocommerce' ),
-					'removeItem'      => esc_html__( '×', 'subscriptions-for-woocommerce' ),
-					'subGrantNotice'  => esc_html__(
+					'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
+					'nonce'            => wp_create_nonce( 'wps_membership_admin_nonce' ),
+					'searching'        => esc_html__( 'Searching…', 'subscriptions-for-woocommerce' ),
+					'noResults'        => esc_html__( 'No results found.', 'subscriptions-for-woocommerce' ),
+					'removeItem'       => esc_html__( '×', 'subscriptions-for-woocommerce' ),
+					'subGrantNotice'   => esc_html__(
 						'Access duration follows the subscription lifecycle — the Access Length setting is ignored.',
 						'subscriptions-for-woocommerce'
 					),
-					'autoGrantNotice' => esc_html__(
+					'autoGrantNotice'  => esc_html__(
 						'Auto-Enroll plan: access is granted automatically on registration.',
 						'subscriptions-for-woocommerce'
 					),
+					'previewTitle'     => esc_html__( 'Non-member preview', 'subscriptions-for-woocommerce' ),
+					'previewIntro'     => esc_html__(
+						'This is what a logged-out visitor sees when blocked by this rule.',
+						'subscriptions-for-woocommerce'
+					),
+					'previewLoading'   => esc_html__( 'Building preview…', 'subscriptions-for-woocommerce' ),
+					'previewError'     => esc_html__( 'Could not build the preview.', 'subscriptions-for-woocommerce' ),
+					'previewEmpty'     => esc_html__(
+						'Nothing to preview yet — add a message or required plan.',
+						'subscriptions-for-woocommerce'
+					),
+					'closeLabel'       => esc_html__( 'Close', 'subscriptions-for-woocommerce' ),
+					'allProductsLabel' => esc_html__( 'All Products', 'subscriptions-for-woocommerce' ),
+					'postTypeLabel'    => esc_html__( 'Post Type', 'subscriptions-for-woocommerce' ),
 				)
 			);
 		}
@@ -287,6 +310,40 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 			}
 
 			wp_send_json_success( array( 'results' => $results ) );
+		}
+
+		/**
+		 * AJAX: render the non-member Preview for an in-progress rule.
+		 *
+		 * Hooked to `wp_ajax_wps_preview_access_rule`. POST param `rule` is the
+		 * rule's form fields as an associative array. The rule is sanitized and
+		 * rendered through the same code the front-end uses, so the preview is an
+		 * exact match for what a logged-out visitor sees.
+		 *
+		 * Returns JSON: `{success: true, data: {html: "…"}}`.
+		 *
+		 * @since 2.0.0
+		 */
+		public function ajax_preview_access_rule() {
+			check_ajax_referer( 'wps_membership_admin_nonce', 'nonce' );
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+				wp_send_json_error( array( 'message' => __( 'Permission denied.', 'subscriptions-for-woocommerce' ) ) );
+				return;
+			}
+
+			// Sanitized inside wps_render_restriction_preview() → wps_sanitize_access_rule().
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$raw = isset( $_POST['rule'] ) ? (array) wp_unslash( $_POST['rule'] ) : array();
+
+			if ( ! function_exists( 'wps_render_restriction_preview' ) ) {
+				wp_send_json_error(
+					array( 'message' => __( 'Preview unavailable.', 'subscriptions-for-woocommerce' ) )
+				);
+				return;
+			}
+
+			wp_send_json_success( array( 'html' => wps_render_restriction_preview( $raw ) ) );
 		}
 
 		// -----------------------------------------------------------------------

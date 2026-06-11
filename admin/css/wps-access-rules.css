@@ -573,8 +573,14 @@
 .wps-rules-footer {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-start;
+	gap: 8px;
 	margin-top: 14px;
+}
+
+/* Keep the two "Add" buttons grouped on the left and push Save to the right. */
+.wps-rules-footer .button-primary {
+	margin-left: auto;
 }
 
 /* -----------------------------------------------------------------------
@@ -927,4 +933,164 @@
 .wps-defaults-tag-hint {
 	font-size: 12px;
 	color: #646970;
+}
+
+/* ===================================================================== */
+/* Rule kinds (Content vs Product)                                       */
+/* ===================================================================== */
+
+.wps-badge--template {
+	background: #ede7f6;
+	color: #5b21b6;
+}
+
+.wps-badge--product {
+	background: #e3f2fd;
+	color: #1565c0;
+}
+
+/* Kind chip in the card header */
+.wps-rule-card__kind {
+	flex-shrink: 0;
+	display: inline-block;
+	padding: 2px 9px;
+	border-radius: 4px;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	border: 1px solid transparent;
+}
+
+.wps-rule-card__kind--content {
+	background: #f3f4f6;
+	color: #4b5563;
+	border-color: #e0e0e0;
+}
+
+.wps-rule-card__kind--product {
+	background: #e3f2fd;
+	color: #1565c0;
+	border-color: #bbdefb;
+}
+
+/* Left accent so kinds are scannable at a glance */
+.wps-rule-card--product {
+	border-left: 3px solid #42a5f5;
+}
+
+.wps-rule-card--content {
+	border-left: 3px solid #cbd5e1;
+}
+
+/* Preview button */
+.wps-rule-card__preview-btn {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 20px;
+	padding: 4px 12px;
+	font-size: 12px;
+	color: #2271b1;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.wps-rule-card__preview-btn:hover {
+	background: #f0f6fc;
+	border-color: #2271b1;
+}
+
+/* ===================================================================== */
+/* Preview modal                                                         */
+/* ===================================================================== */
+
+.wps-preview-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.wps-preview-modal[hidden] {
+	display: none;
+}
+
+.wps-preview-modal__overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba( 0, 0, 0, 0.55 );
+}
+
+.wps-preview-modal__panel {
+	position: relative;
+	z-index: 1;
+	width: 640px;
+	max-width: calc( 100vw - 40px );
+	max-height: calc( 100vh - 80px );
+	overflow: auto;
+	margin-top: 56px;
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 12px 40px rgba( 0, 0, 0, 0.25 );
+	padding: 22px 24px 26px;
+}
+
+.wps-preview-modal__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 4px;
+}
+
+.wps-preview-modal__title {
+	margin: 0;
+	font-size: 16px;
+}
+
+.wps-preview-modal__close {
+	background: none;
+	border: none;
+	font-size: 26px;
+	line-height: 1;
+	color: #787c82;
+	cursor: pointer;
+	padding: 0 4px;
+}
+
+.wps-preview-modal__close:hover {
+	color: #1d2327;
+}
+
+.wps-preview-modal__intro {
+	margin: 0 0 16px;
+	color: #646970;
+	font-size: 13px;
+}
+
+.wps-preview-modal__body {
+	border: 1px dashed #dcdcde;
+	border-radius: 6px;
+	padding: 18px;
+	background: #f6f7f7;
+}
+
+.wps-preview-loading,
+.wps-preview-empty,
+.wps-preview-error {
+	margin: 0;
+	text-align: center;
+	color: #646970;
+}
+
+.wps-preview-error {
+	color: #b32d2e;
+}
+
+.wps-preview-redirect code {
+	background: #fff;
+	padding: 2px 6px;
+	border-radius: 3px;
 }

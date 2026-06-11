@@ -1000,7 +1000,33 @@ if ( ! function_exists( 'wps_build_membership_card_html' ) ) {
 
 		$is_subscription = ( 'variation' === $product_type || 'subscription' === $product_type );
 
-		if ( $is_subscription ) {
+		// Membership-state awareness: figure out which of these plans the current
+		// user already holds, so the card reflects "you're a member" instead of a
+		// purchase prompt once the membership is active. Mirrors how content rules
+		// only show the restriction notice to users who lack access.
+		$user_id     = get_current_user_id();
+		$plan_active = array();
+		$all_active  = ! empty( $plans );
+
+		foreach ( $plans as $wps_p ) {
+			$p_slug = isset( $wps_p['slug'] ) ? $wps_p['slug'] : '';
+
+			$is_active = $p_slug && $user_id > 0 && function_exists( 'wps_user_has_plan' )
+				&& wps_user_has_plan( $user_id, $p_slug );
+
+			$plan_active[ $p_slug ] = (bool) $is_active;
+
+			if ( ! $is_active ) {
+				$all_active = false;
+			}
+		}
+
+		if ( $all_active ) {
+			$subtitle = esc_html__(
+				'You\'re a member — this product gave you the following membership:',
+				'subscriptions-for-woocommerce'
+			);
+		} elseif ( $is_subscription ) {
 			$subtitle = esc_html__(
 				'Active subscription grants you the following membership:',
 				'subscriptions-for-woocommerce'
@@ -1027,16 +1053,26 @@ if ( ! function_exists( 'wps_build_membership_card_html' ) ) {
 			? sanitize_hex_color( $plans[0]['color'] )
 			: '#2e7d32';
 
-		$html  = '<div class="wps-membership-included">';
+		// When the user already holds every listed plan, present an "active" state
+		// (check icon + "MEMBERSHIP ACTIVE") instead of the purchase-offer state.
+		$header_icon  = $all_active
+			? '<polyline points="20 6 9 17 4 12"></polyline>'
+			: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77'
+				. ' 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>';
+		$header_label = $all_active
+			? esc_html__( 'MEMBERSHIP ACTIVE', 'subscriptions-for-woocommerce' )
+			: esc_html__( 'MEMBERSHIP INCLUDED', 'subscriptions-for-woocommerce' );
+		$wrap_class   = 'wps-membership-included' . ( $all_active ? ' wps-membership-included--active' : '' );
+
+		$html  = '<div class="' . esc_attr( $wrap_class ) . '">';
 		$html .= '<div class="wps-membership-included__header"'
 			. ' style="--plan-color:' . esc_attr( $first_color ) . ';">';
 		$html .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"'
 			. ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
 			. ' stroke-linejoin="round" aria-hidden="true">'
-			. '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77'
-			. ' 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>'
+			. $header_icon
 			. '</svg>';
-		$html .= '<span>' . esc_html__( 'MEMBERSHIP INCLUDED', 'subscriptions-for-woocommerce' ) . '</span>';
+		$html .= '<span>' . $header_label . '</span>';
 		$html .= '</div>';
 
 		$html .= '<div class="wps-membership-included__body">';
@@ -1049,8 +1085,16 @@ if ( ! function_exists( 'wps_build_membership_card_html' ) ) {
 			$al_val       = isset( $al['value'] ) ? absint( $al['value'] ) : 0;
 			$al_unit      = isset( $al['unit'] ) ? $al['unit'] : 'day';
 			$grant_method = isset( $plan['grant_method'] ) ? $plan['grant_method'] : 'purchase';
+			$slug         = isset( $plan['slug'] ) ? $plan['slug'] : '';
+			$is_active    = ! empty( $plan_active[ $slug ] );
 
-			if ( 'subscription' === $grant_method ) {
+			$badge_class = 'wps-membership-included__badge';
+
+			if ( $is_active ) {
+				// The user already holds this plan — show its live status, not the offer.
+				$badge        = esc_html__( '✓ Active', 'subscriptions-for-woocommerce' );
+				$badge_class .= ' wps-membership-included__badge--active';
+			} elseif ( 'subscription' === $grant_method ) {
 				$badge = esc_html__( 'While Subscribed', 'subscriptions-for-woocommerce' );
 			} elseif ( 'fixed' === $al_type && $al_val ) {
 				$ul    = 1 === $al_val
@@ -1070,7 +1114,7 @@ if ( ! function_exists( 'wps_build_membership_card_html' ) ) {
 			$html .= '<div class="wps-membership-included__plan-main">';
 			$html .= '<strong class="wps-membership-included__plan-name">'
 				. esc_html( $plan['name'] ) . '</strong>';
-			$html .= '<span class="wps-membership-included__badge">'
+			$html .= '<span class="' . esc_attr( $badge_class ) . '">'
 				. esc_html( $badge ) . '</span>';
 			$html .= '</div>';
 			if ( $desc ) {

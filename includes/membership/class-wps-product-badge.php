@@ -84,72 +84,58 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 
 			$product_id = $product->get_id();
 
-			// Plan-granting products → green badge (text varies by grant method).
+			// Plan-granting products → grant badge. Once the visitor already holds
+			// the plan, the badge flips to an "active" state instead of an offer.
 			if ( function_exists( 'wps_product_actively_grants_membership' ) ) {
 				$grant_slug = wps_product_actively_grants_membership( $product_id );
 				if ( null !== $grant_slug ) {
-					$grant_plan   = function_exists( 'wps_get_plan_by_slug' )
+					$grant_plan = function_exists( 'wps_get_plan_by_slug' )
 						? wps_get_plan_by_slug( $grant_slug )
 						: null;
-					$grant_method = $grant_plan
-						? ( isset( $grant_plan['grant_method'] ) ? $grant_plan['grant_method'] : 'purchase' )
+					$method     = ( $grant_plan && ! empty( $grant_plan['grant_method'] ) )
+						? $grant_plan['grant_method']
 						: 'purchase';
-					$badge_color  = $grant_plan && ! empty( $grant_plan['color'] )
+					$color      = ( $grant_plan && ! empty( $grant_plan['color'] ) )
 						? sanitize_hex_color( $grant_plan['color'] )
 						: '';
 
-					if ( 'subscription' === $grant_method ) {
-						// Subscription product — key icon + "Includes Membership".
-						$badge_icon = '<svg class="wps-members-badge__icon"'
-							. ' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"'
-							. ' fill="none" stroke="currentColor" stroke-width="2.5"'
-							. ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-							. '<circle cx="7.5" cy="15.5" r="5.5"/>'
-							. '<path d="M21 2l-9.6 9.6M15.5 7.5l3 3"/>'
-							. '</svg>';
-						$badge_text = esc_html__( 'Includes Membership', 'subscriptions-for-woocommerce' );
-						$badge_mod  = 'wps-members-badge--grant';
+					$has_plan = function_exists( 'wps_current_user_has_plan' )
+						&& wps_current_user_has_plan( $grant_slug );
+
+					if ( $has_plan ) {
+						$this->print_members_badge(
+							'wps-members-badge--active',
+							'check',
+							__( 'Membership Active', 'subscriptions-for-woocommerce' ),
+							$color
+						);
+					} elseif ( 'subscription' === $method ) {
+						$this->print_members_badge(
+							'wps-members-badge--grant',
+							'key',
+							__( 'Includes Membership', 'subscriptions-for-woocommerce' ),
+							$color
+						);
 					} else {
-						// One-time purchase — star icon + "Unlocks Membership".
-						$badge_icon = '<svg class="wps-members-badge__icon"'
-							. ' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"'
-							. ' fill="none" stroke="currentColor" stroke-width="2.5"'
-							. ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-							. '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88'
-							. 'L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>'
-							. '</svg>';
-						$badge_text = esc_html__( 'Unlocks Membership', 'subscriptions-for-woocommerce' );
-						$badge_mod  = 'wps-members-badge--grant';
+						$this->print_members_badge(
+							'wps-members-badge--grant',
+							'star',
+							__( 'Unlocks Membership', 'subscriptions-for-woocommerce' ),
+							$color
+						);
 					}
-
-					$badge_style = $badge_color
-						? ' style="--badge-color:' . esc_attr( $badge_color ) . ';"'
-						: '';
-
-					// $badge_icon is hardcoded SVG; $badge_text is pre-escaped by esc_html__().
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo '<span class="wps-members-badge ' . esc_attr( $badge_mod ) . '"' . $badge_style . '>'
-						. $badge_icon . $badge_text . '</span>';
 					return;
 				}
 			}
 
-			// Restricted products → blue "Members Only" badge.
+			// Restricted products → "Members Only", but only for visitors who are
+			// actually blocked. Members with access (and admins) see no badge.
 			$post = get_post( $product_id );
-			if ( ! $post || empty( wps_get_rules_for_object( $post ) ) ) {
+			if ( ! $post || null === wps_object_is_restricted( $post, get_current_user_id() ) ) {
 				return;
 			}
 
-			echo '<span class="wps-members-badge">'
-				. '<svg class="wps-members-badge__icon" xmlns="http://www.w3.org/2000/svg"'
-				. ' viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-				. ' stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"'
-				. ' aria-hidden="true">'
-				. '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>'
-				. '<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>'
-				. '</svg>'
-				. esc_html__( 'Members Only', 'subscriptions-for-woocommerce' )
-				. '</span>';
+			$this->print_members_badge( '', 'lock', __( 'Members Only', 'subscriptions-for-woocommerce' ) );
 		}
 
 		// -----------------------------------------------------------------------
@@ -189,6 +175,14 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 
 			$post = get_post( $product->get_id() );
 			if ( ! $post ) {
+				return;
+			}
+
+			// Only show the gate to visitors who are actually blocked. Members who
+			// already hold a required plan (and admins) have access, so the panel
+			// must not appear for them. wps_object_is_restricted() returns null
+			// when access is granted (or when there are no rules at all).
+			if ( null === wps_object_is_restricted( $post, get_current_user_id() ) ) {
 				return;
 			}
 
@@ -278,7 +272,6 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 							style="--plan-color: <?php echo esc_attr( $color ); ?>">
 
 							<div class="wps-plan-card__top">
-								<span class="wps-plan-card__dot" aria-hidden="true"></span>
 								<span class="wps-plan-card__name"><?php echo esc_html( $name ); ?></span>
 								<?php if ( $duration ) : ?>
 									<span class="wps-plan-card__duration">
@@ -339,6 +332,7 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 			$plan = wps_get_plan_by_slug( $plan_slug );
 			if ( ! $plan ) {
 				$plan = array(
+					'slug'          => $plan_slug,
 					'name'          => ucfirst( $plan_slug ),
 					'description'   => '',
 					'color'         => '#1a7f4b',
@@ -354,6 +348,66 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 		// -----------------------------------------------------------------------
 		// Private helpers
 		// -----------------------------------------------------------------------
+
+		/**
+		 * Return the inline SVG for a named badge icon.
+		 *
+		 * Centralises the icon markup so every badge (grant / active / locked)
+		 * shares one definition instead of repeating the SVG in each branch.
+		 *
+		 * @since  2.0.0
+		 * @param  string $name One of: key, star, check, lock.
+		 * @return string SVG markup.
+		 */
+		private function badge_icon( $name ) {
+			switch ( $name ) {
+				case 'key':
+					$paths = '<circle cx="7.5" cy="15.5" r="5.5"/>'
+						. '<path d="M21 2l-9.6 9.6M15.5 7.5l3 3"/>';
+					break;
+				case 'star':
+					$paths = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88'
+						. 'L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>';
+					break;
+				case 'check':
+					$paths = '<polyline points="20 6 9 17 4 12"></polyline>';
+					break;
+				case 'lock':
+				default:
+					$paths = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>'
+						. '<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>';
+					break;
+			}
+
+			return '<svg class="wps-members-badge__icon" xmlns="http://www.w3.org/2000/svg"'
+				. ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"'
+				. ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+				. $paths . '</svg>';
+		}
+
+		/**
+		 * Echo a shop-loop badge (icon + label).
+		 *
+		 * Single output path for every badge variant — keeps markup, escaping, and
+		 * the optional plan-color CSS var in one place.
+		 *
+		 * @since 2.0.0
+		 * @param string $modifier Extra CSS modifier class (may be empty).
+		 * @param string $icon     Icon name passed to badge_icon().
+		 * @param string $text     Badge label (will be escaped).
+		 * @param string $color    Optional hex color for the --badge-color CSS var.
+		 */
+		private function print_members_badge( $modifier, $icon, $text, $color = '' ) {
+			$class = 'wps-members-badge' . ( $modifier ? ' ' . $modifier : '' );
+			$style = $color ? ' style="--badge-color:' . esc_attr( $color ) . ';"' : '';
+
+			// badge_icon() returns hardcoded SVG; $text is escaped here; $style is built above.
+			$badge_html = '<span class="' . esc_attr( $class ) . '"' . $style . '>'
+				. $this->badge_icon( $icon ) . esc_html( $text ) . '</span>';
+
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $badge_html;
+		}
 
 		/**
 		 * Convert an access_length array to a human-readable string.

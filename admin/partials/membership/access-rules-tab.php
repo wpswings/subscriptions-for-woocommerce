@@ -1,6 +1,11 @@
 <?php
 /**
- * Access Rules tab — multi-step rule setup.
+ * Access Rules tab — rule list, Content/Product builders, and Preview modal.
+ *
+ * Rules come in two kinds, each with its own short builder so the two render
+ * paths never mix (a product rule can't be used for content restriction and
+ * vice-versa). Each card is rendered by access-rules-card.php; the two JS clone
+ * templates and the live rows all share that single partial.
  *
  * @since      2.0.0
  * @package    Subscriptions_For_Woocommerce
@@ -20,7 +25,8 @@ $wps_saved = ! empty( $_GET['wps_saved'] );
 $wps_public_post_types = array_filter(
 	get_post_types( array( 'public' => true ), 'objects' ),
 	function ( $pt ) {
-		return ! in_array( $pt->name, array( 'attachment', WPS_MEMBERSHIP_PLAN_CPT ), true );
+		// Products are owned by Product rules, not Content rules.
+		return ! in_array( $pt->name, array( 'attachment', 'product', WPS_MEMBERSHIP_PLAN_CPT ), true );
 	}
 );
 
@@ -39,13 +45,18 @@ function wps_rule_summary( $rule, $plans_map, $post_types, $taxonomies ) {
 	$type = isset( $rule['target_type'] ) ? $rule['target_type'] : 'post_type';
 
 	if ( 'post_type' === $type ) {
-		$pt_key   = isset( $rule['post_type'] ) ? $rule['post_type'] : '';
-		$pt_label = isset( $post_types[ $pt_key ] ) ? $post_types[ $pt_key ]->label : $pt_key;
-		$target   = sprintf(
-			/* translators: post type label */
-			esc_html__( 'Post Type: %s', 'subscriptions-for-woocommerce' ),
-			esc_html( $pt_label )
-		);
+		$pt_key = isset( $rule['post_type'] ) ? $rule['post_type'] : '';
+		if ( 'product' === $pt_key ) {
+			// A whole-product-post-type rule is the "All Products" product rule.
+			$target = esc_html__( 'All Products', 'subscriptions-for-woocommerce' );
+		} else {
+			$pt_label = isset( $post_types[ $pt_key ] ) ? $post_types[ $pt_key ]->label : $pt_key;
+			$target   = sprintf(
+				/* translators: post type label */
+				esc_html__( 'Post Type: %s', 'subscriptions-for-woocommerce' ),
+				esc_html( $pt_label )
+			);
+		}
 	} elseif ( in_array( $type, array( 'post', 'page', 'product' ), true ) ) {
 		$ids   = isset( $rule['object_ids'] ) ? (array) $rule['object_ids'] : array();
 		$count = count( $ids );
@@ -153,9 +164,8 @@ foreach ( $wps_all_plans as $wps_p ) {
 /**
  * Whether Subscriptions for WooCommerce Pro is active.
  *
- * Drives the locked/disabled state of Pro-only controls (e.g. the "Template"
- * restriction behavior, Day 18). Computed once and reused by every rule card
- * and the JS clone template so all instances share one source of truth.
+ * Drives the locked/disabled state of the Pro-only Template behavior and the
+ * advanced rule fields.
  *
  * @since 2.0.0
  *
@@ -164,6 +174,12 @@ foreach ( $wps_all_plans as $wps_p ) {
 $wps_is_pro       = (bool) apply_filters( 'wsp_sfw_check_pro_plugin', false );
 $wps_tpl_lock_cls = $wps_is_pro ? '' : ' wps_pro_settings_tag wps-ai-pro-locked';
 $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
+
+// Pre-escaped attribute strings reused by every card.
+$wps_attr_remove       = esc_attr__( 'Remove', 'subscriptions-for-woocommerce' );
+$wps_attr_prio_title   = esc_attr__( 'Priority — lower number evaluated first', 'subscriptions-for-woocommerce' );
+$wps_attr_search_title = esc_attr__( 'Search by title…', 'subscriptions-for-woocommerce' );
+$wps_attr_search_terms = esc_attr__( 'Search terms…', 'subscriptions-for-woocommerce' );
 ?>
 
 <?php if ( $wps_saved ) : ?>
@@ -180,7 +196,6 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 	<?php wp_nonce_field( 'wps_save_access_rules', 'wps_access_rules_nonce' ); ?>
 	<input type="hidden" name="wps_save_access_rules" value="1">
 
-	<!-- ===== Access Rules list ===== -->
 	<div class="wps-access-section">
 		<div class="wps-access-section__head">
 			<h2 class="wps-access-section__title">
@@ -189,7 +204,7 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 			<span class="wps-access-section__desc">
 				<?php
 				esc_html_e(
-					'Evaluated in priority order — lower number = higher priority.',
+					'Content rules gate posts & pages; Product rules block purchase. Lowest priority number wins.',
 					'subscriptions-for-woocommerce'
 				);
 				?>
@@ -204,7 +219,7 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 					<p class="wps-rules-empty__text">
 						<?php
 						esc_html_e(
-							'No access rules yet. Click "+ Add Rule" to restrict content.',
+							'No access rules yet. Add a Content rule or a Product rule to get started.',
 							'subscriptions-for-woocommerce'
 						);
 						?>
@@ -212,572 +227,24 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 				</div>
 			<?php endif; ?>
 
-			<?php
-			$wps_attr_remove       = esc_attr__( 'Remove', 'subscriptions-for-woocommerce' );
-			$wps_attr_prio_title   = esc_attr__(
-				'Priority — lower number evaluated first',
-				'subscriptions-for-woocommerce'
-			);
-			$wps_attr_search_title = esc_attr__( 'Search by title…', 'subscriptions-for-woocommerce' );
-			$wps_attr_search_terms = esc_attr__( 'Search terms…', 'subscriptions-for-woocommerce' );
-			?>
-
 			<?php foreach ( $wps_rules as $wps_ri => $wps_rule ) : ?>
 				<?php
-				$wps_rule_plans    = isset( $wps_rule['plans'] ) ? (array) $wps_rule['plans'] : array( 'any' );
-				$wps_rule_type     = isset( $wps_rule['target_type'] ) ? $wps_rule['target_type'] : 'post_type';
-				$wps_rule_behavior = isset( $wps_rule['behavior'] ) ? $wps_rule['behavior'] : 'message';
-				$wps_rule_obj_ids  = isset( $wps_rule['object_ids'] ) ? (array) $wps_rule['object_ids'] : array();
-				$wps_rule_term_ids = isset( $wps_rule['term_ids'] ) ? (array) $wps_rule['term_ids'] : array();
-				$wps_rule_pt       = isset( $wps_rule['post_type'] ) ? $wps_rule['post_type'] : '';
-				$wps_rule_tax      = isset( $wps_rule['taxonomy'] ) ? $wps_rule['taxonomy'] : '';
-				$wps_rule_priority = isset( $wps_rule['priority'] ) ? (int) $wps_rule['priority'] : 10;
-				$wps_rule_enabled  = isset( $wps_rule['enabled'] ) ? $wps_rule['enabled'] : '1';
-				$wps_diff_plans    = array_diff( $wps_rule_plans, array_keys( $wps_plans_map ) );
-				$wps_no_plans      = (
-					empty( $wps_rule_plans )
-					|| ( array( 'any' ) !== $wps_rule_plans && ! empty( $wps_diff_plans ) )
-				);
-				$wps_smry          = wps_rule_summary(
-					$wps_rule,
-					$wps_plans_map,
-					$wps_public_post_types,
-					$wps_public_taxonomies
-				);
-				$wps_card_classes  = implode(
-					' ',
-					array_filter(
-						array(
-							'wps-rule-card',
-							$wps_no_plans ? 'wps-rule-card--warn' : '',
-							'1' !== (string) $wps_rule_enabled ? 'wps-rule-card--disabled' : '',
-						)
-					)
-				);
-				if ( 'redirect' === $wps_smry['behavior'] ) {
-					$wps_behavior_lbl = esc_html__( 'Redirect', 'subscriptions-for-woocommerce' );
-				} elseif ( 'template' === $wps_smry['behavior'] ) {
-					$wps_behavior_lbl = esc_html__( 'Template', 'subscriptions-for-woocommerce' );
-				} else {
-					$wps_behavior_lbl = esc_html__( 'Message', 'subscriptions-for-woocommerce' );
-				}
-				$wps_rule_msg     = isset( $wps_rule['message'] ) ? $wps_rule['message'] : '';
-				$wps_rule_redir   = isset( $wps_rule['redirect_url'] ) ? $wps_rule['redirect_url'] : '';
-				$wps_opt_comments = isset( $wps_rule['restrict_comments'] ) ? $wps_rule['restrict_comments'] : '0';
-				$wps_opt_archive  = isset( $wps_rule['include_archive'] ) ? $wps_rule['include_archive'] : '0';
-				$wps_opt_cta      = isset( $wps_rule['show_cta'] ) ? $wps_rule['show_cta'] : '0';
-				$wps_opt_proddesc = isset( $wps_rule['restrict_product_description'] )
-					? $wps_rule['restrict_product_description']
-					: '0';
-
-				// Pre-computed field names and conditional styles (keeps HTML lines under 120 chars).
-				$wps_fld_id       = esc_attr( "wps_rules[{$wps_ri}][id]" );
-				$wps_fld_enabled  = esc_attr( "wps_rules[{$wps_ri}][enabled]" );
-				$wps_fld_priority = esc_attr( "wps_rules[{$wps_ri}][priority]" );
-				$wps_fld_ttype    = esc_attr( "wps_rules[{$wps_ri}][target_type]" );
-				$wps_fld_ptype    = esc_attr( "wps_rules[{$wps_ri}][post_type]" );
-				$wps_fld_obj_ids  = esc_attr( "wps_rules[{$wps_ri}][object_ids][]" );
-				$wps_fld_taxonomy = esc_attr( "wps_rules[{$wps_ri}][taxonomy]" );
-				$wps_fld_term_ids = esc_attr( "wps_rules[{$wps_ri}][term_ids][]" );
-				$wps_fld_plans    = esc_attr( "wps_rules[{$wps_ri}][plans][]" );
-				$wps_fld_behavior = esc_attr( "wps_rules[{$wps_ri}][behavior]" );
-				$wps_fld_message  = esc_attr( "wps_rules[{$wps_ri}][message]" );
-				$wps_fld_redir    = esc_attr( "wps_rules[{$wps_ri}][redirect_url]" );
-				$wps_fld_comments = esc_attr( "wps_rules[{$wps_ri}][restrict_comments]" );
-				$wps_fld_archive  = esc_attr( "wps_rules[{$wps_ri}][include_archive]" );
-				$wps_fld_cta      = esc_attr( "wps_rules[{$wps_ri}][show_cta]" );
-				$wps_fld_rpd      = esc_attr( "wps_rules[{$wps_ri}][restrict_product_description]" );
-				$wps_div_pt       = 'post_type' !== $wps_rule_type ? ' style="display:none;"' : '';
-				$wps_div_obj      = ! in_array( $wps_rule_type, array( 'post', 'page', 'product' ), true )
-					? ' style="display:none;"'
-					: '';
-				$wps_div_tax      = 'taxonomy' !== $wps_rule_type ? ' style="display:none;"' : '';
-				// The message textarea doubles as the restriction notice for the
-				// 'template' behavior, so it stays visible for both message + template.
-				$wps_msg_visible = in_array( $wps_rule_behavior, array( 'message', 'template' ), true );
-				$wps_div_msg     = $wps_msg_visible ? '' : ' style="display:none;"';
-				$wps_div_redir   = 'redirect' !== $wps_rule_behavior ? ' style="display:none;"' : '';
-				// Pro-lock vars ($wps_tpl_lock_cls / $wps_tpl_disabled) are computed
-				// once above the rules loop and reused here for the Template option.
+				$wps_idx  = $wps_ri;
+				$wps_kind = wps_get_access_rule_kind( $wps_rule );
+				require __DIR__ . '/access-rules-card.php';
 				?>
-			<div class="<?php echo esc_attr( $wps_card_classes ); ?>"
-				data-index="<?php echo esc_attr( $wps_ri ); ?>">
-
-				<input type="hidden"
-					name="<?php echo $wps_fld_id; // phpcs:ignore ?>"
-					value="<?php echo esc_attr( $wps_rule['id'] ); ?>">
-
-				<div class="wps-rule-card__header">
-
-					<label class="wps-rule-enable-toggle"
-						title="<?php esc_attr_e( 'Enable / disable this rule', 'subscriptions-for-woocommerce' ); ?>">
-						<input type="hidden"
-							name="<?php echo $wps_fld_enabled; // phpcs:ignore ?>"
-							value="0">
-						<input type="checkbox"
-							name="<?php echo $wps_fld_enabled; // phpcs:ignore ?>"
-							value="1"
-							class="wps-rule-enabled-check"
-							<?php checked( '1', (string) $wps_rule_enabled ); ?>>
-						<span class="wps-toggle__slider"></span>
-					</label>
-
-					<div class="wps-rule-card__summary">
-						<span class="wps-rule-card__target-lbl">
-							<?php echo esc_html( $wps_smry['target_lbl'] ); ?>
-						</span>
-						<span class="wps-rule-card__sep">&#8594;</span>
-						<span class="wps-rule-card__plans-lbl">
-							<?php echo esc_html( $wps_smry['plans_lbl'] ); ?>
-						</span>
-						<span class="wps-badge wps-badge--<?php echo esc_attr( $wps_smry['behavior'] ); ?>">
-							<?php echo esc_html( $wps_behavior_lbl ); ?>
-						</span>
-						<span class="wps-badge wps-badge--disabled-chip">
-							<?php esc_html_e( 'Disabled', 'subscriptions-for-woocommerce' ); ?>
-						</span>
-					</div>
-
-					<label class="wps-rule-prio-label"
-						title="<?php echo esc_attr( $wps_attr_prio_title ); ?>">
-						<span class="screen-reader-text">
-							<?php esc_html_e( 'Priority', 'subscriptions-for-woocommerce' ); ?>
-						</span>
-						<input type="number" min="1" max="999"
-							name="<?php echo $wps_fld_priority; // phpcs:ignore ?>"
-							value="<?php echo esc_attr( $wps_rule_priority ); ?>"
-							class="wps-rule-priority">
-					</label>
-
-					<div class="wps-rule-card__actions">
-						<button type="button" class="wps-rule-card__toggle" aria-expanded="false">
-							<?php esc_html_e( 'Edit', 'subscriptions-for-woocommerce' ); ?>
-							<i class="wps-chevron">&#9662;</i>
-						</button>
-						<button type="button"
-							class="wps-rule-card__remove-btn wps-remove-rule"
-							aria-label="<?php esc_attr_e( 'Remove rule', 'subscriptions-for-woocommerce' ); ?>">
-							&times;
-						</button>
-					</div>
-				</div>
-
-				<div class="wps-rule-card__body" hidden>
-					<div class="wps-wizard">
-
-						<!-- Step indicators -->
-						<div class="wps-wizard__steps">
-							<button type="button" class="wps-wizard__step wps-wizard__step--active" data-step="1">
-								<span class="wps-wizard__step-num">1</span>
-								<span class="wps-wizard__step-label">
-									<?php esc_html_e( 'What', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-							</button>
-							<span class="wps-wizard__sep">›</span>
-							<button type="button" class="wps-wizard__step" data-step="2">
-								<span class="wps-wizard__step-num">2</span>
-								<span class="wps-wizard__step-label">
-									<?php esc_html_e( 'Plans', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-							</button>
-							<span class="wps-wizard__sep">›</span>
-							<button type="button" class="wps-wizard__step" data-step="3">
-								<span class="wps-wizard__step-num">3</span>
-								<span class="wps-wizard__step-label">
-									<?php esc_html_e( 'Behavior', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-							</button>
-							<span class="wps-wizard__sep">›</span>
-							<button type="button" class="wps-wizard__step" data-step="4">
-								<span class="wps-wizard__step-num">4</span>
-								<span class="wps-wizard__step-label">
-									<?php esc_html_e( 'Options', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-							</button>
-						</div>
-
-						<!-- Step 1: What to Restrict -->
-						<div class="wps-wizard__panel" data-panel="1">
-							<div class="wps-field-group">
-								<span class="wps-field-label">
-									<?php esc_html_e( 'What to Restrict', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-								<select name="<?php echo $wps_fld_ttype; // phpcs:ignore; ?>"
-									class="wps-rule-target-type">
-									<option value="post_type" <?php selected( $wps_rule_type, 'post_type' ); ?>>
-										<?php esc_html_e( 'Post Type', 'subscriptions-for-woocommerce' ); ?>
-									</option>
-									<option value="post" <?php selected( $wps_rule_type, 'post' ); ?>>
-										<?php esc_html_e( 'Specific Post(s)', 'subscriptions-for-woocommerce' ); ?>
-									</option>
-									<option value="page" <?php selected( $wps_rule_type, 'page' ); ?>>
-										<?php esc_html_e( 'Specific Page(s)', 'subscriptions-for-woocommerce' ); ?>
-									</option>
-									<option value="product" <?php selected( $wps_rule_type, 'product' ); ?>>
-										<?php esc_html_e( 'Specific Product(s)', 'subscriptions-for-woocommerce' ); ?>
-									</option>
-									<option value="taxonomy" <?php selected( $wps_rule_type, 'taxonomy' ); ?>>
-										<?php esc_html_e( 'Taxonomy Term(s)', 'subscriptions-for-woocommerce' ); ?>
-									</option>
-								</select>
-
-								<div class="wps-target-sub wps-target-post_type"
-									<?php echo $wps_div_pt; // phpcs:ignore ?>>
-									<select name="<?php echo $wps_fld_ptype; // phpcs:ignore ?>"
-										class="wps-rule-post-type-select">
-										<?php foreach ( $wps_public_post_types as $wps_pt ) : ?>
-											<option value="<?php echo esc_attr( $wps_pt->name ); ?>"
-												<?php selected( $wps_rule_pt, $wps_pt->name ); ?>>
-												<?php echo esc_html( $wps_pt->label ); ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-								</div>
-
-								<div class="wps-target-sub wps-target-object"
-									<?php echo $wps_div_obj; // phpcs:ignore ?>>
-									<div class="wps-tag-container">
-										<?php foreach ( $wps_rule_obj_ids as $wps_oid ) : ?>
-											<?php
-											$wps_obj = get_post( (int) $wps_oid );
-											if ( ! $wps_obj ) {
-												continue;
-											}
-											?>
-											<span class="wps-tag">
-												<?php echo esc_html( $wps_obj->post_title ); ?>
-												<input type="hidden"
-													name="<?php echo $wps_fld_obj_ids; // phpcs:ignore ?>"
-													value="<?php echo esc_attr( $wps_oid ); ?>">
-												<button type="button" class="wps-remove-tag"
-													aria-label="<?php echo esc_attr( $wps_attr_remove ); ?>">
-													&times;
-												</button>
-											</span>
-										<?php endforeach; ?>
-									</div>
-									<div class="wps-search-wrap" style="margin-top:4px;">
-										<input type="text" class="wps-object-search wps-ajax-search"
-											placeholder="<?php echo esc_attr( $wps_attr_search_title ); ?>"
-											autocomplete="off">
-										<span class="wps-search-spinner"></span>
-										<ul class="wps-search-results"></ul>
-									</div>
-								</div>
-
-								<div class="wps-target-sub wps-target-taxonomy"
-									<?php echo $wps_div_tax; // phpcs:ignore ?>>
-									<select name="<?php echo $wps_fld_taxonomy; // phpcs:ignore ?>"
-										class="wps-rule-taxonomy-select"
-										style="margin-bottom:6px;">
-										<?php foreach ( $wps_public_taxonomies as $wps_tx ) : ?>
-											<option value="<?php echo esc_attr( $wps_tx->name ); ?>"
-												<?php selected( $wps_rule_tax, $wps_tx->name ); ?>>
-												<?php echo esc_html( $wps_tx->label ); ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-									<div class="wps-tag-container">
-										<?php foreach ( $wps_rule_term_ids as $wps_tid ) : ?>
-											<?php
-											$wps_term = get_term( (int) $wps_tid );
-											if ( ! $wps_term || is_wp_error( $wps_term ) ) {
-												continue;
-											}
-											?>
-											<span class="wps-tag">
-												<?php echo esc_html( $wps_term->name ); ?>
-												<input type="hidden"
-													name="<?php echo $wps_fld_term_ids; // phpcs:ignore ?>"
-													value="<?php echo esc_attr( $wps_tid ); ?>">
-												<button type="button" class="wps-remove-tag"
-													aria-label="<?php echo esc_attr( $wps_attr_remove ); ?>">
-													&times;
-												</button>
-											</span>
-										<?php endforeach; ?>
-									</div>
-									<div class="wps-search-wrap" style="margin-top:4px;">
-										<input type="text" class="wps-term-search wps-ajax-search"
-											placeholder="<?php echo esc_attr( $wps_attr_search_terms ); ?>"
-											autocomplete="off">
-										<span class="wps-search-spinner"></span>
-										<ul class="wps-search-results"></ul>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<!-- Step 2: Required Plans -->
-						<div class="wps-wizard__panel" data-panel="2" hidden>
-							<div class="wps-field-group">
-								<span class="wps-field-label">
-									<?php esc_html_e( 'Required Plan', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-								<div class="wps-plan-pills">
-									<label class="wps-plan-pill">
-										<input type="checkbox"
-											name="<?php echo $wps_fld_plans; // phpcs:ignore; ?>"
-											value="any"
-											class="wps-plan-any-check"
-											<?php echo in_array( 'any', $wps_rule_plans, true ) ? 'checked' : ''; ?>>
-										<span>
-											<?php esc_html_e( 'Any Plan', 'subscriptions-for-woocommerce' ); ?>
-										</span>
-									</label>
-									<?php foreach ( $wps_all_plans as $wps_plan ) : ?>
-										<?php
-										$wps_pill_checked = in_array( $wps_plan['slug'], $wps_rule_plans, true )
-											? 'checked'
-											: '';
-										$wps_pill_row     = isset( $wps_plans_map[ $wps_plan['slug'] ] )
-											? $wps_plans_map[ $wps_plan['slug'] ]
-											: array();
-										$wps_pill_method  = isset( $wps_pill_row['method'] )
-											? $wps_pill_row['method']
-											: 'purchase';
-										$wps_pill_color   = isset( $wps_pill_row['color'] )
-											? $wps_pill_row['color']
-											: '';
-										$wps_method_badge = 'purchase' !== $wps_pill_method
-											? wps_grant_method_short_label( $wps_pill_method )
-											: '';
-										?>
-										<label class="wps-plan-pill">
-											<input type="checkbox"
-												name="<?php echo $wps_fld_plans; // phpcs:ignore; ?>"
-												value="<?php echo esc_attr( $wps_plan['slug'] ); ?>"
-												class="wps-plan-specific-check"
-												data-grant-method="<?php echo esc_attr( $wps_pill_method ); ?>"
-												<?php echo esc_attr( $wps_pill_checked ); ?>>
-											<span>
-												<?php if ( $wps_pill_color ) : ?>
-														<?php $wps_bg = esc_attr( $wps_pill_color ); ?>
-														<i class="wps-plan-pill__dot"
-															style="background:<?php echo $wps_bg; // phpcs:ignore ?>;">
-														</i>
-												<?php endif; ?>
-												<?php echo esc_html( $wps_plan['name'] ); ?>
-												<?php if ( $wps_method_badge ) : ?>
-													<?php
-													$wps_pill_class = 'wps-plan-pill__method wps-plan-pill__method--'
-														. esc_attr( $wps_pill_method );
-													?>
-													<em class="<?php echo esc_attr( $wps_pill_class ); ?>">
-														<?php echo esc_html( $wps_method_badge ); ?>
-													</em>
-												<?php endif; ?>
-											</span>
-										</label>
-									<?php endforeach; ?>
-									<?php if ( empty( $wps_all_plans ) ) : ?>
-										<p class="description" style="margin:0;">
-											<?php
-											esc_html_e(
-												'No active plans. Create plans in the Membership Plans tab.',
-												'subscriptions-for-woocommerce'
-											);
-											?>
-										</p>
-									<?php endif; ?>
-								</div>
-								<div class="wps-plan-pills__notice" style="display:none;"></div>
-							</div>
-						</div>
-
-						<!-- Step 3: Behavior -->
-						<div class="wps-wizard__panel" data-panel="3" hidden>
-							<div class="wps-field-group">
-								<span class="wps-field-label">
-									<?php esc_html_e( 'When Restricted', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-								<div class="wps-seg-control" style="margin-bottom:10px;">
-									<label class="wps-seg-control__option">
-										<input type="radio"
-											name="<?php echo $wps_fld_behavior; // phpcs:ignore; ?>"
-											value="message"
-											class="wps-rule-behavior-radio"
-											<?php checked( $wps_rule_behavior, 'message' ); ?>>
-										<span>
-											<?php esc_html_e( 'Show Message', 'subscriptions-for-woocommerce' ); ?>
-										</span>
-									</label>
-									<label class="wps-seg-control__option">
-										<input type="radio"
-											name="<?php echo $wps_fld_behavior; // phpcs:ignore; ?>"
-											value="redirect"
-											class="wps-rule-behavior-radio"
-											<?php checked( $wps_rule_behavior, 'redirect' ); ?>>
-										<span>
-											<?php esc_html_e( 'Redirect', 'subscriptions-for-woocommerce' ); ?>
-										</span>
-									</label>
-									<label class="wps-seg-control__option<?php echo esc_attr( $wps_tpl_lock_cls ); ?>">
-										<input type="radio"
-											name="<?php echo $wps_fld_behavior; // phpcs:ignore; ?>"
-											value="template"
-											class="wps-rule-behavior-radio"
-											<?php checked( $wps_rule_behavior, 'template' ); ?>
-											<?php echo $wps_tpl_disabled; // phpcs:ignore ?>>
-										<span>
-											<?php esc_html_e( 'Template', 'subscriptions-for-woocommerce' ); ?>
-										</span>
-									</label>
-								</div>
-
-								<div class="wps-behavior-message"
-									<?php echo $wps_div_msg; // phpcs:ignore ?>>
-									<?php
-									$wps_ph_msg = __(
-										'Leave blank to show the default members-only message.',
-										'subscriptions-for-woocommerce'
-									);
-									?>
-									<textarea
-										name="<?php echo $wps_fld_message; // phpcs:ignore; ?>"
-										rows="3"
-										placeholder="<?php echo esc_attr( $wps_ph_msg ); ?>"
-									><?php echo esc_textarea( $wps_rule_msg ); ?></textarea>
-									<p class="description" style="margin-top:4px;">
-										<button type="button" class="wps-copy-tag" data-tag="{purchase_options}">
-											{purchase_options}
-										</button>
-										<?php esc_html_e( '— inserts a buy-link.', 'subscriptions-for-woocommerce' ); ?>
-									</p>
-								</div>
-
-								<div class="wps-behavior-redirect"
-									<?php echo $wps_div_redir; // phpcs:ignore ?>>
-									<?php
-									$wps_ph_url = __(
-										'URL to send non-members to — e.g. a pricing or login page.',
-										'subscriptions-for-woocommerce'
-									);
-									?>
-									<input type="url"
-										name="<?php echo $wps_fld_redir; // phpcs:ignore; ?>"
-										value="<?php echo esc_attr( $wps_rule_redir ); ?>"
-										placeholder="<?php echo esc_attr( $wps_ph_url ); ?>">
-								</div>
-								<?php
-								// Template-behavior teaser fields (Pro): word-count teaser.
-								$wps_idx      = $wps_ri;
-								$wps_rule_tpl = $wps_rule;
-								$wps_tpl_show = 'template' === $wps_rule_behavior;
-								require __DIR__ . '/access-rules-template-fields.php';
-								?>
-							</div>
-						</div>
-
-						<!-- Step 4: Extra Options -->
-						<div class="wps-wizard__panel" data-panel="4" hidden>
-							<div class="wps-field-group">
-								<span class="wps-field-label">
-									<?php esc_html_e( 'Extra Options', 'subscriptions-for-woocommerce' ); ?>
-								</span>
-								<div class="wps-toggle-list">
-									<label class="wps-toggle">
-										<input type="hidden"
-											name="<?php echo $wps_fld_comments; // phpcs:ignore; ?>"
-											value="0">
-										<input type="checkbox"
-											name="<?php echo $wps_fld_comments; // phpcs:ignore; ?>"
-											value="1"
-											<?php checked( '1', $wps_opt_comments ); ?>>
-										<span class="wps-toggle__slider"></span>
-										<span class="wps-toggle__text">
-											<?php
-											esc_html_e(
-												'Disable comments on restricted posts',
-												'subscriptions-for-woocommerce'
-											);
-											?>
-										</span>
-									</label>
-									<label class="wps-toggle">
-										<input type="hidden"
-											name="<?php echo $wps_fld_archive; // phpcs:ignore; ?>"
-											value="0">
-										<input type="checkbox"
-											name="<?php echo $wps_fld_archive; // phpcs:ignore; ?>"
-											value="1"
-											<?php checked( '1', $wps_opt_archive ); ?>>
-										<span class="wps-toggle__slider"></span>
-										<span class="wps-toggle__text">
-											<?php
-											esc_html_e(
-												'Show restricted posts in archives &amp; search',
-												'subscriptions-for-woocommerce'
-											);
-											?>
-										</span>
-									</label>
-									<label class="wps-toggle">
-										<input type="hidden"
-											name="<?php echo $wps_fld_cta; // phpcs:ignore; ?>"
-											value="0">
-										<input type="checkbox"
-											name="<?php echo $wps_fld_cta; // phpcs:ignore; ?>"
-											value="1"
-											<?php checked( '1', $wps_opt_cta ); ?>>
-										<span class="wps-toggle__slider"></span>
-										<span class="wps-toggle__text">
-											<?php
-											esc_html_e(
-												'Auto-append purchase CTA to restriction messages',
-												'subscriptions-for-woocommerce'
-											);
-											?>
-										</span>
-									</label>
-									<label class="wps-toggle">
-										<input type="hidden"
-											name="<?php echo $wps_fld_rpd; // phpcs:ignore ?>"
-											value="0">
-										<input type="checkbox"
-											name="<?php echo $wps_fld_rpd; // phpcs:ignore ?>"
-											value="1"
-											<?php checked( '1', $wps_opt_proddesc ); ?>>
-										<span class="wps-toggle__slider"></span>
-										<span class="wps-toggle__text">
-											<?php
-											esc_html_e(
-												'Restrict product description for non-members',
-												'subscriptions-for-woocommerce'
-											);
-											?>
-										</span>
-									</label>
-								</div>
-								<?php
-								// Advanced (Pro) controls: drip scheduling + exclusions.
-								$wps_idx      = $wps_ri;
-								$wps_rule_adv = $wps_rule;
-								require __DIR__ . '/access-rules-advanced-fields.php';
-								?>
-							</div>
-						</div>
-
-						<div class="wps-wizard__nav">
-							<button type="button" class="button wps-wizard__back" hidden>
-								<?php esc_html_e( '← Back', 'subscriptions-for-woocommerce' ); ?>
-							</button>
-							<button type="button" class="button button-primary wps-wizard__next">
-								<?php esc_html_e( 'Next →', 'subscriptions-for-woocommerce' ); ?>
-							</button>
-						</div>
-
-					</div>
-				</div>
-
-			</div>
 			<?php endforeach; ?>
 
 			</div>
 
 			<div class="wps-rules-footer">
-				<button type="button" id="wps-add-rule" class="button">
-					<?php esc_html_e( '+ Add Rule', 'subscriptions-for-woocommerce' ); ?>
+				<button type="button" id="wps-add-content-rule" class="button"
+					data-template="wps-rule-content-template">
+					<?php esc_html_e( '+ Add Content Rule', 'subscriptions-for-woocommerce' ); ?>
+				</button>
+				<button type="button" id="wps-add-product-rule" class="button"
+					data-template="wps-rule-product-template">
+					<?php esc_html_e( '+ Add Product Rule', 'subscriptions-for-woocommerce' ); ?>
 				</button>
 				<button type="submit" class="button button-primary">
 					<?php esc_html_e( 'Save Access Rules', 'subscriptions-for-woocommerce' ); ?>
@@ -787,385 +254,53 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 		</div>
 	</div>
 
-	<!-- New rule card template (cloned by JS) -->
-	<template id="wps-rule-row-template">
-		<div class="wps-rule-card wps-rule-card--open" data-index="__IDX__">
-			<input type="hidden" name="wps_rules[__IDX__][id]" value="">
+	<!-- Content rule template (cloned by JS) -->
+	<template id="wps-rule-content-template">
+		<?php
+		$wps_idx  = '__IDX__';
+		$wps_kind = 'content';
+		$wps_rule = array();
+		require __DIR__ . '/access-rules-card.php';
+		?>
+	</template>
 
-			<div class="wps-rule-card__header">
-
-				<label class="wps-rule-enable-toggle"
-					title="<?php esc_attr_e( 'Enable / disable this rule', 'subscriptions-for-woocommerce' ); ?>">
-					<input type="hidden" name="wps_rules[__IDX__][enabled]" value="0">
-					<input type="checkbox" name="wps_rules[__IDX__][enabled]" value="1"
-						class="wps-rule-enabled-check" checked>
-					<span class="wps-toggle__slider"></span>
-				</label>
-
-				<div class="wps-rule-card__summary">
-					<span class="wps-rule-card__target-lbl">
-						<?php esc_html_e( 'New Rule', 'subscriptions-for-woocommerce' ); ?>
-					</span>
-					<span class="wps-rule-card__sep">&#8594;</span>
-					<span class="wps-rule-card__plans-lbl">
-						<?php esc_html_e( 'Any Plan', 'subscriptions-for-woocommerce' ); ?>
-					</span>
-					<span class="wps-badge wps-badge--message wps-rule-card__behavior-badge">
-						<?php esc_html_e( 'Message', 'subscriptions-for-woocommerce' ); ?>
-					</span>
-					<span class="wps-badge wps-badge--disabled-chip">
-						<?php esc_html_e( 'Disabled', 'subscriptions-for-woocommerce' ); ?>
-					</span>
-				</div>
-
-				<label class="wps-rule-prio-label">
-					<span class="screen-reader-text">
-						<?php esc_html_e( 'Priority', 'subscriptions-for-woocommerce' ); ?>
-					</span>
-					<input type="number" min="1" max="999"
-						name="wps_rules[__IDX__][priority]"
-						value="10"
-						class="wps-rule-priority">
-				</label>
-
-				<div class="wps-rule-card__actions">
-					<button type="button" class="wps-rule-card__toggle" aria-expanded="true">
-						<?php esc_html_e( 'Collapse', 'subscriptions-for-woocommerce' ); ?>
-						<i class="wps-chevron" style="transform:rotate(180deg);">&#9662;</i>
-					</button>
-					<button type="button"
-						class="wps-rule-card__remove-btn wps-remove-rule"
-						aria-label="<?php esc_attr_e( 'Remove rule', 'subscriptions-for-woocommerce' ); ?>">
-						&times;
-					</button>
-				</div>
-			</div>
-
-			<div class="wps-rule-card__body">
-				<div class="wps-wizard">
-
-					<div class="wps-wizard__steps">
-						<button type="button" class="wps-wizard__step wps-wizard__step--active" data-step="1">
-							<span class="wps-wizard__step-num">1</span>
-							<span class="wps-wizard__step-label">
-								<?php esc_html_e( 'What', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-						</button>
-						<span class="wps-wizard__sep">›</span>
-						<button type="button" class="wps-wizard__step" data-step="2">
-							<span class="wps-wizard__step-num">2</span>
-							<span class="wps-wizard__step-label">
-								<?php esc_html_e( 'Plans', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-						</button>
-						<span class="wps-wizard__sep">›</span>
-						<button type="button" class="wps-wizard__step" data-step="3">
-							<span class="wps-wizard__step-num">3</span>
-							<span class="wps-wizard__step-label">
-								<?php esc_html_e( 'Behavior', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-						</button>
-						<span class="wps-wizard__sep">›</span>
-						<button type="button" class="wps-wizard__step" data-step="4">
-							<span class="wps-wizard__step-num">4</span>
-							<span class="wps-wizard__step-label">
-								<?php esc_html_e( 'Options', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-						</button>
-					</div>
-
-					<!-- Step 1: What to Restrict -->
-					<div class="wps-wizard__panel" data-panel="1">
-						<div class="wps-field-group">
-							<span class="wps-field-label">
-								<?php esc_html_e( 'What to Restrict', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-							<select name="wps_rules[__IDX__][target_type]" class="wps-rule-target-type">
-								<option value="post_type">
-									<?php esc_html_e( 'Post Type', 'subscriptions-for-woocommerce' ); ?>
-								</option>
-								<option value="post">
-									<?php esc_html_e( 'Specific Post(s)', 'subscriptions-for-woocommerce' ); ?>
-								</option>
-								<option value="page">
-									<?php esc_html_e( 'Specific Page(s)', 'subscriptions-for-woocommerce' ); ?>
-								</option>
-								<option value="product">
-									<?php esc_html_e( 'Specific Product(s)', 'subscriptions-for-woocommerce' ); ?>
-								</option>
-								<option value="taxonomy">
-									<?php esc_html_e( 'Taxonomy Term(s)', 'subscriptions-for-woocommerce' ); ?>
-								</option>
-							</select>
-							<div class="wps-target-sub wps-target-post_type">
-								<select name="wps_rules[__IDX__][post_type]" class="wps-rule-post-type-select">
-									<?php foreach ( $wps_public_post_types as $wps_pt ) : ?>
-										<option value="<?php echo esc_attr( $wps_pt->name ); ?>">
-											<?php echo esc_html( $wps_pt->label ); ?>
-										</option>
-									<?php endforeach; ?>
-								</select>
-							</div>
-							<div class="wps-target-sub wps-target-object" style="display:none;">
-								<div class="wps-tag-container"></div>
-								<div class="wps-search-wrap" style="margin-top:4px;">
-									<input type="text" class="wps-object-search wps-ajax-search"
-										placeholder="<?php echo esc_attr( $wps_attr_search_title ); ?>"
-										autocomplete="off">
-									<span class="wps-search-spinner"></span>
-									<ul class="wps-search-results"></ul>
-								</div>
-							</div>
-							<div class="wps-target-sub wps-target-taxonomy" style="display:none;">
-								<select name="wps_rules[__IDX__][taxonomy]"
-									class="wps-rule-taxonomy-select"
-									style="margin-bottom:6px;">
-									<?php foreach ( $wps_public_taxonomies as $wps_tx ) : ?>
-										<option value="<?php echo esc_attr( $wps_tx->name ); ?>">
-											<?php echo esc_html( $wps_tx->label ); ?>
-										</option>
-									<?php endforeach; ?>
-								</select>
-								<div class="wps-tag-container"></div>
-								<div class="wps-search-wrap" style="margin-top:4px;">
-									<input type="text" class="wps-term-search wps-ajax-search"
-										placeholder="<?php echo esc_attr( $wps_attr_search_terms ); ?>"
-										autocomplete="off">
-									<span class="wps-search-spinner"></span>
-									<ul class="wps-search-results"></ul>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Step 2: Required Plans -->
-					<div class="wps-wizard__panel" data-panel="2" hidden>
-						<div class="wps-field-group">
-							<span class="wps-field-label">
-								<?php esc_html_e( 'Required Plan', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-							<div class="wps-plan-pills">
-								<label class="wps-plan-pill">
-									<input type="checkbox"
-										name="wps_rules[__IDX__][plans][]"
-										value="any"
-										class="wps-plan-any-check"
-										checked>
-									<span>
-										<?php esc_html_e( 'Any Plan', 'subscriptions-for-woocommerce' ); ?>
-									</span>
-								</label>
-								<?php foreach ( $wps_all_plans as $wps_plan ) : ?>
-									<?php
-									$wps_tpl_row    = isset( $wps_plans_map[ $wps_plan['slug'] ] )
-										? $wps_plans_map[ $wps_plan['slug'] ]
-										: array();
-									$wps_tpl_method = isset( $wps_tpl_row['method'] )
-										? $wps_tpl_row['method']
-										: 'purchase';
-									$wps_tpl_color  = isset( $wps_tpl_row['color'] )
-										? $wps_tpl_row['color']
-										: '';
-									$wps_tpl_badge  = 'purchase' !== $wps_tpl_method
-										? wps_grant_method_short_label( $wps_tpl_method )
-										: '';
-									?>
-									<label class="wps-plan-pill">
-										<input type="checkbox"
-											name="wps_rules[__IDX__][plans][]"
-											value="<?php echo esc_attr( $wps_plan['slug'] ); ?>"
-											class="wps-plan-specific-check"
-											data-grant-method="<?php echo esc_attr( $wps_tpl_method ); ?>">
-										<span>
-											<?php if ( $wps_tpl_color ) : ?>
-												<i class="wps-plan-pill__dot"
-													style="background:<?php echo esc_attr( $wps_tpl_color ); ?>;"></i>
-											<?php endif; ?>
-											<?php echo esc_html( $wps_plan['name'] ); ?>
-											<?php if ( $wps_tpl_badge ) : ?>
-												<em class="wps-plan-pill__method
-													wps-plan-pill__method--<?php echo esc_attr( $wps_tpl_method ); ?>">
-													<?php echo esc_html( $wps_tpl_badge ); ?>
-												</em>
-											<?php endif; ?>
-										</span>
-									</label>
-								<?php endforeach; ?>
-							</div>
-							<div class="wps-plan-pills__notice" style="display:none;"></div>
-						</div>
-					</div>
-
-					<!-- Step 3: Behavior -->
-					<div class="wps-wizard__panel" data-panel="3" hidden>
-						<div class="wps-field-group">
-							<span class="wps-field-label">
-								<?php esc_html_e( 'When Restricted', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-							<div class="wps-seg-control" style="margin-bottom:10px;">
-								<label class="wps-seg-control__option">
-									<input type="radio"
-										name="wps_rules[__IDX__][behavior]"
-										value="message"
-										class="wps-rule-behavior-radio"
-										checked>
-									<span>
-										<?php esc_html_e( 'Show Message', 'subscriptions-for-woocommerce' ); ?>
-									</span>
-								</label>
-								<label class="wps-seg-control__option">
-									<input type="radio"
-										name="wps_rules[__IDX__][behavior]"
-										value="redirect"
-										class="wps-rule-behavior-radio">
-									<span>
-										<?php esc_html_e( 'Redirect', 'subscriptions-for-woocommerce' ); ?>
-									</span>
-								</label>
-								<label class="wps-seg-control__option<?php echo esc_attr( $wps_tpl_lock_cls ); ?>">
-									<input type="radio"
-										name="wps_rules[__IDX__][behavior]"
-										value="template"
-										class="wps-rule-behavior-radio"
-										<?php echo $wps_tpl_disabled; // phpcs:ignore ?>>
-									<span>
-										<?php esc_html_e( 'Template', 'subscriptions-for-woocommerce' ); ?>
-									</span>
-								</label>
-							</div>
-							<div class="wps-behavior-message">
-								<?php
-								$wps_ph_msg = __(
-									'Leave blank to show the default members-only message.',
-									'subscriptions-for-woocommerce'
-								);
-								?>
-								<textarea name="wps_rules[__IDX__][message]"
-									rows="3"
-									placeholder="<?php echo esc_attr( $wps_ph_msg ); ?>"
-								></textarea>
-								<p class="description" style="margin-top:4px;">
-									<button type="button" class="wps-copy-tag" data-tag="{purchase_options}">
-										{purchase_options}
-									</button>
-									<?php esc_html_e( '— inserts a buy-link.', 'subscriptions-for-woocommerce' ); ?>
-								</p>
-							</div>
-							<div class="wps-behavior-redirect" style="display:none;">
-								<?php
-								$wps_ph_url = __(
-									'URL to send non-members to — e.g. a pricing or login page.',
-									'subscriptions-for-woocommerce'
-								);
-								?>
-								<input type="url"
-									name="wps_rules[__IDX__][redirect_url]"
-									placeholder="<?php echo esc_attr( $wps_ph_url ); ?>">
-							</div>
-							<?php
-							// Template-behavior teaser fields (Pro) for the cloned-row template.
-							$wps_idx      = '__IDX__';
-							$wps_rule_tpl = array();
-							$wps_tpl_show = false;
-							require __DIR__ . '/access-rules-template-fields.php';
-							?>
-						</div>
-					</div>
-
-					<!-- Step 4: Extra Options -->
-					<div class="wps-wizard__panel" data-panel="4" hidden>
-						<div class="wps-field-group">
-							<span class="wps-field-label">
-								<?php esc_html_e( 'Extra Options', 'subscriptions-for-woocommerce' ); ?>
-							</span>
-							<div class="wps-toggle-list">
-								<label class="wps-toggle">
-									<input type="hidden" name="wps_rules[__IDX__][restrict_comments]" value="0">
-									<input type="checkbox" name="wps_rules[__IDX__][restrict_comments]" value="1">
-									<span class="wps-toggle__slider"></span>
-									<span class="wps-toggle__text">
-										<?php
-										esc_html_e(
-											'Disable comments on restricted posts',
-											'subscriptions-for-woocommerce'
-										);
-										?>
-									</span>
-								</label>
-								<label class="wps-toggle">
-									<input type="hidden" name="wps_rules[__IDX__][include_archive]" value="0">
-									<input type="checkbox" name="wps_rules[__IDX__][include_archive]" value="1">
-									<span class="wps-toggle__slider"></span>
-									<span class="wps-toggle__text">
-										<?php
-										esc_html_e(
-											'Show restricted posts in archives &amp; search',
-											'subscriptions-for-woocommerce'
-										);
-										?>
-									</span>
-								</label>
-								<label class="wps-toggle">
-									<input type="hidden" name="wps_rules[__IDX__][show_cta]" value="0">
-									<input type="checkbox" name="wps_rules[__IDX__][show_cta]" value="1">
-									<span class="wps-toggle__slider"></span>
-									<span class="wps-toggle__text">
-										<?php
-										esc_html_e(
-											'Auto-append purchase CTA to restriction messages',
-											'subscriptions-for-woocommerce'
-										);
-										?>
-									</span>
-								</label>
-								<label class="wps-toggle">
-									<input type="hidden"
-										name="wps_rules[__IDX__][restrict_product_description]"
-										value="0">
-									<input type="checkbox"
-										name="wps_rules[__IDX__][restrict_product_description]"
-										value="1">
-									<span class="wps-toggle__slider"></span>
-									<span class="wps-toggle__text">
-										<?php
-										esc_html_e(
-											'Restrict product description for non-members',
-											'subscriptions-for-woocommerce'
-										);
-										?>
-									</span>
-								</label>
-							</div>
-							<?php
-							// Advanced (Pro) controls for the cloned-row template.
-							$wps_idx      = '__IDX__';
-							$wps_rule_adv = array();
-							require __DIR__ . '/access-rules-advanced-fields.php';
-							?>
-						</div>
-					</div>
-
-					<div class="wps-wizard__nav">
-						<button type="button" class="button wps-wizard__back" hidden>
-							<?php esc_html_e( '← Back', 'subscriptions-for-woocommerce' ); ?>
-						</button>
-						<button type="button" class="button button-primary wps-wizard__next">
-							<?php esc_html_e( 'Next →', 'subscriptions-for-woocommerce' ); ?>
-						</button>
-					</div>
-
-				</div>
-			</div>
-		</div>
+	<!-- Product rule template (cloned by JS) -->
+	<template id="wps-rule-product-template">
+		<?php
+		$wps_idx  = '__IDX__';
+		$wps_kind = 'product';
+		$wps_rule = array();
+		require __DIR__ . '/access-rules-card.php';
+		?>
 	</template>
 
 </form>
 
+<!-- Non-member preview modal -->
+<div class="wps-preview-modal" id="wps-preview-modal" hidden>
+	<div class="wps-preview-modal__overlay" data-close="1"></div>
+	<div class="wps-preview-modal__panel" role="dialog" aria-modal="true"
+		aria-labelledby="wps-preview-modal-title">
+		<div class="wps-preview-modal__head">
+			<h3 class="wps-preview-modal__title" id="wps-preview-modal-title"></h3>
+			<button type="button" class="wps-preview-modal__close" data-close="1" aria-label="">&times;</button>
+		</div>
+		<p class="wps-preview-modal__intro"></p>
+		<div class="wps-preview-modal__body"></div>
+	</div>
+</div>
+
 <script>
 ( function () {
+	function wpsWizardTotal( wizard ) {
+		var attr = parseInt( wizard.getAttribute( 'data-total-steps' ), 10 );
+		if ( attr ) { return attr; }
+		return wizard.querySelectorAll( '.wps-wizard__panel' ).length;
+	}
+
 	function wpsWizardGoTo( wizard, step ) {
 		var panels = wizard.querySelectorAll( '.wps-wizard__panel' );
-		var total  = panels.length;
+		var total  = wpsWizardTotal( wizard );
 
 		panels.forEach( function ( p ) {
 			p.hidden = parseInt( p.dataset.panel, 10 ) !== step;
@@ -1198,9 +333,8 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 		if ( btn ) {
 			var wizard = btn.closest( '.wps-wizard' );
 			if ( ! wizard ) { return; }
-			var panels = wizard.querySelectorAll( '.wps-wizard__panel' );
-			var cur    = wpsWizardCurrentStep( wizard );
-			if ( cur >= panels.length ) {
+			var cur = wpsWizardCurrentStep( wizard );
+			if ( cur >= wpsWizardTotal( wizard ) ) {
 				// Done — collapse the card.
 				var card   = wizard.closest( '.wps-rule-card' );
 				var body   = card && card.querySelector( '.wps-rule-card__body' );
@@ -1211,6 +345,7 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 					toggle.innerHTML = '<?php echo esc_js( __( 'Edit', 'subscriptions-for-woocommerce' ) ); ?>'
 						+ ' <i class="wps-chevron">&#9662;</i>';
 				}
+				if ( card ) { card.classList.remove( 'wps-rule-card--open' ); }
 			} else {
 				wpsWizardGoTo( wizard, cur + 1 );
 			}
@@ -1237,8 +372,8 @@ $wps_tpl_disabled = $wps_is_pro ? '' : ' disabled';
 		var toggleBtn = e.target.closest( '.wps-rule-card__toggle' );
 		if ( toggleBtn ) {
 			requestAnimationFrame( function () {
-				var card   = toggleBtn.closest( '.wps-rule-card' );
-				var body   = card && card.querySelector( '.wps-rule-card__body' );
+				var card = toggleBtn.closest( '.wps-rule-card' );
+				var body = card && card.querySelector( '.wps-rule-card__body' );
 				if ( ! body || body.hidden ) { return; }
 				var wizard = body.querySelector( '.wps-wizard' );
 				if ( wizard ) { wpsWizardGoTo( wizard, 1 ); }

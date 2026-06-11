@@ -95,6 +95,13 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 				return $content;
 			}
 
+			// Product rules never touch the_content — they only gate purchase and
+			// render a notice in the add-to-cart area. Keeping the two render
+			// paths separate is the whole point of the kind split.
+			if ( 'product' === $this->rule_kind( $rule ) ) {
+				return $content;
+			}
+
 			if ( 'redirect' === $this->rule_behavior( $rule ) ) {
 				$url = ! empty( $rule['redirect_url'] )
 					? $rule['redirect_url']
@@ -138,6 +145,11 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 				return;
 			}
 
+			// Product rules never redirect — purchase gating is their only effect.
+			if ( 'product' === $this->rule_kind( $rule ) ) {
+				return;
+			}
+
 			if ( 'redirect' !== $this->rule_behavior( $rule ) ) {
 				return;
 			}
@@ -175,20 +187,79 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 				return $purchasable;
 			}
 
+			// Only a product-kind rule blocks purchase. Content rules never gate
+			// products even if one somehow resolves to a product.
+			return null === $this->product_restricting_rule( $product );
+		}
+
+		/**
+		 * Build the members-only notice + purchase CTA for a gated product.
+		 *
+		 * Used by the admin Preview (wps_render_restriction_preview()) to show
+		 * what blocks a non-member from buying. The product page itself surfaces
+		 * the membership requirement via WPS_Product_Badge::render_product_page_plans(),
+		 * so this notice is not echoed on the front-end (avoids a duplicate panel).
+		 *
+		 * @since  2.0.0
+		 * @param  array $rule The product-kind access rule.
+		 * @return string Notice HTML.
+		 */
+		public function render_product_gate_notice( array $rule ) {
+			$user_id = get_current_user_id();
+			$cta     = $this->resolve_purchase_options( $rule );
+
+			$message = ! empty( $rule['message'] )
+				? $rule['message']
+				: $this->resolve_message_text( $rule, $user_id );
+
+			$had_tag = false !== strpos( $message, '{purchase_options}' );
+			$message = str_replace( '{purchase_options}', $cta, $message );
+
+			$body = wpautop( wp_kses_post( $message ) );
+
+			// Append the CTA when the message didn't already place it and one exists.
+			if ( ! $had_tag && ! empty( $cta ) ) {
+				$body .= $cta;
+			}
+
+			$html = wps_restriction_notice_html( $body, 'wps-restricted-product' );
+
+			/**
+			 * Filter the product-gate notice HTML.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param string $html The notice HTML.
+			 * @param array  $rule The product-kind access rule.
+			 */
+			return apply_filters( 'wps_product_restriction_notice_html', $html, $rule );
+		}
+
+		/**
+		 * Resolve the product-kind rule that restricts a product for the current
+		 * user, or null when the product is unrestricted / a grant vehicle.
+		 *
+		 * Shared by purchasability gating and the product-page notice so they
+		 * always agree. Plan-granting products stay purchasable while their grant
+		 * method is enabled.
+		 *
+		 * @since  2.0.0
+		 * @param  WC_Product $product Product to check.
+		 * @return array|null The restricting rule, or null.
+		 */
+		private function product_restricting_rule( WC_Product $product ) {
 			$post_id = $product->get_id();
 			if ( ! $post_id ) {
-				return $purchasable;
+				return null;
 			}
 
 			// Plan-granting products must stay purchasable only while their grant
 			// method is enabled. If purchase/subscription is disabled the product
 			// is no longer a grant vehicle, so normal access rules apply to it.
-			// Use wps_product_actively_grants_membership() which checks both the
-			// map and the per-method enabled flag in one call.
 			if ( function_exists( 'wps_product_actively_grants_membership' )
 				&& null !== wps_product_actively_grants_membership( $post_id )
 			) {
-				return true;
+				return null;
 			}
 			// Stale-map fallback: rebuild and re-check with the enabled-aware helper.
 			if ( function_exists( 'wps_rebuild_product_plan_map' )
@@ -196,16 +267,21 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 			) {
 				wps_rebuild_product_plan_map();
 				if ( null !== wps_product_actively_grants_membership( $post_id ) ) {
-					return true;
+					return null;
 				}
 			}
 
 			$post = get_post( $post_id );
 			if ( ! $post instanceof WP_Post ) {
-				return $purchasable;
+				return null;
 			}
 
-			return null === wps_object_is_restricted( $post, get_current_user_id() );
+			$rule = wps_object_is_restricted( $post, get_current_user_id() );
+			if ( null === $rule || 'product' !== $this->rule_kind( $rule ) ) {
+				return null;
+			}
+
+			return $rule;
 		}
 
 		/**
@@ -288,7 +364,14 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 				return $open;
 			}
 
-			return null === wps_object_is_restricted( $post, get_current_user_id() );
+			$rule = wps_object_is_restricted( $post, get_current_user_id() );
+
+			// Only content rules close comments; product rules don't.
+			if ( null === $rule || 'product' === $this->rule_kind( $rule ) ) {
+				return $open;
+			}
+
+			return false;
 		}
 
 		/**
@@ -366,13 +449,17 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 		 * "Members Only" card chrome and no auto CTA. Otherwise the global/default
 		 * message is wrapped in the shared card with the optional purchase CTA.
 		 *
+		 * Public so the admin Preview (wps_render_restriction_preview()) renders
+		 * the identical markup a non-member sees. $post may be null in that
+		 * preview context — it is only used for the output filter.
+		 *
 		 * @since  2.0.0
-		 * @param  array   $rule    The first failing access rule.
-		 * @param  WP_Post $post    The restricted post.
-		 * @param  int     $user_id The current user ID (0 = guest).
+		 * @param  array        $rule    The first failing access rule.
+		 * @param  WP_Post|null $post    The restricted post (null in preview).
+		 * @param  int          $user_id The current user ID (0 = guest).
 		 * @return string HTML output.
 		 */
-		private function build_message_html( array $rule, WP_Post $post, $user_id ) {
+		public function build_message_html( array $rule, $post = null, $user_id = 0 ) {
 			$cta = $this->resolve_purchase_options( $rule );
 
 			if ( ! empty( $rule['message'] ) ) {
@@ -512,6 +599,20 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 			return 'redirect' === get_option( 'wps_access_default_behavior', 'message' )
 				? 'redirect'
 				: 'message';
+		}
+
+		/**
+		 * Return a rule's kind ('content' or 'product'), inferring it for legacy
+		 * rules that predate the field.
+		 *
+		 * @since  2.0.0
+		 * @param  array $rule Access rule array.
+		 * @return string 'content' | 'product'.
+		 */
+		private function rule_kind( array $rule ) {
+			return function_exists( 'wps_get_access_rule_kind' )
+				? wps_get_access_rule_kind( $rule )
+				: 'content';
 		}
 
 		/**

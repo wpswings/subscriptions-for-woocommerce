@@ -354,8 +354,12 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( 'wps-restricted-content__head', $result );
 	}
 
-	/** Custom message renders raw on a PRODUCT (post_type target). */
-	public function test_custom_message_renders_on_a_product() {
+	/**
+	 * A whole-product rule is a product-kind rule: it gates purchase but must
+	 * NOT replace the_content. The product page stays intact (the message only
+	 * surfaces in the add-to-cart notice, tested in RestrictionEnforcerKindTest).
+	 */
+	public function test_product_rule_leaves_product_content_intact() {
 		if ( ! post_type_exists( 'product' ) ) {
 			$this->markTestSkipped( 'WooCommerce product post type not registered.' );
 		}
@@ -371,8 +375,7 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 
 		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
 
-		$this->assertStringContainsString( 'Product members only.', $result );
-		$this->assertStringNotContainsString( 'wps-restricted-content__head', $result );
+		$this->assertSame( 'Secret content.', $result );
 	}
 
 	/** Custom message renders raw when the rule targets a TAXONOMY term. */
@@ -458,9 +461,15 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	/** Purchasability returns false for a restricted post when user is guest. */
+	/** Purchasability returns false for a restricted product when user is guest. */
 	public function test_purchasability_false_for_restricted_post() {
-		$this->add_gold_rule();
+		// Purchase gating requires a product-kind rule (content rules never gate).
+		$this->add_gold_rule(
+			array(
+				'rule_kind'   => 'product',
+				'target_type' => 'product',
+			)
+		);
 		wp_set_current_user( 0 );
 		$mock = $this->createMock( WC_Product::class );
 		$mock->method( 'get_id' )->willReturn( $this->post_id );
@@ -482,7 +491,12 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 
 	/** Purchasability passes through for a member who holds the plan. */
 	public function test_purchasability_true_for_member() {
-		$this->add_gold_rule();
+		$this->add_gold_rule(
+			array(
+				'rule_kind'   => 'product',
+				'target_type' => 'product',
+			)
+		);
 		wp_set_current_user( $this->member_id );
 		$mock = $this->createMock( WC_Product::class );
 		$mock->method( 'get_id' )->willReturn( $this->post_id );

@@ -32,6 +32,32 @@ if ( ! defined( 'WPS_ACCESS_RULES_CACHE_GROUP' ) ) {
 define( 'WPS_ACCESS_RULE_TARGET_TYPES', array( 'post', 'page', 'product', 'post_type', 'taxonomy' ) );
 
 /**
+ * Allowed rule kinds.
+ *
+ *  'content' — gates posts, pages, whole post types, or taxonomy terms. Renders
+ *              through the_content / template_redirect / template_include and
+ *              supports the message / redirect / template behaviors.
+ *  'product' — gates WooCommerce products (or product categories). Renders only
+ *              through purchasability gating + a product-page members-only
+ *              notice; it never touches the_content. This keeps the product and
+ *              content render paths fully separate so a product rule can't be
+ *              used for content restriction and vice-versa.
+ */
+define( 'WPS_ACCESS_RULE_KINDS', array( 'content', 'product' ) );
+
+/** Target types valid for a 'content' rule (products are owned by 'product' rules). */
+define( 'WPS_ACCESS_RULE_CONTENT_TARGETS', array( 'post', 'page', 'post_type', 'taxonomy' ) );
+
+/**
+ * Target types valid for a 'product' rule.
+ *
+ *  'product'   — specific product IDs.
+ *  'taxonomy'  — product category / tag terms.
+ *  'post_type' — every product (post_type is forced to 'product').
+ */
+define( 'WPS_ACCESS_RULE_PRODUCT_TARGETS', array( 'product', 'taxonomy', 'post_type' ) );
+
+/**
  * Allowed restriction behavior values.
  *
  *  'message'  — replace the content with the restriction notice (Free).
@@ -70,6 +96,45 @@ define( 'WPS_ACCESS_RULE_TEASER_MODES', array( 'none', 'words' ) );
 define( 'WPS_ACCESS_RULE_DRIP_MODES', array( 'none', 'days', 'date' ) );
 
 // ---------------------------------------------------------------------------
+// Rule kind
+// ---------------------------------------------------------------------------
+
+if ( ! function_exists( 'wps_get_access_rule_kind' ) ) {
+	/**
+	 * Resolve a rule's kind ('content' or 'product').
+	 *
+	 * Uses the stored `rule_kind` when present and valid. For legacy rules saved
+	 * before the kind field existed, the kind is inferred from the target so the
+	 * enforcer keeps the content and product render paths separate without a data
+	 * migration: a product target (or a product-category taxonomy target) is a
+	 * product rule; everything else is a content rule. Re-saving a legacy rule
+	 * persists the resolved kind.
+	 *
+	 * @since  2.0.0
+	 * @param  array $rule Raw or sanitized rule array.
+	 * @return string 'content' | 'product'.
+	 */
+	function wps_get_access_rule_kind( array $rule ) {
+		if ( isset( $rule['rule_kind'] ) && in_array( $rule['rule_kind'], WPS_ACCESS_RULE_KINDS, true ) ) {
+			return $rule['rule_kind'];
+		}
+
+		$target_type = isset( $rule['target_type'] ) ? $rule['target_type'] : '';
+		$taxonomy    = isset( $rule['taxonomy'] ) ? $rule['taxonomy'] : '';
+		$post_type   = isset( $rule['post_type'] ) ? $rule['post_type'] : '';
+
+		if ( 'product' === $target_type
+			|| ( 'taxonomy' === $target_type && in_array( $taxonomy, array( 'product_cat', 'product_tag' ), true ) )
+			|| ( 'post_type' === $target_type && 'product' === $post_type )
+		) {
+			return 'product';
+		}
+
+		return 'content';
+	}
+}
+
+// ---------------------------------------------------------------------------
 // Sanitization helper
 // ---------------------------------------------------------------------------
 
@@ -85,12 +150,44 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 	 * @return array Sanitized rule array.
 	 */
 	function wps_sanitize_access_rule( array $raw ) {
-		$raw_type    = isset( $raw['target_type'] ) ? $raw['target_type'] : '';
-		$target_type = in_array( $raw_type, WPS_ACCESS_RULE_TARGET_TYPES, true ) ? $raw_type : 'post_type';
+		// Resolve the rule kind first — it constrains which target types and
+		// behaviors are valid and which fields are kept vs. dropped. Content and
+		// product rules render through entirely separate paths.
+		$kind = wps_get_access_rule_kind( $raw );
 
-		$behavior = isset( $raw['behavior'] ) && in_array( $raw['behavior'], WPS_ACCESS_RULE_BEHAVIORS, true )
-			? $raw['behavior']
-			: 'message';
+		$raw_type = isset( $raw['target_type'] ) ? $raw['target_type'] : '';
+
+		if ( 'product' === $kind ) {
+			$allowed_targets = WPS_ACCESS_RULE_PRODUCT_TARGETS;
+			$default_target  = 'product';
+		} else {
+			$allowed_targets = WPS_ACCESS_RULE_CONTENT_TARGETS;
+			$default_target  = 'post_type';
+		}
+		$target_type = in_array( $raw_type, $allowed_targets, true ) ? $raw_type : $default_target;
+
+		// Product rules always gate purchasability — they have no behavior
+		// selector. Content rules choose message / redirect / template.
+		if ( 'product' === $kind ) {
+			$behavior = 'message';
+		} else {
+			$behavior = isset( $raw['behavior'] ) && in_array( $raw['behavior'], WPS_ACCESS_RULE_BEHAVIORS, true )
+				? $raw['behavior']
+				: 'message';
+		}
+
+		// Product rules drop every content-only field so invalid combinations
+		// can't be stored: redirect, template/teaser, drip, comments, archive,
+		// and description restriction are all content concerns.
+		$is_product = ( 'product' === $kind );
+
+		// An "all products" rule is modelled as a whole-post-type target whose
+		// post type is forced to 'product' (the engine already maps post_type
+		// rules to the post_type bucket).
+		$post_type = isset( $raw['post_type'] ) ? sanitize_key( $raw['post_type'] ) : '';
+		if ( $is_product ) {
+			$post_type = ( 'post_type' === $target_type ) ? 'product' : '';
+		}
 
 		$plans = array();
 		if ( isset( $raw['plans'] ) && is_array( $raw['plans'] ) ) {
@@ -134,10 +231,13 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 		$raw_teaser  = isset( $raw['teaser_mode'] ) ? $raw['teaser_mode'] : '';
 		$teaser_mode = in_array( $raw_teaser, WPS_ACCESS_RULE_TEASER_MODES, true ) ? $raw_teaser : 'none';
 
+		$enabled = ( isset( $raw['enabled'] ) && '0' === (string) $raw['enabled'] ) ? '0' : '1';
+
 		return array(
 			'id'                           => isset( $raw['id'] ) ? sanitize_key( $raw['id'] ) : '',
+			'rule_kind'                    => $kind,
 			'target_type'                  => $target_type,
-			'post_type'                    => isset( $raw['post_type'] ) ? sanitize_key( $raw['post_type'] ) : '',
+			'post_type'                    => $post_type,
 			'object_ids'                   => isset( $raw['object_ids'] ) && is_array( $raw['object_ids'] )
 				? array_values( array_filter( array_map( 'absint', $raw['object_ids'] ) ) )
 				: array(),
@@ -148,19 +248,25 @@ if ( ! function_exists( 'wps_sanitize_access_rule' ) ) {
 			'plans'                        => $plans,
 			'behavior'                     => $behavior,
 			'message'                      => isset( $raw['message'] ) ? wp_kses_post( $raw['message'] ) : '',
-			'redirect_url'                 => isset( $raw['redirect_url'] ) ? esc_url_raw( $raw['redirect_url'] ) : '',
+			'redirect_url'                 => ( ! $is_product && isset( $raw['redirect_url'] ) )
+				? esc_url_raw( $raw['redirect_url'] )
+				: '',
 			'priority'                     => isset( $raw['priority'] ) ? absint( $raw['priority'] ) : 10,
-			'enabled'                      => ( isset( $raw['enabled'] ) && '0' === (string) $raw['enabled'] ) ? '0' : '1',
-			'restrict_comments'            => $wps_flag( 'restrict_comments', $raw ),
-			'include_archive'              => $wps_flag( 'include_archive', $raw ),
+			'enabled'                      => $enabled,
+			'restrict_comments'            => $is_product ? '0' : $wps_flag( 'restrict_comments', $raw ),
+			'include_archive'              => $is_product ? '0' : $wps_flag( 'include_archive', $raw ),
 			'show_cta'                     => $wps_flag( 'show_cta', $raw ),
-			'restrict_product_description' => $wps_flag( 'restrict_product_description', $raw ),
-			'drip_mode'                    => $drip_mode,
-			'drip_days'                    => isset( $raw['drip_days'] ) ? absint( $raw['drip_days'] ) : 0,
-			'drip_date'                    => $drip_date,
-			'exclude_ids'                  => $exclude_ids,
-			'teaser_mode'                  => $teaser_mode,
-			'teaser_words'                 => isset( $raw['teaser_words'] ) ? absint( $raw['teaser_words'] ) : 0,
+			'restrict_product_description' => '0',
+			'drip_mode'                    => $is_product ? 'none' : $drip_mode,
+			'drip_days'                    => ( ! $is_product && isset( $raw['drip_days'] ) )
+				? absint( $raw['drip_days'] )
+				: 0,
+			'drip_date'                    => $is_product ? '' : $drip_date,
+			'exclude_ids'                  => $is_product ? array() : $exclude_ids,
+			'teaser_mode'                  => $is_product ? 'none' : $teaser_mode,
+			'teaser_words'                 => ( ! $is_product && isset( $raw['teaser_words'] ) )
+				? absint( $raw['teaser_words'] )
+				: 0,
 		);
 	}
 }
@@ -480,6 +586,60 @@ if ( ! function_exists( 'wps_restriction_notice_html' ) ) {
 			. '</div>'
 			. '<div class="wps-restricted-content__msg">' . $body_html . '</div>'
 			. '</div>';
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Admin preview
+// ---------------------------------------------------------------------------
+
+if ( ! function_exists( 'wps_render_restriction_preview' ) ) {
+	/**
+	 * Render the non-member view of a rule for the admin Preview modal.
+	 *
+	 * Reuses the exact same renderers the front-end enforcer uses, so the preview
+	 * is guaranteed to match what a logged-out visitor actually sees:
+	 *   - Content / message + template → WPS_Restriction_Enforcer::build_message_html().
+	 *   - Content / redirect           → a short "will redirect" note (no live redirect).
+	 *   - Product                      → WPS_Restriction_Enforcer::render_product_gate_notice().
+	 *
+	 * The rule is sanitized first so unsaved admin input is normalized the same
+	 * way a saved rule would be.
+	 *
+	 * @since  2.0.0
+	 * @param  array $rule Raw (unsaved) rule array from the admin form.
+	 * @return string Preview HTML.
+	 */
+	function wps_render_restriction_preview( array $rule ) {
+		$rule = wps_sanitize_access_rule( $rule );
+		$kind = wps_get_access_rule_kind( $rule );
+
+		if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
+			return '';
+		}
+
+		$enforcer = new WPS_Restriction_Enforcer();
+
+		if ( 'product' === $kind ) {
+			return $enforcer->render_product_gate_notice( $rule );
+		}
+
+		if ( 'redirect' === $rule['behavior'] ) {
+			$url = ! empty( $rule['redirect_url'] )
+				? $rule['redirect_url']
+				: get_option( 'wps_access_redirect_url', '' );
+
+			if ( ! empty( $url ) ) {
+				return '<div class="wps-restricted-message wps-preview-redirect">'
+					. esc_html__( 'Non-members are redirected to:', 'subscriptions-for-woocommerce' )
+					. ' <code>' . esc_html( $url ) . '</code></div>';
+			}
+			// No URL configured — the enforcer falls back to the message, so the
+			// preview shows the message too.
+		}
+
+		// Preview the guest (logged-out) view — the most restrictive state.
+		return $enforcer->build_message_html( $rule, null, 0 );
 	}
 }
 

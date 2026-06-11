@@ -488,6 +488,11 @@ class Subscriptions_For_Woocommerce {
 			$wps_access_rules_admin,
 			'ajax_search_rule_targets'
 		);
+		$this->loader->add_action(
+			'wp_ajax_wps_preview_access_rule',
+			$wps_access_rules_admin,
+			'ajax_preview_access_rule'
+		);
 
 		// Gutenberg block restriction — editor controls (always rendered; the
 		// Pro plugin enforces on the frontend). Day 17.
@@ -1259,6 +1264,10 @@ class Subscriptions_For_Woocommerce {
 				2
 			);
 			$this->loader->add_action( 'init', $wps_restriction_enforcer, 'register_shortcode', 5 );
+			// Note: the product-page members-only panel + buy link is rendered by
+			// WPS_Product_Badge::render_product_page_plans() (priority 25 below),
+			// so the enforcer does not add a second notice here — it only gates
+			// purchasability via the woocommerce_is_purchasable filter above.
 
 			$wps_myaccount_memberships = new WPS_Myaccount_Memberships();
 			$this->loader->add_action( 'init', $wps_myaccount_memberships, 'register_endpoint', 5 );
