@@ -3,10 +3,10 @@ Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions,subscription billing, subscription box, subscription, woocommerce subscriptions
 Requires at least: 6.7
-Tested up to: 6.9.4
+Tested up to: 7.0
 WC requires at least: 6.5
-WC tested up to: 10.7.1
-Stable tag: 1.9.6
+WC tested up to: 10.8.1
+Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -307,6 +307,13 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 
 == Changelog ==
+
+= 2.0.0 - Released on 02 July 2026 =
+* New: Membership Layer — create membership plans and sell them via one-time products or subscriptions (no custom database tables).
+* New: Content & product access rules — gate posts, pages, post types, and taxonomy terms (Content rules) or block product purchase (Product rules) by required plan.
+* New: Per-rule "Preview" of the non-member view, plus membership-state-aware product badges and grant panels.
+* New: My Account "Memberships" tab, membership emails (activated / on-hold / cancelled / expired), and a central Members management screen.
+* New: Compatibility with the Pro plugin's membership features (advanced/drip rules, Gutenberg block restriction, template restriction, and role assignment per plan).
 
 = 1.9.7 - Released on 19 May 2026 =
 * Fix: fatal error caused by undefined WC_Stripe_Logger function

@@ -11,6 +11,10 @@
  * @subpackage Subscriptions_For_Woocommerce/onboarding
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 global $sfw_wps_sfw_obj;
 $sfw_onboarding_form_fields = apply_filters( 'wps_sfw_on_boarding_form_fields', array() );
 ?>

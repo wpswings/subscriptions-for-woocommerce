@@ -348,7 +348,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 			 * Email field with label. ( auto filled with admin email )
 			 */
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-monthly-revenue',
 				'title' => esc_html__( 'What is your monthly revenue?', 'subscriptions-for-woocommerce' ),
 				'type' => 'radio',
@@ -367,7 +367,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				),
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps_sfw_industry_type',
 				'title' => esc_html__( 'What industry defines your business?', 'subscriptions-for-woocommerce' ),
 				'type' => 'select',
@@ -404,7 +404,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				),
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-onboard-email',
 				'title' => esc_html__( 'What is the best email address to contact you?', 'subscriptions-for-woocommerce' ),
 				'type' => 'email',
@@ -416,7 +416,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => 'sfw-text-class',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-onboard-number',
 				'title' => esc_html__( 'What is your contact number?', 'subscriptions-for-woocommerce' ),
 				'type' => 'number',
@@ -428,7 +428,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => '',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-store-name',
 				'title' => '',
 				'description' => '',
@@ -440,7 +440,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => '',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-store-url',
 				'title' => '',
 				'description' => '',
@@ -452,7 +452,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => '',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-show-counter',
 				'title' => '',
 				'description' => '',
@@ -464,7 +464,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => '',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-plugin-name',
 				'title' => '',
 				'description' => '',
@@ -511,7 +511,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 			 * Email field with label. ( auto filled with admin email )
 			 */
 
-				rand() => array(
+				wp_rand() => array(
 					'id' => 'wps-sfw-deactivation-reason',
 					'title' => esc_html__( 'What best describes your reason?', 'subscriptions-for-woocommerce' ),
 					'subtitle' => esc_html__( 'Pick the closest option so we can improve the plugin experience.', 'subscriptions-for-woocommerce' ),
@@ -533,7 +533,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 					),
 				),
 
-				rand() => array(
+				wp_rand() => array(
 					'id' => 'wps-sfw-deactivation-reason-text',
 					'title' => esc_html__( 'Anything else you want us to know?', 'subscriptions-for-woocommerce' ),
 					'type' => 'textarea',
@@ -545,7 +545,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 					'class' => 'wps-keep-hidden',
 				),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-admin-email',
 				'title' => '',
 				'description' => '',
@@ -557,7 +557,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => '',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-store-name',
 				'title' => '',
 				'description' => '',
@@ -569,7 +569,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => '',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-store-url',
 				'title' => '',
 				'description' => '',
@@ -581,7 +581,7 @@ class Subscriptions_For_Woocommerce_Onboarding_Steps {
 				'class' => '',
 			),
 
-			rand() => array(
+			wp_rand() => array(
 				'id' => 'wps-sfw-plugin-name',
 				'title' => '',
 				'description' => '',

@@ -558,7 +558,8 @@ class Subscriptions_For_Woocommerce_Talk_To_Expert_Form {
 				"SELECT SUM(total_sales) FROM {$table_name} WHERE status IN ({$status_placeholders}) AND date_created >= %s",
 				array_merge( $paid_statuses, array( $from_date ) )
 			); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$stats_total         = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is already built with $wpdb->prepare() above.
+			$stats_total = $wpdb->get_var( $query );
 
 			if ( ! empty( $stats_total ) ) {
 				$annual_revenue = (float) $stats_total;

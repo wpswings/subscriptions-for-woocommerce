@@ -1,0 +1,38 @@
+# Files & directories excluded from the distributed plugin archive.
+# These are development/build/test artifacts that must not ship to
+# WordPress.org (they trigger Plugin Check "application_detected" /
+# "hidden_files" errors and bloat the package).
+
+# Version control & editor
+.git
+.gitignore
+.gitattributes
+.github
+.editorconfig
+.vscode
+.idea
+
+# Dependency manifests / build config
+composer.json
+composer.lock
+package.json
+package-lock.json
+phpcs.xml
+phpcs.xml.dist
+.phpcs.xml.dist
+gulpfile.js
+webpack.config.js
+
+# Tests & CI
+tests
+phpunit.xml
+phpunit.xml.dist
+.phpunit.result.cache
+
+# Task / automation scripts
+script
+bin
+
+# OS noise
+.DS_Store
+Thumbs.db

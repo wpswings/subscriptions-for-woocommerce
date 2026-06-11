@@ -331,7 +331,8 @@ class Subscriptions_For_Woocommerce_Public {
 			 translators: %s: signup fee */
 			// $price .= sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) );
 
-			$price .= sprintf( esc_html__( ' and %1$1s%2$2s sign-up fee', 'subscriptions-for-woocommerce' ), get_woocommerce_currency_symbol(), $wps_sfw_subscription_initial_signup_price );
+			/* translators: 1: currency symbol, 2: sign-up fee amount */
+			$price .= sprintf( esc_html__( ' and %1$s%2$s sign-up fee', 'subscriptions-for-woocommerce' ), get_woocommerce_currency_symbol(), $wps_sfw_subscription_initial_signup_price );
 
 		}
 		return $price;
@@ -1175,6 +1176,7 @@ class Subscriptions_For_Woocommerce_Public {
 			AND {$table}.{$type_field} = 'wps_subscriptions'
 		";
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded column names; the user value is bound via prepare().
 		$total_count = $wpdb->get_var( $wpdb->prepare( $sql_count, $user_id ) );
 		$wps_num_pages = ceil( $total_count / $wps_per_page );
 
@@ -1190,9 +1192,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$sql .= " ORDER BY {$table}.{$id_field} DESC LIMIT %d OFFSET %d";
 
-		$subscription_ids = $wpdb->get_col(
-			$wpdb->prepare( $sql, $user_id, $wps_per_page, $offset )
-		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded column names; user values are bound via prepare().
+		$subscription_ids = $wpdb->get_col( $wpdb->prepare( $sql, $user_id, $wps_per_page, $offset ) );
 
 		$sql_all_subscription_ids = "
 			SELECT DISTINCT {$table}.{$id_field}
@@ -1204,9 +1205,8 @@ class Subscriptions_For_Woocommerce_Public {
 			ORDER BY {$table}.{$id_field} DESC
 		";
 
-		$wps_all_subscription_ids = $wpdb->get_col(
-			$wpdb->prepare( $sql_all_subscription_ids, $user_id )
-		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded column names; the user value is bound via prepare().
+		$wps_all_subscription_ids = $wpdb->get_col( $wpdb->prepare( $sql_all_subscription_ids, $user_id ) );
 
 		wc_get_template(
 			$this->wps_sfw_get_subscription_list_template(),
@@ -2050,7 +2050,8 @@ class Subscriptions_For_Woocommerce_Public {
 
 			if ( ! empty( $wps_sfw_subscription_free_trial_number ) && ! $cart_item['data']->get_price() && $product_id && wc_get_product( $product_id ) ) {
 				// $price =  wc_get_product( $product_id )->get_price() ;
-				$price = sprintf( esc_html__( ' and %1$1s%2$2s', 'subscriptions-for-woocommerce' ), get_woocommerce_currency_symbol(), wc_get_product( $product_id )->get_price() );
+				/* translators: 1: currency symbol, 2: price amount */
+				$price = sprintf( esc_html__( ' and %1$s%2$s', 'subscriptions-for-woocommerce' ), get_woocommerce_currency_symbol(), wc_get_product( $product_id )->get_price() );
 			}
 
 			$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
@@ -2386,15 +2387,15 @@ class Subscriptions_For_Woocommerce_Public {
 		return $view;
 	}
 
-		/**
-		 * Allow the zero checkout for the stripe
-		 *
-		 * @param mixed $needs_payment .
-		 * @param mixed $order .
-		 * @param mixed $valid_order_statuses .
-		 *
-		 * @return mixed
-		 */
+	/**
+	 * Allow the zero checkout for the stripe
+	 *
+	 * @param mixed $needs_payment .
+	 * @param mixed $order .
+	 * @param mixed $valid_order_statuses .
+	 *
+	 * @return mixed
+	 */
 	public function wps_sfw_woocommerce_order_needs_payment( $needs_payment, $order, $valid_order_statuses ) {
 		// Skips checks if the order already needs payment.
 		if ( $needs_payment ) {
@@ -2406,11 +2407,6 @@ class Subscriptions_For_Woocommerce_Public {
 		}
 		return $needs_payment;
 	}
-
-
-
-
-
 
 	/**
 	 * Show the subscription box product "Create Subscription Box" button on the single product page.
@@ -2640,19 +2636,20 @@ class Subscriptions_For_Woocommerce_Public {
 
 				foreach ( $render_steps as $step_key => $step ) :
 					$type         = isset( $step['type'] ) ? $step['type'] : 'specific_products';
-					$label        = isset( $step['label'] ) && '' !== $step['label'] ? $step['label'] : sprintf( __( 'Step %d', 'subscriptions-for-woocommerce' ), $step_index );
+					/* translators: %d: step number */
+				$label        = isset( $step['label'] ) && '' !== $step['label'] ? $step['label'] : sprintf( __( 'Step %d', 'subscriptions-for-woocommerce' ), $step_index );
 					$product_ids  = isset( $step['product_ids'] ) ? (array) $step['product_ids'] : array();
 					$category_ids = isset( $step['category_ids'] ) ? (array) $step['category_ids'] : array();
 					$min_num      = ( $is_pro && isset( $step['min_num'] ) ) ? absint( $step['min_num'] ) : 0;
 					$max_num      = ( $is_pro && isset( $step['max_num'] ) ) ? absint( $step['max_num'] ) : 0;
 
-					$display_attr = ( 1 === $step_index ) ? '' : 'style="display:none"';
+					$display_style = ( 1 === $step_index ) ? '' : 'display:none';
 
-					echo '<div class="wps_sfw-sb-step" 
-					        data-step-index="' . esc_attr( $step_index ) . '" 
-					        data-min-num="' . esc_attr( $min_num ) . '" 
-					        data-max-num="' . esc_attr( $max_num ) . '" 
-					        ' . $display_attr . '>';
+					echo '<div class="wps_sfw-sb-step"
+					        data-step-index="' . esc_attr( $step_index ) . '"
+					        data-min-num="' . esc_attr( $min_num ) . '"
+					        data-max-num="' . esc_attr( $max_num ) . '"
+					        style="' . esc_attr( $display_style ) . '">';
 					?>
 						<div class="wps_sfw-sb-title">
 							<p class="wps_sfw_subscription_box_error_notice" style="display:none; color:red;"></p>
@@ -2685,7 +2682,7 @@ class Subscriptions_For_Woocommerce_Public {
 									echo '<button type="button" class="button wps_sfw-sb-prev" style="display:none;">' . esc_html__( 'Back', 'subscriptions-for-woocommerce' ) . '</button>';
 									echo '<button type="button" class="button wps_sfw-empty-cart" id="wps_sfw-empty-cart" style="display:none;">' . esc_html__( 'Empty Cart', 'subscriptions-for-woocommerce' ) . '</button>';
 									echo '<button type="button" class="button button-primary wps_sfw-sb-next">' . esc_html__( 'Next', 'subscriptions-for-woocommerce' ) . '</button>';
-									echo '<button type="submit" class="button button-primary wps_sfw_subscription_product_id" data-subscription-box-id="' . esc_attr( $product_id ) . '" style="display:none;">' . esc_html__( 'Add to Basket', 'subscr	iptions-for-woocommerce' ) . '</button>';
+									echo '<button type="submit" class="button button-primary wps_sfw_subscription_product_id" data-subscription-box-id="' . esc_attr( $product_id ) . '" style="display:none;">' . esc_html__( 'Add to Basket', 'subscriptions-for-woocommerce' ) . '</button>';
 								} else {
 									echo '<button type="button" class="button wps_sfw-empty-cart" id="wps_sfw-empty-cart" style="display:none;">' . esc_html__( 'Empty Cart', 'subscriptions-for-woocommerce' ) . '</button>';
 									echo '<button type="submit" class="button button-primary wps_sfw_subscription_product_id" data-subscription-box-id="' . esc_attr( $product_id ) . '">' . esc_html__( 'Add to Basket', 'subscriptions-for-woocommerce' ) . '</button>';
@@ -3390,6 +3387,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$data['wps_subscription_expiry_html'] = sprintf(
 				'<span class="wps_sfw_expiry_interval"> %s</span>',
 				sprintf(
+					/* translators: %s: expiry interval (e.g. "6 months") */
 					esc_html__( 'For %s', 'subscriptions-for-woocommerce' ),
 					esc_html( $exp_html )
 				)

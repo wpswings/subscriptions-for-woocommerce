@@ -11,6 +11,10 @@
  * @subpackage Subscriptions_For_Woocommerce/onboarding
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 global $pagenow, $sfw_wps_sfw_obj;
 if ( empty( $pagenow ) || 'plugins.php' != $pagenow ) {
 	return false;

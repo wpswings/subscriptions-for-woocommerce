@@ -395,6 +395,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		ORDER BY {$table}.{$id_field} DESC
 		LIMIT %d OFFSET %d
 	";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded; all user input ($where/$search_join) is bound via prepare() above.
 		$wps_subscriptions = $wpdb->get_col( $wpdb->prepare( $sql, $per_page, $offset ) );
 
 		// Get total count.
@@ -408,6 +409,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		AND $where
 		$valid_parent_where
 	";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- No data placeholders here; identifiers are safe and any user input in $where was bound via prepare() above.
 		$total_count = absint( $wpdb->get_var( $sql_count ) );
 
 		$wps_subscriptions_data = array();
