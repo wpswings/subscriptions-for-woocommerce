@@ -1,0 +1,385 @@
+/**
+ * Membership Analytics sub-tab.
+ *
+ * Shared by the org build's locked teaser (wps-membership-analytics.php) and
+ * the Pro plugin's live dashboard, which renders inside this same tab. Lives in
+ * the free plugin so the teaser is styled even when Pro is not installed.
+ *
+ * @since 2.0.0
+ */
+
+/* Nav "PRO" badge on the Analytics tab (the tab is inline-flex with gap). */
+.wps-mem-tab__pro {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 6px;
+	font-size: 8px;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: 0.06em;
+	color: #114644;
+	background: linear-gradient(180deg, #8ce7e3 0%, #66d3cd 100%);
+	border-radius: 999px;
+}
+
+.wps-an-wrap {
+	margin-top: 16px;
+}
+
+.wps-an-filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 16px;
+	padding: 16px;
+	margin-bottom: 20px;
+	background: #fff;
+	border: 1px solid #e2e4e7;
+	border-radius: 6px;
+}
+
+.wps-an-field {
+	display: flex;
+	flex-direction: column;
+}
+
+.wps-an-field label {
+	margin-bottom: 4px;
+	font-weight: 600;
+	font-size: 12px;
+	color: #50575e;
+}
+
+.wps-an-field input[type="date"],
+.wps-an-field select {
+	min-width: 160px;
+}
+
+.wps-an-field--action {
+	margin-left: auto;
+}
+
+.wps-an-cards {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+	margin-bottom: 12px;
+}
+
+@media screen and (max-width: 900px) {
+	.wps-an-cards {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.wps-an-card {
+	display: flex;
+	flex-direction: column;
+	padding: 18px;
+	background: #fff;
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.wps-an-card__label {
+	font-size: 13px;
+	color: #646970;
+	margin-bottom: 8px;
+}
+
+.wps-an-card__value {
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1.2;
+	color: #1d2327;
+}
+
+.wps-an-card__delta {
+	margin-top: 8px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.wps-an-delta--up {
+	color: #008a20;
+}
+
+.wps-an-delta--down {
+	color: #d63638;
+}
+
+.wps-an-delta--flat {
+	color: #646970;
+}
+
+.wps-an-compare-note {
+	margin: 0 0 20px;
+	font-size: 12px;
+	color: #646970;
+}
+
+.wps-an-chart-card {
+	padding: 18px;
+	margin-bottom: 24px;
+	background: #fff;
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.wps-an-chart-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.wps-an-metric-switch {
+	display: inline-flex;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.wps-an-metric {
+	padding: 6px 14px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #50575e;
+	background: #fff;
+	border: 0;
+	border-right: 1px solid #dcdcde;
+	cursor: pointer;
+}
+
+.wps-an-metric:last-child {
+	border-right: 0;
+}
+
+.wps-an-metric.is-active {
+	color: #fff;
+	background: #2271b1;
+}
+
+.wps-an-legend {
+	display: flex;
+	gap: 16px;
+	font-size: 12px;
+	color: #646970;
+}
+
+.wps-an-legend__item {
+	display: inline-flex;
+	align-items: center;
+}
+
+.wps-an-legend__item::before {
+	content: "";
+	display: inline-block;
+	width: 16px;
+	height: 0;
+	margin-right: 6px;
+	border-top-width: 3px;
+	border-top-style: solid;
+}
+
+.wps-an-legend__item--current::before {
+	border-top-color: #2271b1;
+}
+
+.wps-an-legend__item--compare::before {
+	border-top-color: #8c8f94;
+	border-top-style: dashed;
+}
+
+.wps-an-chart-canvas-wrap {
+	position: relative;
+	width: 100%;
+}
+
+.wps-an-chart-sample {
+	display: block;
+	width: 100%;
+	height: 220px;
+}
+
+.wps-an-section-title {
+	margin: 8px 0 12px;
+}
+
+.wps-an-table {
+	width: 100%;
+	max-width: 920px;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: #fff;
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.wps-an-table th,
+.wps-an-table td {
+	padding: 12px 16px;
+	font-size: 13px;
+	text-align: left;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.wps-an-table thead th {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #646970;
+	background: #f6f7f7;
+}
+
+.wps-an-table tbody tr:hover {
+	background: #f6f7f7;
+}
+
+.wps-an-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.wps-an-col-num {
+	text-align: right;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+	width: 84px;
+}
+
+.wps-an-col-num.is-zero {
+	color: #c3c4c7;
+}
+
+.wps-an-col-plan {
+	font-weight: 600;
+	color: #1d2327;
+}
+
+/* Revenue column carries the full-width share bar, so give it room. */
+.wps-an-col-rev {
+	min-width: 260px;
+}
+
+.wps-an-dot {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-right: 8px;
+	background: #c3c4c7;
+	border-radius: 50%;
+	vertical-align: middle;
+}
+
+.wps-an-rev-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.wps-an-rev-value {
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	color: #1d2327;
+}
+
+.wps-an-rev-pct {
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	color: #646970;
+}
+
+.wps-an-rev-bar {
+	display: block;
+	width: 100%;
+	height: 6px;
+	margin-top: 7px;
+	background: #f0f0f1;
+	border-radius: 3px;
+	overflow: hidden;
+}
+
+.wps-an-rev-bar__fill {
+	display: block;
+	height: 100%;
+	min-width: 2px;
+	background: #2271b1;
+	border-radius: 3px;
+	transition: width 0.2s ease;
+}
+
+.wps-an-table tfoot td {
+	font-weight: 700;
+	color: #1d2327;
+	background: #f6f7f7;
+	border-top: 2px solid #e2e4e7;
+	border-bottom: 0;
+}
+
+.wps-an-empty {
+	max-width: 760px;
+	padding: 32px;
+	text-align: center;
+	color: #646970;
+	background: #fff;
+	border: 1px dashed #c3c4c7;
+	border-radius: 8px;
+}
+
+/* ---- Locked teaser (org build, Pro inactive) ------------------------- */
+
+.wps-an-upsell {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 20px 24px;
+	margin-bottom: 20px;
+	background: linear-gradient(135deg, #f0fbfa 0%, #eef4fb 100%);
+	border: 1px solid #cfe9e7;
+	border-radius: 10px;
+}
+
+.wps-an-upsell__text h3 {
+	margin: 6px 0 4px;
+	font-size: 18px;
+}
+
+.wps-an-upsell__text p {
+	margin: 0;
+	max-width: 720px;
+	font-size: 13px;
+	color: #50575e;
+}
+
+.wps-an-upsell__badge {
+	display: inline-block;
+	padding: 2px 9px;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: #114644;
+	background: linear-gradient(180deg, #8ce7e3 0%, #66d3cd 100%);
+	border-radius: 999px;
+}
+
+.wps-an-upsell__cta {
+	flex-shrink: 0;
+}
+
+.wps-an-locked .wps-ai-pro-locked {
+	position: relative;
+	opacity: 0.6;
+	filter: grayscale(0.2);
+	pointer-events: none;
+	user-select: none;
+}

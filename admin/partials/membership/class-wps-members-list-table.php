@@ -501,22 +501,35 @@ if ( ! class_exists( 'WPS_Members_List_Table' ) ) {
 			switch ( $item['source'] ) {
 				case 'subscription':
 					if ( ! empty( $item['subscription_id'] ) ) {
+						$wps_sub_id = absint( $item['subscription_id'] );
+						// Open the plugin's subscriptions table filtered to this
+						// subscription — the table searches the ID via the `s` param.
+						$wps_sub_url = add_query_arg(
+							array(
+								'page'    => 'subscriptions_for_woocommerce_menu',
+								'sfw_tab' => 'subscriptions-for-woocommerce-subscriptions-table',
+								's'       => $wps_sub_id,
+							),
+							admin_url( 'admin.php' )
+						);
 						return sprintf(
 							'<a href="%s">%s #%d</a>',
-							esc_url( get_edit_post_link( $item['subscription_id'] ) ),
+							esc_url( $wps_sub_url ),
 							esc_html__( 'Subscription', 'subscriptions-for-woocommerce' ),
-							absint( $item['subscription_id'] )
+							$wps_sub_id
 						);
 					}
 					return esc_html__( 'Subscription', 'subscriptions-for-woocommerce' );
 
 				case 'order':
 					if ( ! empty( $item['order_id'] ) ) {
+						$wps_order_id  = absint( $item['order_id'] );
+						$wps_order_url = self::wps_order_edit_url( $wps_order_id, 'shop_order' );
 						return sprintf(
 							'<a href="%s">%s #%d</a>',
-							esc_url( get_edit_post_link( $item['order_id'] ) ),
+							esc_url( $wps_order_url ),
 							esc_html__( 'Order', 'subscriptions-for-woocommerce' ),
-							absint( $item['order_id'] )
+							$wps_order_id
 						);
 					}
 					return esc_html__( 'Order', 'subscriptions-for-woocommerce' );
@@ -524,6 +537,26 @@ if ( ! class_exists( 'WPS_Members_List_Table' ) ) {
 				default:
 					return esc_html__( 'Manual', 'subscriptions-for-woocommerce' );
 			}
+		}
+
+		/**
+		 * Build the admin edit URL for an order or subscription (HPOS aware).
+		 *
+		 * @since  2.0.0
+		 * @param  int    $id         Order / subscription ID.
+		 * @param  string $order_type Order type slug (shop_order, wps_subscriptions).
+		 * @return string
+		 */
+		private static function wps_order_edit_url( $id, $order_type ) {
+			$id = absint( $id );
+
+			if ( class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' )
+				&& \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$page = ( 'shop_order' === $order_type ) ? 'wc-orders' : 'wc-orders--' . $order_type;
+				return admin_url( 'admin.php?page=' . $page . '&action=edit&id=' . $id );
+			}
+
+			return (string) get_edit_post_link( $id );
 		}
 	}
 }

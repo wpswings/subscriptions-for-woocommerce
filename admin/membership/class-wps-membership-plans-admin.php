@@ -56,6 +56,15 @@ if ( ! class_exists( 'WPS_Membership_Plans_Admin' ) ) {
 				array(),
 				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
 			);
+
+			// Analytics styles — shared by the org-build teaser and the Pro
+			// plugin's live dashboard (both render inside the Manage tab).
+			wp_enqueue_style(
+				'wps-membership-analytics',
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/css/wps-membership-analytics.css',
+				array(),
+				SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION
+			);
 		}
 
 		/**

@@ -432,3 +432,47 @@
 	line-height: 1.4;
 	color: #646970;
 }
+
+/* -----------------------------------------------------------------------
+   "PRO" badge alignment for the Pro feature teasers in the membership UI.
+
+   The shared .wps_pro_settings_tag::before badge is positioned for large
+   setting cards (absolute, top/right 14px) and is clipped by the segmented
+   control's overflow:hidden. These scoped overrides realign it: an inline
+   pill centered inside the Template button, and a corner pill aligned to the
+   field label for the Drip / Exclusions / Teaser groups.
+   ----------------------------------------------------------------------- */
+
+/* Segmented "Template" behavior button — pill sits inside, vertically centered. */
+.wps-mem-wrap .wps-seg-control__option.wps_pro_settings_tag {
+	overflow: visible;
+}
+
+.wps-mem-wrap .wps-seg-control__option.wps_pro_settings_tag span {
+	padding-right: 46px;
+}
+
+.wps-mem-wrap .wps-seg-control__option.wps_pro_settings_tag::before {
+	top: 50%;
+	right: 6px;
+	transform: translateY(-50%);
+	min-height: 15px;
+	padding: 0 6px;
+	font-size: 8px;
+	box-shadow: none;
+}
+
+/* Drip / Scheduled Access, Exclusions and Teaser field groups — pill aligned
+   to the top-right, level with the uppercase field label. */
+.wps-mem-wrap .wps-field-group.wps_pro_settings_tag {
+	overflow: visible;
+}
+
+.wps-mem-wrap .wps-field-group.wps_pro_settings_tag::before {
+	top: 0;
+	right: 0;
+	min-height: 16px;
+	padding: 0 6px;
+	font-size: 8px;
+	box-shadow: none;
+}

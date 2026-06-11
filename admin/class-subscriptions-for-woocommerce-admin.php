@@ -1520,6 +1520,86 @@ class Subscriptions_For_Woocommerce_Admin {
 	}
 
 	/**
+	 * Show the dismissible membership feature banner on the plugin page.
+	 *
+	 * @since 2.0.0
+	 */
+	public function wps_sfw_membership_feature_notice() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			return;
+		}
+
+		if ( get_user_meta( get_current_user_id(), 'wps_sfw_membership_feature_notice_dismissed', true ) ) {
+			return;
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$wps_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		$wps_tab  = isset( $_GET['sfw_tab'] ) ? sanitize_key( wp_unslash( $_GET['sfw_tab'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		// Plugin page only, and not on the membership tab it links to.
+		if ( 'subscriptions_for_woocommerce_menu' !== $wps_page || 'wps-membership-manage' === $wps_tab ) {
+			return;
+		}
+
+		$wps_manage_url  = admin_url(
+			'admin.php?page=subscriptions_for_woocommerce_menu&sfw_tab=wps-membership-manage&wps_mem_tab=plans'
+		);
+		$wps_dismiss_url = wp_nonce_url(
+			add_query_arg( 'wps_sfw_dismiss_membership_notice', '1' ),
+			'wps_sfw_dismiss_membership_notice'
+		);
+		?>
+		<div class="notice wps-sfw-mem-banner">
+			<span class="wps-sfw-mem-banner__badge">
+				<?php esc_html_e( 'NEW', 'subscriptions-for-woocommerce' ); ?>
+			</span>
+			<div class="wps-sfw-mem-banner__body">
+				<strong class="wps-sfw-mem-banner__title">
+					<?php esc_html_e( 'Membership is now built into Subscriptions for WooCommerce', 'subscriptions-for-woocommerce' ); ?>
+				</strong>
+				<span class="wps-sfw-mem-banner__text">
+					<?php esc_html_e( 'Create membership plans, manage members, and restrict content right from your subscriptions dashboard.', 'subscriptions-for-woocommerce' ); ?>
+				</span>
+			</div>
+			<a class="wps-sfw-mem-banner__cta" href="<?php echo esc_url( $wps_manage_url ); ?>">
+				<?php esc_html_e( 'Manage Membership', 'subscriptions-for-woocommerce' ); ?>
+			</a>
+			<a class="wps-sfw-mem-banner__dismiss" href="<?php echo esc_url( $wps_dismiss_url ); ?>">
+				<?php esc_html_e( 'Dismiss', 'subscriptions-for-woocommerce' ); ?>
+			</a>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Save dismissal of the membership feature banner.
+	 *
+	 * @since 2.0.0
+	 */
+	public function wps_sfw_dismiss_membership_feature_notice() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! isset( $_GET['wps_sfw_dismiss_membership_notice'] ) ) {
+			return;
+		}
+
+		$wps_nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $wps_nonce, 'wps_sfw_dismiss_membership_notice' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			return;
+		}
+
+		update_user_meta( get_current_user_id(), 'wps_sfw_membership_feature_notice_dismissed', 1 );
+
+		wp_safe_redirect( remove_query_arg( array( 'wps_sfw_dismiss_membership_notice', '_wpnonce' ) ) );
+		exit;
+	}
+
+	/**
 	 * Api settings fields.
 	 *
 	 * @since    1.0.0

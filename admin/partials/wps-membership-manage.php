@@ -44,7 +44,39 @@ $wps_mem_sub_tabs = array(
 			. 'c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/>'
 			. '<path d="m9 12 2 2 4-4"/></svg>',
 	),
+	// Analytics is a Pro feature. The tab always renders (org build included);
+	// when Pro is inactive it shows the "PRO" badge and a locked teaser, and
+	// the Pro plugin swaps in the live partial via wps_membership_sub_tab_partials.
+	'analytics'    => array(
+		'label' => esc_html__( 'Analytics', 'subscriptions-for-woocommerce' ),
+		'pro'   => true,
+		'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"'
+			. ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+			. '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>',
+	),
 );
+
+/**
+ * Whether the Pro plugin is active and licensed.
+ *
+ * Drives the "PRO" badge and which Analytics partial (teaser vs live) renders.
+ *
+ * @since 2.0.0
+ * @param bool $active Default false (org build); Pro returns true.
+ */
+$wps_mem_pro_active = (bool) apply_filters( 'wsp_sfw_check_pro_plugin', false );
+
+/**
+ * Filter the Manage Membership sub-tabs.
+ *
+ * Lets add-ons (e.g. the Pro plugin's Analytics tab) register additional
+ * sub-tabs in the membership navigation. Each entry must be keyed by a slug
+ * and provide 'label' and 'icon' (inline SVG markup).
+ *
+ * @since 2.0.0
+ * @param array $wps_mem_sub_tabs Sub-tabs keyed by slug.
+ */
+$wps_mem_sub_tabs = apply_filters( 'wps_membership_sub_tabs', $wps_mem_sub_tabs );
 
 // phpcs:disable WordPress.Security.NonceVerification.Recommended
 $wps_active_sub = isset( $_GET['wps_mem_tab'] )
@@ -60,7 +92,28 @@ $wps_partial_map = array(
 	'plans'        => 'wps-membership-plans.php',
 	'members'      => 'wps-membership-members.php',
 	'access-rules' => 'wps-membership-access-rules.php',
+	// Locked teaser shipped in the org build. The Pro plugin overrides this
+	// entry with its live analytics partial via the filter below.
+	'analytics'    => 'wps-membership-analytics.php',
 );
+
+/**
+ * Filter the Manage Membership sub-tab → partial map.
+ *
+ * Values may be either a filename relative to this plugin's `admin/partials/`
+ * directory (core sub-tabs) or an absolute path to a partial owned by an
+ * add-on plugin. Add-ons registering a sub-tab via `wps_membership_sub_tabs`
+ * must register a matching partial here.
+ *
+ * @since 2.0.0
+ * @param array $wps_partial_map Partial paths keyed by sub-tab slug.
+ */
+$wps_partial_map = apply_filters( 'wps_membership_sub_tab_partials', $wps_partial_map );
+
+// A registered sub-tab with no matching partial falls back to the plans view.
+if ( ! isset( $wps_partial_map[ $wps_active_sub ] ) ) {
+	$wps_active_sub = 'plans';
+}
 ?>
 
 <div class="wps-mem-wrap">
@@ -90,6 +143,9 @@ $wps_partial_map = array(
 					?>
 				</span>
 				<span class="wps-mem-tab__label"><?php echo esc_html( $wps_tab['label'] ); ?></span>
+				<?php if ( ! empty( $wps_tab['pro'] ) && ! $wps_mem_pro_active ) : ?>
+					<span class="wps-mem-tab__pro"><?php esc_html_e( 'PRO', 'subscriptions-for-woocommerce' ); ?></span>
+				<?php endif; ?>
 			</a>
 			<?php
 		endforeach;
@@ -98,8 +154,16 @@ $wps_partial_map = array(
 
 	<div class="wps-mem-content">
 		<?php
-		require_once SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH
-			. 'admin/partials/' . $wps_partial_map[ $wps_active_sub ];
+		$wps_partial_file = $wps_partial_map[ $wps_active_sub ];
+
+		// Absolute paths (add-on partials) are loaded as-is; bare filenames
+		// resolve against this plugin's own partials directory.
+		if ( ! is_file( $wps_partial_file ) ) {
+			$wps_partial_file = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH
+				. 'admin/partials/' . $wps_partial_file;
+		}
+
+		require_once $wps_partial_file;
 		?>
 	</div>
 

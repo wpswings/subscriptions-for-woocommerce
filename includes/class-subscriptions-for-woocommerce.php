@@ -383,6 +383,10 @@ class Subscriptions_For_Woocommerce {
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
 		$this->loader->add_action( 'admin_init', $wps_ai_settings, 'save_settings' );
+
+		// Membership feature announcement banner (dismissible).
+		$this->loader->add_action( 'admin_notices', $sfw_plugin_admin, 'wps_sfw_membership_feature_notice' );
+		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'wps_sfw_dismiss_membership_feature_notice' );
 		// Multistep.
 		$this->loader->add_action( 'wp_ajax_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
 		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
