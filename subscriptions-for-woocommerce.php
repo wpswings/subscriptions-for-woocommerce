@@ -445,8 +445,25 @@ if ( $activated ) {
 		add_rewrite_endpoint( 'wps_subscriptions', EP_PAGES );
 		add_rewrite_endpoint( 'show-subscription', EP_PAGES );
 		add_rewrite_endpoint( 'wps-add-payment-method', EP_PAGES );
+		add_rewrite_endpoint( 'wps_memberships', EP_PAGES );
 		flush_rewrite_rules();
 	}
+
+	/**
+	 * One-time deferred flush so the wps_memberships endpoint is registered on
+	 * already-active installs without requiring a re-activation or manual permalink save.
+	 * The flag is deleted immediately after the flush so it only runs once.
+	 */
+	add_action(
+		'init',
+		function () {
+			if ( get_option( 'wps_sfw_flush_memberships_endpoint' ) ) {
+				delete_option( 'wps_sfw_flush_memberships_endpoint' );
+				flush_rewrite_rules();
+			}
+		},
+		99
+	);
 
 	add_action( 'init', 'wps_sfw_register_custom_order_types', 5 );
 

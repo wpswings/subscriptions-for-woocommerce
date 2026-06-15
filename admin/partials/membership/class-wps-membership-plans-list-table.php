@@ -279,40 +279,46 @@ if ( ! class_exists( 'WPS_Membership_Plans_List_Table' ) ) {
 
 					// subscription grant — show subscription products.
 					if ( 'subscription' === $wps_method ) {
+						$wps_sub_icon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none"'
+							. ' stroke="currentColor" stroke-width="2.5" aria-hidden="true">'
+							. '<path d="M21.5 2v6h-6M2.5 22v-6h6"/>'
+							. '<path d="M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>'
+							. '</svg>';
+						$wps_chip     = '<span class="wps-grant-chip wps-grant-chip--sub">'
+							. $wps_sub_icon
+							. esc_html__( 'Via Subscription', 'subscriptions-for-woocommerce' )
+							. '</span>';
+
 						$wps_sub_prods = isset( $item['subscription_products'] )
 							? $item['subscription_products']
 							: array();
 						if ( empty( $wps_sub_prods ) ) {
-							return '<span class="wps-grant-chip wps-grant-chip--sub">'
-								. '<svg width="10" height="10" viewBox="0 0 24 24" fill="none"'
-								. ' stroke="currentColor" stroke-width="2.5" aria-hidden="true">'
-								. '<path d="M21.5 2v6h-6M2.5 22v-6h6"/>'
-								. '<path d="M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>'
-								. '</svg>'
-								. esc_html__( 'Via subscription — no products linked', 'subscriptions-for-woocommerce' )
+							return $wps_chip
+								. '<span class="wps-linked-products wps-linked-products--empty">'
+								. esc_html__( 'No products linked', 'subscriptions-for-woocommerce' )
 								. '</span>';
 						}
-						$wps_names = array();
-						foreach ( array_slice( $wps_sub_prods, 0, 2 ) as $wps_pid ) {
+
+						$wps_pills = array();
+						foreach ( array_slice( $wps_sub_prods, 0, 3 ) as $wps_pid ) {
 							$wps_product = wc_get_product( $wps_pid );
 							if ( $wps_product ) {
-								$wps_names[] = '<a href="' . esc_url( get_edit_post_link( $wps_pid ) ) . '">'
+								$wps_pills[] = '<a href="' . esc_url( get_edit_post_link( $wps_pid ) ) . '"'
+									. ' class="wps-product-pill">'
 									. esc_html( $wps_product->get_name() ) . '</a>';
 							}
 						}
-						$wps_extra = count( $wps_sub_prods ) - 2;
-						$wps_out   = implode( ', ', $wps_names );
+						$wps_extra = count( $wps_sub_prods ) - 3;
 						if ( $wps_extra > 0 ) {
-							$wps_out .= ' <span class="description">+'
+							$wps_pills[] = '<span class="wps-product-pill wps-product-pill--more">+'
 								. absint( $wps_extra ) . ' '
 								. esc_html__( 'more', 'subscriptions-for-woocommerce' ) . '</span>';
 						}
-						$wps_chip = '<span class="wps-grant-chip wps-grant-chip--sub">'
-							. esc_html__( 'Subscription', 'subscriptions-for-woocommerce' )
-							. '</span>';
-						return $wps_out
-							? $wps_chip . '<span class="wps-linked-products">' . $wps_out . '</span>'
-							: '—';
+
+						return $wps_chip
+							. ( $wps_pills
+								? '<div class="wps-linked-products">' . implode( '', $wps_pills ) . '</div>'
+								: '' );
 					}
 
 					// purchase grant — existing behavior.

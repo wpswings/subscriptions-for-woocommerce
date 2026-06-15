@@ -155,6 +155,61 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 		$this->assertLessThan( time() + 22 * DAY_IN_SECONDS, (int) $membership['expiry_date'] );
 	}
 
+	/**
+	 * A "processing" order (online payment confirmed) must grant the membership
+	 * immediately — without waiting for the order to reach "completed".
+	 */
+	public function test_processing_order_grants_membership() {
+		$product_id = $this->make_product();
+		wps_create_plan(
+			array(
+				'name'         => 'Processing Plan',
+				'slug'         => 'processing-plan',
+				'grant_method' => 'purchase',
+				'products'     => array( $product_id ),
+			)
+		);
+		wp_cache_flush();
+
+		$order_id = $this->make_order( $product_id );
+
+		// Simulate what WooCommerce does when an online payment transitions
+		// an order to "processing" (without ever reaching "completed").
+		$this->grant->grant_from_order( $order_id );
+
+		$membership = wps_get_membership( $this->user_id, 'processing-plan' );
+		$this->assertNotEmpty( $membership, 'Membership must be created on processing.' );
+		$this->assertSame( 'active', $membership['status'] );
+		$this->assertSame( 'order', $membership['source'] );
+		$this->assertSame( $order_id, absint( $membership['order_id'] ) );
+	}
+
+	/**
+	 * Firing the grant for both "processing" and "completed" on the same order
+	 * must produce exactly one membership row (idempotency across status hooks).
+	 */
+	public function test_processing_then_completed_does_not_duplicate() {
+		$product_id = $this->make_product();
+		wps_create_plan(
+			array(
+				'name'         => 'Dedup Plan',
+				'slug'         => 'dedup-plan',
+				'grant_method' => 'purchase',
+				'products'     => array( $product_id ),
+			)
+		);
+		wp_cache_flush();
+
+		$order_id = $this->make_order( $product_id );
+
+		// processing fires first (online payment confirmed).
+		$this->grant->grant_from_order( $order_id );
+		// completed fires later (merchant marks complete) — must be a no-op.
+		$this->grant->grant_from_order( $order_id );
+
+		$this->assertCount( 1, wps_get_user_memberships( $this->user_id, 'all' ) );
+	}
+
 	public function test_grant_is_idempotent() {
 		$product_id = $this->make_product();
 		wps_create_plan(

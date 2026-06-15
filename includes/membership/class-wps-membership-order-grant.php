@@ -13,9 +13,9 @@
  * On order refund / cancellation: revoke the membership if and only if this
  * order originally granted it (`order_id` match on the membership row).
  *
- * Idempotency: re-firing `woocommerce_order_status_completed` or
- * `woocommerce_payment_complete` for the same order is a no-op — the grant is
- * skipped when a membership for the same plan already carries this order's ID.
+ * Idempotency: re-firing any of the three grant hooks (`completed`, `processing`,
+ * `payment_complete`) for the same order is a no-op — the grant is skipped when
+ * a membership for the same plan already carries this order's ID.
  *
  * Backward-compat guarantee: products with no linked plan produce zero new user
  * meta. Subscription products are always skipped (owned by WPS_Membership_Sync).
@@ -45,6 +45,7 @@ if ( ! class_exists( 'WPS_Membership_Order_Grant' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'woocommerce_order_status_completed', array( $this, 'grant_from_order' ), 10, 1 );
+			add_action( 'woocommerce_order_status_processing', array( $this, 'grant_from_order' ), 10, 1 );
 			add_action( 'woocommerce_payment_complete', array( $this, 'grant_from_order' ), 10, 1 );
 			add_action( 'woocommerce_order_status_refunded', array( $this, 'revoke_from_order' ), 10, 1 );
 			add_action( 'woocommerce_order_status_cancelled', array( $this, 'revoke_from_order' ), 10, 1 );
@@ -57,9 +58,9 @@ if ( ! class_exists( 'WPS_Membership_Order_Grant' ) ) {
 		/**
 		 * Process a completed order and grant memberships for linked products.
 		 *
-		 * Called on both `woocommerce_order_status_completed` and
-		 * `woocommerce_payment_complete` — the method is idempotent so firing
-		 * twice for the same order is safe.
+		 * Called on `woocommerce_order_status_completed`, `woocommerce_order_status_processing`,
+		 * and `woocommerce_payment_complete` — the method is idempotent so firing
+		 * more than once for the same order is safe.
 		 *
 		 * @since 2.0.0
 		 * @param int $order_id WooCommerce order ID.
