@@ -341,8 +341,7 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 				);
 			}
 
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo wps_build_membership_card_html( array( $plan ), 'simple' );
+			echo wp_kses_post( wps_build_membership_card_html( array( $plan ), 'simple' ) );
 		}
 
 		// -----------------------------------------------------------------------
@@ -405,8 +404,7 @@ if ( ! class_exists( 'WPS_Product_Badge' ) ) {
 			$badge_html = '<span class="' . esc_attr( $class ) . '"' . $style . '>'
 				. $this->badge_icon( $icon ) . esc_html( $text ) . '</span>';
 
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $badge_html;
+			echo wp_kses_post( $badge_html );
 		}
 
 		/**

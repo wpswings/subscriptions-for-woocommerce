@@ -19,18 +19,39 @@
  */
 class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 
-	/** @var WPS_Restriction_Enforcer */
+	/**
+	 * Enforcer under test.
+	 *
+	 * @var WPS_Restriction_Enforcer
+	 */
 	private $enforcer;
 
-	/** @var int Product post that a product rule targets. */
+	/**
+	 * Product post that a product rule targets.
+	 *
+	 * @var int
+	 */
 	private $product_id;
 
-	/** @var int User holding the required plan. */
+	/**
+	 * User holding the required plan.
+	 *
+	 * @var int
+	 */
 	private $member_id;
 
-	/** @var int User with no membership. */
+	/**
+	 * User with no membership.
+	 *
+	 * @var int
+	 */
 	private $stranger_id;
 
+	/**
+	 * Set up test fixtures before each test.
+	 *
+	 * @return void
+	 */
 	public function setUp(): void {
 		parent::setUp();
 
@@ -58,6 +79,11 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		wp_cache_flush();
 	}
 
+	/**
+	 * Tear down test fixtures after each test.
+	 *
+	 * @return void
+	 */
 	public function tearDown(): void {
 		wp_delete_post( $this->product_id, true );
 		if ( $this->member_id ) {
@@ -72,7 +98,12 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		parent::tearDown();
 	}
 
-	/** Save a product-kind rule requiring the 'gold' plan for the product. */
+	/**
+	 * Save a product-kind rule requiring the 'gold' plan for the product.
+	 *
+	 * @param array $overrides Optional rule field overrides.
+	 * @return void
+	 */
 	private function add_product_rule( array $overrides = array() ) {
 		$rule = array_merge(
 			array(
@@ -90,10 +121,11 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		wp_cache_flush();
 	}
 
-	// -----------------------------------------------------------------------
-	// Content path is never touched by a product rule
-	// -----------------------------------------------------------------------
-
+	/**
+	 * Verify a product rule does not replace post content for a guest user.
+	 *
+	 * @return void
+	 */
 	public function test_product_rule_does_not_replace_content_for_guest() {
 		wp_set_current_user( 0 );
 		$this->go_to( get_permalink( $this->product_id ) );
@@ -103,6 +135,11 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		$this->assertSame( 'Full product description.', $result );
 	}
 
+	/**
+	 * Verify a product rule does not trigger a redirect.
+	 *
+	 * @return void
+	 */
 	public function test_product_rule_does_not_redirect() {
 		wp_set_current_user( 0 );
 		$this->go_to( get_permalink( $this->product_id ) );
@@ -113,10 +150,11 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		$this->assertTrue( true );
 	}
 
-	// -----------------------------------------------------------------------
-	// Purchasability gating is product-kind only
-	// -----------------------------------------------------------------------
-
+	/**
+	 * Verify a product rule blocks purchase for a non-member.
+	 *
+	 * @return void
+	 */
 	public function test_product_rule_blocks_purchase_for_non_member() {
 		wp_set_current_user( $this->stranger_id );
 		$product = wc_get_product( $this->product_id );
@@ -124,6 +162,11 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		$this->assertFalse( $this->enforcer->maybe_restrict_purchasability( true, $product ) );
 	}
 
+	/**
+	 * Verify a product rule allows purchase for an active member.
+	 *
+	 * @return void
+	 */
 	public function test_product_rule_allows_purchase_for_member() {
 		wp_set_current_user( $this->member_id );
 		$product = wc_get_product( $this->product_id );
@@ -168,6 +211,11 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		wp_delete_user( $admin_id );
 	}
 
+	/**
+	 * Verify a content-kind rule does not block product purchase.
+	 *
+	 * @return void
+	 */
 	public function test_content_rule_does_not_block_product_purchase() {
 		// Replace the product rule with a content-kind rule that (incorrectly)
 		// references the product ID. Content rules must never gate purchase.
@@ -192,10 +240,11 @@ class RestrictionEnforcerKindTest extends WP_UnitTestCase {
 		$this->assertTrue( $this->enforcer->maybe_restrict_purchasability( true, $product ) );
 	}
 
-	// -----------------------------------------------------------------------
-	// Product gate notice (used by the admin Preview; not echoed on front-end)
-	// -----------------------------------------------------------------------
-
+	/**
+	 * Verify the product gate notice contains the rule message and wrapper element.
+	 *
+	 * @return void
+	 */
 	public function test_product_gate_notice_contains_message_and_card() {
 		$rule = array(
 			'rule_kind'   => 'product',

@@ -14,14 +14,30 @@
  * @package Subscriptions_For_Woocommerce
  */
 
+/**
+ * Grant-path matrix test suite.
+ */
 class GrantPathMatrixTest extends WP_UnitTestCase {
 
-	/** @var WPS_Membership_Order_Grant */
+	/**
+	 * Grant handler under test.
+	 *
+	 * @var WPS_Membership_Order_Grant
+	 */
 	private $grant;
 
-	/** @var int */
+	/**
+	 * WordPress user ID created for each test.
+	 *
+	 * @var int
+	 */
 	private $user_id;
 
+	/**
+	 * Set up test fixtures before each test.
+	 *
+	 * @return void
+	 */
 	public function setUp(): void {
 		parent::setUp();
 
@@ -34,6 +50,11 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 		wp_cache_flush();
 	}
 
+	/**
+	 * Tear down test fixtures after each test.
+	 *
+	 * @return void
+	 */
 	public function tearDown(): void {
 		if ( $this->user_id ) {
 			wp_delete_user( $this->user_id );
@@ -79,6 +100,11 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 	// Backward-compat guarantee
 	// -----------------------------------------------------------------------
 
+	/**
+	 * A product with no linked plan must not write any membership meta.
+	 *
+	 * @return void
+	 */
 	public function test_product_with_no_plan_writes_no_membership() {
 		$product_id = $this->make_product( 'Plain Product' );
 		$order_id   = $this->make_order( $product_id );
@@ -89,6 +115,11 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 		$this->assertEmpty( get_user_meta( $this->user_id, 'wps_memberships', true ) );
 	}
 
+	/**
+	 * Revoking an order that has no plan must be a silent no-op.
+	 *
+	 * @return void
+	 */
 	public function test_refund_of_planless_order_is_noop() {
 		$product_id = $this->make_product( 'Plain Product' );
 		$order_id   = $this->make_order( $product_id );
@@ -103,6 +134,11 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 	// Grant matrix
 	// -----------------------------------------------------------------------
 
+	/**
+	 * A lifetime plan must grant an active membership with no expiry date.
+	 *
+	 * @return void
+	 */
 	public function test_lifetime_plan_grants_active_membership_without_expiry() {
 		$product_id = $this->make_product();
 		wps_create_plan(
@@ -127,6 +163,11 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 		$this->assertNull( $membership['expiry_date'] );
 	}
 
+	/**
+	 * A fixed-length plan must compute an expiry date approximately equal to the access length.
+	 *
+	 * @return void
+	 */
 	public function test_fixed_length_plan_computes_expiry() {
 		$product_id = $this->make_product();
 		wps_create_plan(
@@ -158,6 +199,8 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 	/**
 	 * A "processing" order (online payment confirmed) must grant the membership
 	 * immediately — without waiting for the order to reach "completed".
+	 *
+	 * @return void
 	 */
 	public function test_processing_order_grants_membership() {
 		$product_id = $this->make_product();
@@ -187,6 +230,8 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 	/**
 	 * Firing the grant for both "processing" and "completed" on the same order
 	 * must produce exactly one membership row (idempotency across status hooks).
+	 *
+	 * @return void
 	 */
 	public function test_processing_then_completed_does_not_duplicate() {
 		$product_id = $this->make_product();
@@ -210,6 +255,11 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 		$this->assertCount( 1, wps_get_user_memberships( $this->user_id, 'all' ) );
 	}
 
+	/**
+	 * Calling grant_from_order twice for the same order must produce one membership entry.
+	 *
+	 * @return void
+	 */
 	public function test_grant_is_idempotent() {
 		$product_id = $this->make_product();
 		wps_create_plan(
@@ -229,6 +279,11 @@ class GrantPathMatrixTest extends WP_UnitTestCase {
 		$this->assertCount( 1, wps_get_user_memberships( $this->user_id, 'all' ) );
 	}
 
+	/**
+	 * Revoking an order must transition an active membership to cancelled.
+	 *
+	 * @return void
+	 */
 	public function test_refund_revokes_membership() {
 		$product_id = $this->make_product();
 		wps_create_plan(

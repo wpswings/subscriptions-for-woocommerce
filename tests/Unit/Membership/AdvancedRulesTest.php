@@ -1,6 +1,8 @@
 <?php
 /**
- * Unit tests for Day 16 deliverables (Pro — Advanced Access Rules):
+ * Unit tests for Day 16 deliverables (Pro — Advanced Access Rules).
+ *
+ * Covers:
  *   Free:  drip + exclusion fields in wps_sanitize_access_rule()
  *          the `wps_object_is_restricted` filter hook in the resolver
  *   Pro:   WPS_Advanced_Rules enforcement (drip scheduling + rule exclusions)
@@ -12,11 +14,25 @@
  * @package Subscriptions_For_Woocommerce
  */
 
+/**
+ * Advanced Rules unit test suite.
+ *
+ * @since 2.0.0
+ */
 class AdvancedRulesTest extends WP_UnitTestCase {
 
-	/** @var int */
+	/**
+	 * Subscriber user ID used throughout the suite.
+	 *
+	 * @var int
+	 */
 	private $user_id;
 
+	/**
+	 * Load the Pro enforcement class before any test in this suite runs.
+	 *
+	 * @return void
+	 */
 	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
@@ -27,6 +43,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * Reset option storage and create a fresh subscriber before each test.
+	 *
+	 * @return void
+	 */
 	public function setUp(): void {
 		parent::setUp();
 		delete_option( WPS_ACCESS_RULES_OPTION );
@@ -40,7 +61,12 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 	// Helpers
 	// -----------------------------------------------------------------------
 
-	/** Persist a single rule and (re)build the index. */
+	/**
+	 * Persist a single rule and (re)build the index.
+	 *
+	 * @param array $overrides Rule fields to merge over the defaults.
+	 * @return void
+	 */
 	private function save_rule( array $overrides = array() ) {
 		$rule = array_merge(
 			array(
@@ -57,14 +83,23 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		wp_cache_flush();
 	}
 
-	/** Hook the Pro enforcement class onto the resolver filter. */
+	/**
+	 * Hook the Pro enforcement class onto the resolver filter.
+	 *
+	 * @return WPS_Advanced_Rules
+	 */
 	private function enable_pro_enforcement() {
 		$advanced = new WPS_Advanced_Rules();
 		add_filter( 'wps_object_is_restricted', array( $advanced, 'filter_object_restriction' ), 10, 4 );
 		return $advanced;
 	}
 
-	/** Resolve restriction for a fresh post, bypassing the per-request cache. */
+	/**
+	 * Resolve restriction for a fresh post, bypassing the per-request cache.
+	 *
+	 * @param int $post_id Post ID to check.
+	 * @return mixed
+	 */
 	private function resolve( $post_id ) {
 		wp_cache_flush();
 		return wps_object_is_restricted( get_post( $post_id ), $this->user_id );
@@ -74,6 +109,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 	// Free — sanitizer
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Drip mode, drip days, drip date, and exclude_ids are all kept by the sanitizer.
+	 *
+	 * @return void
+	 */
 	public function test_sanitizer_persists_drip_and_exclusion_fields() {
 		$clean = wps_sanitize_access_rule(
 			array(
@@ -93,6 +133,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertSame( array( 42, 108 ), $clean['exclude_ids'] );
 	}
 
+	/**
+	 * A CSV string in exclude_ids is parsed; non-numeric, zero, and duplicate values are removed.
+	 *
+	 * @return void
+	 */
 	public function test_sanitizer_parses_csv_exclusions() {
 		$clean = wps_sanitize_access_rule(
 			array(
@@ -105,6 +150,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertSame( array( 42, 108 ), $clean['exclude_ids'] );
 	}
 
+	/**
+	 * An unrecognised drip_mode value is replaced with the safe default "none".
+	 *
+	 * @return void
+	 */
 	public function test_sanitizer_rejects_invalid_drip_mode() {
 		$clean = wps_sanitize_access_rule(
 			array(
@@ -115,6 +165,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertSame( 'none', $clean['drip_mode'] );
 	}
 
+	/**
+	 * A drip_date value that is not a valid Y-m-d string is replaced with an empty string.
+	 *
+	 * @return void
+	 */
 	public function test_sanitizer_rejects_malformed_drip_date() {
 		$clean = wps_sanitize_access_rule(
 			array(
@@ -125,6 +180,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertSame( '', $clean['drip_date'] );
 	}
 
+	/**
+	 * When advanced fields are absent the sanitizer fills in safe zero/empty defaults.
+	 *
+	 * @return void
+	 */
 	public function test_sanitizer_defaults_when_advanced_fields_absent() {
 		$clean = wps_sanitize_access_rule( array( 'target_type' => 'post_type' ) );
 		$this->assertSame( 'none', $clean['drip_mode'] );
@@ -137,6 +197,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 	// Free — resolver filter contract
 	// -----------------------------------------------------------------------
 
+	/**
+	 * A filter hooked to wps_object_is_restricted can override the resolver's decision.
+	 *
+	 * @return void
+	 */
 	public function test_resolver_applies_wps_object_is_restricted_filter() {
 		$post_id = $this->factory->post->create();
 		$this->save_rule(); // user lacks 'gold' → base decision is restricted.
@@ -147,6 +212,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertNull( $this->resolve( $post_id ) );
 	}
 
+	/**
+	 * A filter hooked to wps_object_is_restricted can force a restriction result.
+	 *
+	 * @return void
+	 */
 	public function test_resolver_filter_can_force_restriction() {
 		$post_id = $this->factory->post->create();
 		// No rules at all → base decision would be null (granted) and the
@@ -170,6 +240,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 	// Pro — exclusions
 	// -----------------------------------------------------------------------
 
+	/**
+	 * A post listed in exclude_ids is accessible even when the user lacks the required plan.
+	 *
+	 * @return void
+	 */
 	public function test_exclusion_grants_access_to_listed_post() {
 		if ( ! class_exists( 'WPS_Advanced_Rules' ) ) {
 			$this->markTestSkipped( 'Pro plugin not present.' );
@@ -183,6 +258,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertNull( $this->resolve( $post_id ) );
 	}
 
+	/**
+	 * A post that is not in exclude_ids remains restricted when the user lacks the plan.
+	 *
+	 * @return void
+	 */
 	public function test_non_excluded_post_still_restricted() {
 		if ( ! class_exists( 'WPS_Advanced_Rules' ) ) {
 			$this->markTestSkipped( 'Pro plugin not present.' );
@@ -199,6 +279,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 	// Pro — drip (fixed date)
 	// -----------------------------------------------------------------------
 
+	/**
+	 * A plan holder cannot access content whose drip_date is in the future.
+	 *
+	 * @return void
+	 */
 	public function test_drip_future_date_blocks_plan_holder() {
 		if ( ! class_exists( 'WPS_Advanced_Rules' ) ) {
 			$this->markTestSkipped( 'Pro plugin not present.' );
@@ -214,6 +299,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertNotNull( $this->resolve( $post_id ) );
 	}
 
+	/**
+	 * A plan holder can access content once the drip_date has passed.
+	 *
+	 * @return void
+	 */
 	public function test_drip_past_date_grants_plan_holder() {
 		if ( ! class_exists( 'WPS_Advanced_Rules' ) ) {
 			$this->markTestSkipped( 'Pro plugin not present.' );
@@ -232,6 +322,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 	// Pro — drip (days after membership start)
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Content remains locked when the required number of drip days has not yet elapsed.
+	 *
+	 * @return void
+	 */
 	public function test_drip_days_not_elapsed_blocks_plan_holder() {
 		if ( ! class_exists( 'WPS_Advanced_Rules' ) ) {
 			$this->markTestSkipped( 'Pro plugin not present.' );
@@ -249,6 +344,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertNotNull( $this->resolve( $post_id ) );
 	}
 
+	/**
+	 * Content is unlocked once the required number of drip days has elapsed since membership start.
+	 *
+	 * @return void
+	 */
 	public function test_drip_days_elapsed_grants_plan_holder() {
 		if ( ! class_exists( 'WPS_Advanced_Rules' ) ) {
 			$this->markTestSkipped( 'Pro plugin not present.' );
@@ -266,6 +366,11 @@ class AdvancedRulesTest extends WP_UnitTestCase {
 		$this->assertNull( $this->resolve( $post_id ) );
 	}
 
+	/**
+	 * Drip days do not grant access when the user holds no matching membership plan.
+	 *
+	 * @return void
+	 */
 	public function test_drip_does_not_grant_when_user_lacks_plan() {
 		if ( ! class_exists( 'WPS_Advanced_Rules' ) ) {
 			$this->markTestSkipped( 'Pro plugin not present.' );

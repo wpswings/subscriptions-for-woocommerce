@@ -20,22 +20,41 @@
  */
 class RestrictionEnforcerTest extends WP_UnitTestCase {
 
-	/** @var WPS_Restriction_Enforcer */
+	/**
+	 * Restriction enforcer instance under test.
+	 *
+	 * @var WPS_Restriction_Enforcer
+	 */
 	private $enforcer;
 
-	/** @var int Published post that rules will target. */
+	/**
+	 * Published post that rules will target.
+	 *
+	 * @var int
+	 */
 	private $post_id;
 
-	/** @var int User who holds an active 'gold' membership. */
+	/**
+	 * User who holds an active 'gold' membership.
+	 *
+	 * @var int
+	 */
 	private $member_id;
 
-	/** @var int User with no membership. */
+	/**
+	 * User with no membership.
+	 *
+	 * @var int
+	 */
 	private $stranger_id;
 
 	// -----------------------------------------------------------------------
 	// Lifecycle
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Set up test fixtures before each test.
+	 */
 	public function setUp(): void {
 		parent::setUp();
 
@@ -58,6 +77,9 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 		wp_cache_flush();
 	}
 
+	/**
+	 * Tear down test fixtures after each test.
+	 */
 	public function tearDown(): void {
 		wp_delete_post( $this->post_id, true );
 		if ( $this->member_id ) {

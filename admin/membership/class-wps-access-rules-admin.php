@@ -333,8 +333,7 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 			}
 
 			// Sanitized inside wps_render_restriction_preview() → wps_sanitize_access_rule().
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$raw = isset( $_POST['rule'] ) ? (array) wp_unslash( $_POST['rule'] ) : array();
+			$raw = isset( $_POST['rule'] ) ? (array) wp_unslash( $_POST['rule'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			if ( ! function_exists( 'wps_render_restriction_preview' ) ) {
 				wp_send_json_error(
@@ -421,9 +420,10 @@ if ( ! class_exists( 'WPS_Access_Rules_Admin' ) ) {
 			// Nonce verified by the calling method (handle_save).
 			// phpcs:disable WordPress.Security.NonceVerification.Missing
 			// Individual fields are sanitized inside wps_sanitize_access_rule().
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$raw_rules = isset( $_POST['wps_rules'] ) ? (array) wp_unslash( $_POST['wps_rules'] ) : array();
-			$rules     = array();
+			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$rules = array();
 
 			// Collect existing IDs so generated IDs don't collide.
 			$existing_ids = array();

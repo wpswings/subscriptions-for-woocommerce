@@ -556,8 +556,10 @@ class Subscriptions_For_Woocommerce {
 	 * @return array{0:string,1:string}
 	 */
 	private function wps_sfw_get_report_date_range() {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$start_date = isset( $_POST['startDate'] ) ? sanitize_text_field( wp_unslash( $_POST['startDate'] ) ) : '';
 		$end_date   = isset( $_POST['endDate'] ) ? sanitize_text_field( wp_unslash( $_POST['endDate'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		return array( $start_date, $end_date );
 	}

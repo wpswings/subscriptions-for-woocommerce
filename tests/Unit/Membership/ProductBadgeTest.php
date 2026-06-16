@@ -16,22 +16,41 @@
  */
 class ProductBadgeTest extends WP_UnitTestCase {
 
-	/** @var WPS_Product_Badge */
+	/**
+	 * The badge instance under test.
+	 *
+	 * @var WPS_Product_Badge
+	 */
 	private $badge;
 
-	/** @var int WC product post ID used as the restricted product. */
+	/**
+	 * WC product post ID used as the restricted product.
+	 *
+	 * @var int
+	 */
 	private $product_id;
 
-	/** @var int User who holds the required plan. */
+	/**
+	 * User who holds the required plan.
+	 *
+	 * @var int
+	 */
 	private $member_id;
 
-	/** @var int User with no membership. */
+	/**
+	 * User with no membership.
+	 *
+	 * @var int
+	 */
 	private $guest_id;
 
 	// -----------------------------------------------------------------------
 	// Lifecycle
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Sets up test fixtures.
+	 */
 	public function setUp(): void {
 		parent::setUp();
 
@@ -76,6 +95,9 @@ class ProductBadgeTest extends WP_UnitTestCase {
 		wp_cache_flush();
 	}
 
+	/**
+	 * Tears down test fixtures.
+	 */
 	public function tearDown(): void {
 		wp_delete_post( $this->product_id, true );
 		if ( $this->member_id ) {

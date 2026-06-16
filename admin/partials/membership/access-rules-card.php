@@ -108,9 +108,10 @@ if ( $wps_is_product ) {
 	$wps_behavior_class = 'message';
 }
 
-// Field name helper closure.
+// Field name helper closure — returns the raw (unescaped) field name string.
+// Every call site wraps the return value with esc_attr() before output.
 $wps_fld = function ( $key ) use ( $wps_idx ) {
-	return esc_attr( "wps_rules[{$wps_idx}][{$key}]" );
+	return "wps_rules[{$wps_idx}][{$key}]";
 };
 
 // Conditional inline styles for target sub-fields.
@@ -144,17 +145,17 @@ if ( $wps_is_product ) {
 	data-index="<?php echo esc_attr( $wps_idx ); ?>"
 	data-kind="<?php echo esc_attr( $wps_kind ); ?>">
 
-	<input type="hidden" name="<?php echo $wps_fld( 'id' ); // phpcs:ignore ?>"
+	<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'id' ) ); ?>"
 		value="<?php echo esc_attr( isset( $wps_rule['id'] ) ? $wps_rule['id'] : '' ); ?>">
-	<input type="hidden" name="<?php echo $wps_fld( 'rule_kind' ); // phpcs:ignore ?>"
+	<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'rule_kind' ) ); ?>"
 		value="<?php echo esc_attr( $wps_kind ); ?>">
 
 	<div class="wps-rule-card__header">
 
 		<label class="wps-rule-enable-toggle"
 			title="<?php esc_attr_e( 'Enable / disable this rule', 'subscriptions-for-woocommerce' ); ?>">
-			<input type="hidden" name="<?php echo $wps_fld( 'enabled' ); // phpcs:ignore ?>" value="0">
-			<input type="checkbox" name="<?php echo $wps_fld( 'enabled' ); // phpcs:ignore ?>" value="1"
+			<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'enabled' ) ); ?>" value="0">
+			<input type="checkbox" name="<?php echo esc_attr( $wps_fld( 'enabled' ) ); ?>" value="1"
 				class="wps-rule-enabled-check" <?php checked( '1', (string) $wps_rule_enabled ); ?>>
 			<span class="wps-toggle__slider"></span>
 		</label>
@@ -182,7 +183,7 @@ if ( $wps_is_product ) {
 		<label class="wps-rule-prio-label" title="<?php echo esc_attr( $wps_attr_prio_title ); ?>">
 			<span class="screen-reader-text"><?php esc_html_e( 'Priority', 'subscriptions-for-woocommerce' ); ?></span>
 			<input type="number" min="1" max="999"
-				name="<?php echo $wps_fld( 'priority' ); // phpcs:ignore ?>"
+				name="<?php echo esc_attr( $wps_fld( 'priority' ) ); ?>"
 				value="<?php echo esc_attr( $wps_rule_priority ); ?>"
 				class="wps-rule-priority">
 		</label>
@@ -253,7 +254,7 @@ if ( $wps_is_product ) {
 							: esc_html__( 'What to Restrict', 'subscriptions-for-woocommerce' );
 						?>
 					</span>
-					<select name="<?php echo $wps_fld( 'target_type' ); // phpcs:ignore ?>" class="wps-rule-target-type">
+					<select name="<?php echo esc_attr( $wps_fld( 'target_type' ) ); ?>" class="wps-rule-target-type">
 						<?php if ( $wps_is_product ) : ?>
 							<option value="post_type" <?php selected( $wps_rule_type, 'post_type' ); ?>>
 								<?php esc_html_e( 'All Products', 'subscriptions-for-woocommerce' ); ?>
@@ -281,8 +282,8 @@ if ( $wps_is_product ) {
 					</select>
 
 					<?php if ( ! $wps_is_product ) : ?>
-						<div class="wps-target-sub wps-target-post_type"<?php echo $wps_div_pt; // phpcs:ignore ?>>
-							<select name="<?php echo $wps_fld( 'post_type' ); // phpcs:ignore ?>"
+						<div class="wps-target-sub wps-target-post_type"<?php echo wp_kses_post( $wps_div_pt ); ?>>
+							<select name="<?php echo esc_attr( $wps_fld( 'post_type' ) ); ?>"
 								class="wps-rule-post-type-select">
 								<?php foreach ( $wps_public_post_types as $wps_pt ) : ?>
 									<option value="<?php echo esc_attr( $wps_pt->name ); ?>"
@@ -294,8 +295,8 @@ if ( $wps_is_product ) {
 						</div>
 					<?php endif; ?>
 
-					<div class="wps-target-sub wps-target-object"<?php echo $wps_div_obj; // phpcs:ignore ?>>
-						<div class="wps-tag-container"<?php echo $wps_obj_tags_style; // phpcs:ignore ?>>
+					<div class="wps-target-sub wps-target-object"<?php echo wp_kses_post( $wps_div_obj ); ?>>
+						<div class="wps-tag-container"<?php echo wp_kses_post( $wps_obj_tags_style ); ?>>
 							<?php foreach ( $wps_rule_obj_ids as $wps_oid ) : ?>
 								<?php
 								$wps_obj = get_post( (int) $wps_oid );
@@ -305,7 +306,7 @@ if ( $wps_is_product ) {
 								?>
 								<span class="wps-tag">
 									<?php echo esc_html( $wps_obj->post_title ); ?>
-									<input type="hidden" name="<?php echo $wps_fld( 'object_ids' ); // phpcs:ignore ?>[]"
+									<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'object_ids' ) ); ?>[]"
 										value="<?php echo esc_attr( $wps_oid ); ?>">
 									<button type="button" class="wps-remove-tag"
 										aria-label="<?php echo esc_attr( $wps_attr_remove ); ?>">&times;</button>
@@ -320,8 +321,8 @@ if ( $wps_is_product ) {
 						</div>
 					</div>
 
-					<div class="wps-target-sub wps-target-taxonomy"<?php echo $wps_div_tax; // phpcs:ignore ?>>
-						<select name="<?php echo $wps_fld( 'taxonomy' ); // phpcs:ignore ?>"
+					<div class="wps-target-sub wps-target-taxonomy"<?php echo wp_kses_post( $wps_div_tax ); ?>>
+						<select name="<?php echo esc_attr( $wps_fld( 'taxonomy' ) ); ?>"
 							class="wps-rule-taxonomy-select" style="margin-bottom:6px;">
 							<?php foreach ( $wps_card_taxonomies as $wps_tx ) : ?>
 								<option value="<?php echo esc_attr( $wps_tx->name ); ?>"
@@ -330,7 +331,7 @@ if ( $wps_is_product ) {
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<div class="wps-tag-container"<?php echo $wps_term_tags_style; // phpcs:ignore ?>>
+						<div class="wps-tag-container"<?php echo wp_kses_post( $wps_term_tags_style ); ?>>
 							<?php foreach ( $wps_rule_term_ids as $wps_tid ) : ?>
 								<?php
 								$wps_term = get_term( (int) $wps_tid );
@@ -340,7 +341,7 @@ if ( $wps_is_product ) {
 								?>
 								<span class="wps-tag">
 									<?php echo esc_html( $wps_term->name ); ?>
-									<input type="hidden" name="<?php echo $wps_fld( 'term_ids' ); // phpcs:ignore ?>[]"
+									<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'term_ids' ) ); ?>[]"
 										value="<?php echo esc_attr( $wps_tid ); ?>">
 									<button type="button" class="wps-remove-tag"
 										aria-label="<?php echo esc_attr( $wps_attr_remove ); ?>">&times;</button>
@@ -365,7 +366,7 @@ if ( $wps_is_product ) {
 					</span>
 					<div class="wps-plan-pills">
 						<label class="wps-plan-pill">
-							<input type="checkbox" name="<?php echo $wps_fld( 'plans' ); // phpcs:ignore ?>[]"
+							<input type="checkbox" name="<?php echo esc_attr( $wps_fld( 'plans' ) ); ?>[]"
 								value="any" class="wps-plan-any-check"
 								<?php echo in_array( 'any', $wps_rule_plans, true ) ? 'checked' : ''; ?>>
 							<span><?php esc_html_e( 'Any Plan', 'subscriptions-for-woocommerce' ); ?></span>
@@ -383,7 +384,7 @@ if ( $wps_is_product ) {
 								: '';
 							?>
 							<label class="wps-plan-pill">
-								<input type="checkbox" name="<?php echo $wps_fld( 'plans' ); // phpcs:ignore ?>[]"
+								<input type="checkbox" name="<?php echo esc_attr( $wps_fld( 'plans' ) ); ?>[]"
 									value="<?php echo esc_attr( $wps_plan['slug'] ); ?>"
 									class="wps-plan-specific-check"
 									data-grant-method="<?php echo esc_attr( $wps_pill_method ); ?>"
@@ -395,7 +396,7 @@ if ( $wps_is_product ) {
 									<?php endif; ?>
 									<?php echo esc_html( $wps_plan['name'] ); ?>
 									<?php if ( $wps_method_badge ) : ?>
-										<em class="wps-plan-pill__method wps-plan-pill__method--<?php echo esc_attr( $wps_pill_method ); ?>">
+										<em class="wps-plan-pill__method wps-plan-pill__method--<?php echo esc_attr( $wps_pill_method ); // phpcs:ignore Generic.Files.LineLength.TooLong ?>">
 											<?php echo esc_html( $wps_method_badge ); ?>
 										</em>
 									<?php endif; ?>
@@ -426,7 +427,7 @@ if ( $wps_is_product ) {
 							<span class="wps-field-label">
 								<?php esc_html_e( 'Members-only notice', 'subscriptions-for-woocommerce' ); ?>
 							</span>
-							<textarea name="<?php echo $wps_fld( 'message' ); // phpcs:ignore ?>" rows="3"
+							<textarea name="<?php echo esc_attr( $wps_fld( 'message' ) ); ?>" rows="3"
 								placeholder="<?php echo esc_attr( $wps_ph_pmsg ); ?>"
 							><?php echo esc_textarea( $wps_rule_msg ); ?></textarea>
 							<p class="description" style="margin-top:4px;">
@@ -449,34 +450,34 @@ if ( $wps_is_product ) {
 						</span>
 						<div class="wps-seg-control" style="margin-bottom:10px;">
 							<label class="wps-seg-control__option">
-								<input type="radio" name="<?php echo $wps_fld( 'behavior' ); // phpcs:ignore ?>"
+								<input type="radio" name="<?php echo esc_attr( $wps_fld( 'behavior' ) ); ?>"
 									value="message" class="wps-rule-behavior-radio"
 									<?php checked( $wps_rule_behavior, 'message' ); ?>>
 								<span><?php esc_html_e( 'Show Message', 'subscriptions-for-woocommerce' ); ?></span>
 							</label>
 							<label class="wps-seg-control__option">
-								<input type="radio" name="<?php echo $wps_fld( 'behavior' ); // phpcs:ignore ?>"
+								<input type="radio" name="<?php echo esc_attr( $wps_fld( 'behavior' ) ); ?>"
 									value="redirect" class="wps-rule-behavior-radio"
 									<?php checked( $wps_rule_behavior, 'redirect' ); ?>>
 								<span><?php esc_html_e( 'Redirect', 'subscriptions-for-woocommerce' ); ?></span>
 							</label>
 							<label class="wps-seg-control__option<?php echo esc_attr( $wps_tpl_lock_cls ); ?>">
-								<input type="radio" name="<?php echo $wps_fld( 'behavior' ); // phpcs:ignore ?>"
+								<input type="radio" name="<?php echo esc_attr( $wps_fld( 'behavior' ) ); ?>"
 									value="template" class="wps-rule-behavior-radio"
 									<?php checked( $wps_rule_behavior, 'template' ); ?>
-									<?php echo $wps_tpl_disabled; // phpcs:ignore ?>>
+									<?php echo esc_attr( $wps_tpl_disabled ); ?>>
 								<span><?php esc_html_e( 'Template', 'subscriptions-for-woocommerce' ); ?></span>
 							</label>
 						</div>
 
-						<div class="wps-behavior-message"<?php echo $wps_div_msg; // phpcs:ignore ?>>
+						<div class="wps-behavior-message"<?php echo wp_kses_post( $wps_div_msg ); ?>>
 							<?php
 							$wps_ph_msg = __(
 								'Leave blank to show the default members-only message.',
 								'subscriptions-for-woocommerce'
 							);
 							?>
-							<textarea name="<?php echo $wps_fld( 'message' ); // phpcs:ignore ?>" rows="3"
+							<textarea name="<?php echo esc_attr( $wps_fld( 'message' ) ); ?>" rows="3"
 								placeholder="<?php echo esc_attr( $wps_ph_msg ); ?>"
 							><?php echo esc_textarea( $wps_rule_msg ); ?></textarea>
 							<p class="description" style="margin-top:4px;">
@@ -487,14 +488,14 @@ if ( $wps_is_product ) {
 							</p>
 						</div>
 
-						<div class="wps-behavior-redirect"<?php echo $wps_div_redir; // phpcs:ignore ?>>
+						<div class="wps-behavior-redirect"<?php echo wp_kses_post( $wps_div_redir ); ?>>
 							<?php
 							$wps_ph_url = __(
 								'URL to send non-members to — e.g. a pricing or login page.',
 								'subscriptions-for-woocommerce'
 							);
 							?>
-							<input type="url" name="<?php echo $wps_fld( 'redirect_url' ); // phpcs:ignore ?>"
+							<input type="url" name="<?php echo esc_attr( $wps_fld( 'redirect_url' ) ); ?>"
 								value="<?php echo esc_attr( $wps_rule_redir ); ?>"
 								placeholder="<?php echo esc_attr( $wps_ph_url ); ?>">
 						</div>
@@ -515,32 +516,38 @@ if ( $wps_is_product ) {
 						</span>
 						<div class="wps-toggle-list">
 							<label class="wps-toggle">
-								<input type="hidden" name="<?php echo $wps_fld( 'restrict_comments' ); // phpcs:ignore ?>"
+								<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'restrict_comments' ) ); ?>"
 									value="0">
-								<input type="checkbox" name="<?php echo $wps_fld( 'restrict_comments' ); // phpcs:ignore ?>"
+								<input type="checkbox" name="<?php echo esc_attr( $wps_fld( 'restrict_comments' ) ); ?>"
 									value="1" <?php checked( '1', $wps_opt_comments ); ?>>
 								<span class="wps-toggle__slider"></span>
 								<span class="wps-toggle__text">
-									<?php esc_html_e( 'Disable comments on restricted posts', 'subscriptions-for-woocommerce' ); ?>
+									<?php
+									esc_html_e( 'Disable comments on restricted posts', 'subscriptions-for-woocommerce' );
+									?>
 								</span>
 							</label>
 							<label class="wps-toggle">
-								<input type="hidden" name="<?php echo $wps_fld( 'include_archive' ); // phpcs:ignore ?>"
+								<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'include_archive' ) ); ?>"
 									value="0">
-								<input type="checkbox" name="<?php echo $wps_fld( 'include_archive' ); // phpcs:ignore ?>"
+								<input type="checkbox" name="<?php echo esc_attr( $wps_fld( 'include_archive' ) ); ?>"
 									value="1" <?php checked( '1', $wps_opt_archive ); ?>>
 								<span class="wps-toggle__slider"></span>
 								<span class="wps-toggle__text">
-									<?php esc_html_e( 'Show restricted posts in archives &amp; search', 'subscriptions-for-woocommerce' ); ?>
+									<?php
+									esc_html_e( 'Show restricted posts in archives &amp; search', 'subscriptions-for-woocommerce' );
+									?>
 								</span>
 							</label>
 							<label class="wps-toggle">
-								<input type="hidden" name="<?php echo $wps_fld( 'show_cta' ); // phpcs:ignore ?>" value="0">
-								<input type="checkbox" name="<?php echo $wps_fld( 'show_cta' ); // phpcs:ignore ?>"
+								<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'show_cta' ) ); ?>" value="0">
+								<input type="checkbox" name="<?php echo esc_attr( $wps_fld( 'show_cta' ) ); ?>"
 									value="1" <?php checked( '1', $wps_opt_cta ); ?>>
 								<span class="wps-toggle__slider"></span>
 								<span class="wps-toggle__text">
-									<?php esc_html_e( 'Auto-append purchase CTA to restriction messages', 'subscriptions-for-woocommerce' ); ?>
+									<?php
+									esc_html_e( 'Auto-append purchase CTA to restriction messages', 'subscriptions-for-woocommerce' );
+									?>
 								</span>
 							</label>
 						</div>
@@ -553,7 +560,7 @@ if ( $wps_is_product ) {
 				</div>
 			<?php else : ?>
 				<!-- Product cards always block purchase; one toggle for the CTA. -->
-				<input type="hidden" name="<?php echo $wps_fld( 'behavior' ); // phpcs:ignore ?>" value="message">
+				<input type="hidden" name="<?php echo esc_attr( $wps_fld( 'behavior' ) ); ?>" value="message">
 			<?php endif; ?>
 
 			<div class="wps-wizard__nav">

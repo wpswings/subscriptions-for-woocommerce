@@ -328,7 +328,8 @@ class Subscriptions_For_Woocommerce_Public {
 		$wps_sfw_subscription_initial_signup_price = wps_sfw_get_meta_data( $product_id, 'wps_sfw_subscription_initial_signup_price', true );
 		if ( isset( $wps_sfw_subscription_initial_signup_price ) && ! empty( $wps_sfw_subscription_initial_signup_price ) ) {
 			/*
-			 translators: %s: signup fee */
+			 * Translators: %s: signup fee.
+			 */
 			// $price .= sprintf( esc_html__( ' and %s  Sign up fee', 'subscriptions-for-woocommerce' ), wc_price( $wps_sfw_subscription_initial_signup_price ) );
 
 			/* translators: 1: currency symbol, 2: sign-up fee amount */
@@ -1176,8 +1177,7 @@ class Subscriptions_For_Woocommerce_Public {
 			AND {$table}.{$type_field} = 'wps_subscriptions'
 		";
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded column names; the user value is bound via prepare().
-		$total_count = $wpdb->get_var( $wpdb->prepare( $sql_count, $user_id ) );
+		$total_count = $wpdb->get_var( $wpdb->prepare( $sql_count, $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wps_num_pages = ceil( $total_count / $wps_per_page );
 
 		// Paginated query.
@@ -1192,8 +1192,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$sql .= " ORDER BY {$table}.{$id_field} DESC LIMIT %d OFFSET %d";
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded column names; user values are bound via prepare().
-		$subscription_ids = $wpdb->get_col( $wpdb->prepare( $sql, $user_id, $wps_per_page, $offset ) );
+		$subscription_ids = $wpdb->get_col( $wpdb->prepare( $sql, $user_id, $wps_per_page, $offset ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		$sql_all_subscription_ids = "
 			SELECT DISTINCT {$table}.{$id_field}
@@ -1205,8 +1204,7 @@ class Subscriptions_For_Woocommerce_Public {
 			ORDER BY {$table}.{$id_field} DESC
 		";
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded column names; the user value is bound via prepare().
-		$wps_all_subscription_ids = $wpdb->get_col( $wpdb->prepare( $sql_all_subscription_ids, $user_id ) );
+		$wps_all_subscription_ids = $wpdb->get_col( $wpdb->prepare( $sql_all_subscription_ids, $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		wc_get_template(
 			$this->wps_sfw_get_subscription_list_template(),
@@ -2732,7 +2730,7 @@ class Subscriptions_For_Woocommerce_Public {
 						'order_item_type' => 'line_item', // product.
 					)
 				);
-				// print_r($items_value['product_id']);echo"<br>---------dfdffsdfsdfsdfsdfsd---------";
+				// print_r( $items_value['product_id'] ); // Debug line.
 				if ( $order_item_id ) {
 					// Provide its meta information.
 					wc_add_order_item_meta( $order_item_id, '_qty', $items_value['qty'], true ); // Quantity.
@@ -2756,7 +2754,7 @@ class Subscriptions_For_Woocommerce_Public {
 			wp_send_json( 'Missing subscription data.' );
 		}
 
-		$subscription_data = json_decode( stripslashes( $_POST['subscription_data'] ), true );
+		$subscription_data = json_decode( wp_unslash( $_POST['subscription_data'] ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( ! is_array( $subscription_data ) ) {
 			wp_send_json( 'Invalid JSON data.' );
@@ -2773,7 +2771,7 @@ class Subscriptions_For_Woocommerce_Public {
 			? $subscription_data['products']
 			: array();
 
-		// Client supplied total (KEEPING YOUR LOGIC)
+		// Client supplied total.
 		$client_total = isset( $subscription_data['total'] )
 			? floatval( sanitize_text_field( $subscription_data['total'] ) )
 			: 0;
@@ -2818,7 +2816,7 @@ class Subscriptions_For_Woocommerce_Public {
 			wp_send_json_error( $validated_products['message'] );
 		}
 
-		// Base subscription price
+		// Base subscription price.
 		$base_price   = (float) $subscription_product->get_price();
 		$server_total = (float) $validated_products['total'] + $base_price;
 
@@ -3274,7 +3272,7 @@ class Subscriptions_For_Woocommerce_Public {
 		 */
 	public function wps_sfw_subscription_custom_add_body_class( $classes ) {
 
-		$current_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+		$current_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
 		if ( strpos( $current_uri, '/my-account/show-subscription/' ) !== false ) {
 			$classes[] = 'wps_sfw_show-subscription-page';
@@ -3482,7 +3480,7 @@ class Subscriptions_For_Woocommerce_Public {
 						foreach ( $order_fee_items as $fee_item ) {
 							$total_fee += $fee_item['line_total'];
 						}
-						$purchaseAmount = $total - $shipping - $tax - $total_fee;
+						$purchase_amount = $total - $shipping - $tax - $total_fee;
 
 						$wpam_refkey = $parent_order->get_meta( '_wpam_refkey' );
 						$wpam_id = $parent_order->get_meta( '_wpam_id' );
@@ -3491,7 +3489,7 @@ class Subscriptions_For_Woocommerce_Public {
 						}
 						$args = array();
 						$args['txn_id'] = $order_id;
-						$args['amount'] = $purchaseAmount;
+						$args['amount'] = $purchase_amount;
 						$args['aff_id'] = $wpam_refkey;
 						$args['email'] = $buyer_email;
 						WPAM_Commission_Tracking::award_commission( $args );

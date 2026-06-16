@@ -57,7 +57,7 @@ $wps_date_style = 'date' === $wps_drip_mode ? '' : ' style="display:none;"';
 	</span>
 
 	<select name="<?php echo esc_attr( $wps_fld_drip_mode ); ?>"
-		class="wps-rule-drip-mode"<?php echo $wps_adv_disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		class="wps-rule-drip-mode"<?php echo esc_attr( $wps_adv_disabled ); ?>>
 		<option value="none" <?php selected( $wps_drip_mode, 'none' ); ?>>
 			<?php esc_html_e( 'No scheduling — grant immediately', 'subscriptions-for-woocommerce' ); ?>
 		</option>
@@ -69,23 +69,23 @@ $wps_date_style = 'date' === $wps_drip_mode ? '' : ' style="display:none;"';
 		</option>
 	</select>
 
-	<div class="wps-drip-days-field" style="margin-top:6px;"<?php echo $wps_days_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<div class="wps-drip-days-field" style="margin-top:6px;"<?php echo esc_attr( $wps_days_style ); ?>>
 		<label>
 			<?php esc_html_e( 'Days after membership start:', 'subscriptions-for-woocommerce' ); ?>
 			<input type="number" min="0" max="3650"
 				name="<?php echo esc_attr( $wps_fld_drip_days ); ?>"
 				value="<?php echo esc_attr( $wps_drip_days ); ?>"
-				class="wps-rule-drip-days"<?php echo $wps_adv_disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+				class="wps-rule-drip-days"<?php echo esc_attr( $wps_adv_disabled ); ?>>
 		</label>
 	</div>
 
-	<div class="wps-drip-date-field" style="margin-top:6px;"<?php echo $wps_date_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<div class="wps-drip-date-field" style="margin-top:6px;"<?php echo esc_attr( $wps_date_style ); ?>>
 		<label>
 			<?php esc_html_e( 'Unlock on:', 'subscriptions-for-woocommerce' ); ?>
 			<input type="date"
 				name="<?php echo esc_attr( $wps_fld_drip_date ); ?>"
 				value="<?php echo esc_attr( $wps_drip_date ); ?>"
-				class="wps-rule-drip-date"<?php echo $wps_adv_disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+				class="wps-rule-drip-date"<?php echo esc_attr( $wps_adv_disabled ); ?>>
 		</label>
 	</div>
 
@@ -111,7 +111,7 @@ $wps_date_style = 'date' === $wps_drip_mode ? '' : ' style="display:none;"';
 		value="<?php echo esc_attr( $wps_exclude_ids ); ?>"
 		class="wps-rule-exclude-ids"
 		placeholder="<?php esc_attr_e( 'e.g. 42, 108, 256', 'subscriptions-for-woocommerce' ); ?>"
-		<?php echo $wps_adv_disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		<?php echo esc_attr( $wps_adv_disabled ); ?>>
 
 	<p class="description" style="margin-top:4px;">
 		<?php

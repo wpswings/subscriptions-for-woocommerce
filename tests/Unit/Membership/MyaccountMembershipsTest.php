@@ -21,16 +21,27 @@
  */
 class MyaccountMembershipsTest extends WP_UnitTestCase {
 
-	/** @var WPS_Myaccount_Memberships */
+	/**
+	 * Instance of the myaccount memberships tab under test.
+	 *
+	 * @var WPS_Myaccount_Memberships
+	 */
 	private $tab;
 
-	/** @var int */
+	/**
+	 * ID of the test subscriber user.
+	 *
+	 * @var int
+	 */
 	private $user_id;
 
 	// -----------------------------------------------------------------------
 	// Lifecycle
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Sets up test fixtures before each test.
+	 */
 	public function setUp(): void {
 		parent::setUp();
 		$this->tab     = new WPS_Myaccount_Memberships();
@@ -38,6 +49,9 @@ class MyaccountMembershipsTest extends WP_UnitTestCase {
 		wp_cache_flush();
 	}
 
+	/**
+	 * Tears down test fixtures after each test.
+	 */
 	public function tearDown(): void {
 		wp_delete_user( $this->user_id );
 		wp_cache_flush();

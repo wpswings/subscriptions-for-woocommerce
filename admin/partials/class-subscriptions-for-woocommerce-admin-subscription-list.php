@@ -361,11 +361,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		if ( $search_term ) {
 			if ( is_numeric( $search_term ) ) {
 				$search_join .= " LEFT JOIN {$meta_table} AS meta_search ON meta_search.{$order_id_field} = {$table}.{$id_field}";
+				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table/$id_field are $wpdb->prefix-based identifiers, not user input.
 				$where .= $wpdb->prepare(
 					" AND ( (meta_search.meta_key = 'wps_parent_order' AND meta_search.meta_value LIKE %s) OR {$table}.{$id_field} = %d )",
 					'%' . $wpdb->esc_like( $search_term ) . '%',
 					$search_term
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			} else {
 				$user = get_user_by( 'email', $search_term );
 				if ( ! $user ) {

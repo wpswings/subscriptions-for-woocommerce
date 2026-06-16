@@ -82,7 +82,7 @@ wp_nonce_field( WPS_Membership_Plan_CPT::NONCE_ACTION, WPS_Membership_Plan_CPT::
 					type="color"
 					id="wps_plan_color"
 					name="_wps_plan_color"
-					value="<?php echo $wps_color ? $wps_color : '#0073aa'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
+					value="<?php echo esc_attr( $wps_color ? $wps_color : '#0073aa' ); ?>"
 				/>
 				<p class="description">
 					<?php esc_html_e( 'Optional color shown as a badge next to the plan name in the admin list.', 'subscriptions-for-woocommerce' ); ?>
@@ -100,10 +100,7 @@ wp_nonce_field( WPS_Membership_Plan_CPT::NONCE_ACTION, WPS_Membership_Plan_CPT::
 				<div class="wps-plan-roles<?php echo esc_attr( $wps_role_lock_cls ); ?>"
 					data-wps-pro-locked="<?php echo esc_attr( $wps_role_is_pro ? '0' : '1' ); ?>">
 					<select id="wps_plan_user_role" name="_wps_plan_user_role"
-						<?php
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo $wps_role_disabled;
-						?>
+						<?php echo esc_attr( $wps_role_disabled ); ?>
 					>
 						<option value="">
 							<?php esc_html_e( '— No role change —', 'subscriptions-for-woocommerce' ); ?>
@@ -127,10 +124,7 @@ wp_nonce_field( WPS_Membership_Plan_CPT::NONCE_ACTION, WPS_Membership_Plan_CPT::
 						<input type="hidden" name="_wps_plan_remove_role" value="0">
 						<input type="checkbox" name="_wps_plan_remove_role" value="1"
 							<?php checked( $wps_role_remove ); ?>
-							<?php
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							echo $wps_role_disabled;
-							?>
+							<?php echo esc_attr( $wps_role_disabled ); ?>
 						>
 						<?php
 						esc_html_e(

@@ -1,5 +1,11 @@
 <?php
 /**
+ * Test suite for Membership Email notifications.
+ *
+ * @package Subscriptions_For_Woocommerce
+ */
+
+/**
  * Unit tests for Day 10 membership email classes.
  *
  * Covers:
@@ -13,15 +19,25 @@
  * @since   2.0.0
  * @package Subscriptions_For_Woocommerce
  */
-
 class MembershipEmailTest extends WP_UnitTestCase {
 
-	/** @var int A WordPress user created for the test run. */
+	/**
+	 * A WordPress user created for the test run.
+	 *
+	 * @var int
+	 */
 	private $user_id;
 
-	/** @var string A plan slug used throughout the tests. */
+	/**
+	 * A plan slug used throughout the tests.
+	 *
+	 * @var string
+	 */
 	private $plan_slug = 'gold';
 
+	/**
+	 * Sets up test fixtures.
+	 */
 	public function setUp(): void {
 		parent::setUp();
 		$this->user_id = $this->factory->user->create(
@@ -34,6 +50,12 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		// Stub wps_get_plan_by_slug so email tests don't need a real CPT post.
 		if ( ! function_exists( 'wps_get_plan_by_slug' ) ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+			/**
+			 * Mock implementation of wps_get_plan_by_slug().
+			 *
+			 * @param string $slug The plan slug.
+			 * @return array
+			 */
 			function wps_get_plan_by_slug( $slug ) {
 				return array(
 					'slug' => $slug,
@@ -62,31 +84,49 @@ class MembershipEmailTest extends WP_UnitTestCase {
 	// Email metadata
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Tests that the activated email has the correct ID.
+	 */
 	public function test_activated_email_has_correct_id() {
 		$email = new WPS_Membership_Activated_Email();
 		$this->assertSame( 'wps_membership_activated', $email->id );
 	}
 
+	/**
+	 * Tests that the cancelled email has the correct ID.
+	 */
 	public function test_cancelled_email_has_correct_id() {
 		$email = new WPS_Membership_Cancelled_Email();
 		$this->assertSame( 'wps_membership_cancelled', $email->id );
 	}
 
+	/**
+	 * Tests that the expired email has the correct ID.
+	 */
 	public function test_expired_email_has_correct_id() {
 		$email = new WPS_Membership_Expired_Email();
 		$this->assertSame( 'wps_membership_expired', $email->id );
 	}
 
+	/**
+	 * Tests that the on-hold email has the correct ID.
+	 */
 	public function test_onhold_email_has_correct_id() {
 		$email = new WPS_Membership_Onhold_Email();
 		$this->assertSame( 'wps_membership_onhold', $email->id );
 	}
 
+	/**
+	 * Tests that the activated email default subject contains the site title placeholder.
+	 */
 	public function test_activated_email_default_subject_contains_site_title_placeholder() {
 		$email = new WPS_Membership_Activated_Email();
 		$this->assertStringContainsString( '{site_title}', $email->get_default_subject() );
 	}
 
+	/**
+	 * Tests that all emails have the HTML template path set.
+	 */
 	public function test_all_emails_have_html_template_path_set() {
 		foreach ( array( 'Activated', 'Cancelled', 'Expired', 'Onhold' ) as $type ) {
 			$class = 'WPS_Membership_' . $type . '_Email';
@@ -95,6 +135,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * Tests that all emails have the plain text template path set.
+	 */
 	public function test_all_emails_have_plain_template_path_set() {
 		foreach ( array( 'Activated', 'Cancelled', 'Expired', 'Onhold' ) as $type ) {
 			$class = 'WPS_Membership_' . $type . '_Email';
@@ -107,6 +150,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 	// trigger() guard: invalid user
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Tests that the activated email trigger bails for an invalid user.
+	 */
 	public function test_activated_trigger_bails_for_invalid_user() {
 		$email        = new WPS_Membership_Activated_Email();
 		$sent_before  = did_action( 'woocommerce_email_sent' );
@@ -114,6 +160,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		$this->assertSame( $sent_before, did_action( 'woocommerce_email_sent' ) );
 	}
 
+	/**
+	 * Tests that the cancelled email trigger bails for an invalid user.
+	 */
 	public function test_cancelled_trigger_bails_for_invalid_user() {
 		$email       = new WPS_Membership_Cancelled_Email();
 		$sent_before = did_action( 'woocommerce_email_sent' );
@@ -121,6 +170,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		$this->assertSame( $sent_before, did_action( 'woocommerce_email_sent' ) );
 	}
 
+	/**
+	 * Tests that the expired email trigger bails for an invalid user.
+	 */
 	public function test_expired_trigger_bails_for_invalid_user() {
 		$email       = new WPS_Membership_Expired_Email();
 		$sent_before = did_action( 'woocommerce_email_sent' );
@@ -128,6 +180,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		$this->assertSame( $sent_before, did_action( 'woocommerce_email_sent' ) );
 	}
 
+	/**
+	 * Tests that the on-hold email trigger bails for an invalid user.
+	 */
 	public function test_onhold_trigger_bails_for_invalid_user() {
 		$email       = new WPS_Membership_Onhold_Email();
 		$sent_before = did_action( 'woocommerce_email_sent' );
@@ -139,6 +194,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 	// trigger() guard: email disabled
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Tests that the activated email trigger bails when the email is disabled.
+	 */
 	public function test_activated_trigger_bails_when_disabled() {
 		$email = new WPS_Membership_Activated_Email();
 		update_option( $email->get_option_key(), array( 'enabled' => 'no' ) );
@@ -153,6 +211,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 	// trigger() populates $this->object
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Tests that the activated email trigger sets the object with user data.
+	 */
 	public function test_activated_trigger_sets_object_with_user() {
 		$email = new WPS_Membership_Activated_Email();
 		// Disable sending to avoid actual mail; object is set before the send guard.
@@ -172,6 +233,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 	// trigger_on_reactivate() status filter
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Tests that trigger_on_reactivate ignores non-active statuses.
+	 */
 	public function test_trigger_on_reactivate_ignores_non_active_status() {
 		$email = new WPS_Membership_Activated_Email();
 		update_option( $email->get_option_key(), array( 'enabled' => 'yes' ) );
@@ -189,6 +253,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 	// maybe_trigger() status filters
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Tests that the cancelled email maybe_trigger ignores non-cancelled statuses.
+	 */
 	public function test_cancelled_maybe_trigger_ignores_non_cancelled_status() {
 		$email       = new WPS_Membership_Cancelled_Email();
 		$sent_before = did_action( 'woocommerce_email_sent' );
@@ -196,6 +263,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		$this->assertSame( $sent_before, did_action( 'woocommerce_email_sent' ) );
 	}
 
+	/**
+	 * Tests that the expired email maybe_trigger ignores non-expired statuses.
+	 */
 	public function test_expired_maybe_trigger_ignores_non_expired_status() {
 		$email       = new WPS_Membership_Expired_Email();
 		$sent_before = did_action( 'woocommerce_email_sent' );
@@ -203,6 +273,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		$this->assertSame( $sent_before, did_action( 'woocommerce_email_sent' ) );
 	}
 
+	/**
+	 * Tests that the on-hold email maybe_trigger ignores non-on-hold statuses.
+	 */
 	public function test_onhold_maybe_trigger_ignores_non_onhold_status() {
 		$email       = new WPS_Membership_Onhold_Email();
 		$sent_before = did_action( 'woocommerce_email_sent' );
@@ -214,6 +287,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 	// Hook wiring
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Tests that the activated email is hooked to the wps_membership_created action.
+	 */
 	public function test_activated_email_is_hooked_to_wps_membership_created() {
 		$email = new WPS_Membership_Activated_Email();
 		$this->assertGreaterThan(
@@ -222,6 +298,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Tests that the activated email is hooked to the wps_membership_status_changed action.
+	 */
 	public function test_activated_email_is_hooked_to_wps_membership_status_changed() {
 		$email = new WPS_Membership_Activated_Email();
 		$this->assertGreaterThan(
@@ -230,6 +309,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Tests that the cancelled email is hooked to the wps_membership_status_changed action.
+	 */
 	public function test_cancelled_email_is_hooked_to_wps_membership_status_changed() {
 		$email = new WPS_Membership_Cancelled_Email();
 		$this->assertGreaterThan(
@@ -238,6 +320,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Tests that the expired email is hooked to the wps_membership_status_changed action.
+	 */
 	public function test_expired_email_is_hooked_to_wps_membership_status_changed() {
 		$email = new WPS_Membership_Expired_Email();
 		$this->assertGreaterThan(
@@ -246,6 +331,9 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Tests that the on-hold email is hooked to the wps_membership_status_changed action.
+	 */
 	public function test_onhold_email_is_hooked_to_wps_membership_status_changed() {
 		$email = new WPS_Membership_Onhold_Email();
 		$this->assertGreaterThan(

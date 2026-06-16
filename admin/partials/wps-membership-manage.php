@@ -136,11 +136,7 @@ if ( ! isset( $wps_partial_map[ $wps_active_sub ] ) ) {
 				class="wps-mem-tab<?php echo $wps_is_active ? ' is-active' : ''; ?>"
 				<?php echo $wps_is_active ? 'aria-current="page"' : ''; ?>>
 				<span class="wps-mem-tab__icon">
-					<?php
-					// Icon markup is a hardcoded inline SVG constant defined above — no user input.
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $wps_tab['icon'];
-					?>
+					<?php echo wp_kses_post( $wps_tab['icon'] ); ?>
 				</span>
 				<span class="wps-mem-tab__label"><?php echo esc_html( $wps_tab['label'] ); ?></span>
 				<?php if ( ! empty( $wps_tab['pro'] ) && ! $wps_mem_pro_active ) : ?>

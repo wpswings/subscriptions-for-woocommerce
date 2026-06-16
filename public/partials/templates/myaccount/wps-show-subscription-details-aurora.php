@@ -206,7 +206,7 @@ $pro_after_details_html = trim( ob_get_clean() );
 						<div class="wps-sfw-aurora-action-card__copy">
 							<h4><?php esc_html_e( 'More actions', 'subscriptions-for-woocommerce' ); ?></h4>
 							<div class="wps-sfw-aurora-pro-actions">
-								<?php echo $pro_manage_actions_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hook output is rendered markup from integrated plugins. ?>
+								<?php echo wp_kses_post( $pro_manage_actions_html ); ?>
 							</div>
 						</div>
 					</div>
@@ -239,7 +239,7 @@ $pro_after_details_html = trim( ob_get_clean() );
 
 	<?php if ( $pro_after_details_html ) : ?>
 		<div class="wps-sfw-aurora-extensions">
-			<?php echo $pro_after_details_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hook output is rendered markup from integrated plugins. ?>
+			<?php echo wp_kses_post( $pro_after_details_html ); ?>
 		</div>
 	<?php endif; ?>
 </div>

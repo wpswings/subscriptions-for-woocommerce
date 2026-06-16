@@ -8,6 +8,7 @@
  * @package     Subscriptions_For_Woocommerce
  * @subpackage  Subscriptions_For_Woocommerce/package
  */
+
 /**
  * The Payment-specific functionality of the plugin admin side.
  *

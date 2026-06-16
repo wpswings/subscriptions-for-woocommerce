@@ -91,7 +91,9 @@ if ( ! function_exists( 'wps_create_plan' ) ) {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $args Plan arguments. {
+	 * @param array $args {
+	 *   Plan arguments.
+	 *
 	 *   @type string $name          Required. Plan display name.
 	 *   @type string $slug          Optional. Auto-generated from name if omitted.
 	 *   @type string $description   Optional. Plan description (wp_kses_post applied).

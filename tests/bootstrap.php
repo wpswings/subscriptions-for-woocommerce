@@ -9,6 +9,8 @@
  * To scaffold WP_TESTS_DIR, run:
  *   bash tests/bin/install-wp-tests.sh local root root \
  *       "/home/shivam/.config/Local/run/wCdL6ejyZ/mysql/mysqld.sock" latest true
+ *
+ * @package Subscriptions_For_Woocommerce
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -33,6 +35,7 @@ if ( ! defined( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' ) ) {
 }
 
 if ( ! file_exists( "$_tests_dir/includes/functions.php" ) ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo "Could not find {$_tests_dir}/includes/functions.php." . PHP_EOL;
 	echo "Run: bash tests/bin/install-wp-tests.sh <db> <user> <pass> <socket> latest true" . PHP_EOL;
 	exit( 1 );

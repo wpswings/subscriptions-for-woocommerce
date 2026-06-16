@@ -290,7 +290,8 @@ class Subscriptions_For_Woocommerce_Talk_To_Expert_Form {
 			);
 		}
 
-		$form_data = isset( $_POST['form_data'] ) ? wp_unslash( $_POST['form_data'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- form_data contains JSON; sanitized after decode.
+		$form_data = isset( $_POST['form_data'] ) ? sanitize_text_field( wp_unslash( $_POST['form_data'] ) ) : '';
 		$decoded   = json_decode( $form_data, true );
 
 		if ( ! is_array( $decoded ) ) {
@@ -554,11 +555,12 @@ class Subscriptions_For_Woocommerce_Talk_To_Expert_Form {
 		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( $table_exists === $table_name ) {
 			$status_placeholders = implode( ',', array_fill( 0, count( $paid_statuses ), '%s' ) );
-			$query               = $wpdb->prepare(
-				"SELECT SUM(total_sales) FROM {$table_name} WHERE status IN ({$status_placeholders}) AND date_created >= %s",
-				array_merge( $paid_statuses, array( $from_date ) )
-			); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is already built with $wpdb->prepare() above.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table_name is a known safe table name; $status_placeholders contains only %s tokens.
+			$sql = 'SELECT SUM(total_sales) FROM ' . $table_name
+				. ' WHERE status IN (' . $status_placeholders . ') AND date_created >= %s';
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql string is constructed from safe values above.
+			$query = $wpdb->prepare( $sql, array_merge( $paid_statuses, array( $from_date ) ) );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$stats_total = $wpdb->get_var( $query );
 
 			if ( ! empty( $stats_total ) ) {

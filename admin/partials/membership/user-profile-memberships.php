@@ -47,12 +47,12 @@ $wps_date_format         = get_option( 'date_format' );
 				: '<code>' . esc_html( $wps_pm_row['plan_slug'] ) . '</code>';
 
 			$wps_pm_since = ! empty( $wps_pm_row['start_date'] )
-				? esc_html( date_i18n( $wps_date_format, $wps_pm_row['start_date'] ) )
+				? date_i18n( $wps_date_format, $wps_pm_row['start_date'] )
 				: '—';
 
 			$wps_pm_expires = empty( $wps_pm_row['expiry_date'] )
-				? esc_html__( 'Lifetime', 'subscriptions-for-woocommerce' )
-				: esc_html( date_i18n( $wps_date_format, $wps_pm_row['expiry_date'] ) );
+				? __( 'Lifetime', 'subscriptions-for-woocommerce' )
+				: date_i18n( $wps_date_format, $wps_pm_row['expiry_date'] );
 
 			$wps_pm_is_active = in_array( $wps_pm_row['status'], array( 'active', 'on-hold' ), true );
 			$wps_pm_slug      = $wps_pm_row['plan_slug'];
@@ -86,34 +86,34 @@ $wps_date_format         = get_option( 'date_format' );
 			);
 			?>
 			<tr>
-				<td><?php echo $wps_pm_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+				<td><?php echo wp_kses_post( $wps_pm_name ); ?></td>
 				<td>
-					<?php $wps_status_class = esc_attr( sanitize_html_class( $wps_pm_row['status'] ) ); ?>
-					<mark class="order-status status-<?php echo $wps_status_class; // phpcs:ignore ?>">
+					<?php $wps_status_class = sanitize_html_class( $wps_pm_row['status'] ); ?>
+					<mark class="order-status status-<?php echo esc_attr( $wps_status_class ); ?>">
 						<span><?php echo esc_html( ucfirst( $wps_pm_row['status'] ) ); ?></span>
 					</mark>
 				</td>
 				<td><?php echo esc_html( ucfirst( $wps_pm_row['source'] ) ); ?></td>
-				<td><?php echo $wps_pm_since; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
-				<td><?php echo $wps_pm_expires; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+				<td><?php echo esc_html( $wps_pm_since ); ?></td>
+				<td><?php echo esc_html( $wps_pm_expires ); ?></td>
 				<td>
 					<?php
-					$wps_revoke_msg     = esc_js( __( 'Revoke this membership?', 'subscriptions-for-woocommerce' ) );
-					$wps_toggle_confirm = $wps_pm_is_active
-						? ' onclick="return confirm( \'' . $wps_revoke_msg . '\' );"'
-						: '';
-					$wps_remove_confirm = ' onclick="return confirm( \''
-						. esc_js( __( 'Permanently remove this membership record?', 'subscriptions-for-woocommerce' ) )
-						. '\' );"';
+					$wps_revoke_msg = __( 'Revoke this membership?', 'subscriptions-for-woocommerce' );
+					$wps_remove_msg = __(
+						'Permanently remove this membership record?',
+						'subscriptions-for-woocommerce'
+					);
 					?>
 					<a href="<?php echo esc_url( $wps_toggle_url ); ?>"
 						class="button button-small"
-						<?php echo $wps_toggle_confirm; // phpcs:ignore ?>>
-						<?php echo $wps_toggle_label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php if ( $wps_pm_is_active ) : ?>
+						onclick="return confirm( '<?php echo esc_js( $wps_revoke_msg ); ?>' );"
+						<?php endif; ?>>
+						<?php echo esc_html( $wps_toggle_label ); ?>
 					</a>
 					<a href="<?php echo esc_url( $wps_remove_url ); ?>"
 						class="button button-small button-link-delete"
-						<?php echo $wps_remove_confirm; // phpcs:ignore ?>>
+						onclick="return confirm( '<?php echo esc_js( $wps_remove_msg ); ?>' );">
 						<?php esc_html_e( 'Remove', 'subscriptions-for-woocommerce' ); ?>
 					</a>
 				</td>

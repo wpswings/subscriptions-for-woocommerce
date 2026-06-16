@@ -36,7 +36,7 @@ $wps_tpl_show = ! empty( $wps_tpl_show );
 // Pro gate — when inactive, lock the controls and show the "Pro" badge.
 $wps_tpl_is_pro   = (bool) apply_filters( 'wsp_sfw_check_pro_plugin', false );
 $wps_tpl_lock_cls = $wps_tpl_is_pro ? '' : ' wps_pro_settings_tag wps-ai-pro-locked';
-$wps_tpl_disabled = $wps_tpl_is_pro ? '' : ' disabled';
+$wps_tpl_disabled = $wps_tpl_is_pro ? '' : 'disabled';
 
 // Current values (defaults match wps_sanitize_access_rule()).
 $wps_teaser_mode  = isset( $wps_rule_tpl['teaser_mode'] ) ? (string) $wps_rule_tpl['teaser_mode'] : 'none';
@@ -48,19 +48,21 @@ $wps_fld_teaser_words = 'wps_rules[' . $wps_idx . '][teaser_words]';
 
 // Inline display toggles: the wrapper follows the selected behavior; the
 // word-count input follows the selected teaser mode (JS keeps both in sync).
-$wps_wrap_style  = $wps_tpl_show ? '' : ' style="display:none;"';
-$wps_words_style = 'words' === $wps_teaser_mode ? '' : ' style="display:none;"';
+$wps_wrap_style  = $wps_tpl_show ? '' : 'display:none;';
+$wps_words_style = 'words' === $wps_teaser_mode ? 'margin-top:6px;' : 'margin-top:6px;display:none;';
 ?>
 <div class="wps-behavior-template wps-field-group<?php echo esc_attr( $wps_tpl_lock_cls ); ?>"
 	data-wps-pro-locked="<?php echo esc_attr( $wps_tpl_is_pro ? '0' : '1' ); ?>"
-	<?php echo $wps_wrap_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<?php if ( $wps_wrap_style ) : ?>
+	style="<?php echo esc_attr( $wps_wrap_style ); ?>"
+	<?php endif; ?>>
 
 	<span class="wps-field-label">
 		<?php esc_html_e( 'Teaser', 'subscriptions-for-woocommerce' ); ?>
 	</span>
 
 	<select name="<?php echo esc_attr( $wps_fld_teaser_mode ); ?>"
-		class="wps-rule-teaser-mode"<?php echo $wps_tpl_disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		class="wps-rule-teaser-mode"<?php echo $wps_tpl_disabled ? ' ' . esc_attr( $wps_tpl_disabled ) : ''; ?>>
 		<option value="none" <?php selected( $wps_teaser_mode, 'none' ); ?>>
 			<?php esc_html_e( 'No teaser — show the restriction notice only', 'subscriptions-for-woocommerce' ); ?>
 		</option>
@@ -69,13 +71,14 @@ $wps_words_style = 'words' === $wps_teaser_mode ? '' : ' style="display:none;"';
 		</option>
 	</select>
 
-	<div class="wps-teaser-words-field" style="margin-top:6px;"<?php echo $wps_words_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<div class="wps-teaser-words-field" style="<?php echo esc_attr( $wps_words_style ); ?>">
 		<label>
 			<?php esc_html_e( 'Number of words:', 'subscriptions-for-woocommerce' ); ?>
 			<input type="number" min="0" max="5000"
 				name="<?php echo esc_attr( $wps_fld_teaser_words ); ?>"
 				value="<?php echo esc_attr( $wps_teaser_words ); ?>"
-				class="wps-rule-teaser-words"<?php echo $wps_tpl_disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+				class="wps-rule-teaser-words"
+				<?php echo $wps_tpl_disabled ? esc_attr( $wps_tpl_disabled ) : ''; ?>>
 		</label>
 	</div>
 

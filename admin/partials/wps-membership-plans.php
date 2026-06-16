@@ -95,14 +95,14 @@ function wps_confirm_plan_delete( el ) {
 	var name    = el.getAttribute( 'data-plan' );
 	var members = parseInt( el.getAttribute( 'data-members' ), 10 );
 	var tpl = members > 0
-		? '<?php echo $wps_js_delete_with_members; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>'
-		: '<?php echo $wps_js_delete_no_members; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>';
+		? '<?php echo esc_js( $wps_js_delete_with_members ); ?>'
+		: '<?php echo esc_js( $wps_js_delete_no_members ); ?>';
 	var msg = tpl.replace( '%1$s', name ).replace( '%2$d', members );
 	return window.confirm( msg );
 }
 
 ( function () {
-	var bulkMsg = '<?php echo $wps_js_bulk_delete; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>';
+	var bulkMsg = '<?php echo esc_js( $wps_js_bulk_delete ); ?>';
 	var applyBtns = document.querySelectorAll(
 		'.wps_sfw_list_table .bulkactions input[type="submit"]'
 	);

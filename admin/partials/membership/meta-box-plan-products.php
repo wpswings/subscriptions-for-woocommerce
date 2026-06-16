@@ -122,7 +122,7 @@ $wps_ph_sub         = esc_attr__(
 			style="width:100%;"
 			id="wps_plan_products"
 			name="_wps_plan_products[]"
-			data-placeholder="<?php echo $wps_ph_purchase; // phpcs:ignore ?>"
+			data-placeholder="<?php echo esc_attr( $wps_ph_purchase ); ?>"
 			data-action="woocommerce_json_search_products_and_variations"
 		>
 			<?php foreach ( $wps_linked as $wps_pid ) : ?>
@@ -167,7 +167,7 @@ $wps_ph_sub         = esc_attr__(
 			style="width:100%;"
 			id="wps_plan_sub_product"
 			name="_wps_plan_sub_product"
-			data-placeholder="<?php echo $wps_ph_sub; // phpcs:ignore ?>"
+			data-placeholder="<?php echo esc_attr( $wps_ph_sub ); ?>"
 			data-action="wps_search_subscription_products"
 			data-allow_clear="true"
 		>

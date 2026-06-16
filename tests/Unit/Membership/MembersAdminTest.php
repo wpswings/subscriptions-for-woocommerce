@@ -1,5 +1,7 @@
 <?php
 /**
+ * Unit tests for WPS_Members_Admin and wps_remove_user_membership().
+ *
  * Unit tests for Day 09 deliverables:
  *   - wps_remove_user_membership() — hard-delete removes both meta keys and pointer
  *   - WPS_Members_Admin::save_profile_section() — grant, revoke, reactivate, remove via POST
@@ -10,14 +12,30 @@
  * @package Subscriptions_For_Woocommerce
  */
 
+/**
+ * Test case for WPS_Members_Admin and related membership functions.
+ */
 class MembersAdminTest extends WP_UnitTestCase {
 
-	/** @var int A WordPress user created per test. */
+	/**
+	 * A WordPress user created per test.
+	 *
+	 * @var int
+	 */
 	private $user_id;
 
-	/** @var WPS_Members_Admin */
+	/**
+	 * Instance of WPS_Members_Admin under test.
+	 *
+	 * @var WPS_Members_Admin
+	 */
 	private $admin;
 
+	/**
+	 * Set up test fixtures before each test.
+	 *
+	 * @return void
+	 */
 	public function setUp(): void {
 		parent::setUp();
 		$this->user_id = $this->factory->user->create();
@@ -28,17 +46,32 @@ class MembersAdminTest extends WP_UnitTestCase {
 	// wps_remove_user_membership()
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Returns false when the membership does not exist.
+	 *
+	 * @return void
+	 */
 	public function test_remove_returns_false_for_nonexistent_membership() {
 		$result = wps_remove_user_membership( $this->user_id, 'ghost-plan' );
 		$this->assertFalse( $result );
 	}
 
+	/**
+	 * Returns true when the membership record exists.
+	 *
+	 * @return void
+	 */
 	public function test_remove_returns_true_when_record_exists() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'gold' ) );
 		$result = wps_remove_user_membership( $this->user_id, 'gold' );
 		$this->assertTrue( $result );
 	}
 
+	/**
+	 * Verifies that the membership is deleted from the wps_memberships meta array.
+	 *
+	 * @return void
+	 */
 	public function test_remove_deletes_from_wps_memberships_array() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'silver' ) );
 		wps_remove_user_membership( $this->user_id, 'silver' );
@@ -47,6 +80,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertFalse( isset( $meta['silver'] ) );
 	}
 
+	/**
+	 * Verifies that the flat queryable meta key is deleted on removal.
+	 *
+	 * @return void
+	 */
 	public function test_remove_deletes_flat_queryable_key() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'bronze' ) );
 		wps_remove_user_membership( $this->user_id, 'bronze' );
@@ -55,6 +93,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertEmpty( $flat );
 	}
 
+	/**
+	 * Verifies that the subscription pointer meta is deleted on removal.
+	 *
+	 * @return void
+	 */
 	public function test_remove_deletes_subscription_pointer() {
 		wps_create_user_membership(
 			$this->user_id,
@@ -70,6 +113,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertEmpty( $pointer );
 	}
 
+	/**
+	 * Verifies that other plan memberships remain intact after one is removed.
+	 *
+	 * @return void
+	 */
 	public function test_remove_leaves_other_plan_memberships_intact() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'plan-a' ) );
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'plan-b' ) );
@@ -81,18 +129,31 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertSame( 'plan-b', $remaining['plan_slug'] );
 	}
 
+	/**
+	 * Verifies that the wps_membership_removed action hook fires on removal.
+	 *
+	 * @return void
+	 */
 	public function test_remove_fires_wps_membership_removed_hook() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'hook-plan' ) );
 
 		$fired = false;
-		add_action( 'wps_membership_removed', function () use ( &$fired ) {
-			$fired = true;
-		} );
+		add_action(
+			'wps_membership_removed',
+			function () use ( &$fired ) {
+				$fired = true;
+			}
+		);
 
 		wps_remove_user_membership( $this->user_id, 'hook-plan' );
 		$this->assertTrue( $fired );
 	}
 
+	/**
+	 * Verifies that the object cache is busted after a membership is removed.
+	 *
+	 * @return void
+	 */
 	public function test_remove_busts_object_cache() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'cache-plan' ) );
 		// Prime the cache.
@@ -104,6 +165,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertFalse( wps_user_has_plan( $this->user_id, 'cache-plan' ) );
 	}
 
+	/**
+	 * Returns false when an invalid (zero) user ID is supplied.
+	 *
+	 * @return void
+	 */
 	public function test_remove_returns_false_for_invalid_user_id() {
 		$result = wps_remove_user_membership( 0, 'gold' );
 		$this->assertFalse( $result );
@@ -113,6 +179,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 	// save_profile_section() — grant path
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Grants membership with manual source via save_profile_section().
+	 *
+	 * @return void
+	 */
 	public function test_save_profile_section_grants_membership_with_manual_source() {
 		$plan_id = wps_create_plan( array( 'name' => 'Profile Plan' ) );
 		$plan    = wps_get_plan( $plan_id );
@@ -136,6 +207,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertSame( 'active', $membership['status'] );
 	}
 
+	/**
+	 * Revokes an active membership via save_profile_section().
+	 *
+	 * @return void
+	 */
 	public function test_save_profile_section_revokes_membership() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'revoke-plan' ) );
 
@@ -143,11 +219,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		wp_set_current_user( $admin_user );
 
 		$_POST = array(
-			'wps_profile_membership_nonce'   => wp_create_nonce(
+			'wps_profile_membership_nonce'  => wp_create_nonce(
 				'wps_profile_membership_' . $this->user_id
 			),
-			'wps_profile_membership_action'  => 'revoke',
-			'wps_profile_action_plan'        => 'revoke-plan',
+			'wps_profile_membership_action' => 'revoke',
+			'wps_profile_action_plan'       => 'revoke-plan',
 		);
 
 		$this->admin->save_profile_section( $this->user_id );
@@ -156,6 +232,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertSame( 'cancelled', $membership['status'] );
 	}
 
+	/**
+	 * Reactivates a cancelled membership via save_profile_section().
+	 *
+	 * @return void
+	 */
 	public function test_save_profile_section_reactivates_membership() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'react-plan' ) );
 		wps_update_membership_status( $this->user_id, 'react-plan', 'cancelled' );
@@ -164,11 +245,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		wp_set_current_user( $admin_user );
 
 		$_POST = array(
-			'wps_profile_membership_nonce'   => wp_create_nonce(
+			'wps_profile_membership_nonce'  => wp_create_nonce(
 				'wps_profile_membership_' . $this->user_id
 			),
-			'wps_profile_membership_action'  => 'reactivate',
-			'wps_profile_action_plan'        => 'react-plan',
+			'wps_profile_membership_action' => 'reactivate',
+			'wps_profile_action_plan'       => 'react-plan',
 		);
 
 		$this->admin->save_profile_section( $this->user_id );
@@ -177,6 +258,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertSame( 'active', $membership['status'] );
 	}
 
+	/**
+	 * Removes a membership entirely via save_profile_section().
+	 *
+	 * @return void
+	 */
 	public function test_save_profile_section_removes_membership() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'rm-plan' ) );
 
@@ -184,11 +270,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		wp_set_current_user( $admin_user );
 
 		$_POST = array(
-			'wps_profile_membership_nonce'   => wp_create_nonce(
+			'wps_profile_membership_nonce'  => wp_create_nonce(
 				'wps_profile_membership_' . $this->user_id
 			),
-			'wps_profile_membership_action'  => 'remove',
-			'wps_profile_action_plan'        => 'rm-plan',
+			'wps_profile_membership_action' => 'remove',
+			'wps_profile_action_plan'       => 'rm-plan',
 		);
 
 		$this->admin->save_profile_section( $this->user_id );
@@ -197,6 +283,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertNull( $membership );
 	}
 
+	/**
+	 * Ignores the POST request when the nonce is invalid.
+	 *
+	 * @return void
+	 */
 	public function test_save_profile_section_ignores_bad_nonce() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'nonce-plan' ) );
 
@@ -204,9 +295,9 @@ class MembersAdminTest extends WP_UnitTestCase {
 		wp_set_current_user( $admin_user );
 
 		$_POST = array(
-			'wps_profile_membership_nonce'   => 'bad-nonce',
-			'wps_profile_membership_action'  => 'revoke',
-			'wps_profile_action_plan'        => 'nonce-plan',
+			'wps_profile_membership_nonce'  => 'bad-nonce',
+			'wps_profile_membership_action' => 'revoke',
+			'wps_profile_action_plan'       => 'nonce-plan',
 		);
 
 		$this->admin->save_profile_section( $this->user_id );
@@ -220,6 +311,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 	// handle_row_actions() — GET row actions
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Cancels a membership via handle_row_actions().
+	 *
+	 * @return void
+	 */
 	public function test_handle_row_actions_cancels_membership() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'row-plan' ) );
 
@@ -239,13 +335,18 @@ class MembersAdminTest extends WP_UnitTestCase {
 		try {
 			$this->admin->handle_row_actions();
 		} catch ( Exception $e ) {
-			// wp_safe_redirect may throw in test context; that is fine.
+			// Intentional - exception ignored in test.
 		}
 
 		$membership = wps_get_membership( $this->user_id, 'row-plan' );
 		$this->assertSame( 'cancelled', $membership['status'] );
 	}
 
+	/**
+	 * Removes a membership via handle_row_actions().
+	 *
+	 * @return void
+	 */
 	public function test_handle_row_actions_removes_membership() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'del-plan' ) );
 
@@ -264,13 +365,18 @@ class MembersAdminTest extends WP_UnitTestCase {
 		try {
 			$this->admin->handle_row_actions();
 		} catch ( Exception $e ) {
-			// redirect + exit in test context.
+			// Intentional - exception ignored in test.
 		}
 
 		$membership = wps_get_membership( $this->user_id, 'del-plan' );
 		$this->assertNull( $membership );
 	}
 
+	/**
+	 * Does nothing when the request is outside the membership members tab.
+	 *
+	 * @return void
+	 */
 	public function test_handle_row_actions_does_nothing_outside_the_tab() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'safe-plan' ) );
 
@@ -296,6 +402,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 	// CSV export removal
 	// -----------------------------------------------------------------------
 
+	/**
+	 * Asserts that the CSV export handler method has been removed.
+	 *
+	 * @return void
+	 */
 	public function test_csv_export_handler_method_is_removed() {
 		$this->assertFalse(
 			method_exists( $this->admin, 'output_csv_export' ),
@@ -303,6 +414,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Verifies that an export request does not short-circuit row actions.
+	 *
+	 * @return void
+	 */
 	public function test_export_request_does_not_short_circuit_row_actions() {
 		wps_create_user_membership( $this->user_id, array( 'plan_slug' => 'noexport-plan' ) );
 
@@ -324,6 +440,11 @@ class MembersAdminTest extends WP_UnitTestCase {
 		$this->assertSame( 'active', $membership['status'] );
 	}
 
+	/**
+	 * Tear down after each test by resetting superglobals.
+	 *
+	 * @return void
+	 */
 	public function tearDown(): void {
 		$_POST = array();
 		$_GET  = array();

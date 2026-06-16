@@ -22,7 +22,7 @@ $sfw_subscription_box_settings = apply_filters( 'wps_sfw_subscription_box_settin
 	<div class="sfw-secion-wrap">
 		<?php
 		$wsp_api_html = $sfw_wps_sfw_obj->wps_sfw_plug_generate_html( $sfw_subscription_box_settings );
-		echo $wsp_api_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Renderer escapes field markup internally.
+		echo wp_kses_post( $wsp_api_html );
 		wp_nonce_field( 'wps-sfw-subscription-box-nonce', 'wps-sfw-subscription-box-nonce-field' );
 		?>
 	</div>

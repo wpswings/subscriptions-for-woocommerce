@@ -712,7 +712,8 @@ class Subscriptions_For_Woocommerce_Admin {
 
 								if ( isset( $_POST[ $sfw_genaral_setting['id'] ] ) && ! empty( $_POST[ $sfw_genaral_setting['id'] ] ) ) {
 
-									$posted_value = $this->wps_sfw_sanitize_admin_setting_value( wp_unslash( $_POST[ $sfw_genaral_setting['id'] ] ) );
+									// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via wps_sfw_sanitize_admin_setting_value().
+								$posted_value = $this->wps_sfw_sanitize_admin_setting_value( wp_unslash( $_POST[ $sfw_genaral_setting['id'] ] ) );
 									update_option( $sfw_genaral_setting['id'], $posted_value );
 								} else {
 									update_option( $sfw_genaral_setting['id'], '' );
@@ -752,6 +753,7 @@ class Subscriptions_For_Woocommerce_Admin {
 								$_POST[ $wsp_api_setting['id'] ] = 'wps_' . wc_rand_hash();
 							}
 							if ( isset( $_POST[ $wsp_api_setting['id'] ] ) ) {
+								// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via wps_sfw_sanitize_admin_setting_value().
 								$posted_value = $this->wps_sfw_sanitize_admin_setting_value( wp_unslash( $_POST[ $wsp_api_setting['id'] ] ) );
 								update_option( $wsp_api_setting['id'], $posted_value );
 							} else {
@@ -792,7 +794,10 @@ class Subscriptions_For_Woocommerce_Admin {
 
 								if ( isset( $_POST[ $sfw_subscription_box_setting['id'] ] ) && ! empty( $_POST[ $sfw_subscription_box_setting['id'] ] ) ) {
 
-									$posted_value = $this->wps_sfw_sanitize_admin_setting_value( wp_unslash( $_POST[ $sfw_subscription_box_setting['id'] ] ) );
+										$raw_value = isset( $_POST[ $sfw_subscription_box_setting['id'] ] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+											? wp_unslash( $_POST[ $sfw_subscription_box_setting['id'] ] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+											: '';
+										$posted_value = $this->wps_sfw_sanitize_admin_setting_value( $raw_value );
 									update_option( $sfw_subscription_box_setting['id'], $posted_value );
 								} else {
 									update_option( $sfw_subscription_box_setting['id'], '' );
