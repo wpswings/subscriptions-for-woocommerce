@@ -105,11 +105,12 @@ ob_start();
 do_action( 'wps_sfw_order_details_html_before_cancel', $wps_subscription_id );
 do_action( 'wps_sfw_order_details_html_after_cancel_button', $wps_subscription_id );
 do_action( 'wps_sfw_order_details_html_after_cancel', $wps_subscription_id );
-$pro_manage_actions_html = trim( ob_get_clean() );
+// Strip legacy table-layout HTML comments so they don't render as literal text in the aurora layout.
+$pro_manage_actions_html = trim( preg_replace( '/<!--.*?-->/s', '', (string) ob_get_clean() ) );
 
 ob_start();
 do_action( 'wps_sfw_after_subscription_details', $wps_subscription_id );
-$pro_after_details_html = trim( ob_get_clean() );
+$pro_after_details_html = trim( preg_replace( '/<!--.*?-->/s', '', (string) ob_get_clean() ) );
 ?>
 <div class="wps-sfw-aurora-detail">
 	<div class="wps-sfw-aurora-detail__back">
