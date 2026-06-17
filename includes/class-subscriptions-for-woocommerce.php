@@ -1713,6 +1713,73 @@ class Subscriptions_For_Woocommerce {
 	}
 
 	/**
+	 * Allowed HTML for printing generated settings markup through wp_kses().
+	 *
+	 * The wp_kses_post() helper does not permit <input>, <select>, or <option>
+	 * (they are absent from the default post allowlist), so it silently strips
+	 * every form control out of the markup produced by wps_sfw_plug_generate_html(). That
+	 * leaves the decorative labels/spans behind, making toggles unclickable and
+	 * preventing the form from submitting any values on save. This allowlist
+	 * keeps the controls intact while still escaping the trusted markup.
+	 *
+	 * @since 2.0.0
+	 * @return array Allowed tags and attributes for wp_kses().
+	 */
+	public function wps_sfw_settings_allowed_html() {
+		$allowed = wp_kses_allowed_html( 'post' );
+
+		$allowed['input'] = array(
+			'type'         => true,
+			'name'         => true,
+			'id'           => true,
+			'class'        => true,
+			'value'        => true,
+			'placeholder'  => true,
+			'checked'      => true,
+			'required'     => true,
+			'readonly'     => true,
+			'disabled'     => true,
+			'multiple'     => true,
+			'min'          => true,
+			'max'          => true,
+			'step'         => true,
+			'role'         => true,
+			'aria-checked' => true,
+			'aria-hidden'  => true,
+			'data-*'       => true,
+		);
+
+		$allowed['select'] = array(
+			'name'     => true,
+			'id'       => true,
+			'class'    => true,
+			'multiple' => true,
+			'required' => true,
+			'disabled' => true,
+			'data-*'   => true,
+		);
+
+		$allowed['option'] = array(
+			'value'    => true,
+			'selected' => true,
+			'disabled' => true,
+		);
+
+		// Textarea (and its class/id/rows) is already allowed in the post context;
+		// only the placeholder/required attributes used by the renderer are missing.
+		$textarea_allowed    = isset( $allowed['textarea'] ) ? $allowed['textarea'] : array();
+		$allowed['textarea'] = array_merge(
+			$textarea_allowed,
+			array(
+				'placeholder' => true,
+				'required'    => true,
+			)
+		);
+
+		return $allowed;
+	}
+
+	/**
 	 * Render settings section wrapper markup.
 	 *
 	 * @param array $sfw_component Settings section config.

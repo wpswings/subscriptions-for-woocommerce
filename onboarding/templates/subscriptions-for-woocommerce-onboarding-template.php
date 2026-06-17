@@ -34,7 +34,9 @@ $sfw_onboarding_form_fields = apply_filters( 'wps_sfw_on_boarding_form_fields', 
 					<form action="#" method="post" class="wps-sfw-on-boarding-form">
 						<?php
 						$sfw_onboarding_html = $sfw_wps_sfw_obj->wps_sfw_plug_generate_html( $sfw_onboarding_form_fields );
-						echo wp_kses_post( $sfw_onboarding_html );
+
+						$sfw_onboarding_allowed_html = $sfw_wps_sfw_obj->wps_sfw_settings_allowed_html();
+						echo wp_kses( $sfw_onboarding_html, $sfw_onboarding_allowed_html );
 						?>
 						<div class="wps-sfw-on-boarding-form-btn__wrapper mdc-dialog__actions">
 							<div class="wps-sfw-on-boarding-form-submit wps-sfw-on-boarding-form-verify ">
