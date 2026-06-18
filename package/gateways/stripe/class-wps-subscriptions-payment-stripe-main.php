@@ -39,6 +39,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'wps_sfw_display_save_payment_method_checkbox' ) );
 
+			add_filter( 'wc_stripe_is_optimized_checkout_available', array( $this, 'wps_sfw_disable_optimized_checkout_for_subscription' ) );
+
+			add_filter( 'wc_stripe_generate_create_intent_request', array( $this, 'wps_sfw_add_setup_future_usage_for_parent_order' ), 50, 4 );
+
 			// Path to Stripe's main plugin file.
 			$stripe_main_file = WP_PLUGIN_DIR . '/woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';
 
@@ -130,6 +134,62 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 				return false;
 			}
 			return $display_save_payment_method_checkbox;
+		}
+
+		/**
+		 * Disable Stripe's Optimized Checkout / Adaptive Pricing (Checkout Sessions) flow for subscription carts.
+		 *
+		 * The Checkout Sessions flow builds the initial payment via Stripe's `checkout/sessions` API, which both
+		 * ignores the `wc_stripe_force_save_payment_method` / `wc_stripe_generate_create_intent_request` filters this
+		 * plugin relies on AND initialises Stripe Checkout with `enableSave: "never"`. The card is therefore charged
+		 * once but never attached to the Stripe customer, so off-session renewals fail with "The provided
+		 * PaymentMethod was previously used ... you must attach it to a Customer first." Forcing the standard
+		 * deferred-intent UPE flow keeps the payment method attached and reusable for renewals.
+		 *
+		 * @param bool $is_available Whether Optimized Checkout is available.
+		 * @return bool
+		 */
+		public function wps_sfw_disable_optimized_checkout_for_subscription( $is_available ) {
+			if ( ! $is_available || ! function_exists( 'WC' ) || ! WC()->cart ) {
+				return $is_available;
+			}
+			if ( wps_sfw_is_cart_has_subscription_product() ) {
+				return false;
+			}
+			return $is_available;
+		}
+
+		/**
+		 * Add setup future usage for parent order if subscription exist in order and setup future usage is missing in request.
+		 *
+		 * This forces Stripe to attach the payment method to the customer during the initial subscription
+		 * payment so it can be charged off-session on renewals.
+		 *
+		 * @param array    $request         The request array.
+		 * @param WC_Order $order           The order object.
+		 * @param array    $prepared_source The prepared source array.
+		 * @param bool     $is_setup_intent Whether it's a setup intent or not.
+		 *
+		 * @return array The modified request array.
+		 */
+		public function wps_sfw_add_setup_future_usage_for_parent_order( $request, $order, $prepared_source, $is_setup_intent = false ) {
+			if ( ! $order instanceof WC_Order ) {
+				return $request;
+			}
+
+			$order_id = $order->get_id();
+
+			$is_renewal       = 'yes' === wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
+			$has_subscription = function_exists( 'wps_sfw_order_has_subscription' ) && wps_sfw_order_has_subscription( $order_id );
+
+			$is_parent_order      = $has_subscription && ! $is_renewal;
+			$missing_future_usage = empty( $request['setup_future_usage'] );
+
+			if ( $is_parent_order && $missing_future_usage ) {
+				$request['setup_future_usage'] = 'off_session';
+			}
+
+			return $request;
 		}
 
 		/**

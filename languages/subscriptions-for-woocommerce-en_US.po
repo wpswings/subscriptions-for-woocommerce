@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-06-17 19:04+0530\n"
+"POT-Creation-Date: 2026-06-18 18:05+0530\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.9\n"
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:326
 #: includes/class-subscriptions-for-woocommerce-talk-to-expert-form.php:323
@@ -31,14 +31,12 @@ msgstr ""
 #: includes/subscriptions-for-woocommerce-common-function.php:521
 #: includes/subscriptions-for-woocommerce-common-function.php:542
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:147
-#: src/component/SecondStep.js:73
 msgid "Days"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:348
 #: includes/subscriptions-for-woocommerce-common-function.php:522
 #: includes/subscriptions-for-woocommerce-common-function.php:543
-#: src/component/SecondStep.js:74
 msgid "Weeks"
 msgstr ""
 
@@ -47,7 +45,6 @@ msgstr ""
 #: includes/membership/functions-membership-plan.php:1054
 #: includes/subscriptions-for-woocommerce-common-function.php:523
 #: includes/subscriptions-for-woocommerce-common-function.php:544
-#: src/component/SecondStep.js:75
 msgid "Months"
 msgstr ""
 
@@ -56,7 +53,6 @@ msgstr ""
 #: includes/membership/functions-membership-plan.php:1055
 #: includes/subscriptions-for-woocommerce-common-function.php:524
 #: includes/subscriptions-for-woocommerce-common-function.php:545
-#: src/component/SecondStep.js:76
 msgid "Years"
 msgstr ""
 
@@ -1074,7 +1070,6 @@ msgstr ""
 
 #: admin/partials/class-subscriptions-for-woocommerce-admin-subscription-list.php:58
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:213
-#: src/component/SecondStep.js:24
 msgid "Product Name"
 msgstr ""
 
@@ -2038,8 +2033,7 @@ msgid "Lite"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:57
-#: includes/class-subscriptions-for-woocommerce.php:1427 src/App.js:53
-#: src/component/FirstStep.js:16
+#: includes/class-subscriptions-for-woocommerce.php:1427
 msgid "General Settings"
 msgstr ""
 
@@ -2480,7 +2474,6 @@ msgid "Subscription for Simple Products"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-subscriptions-free-vs-pro.php:61
-#: src/component/SecondStep.js:64 src/component/SecondStep.js:71
 msgid "Subscription Frequency"
 msgstr ""
 
@@ -5202,123 +5195,6 @@ msgstr ""
 
 #: public/partials/templates/myaccount/wps-subscriptions.php:116
 msgid "Show"
-msgstr ""
-
-#: src/App.js:53
-msgid "Create Subscription"
-msgstr ""
-
-#: src/App.js:53
-msgid "Subscription Payment Gateway Configuration"
-msgstr ""
-
-#: src/App.js:53
-msgid "Final Step"
-msgstr ""
-
-#: src/App.js:73
-msgid "Setup complete"
-msgstr ""
-
-#: src/App.js:74
-msgid ""
-"Your subscription setup has been saved. Redirecting you to the plugin "
-"dashboard now."
-msgstr ""
-
-#: src/App.js:78
-msgid "Unknown stepIndex"
-msgstr ""
-
-#: src/App.js:87
-msgid "Negative Subscription Interval Or Price is not allowed"
-msgstr ""
-
-#: src/App.js:153
-msgid "Welcome to Subscriptions For WooCommerce"
-msgstr ""
-
-#: src/App.js:154
-msgid "Complete steps to start selling subscriptions"
-msgstr ""
-
-#: src/component/FinalStep.js:17
-msgid ""
-"Bingo! You are all set to take advantage of your subscription business. "
-"Lastly, we urge you to allow us collect some"
-msgstr ""
-
-#: src/component/FinalStep.js:17
-msgid "information"
-msgstr ""
-
-#: src/component/FinalStep.js:17
-msgid ""
-"in order to improve this plugin and provide better support. If you want, you "
-"can dis-allow anytime settings, We never track down your personal data. "
-"Promise!"
-msgstr ""
-
-#: src/component/FinalStep.js:20
-msgid "Yes. Definitely, you guys rock!"
-msgstr ""
-
-#: src/component/FinalStep.js:21
-msgid "No, not required."
-msgstr ""
-
-#: src/component/FirstStep.js:27
-msgid "Check this box to enable the subscription for woo"
-msgstr ""
-
-#: src/component/FirstStep.js:36
-msgid ""
-"Enter text to dispaly on \"Add to cart\" button for subscription products"
-msgstr ""
-
-#: src/component/FirstStep.js:37
-msgid " \"Add to cart\" button label"
-msgstr ""
-
-#: src/component/FirstStep.js:45
-msgid ""
-"Enter text to dispaly on \"Place order\" button for subscription products"
-msgstr ""
-
-#: src/component/FirstStep.js:46
-msgid " \"Place order\" button label"
-msgstr ""
-
-#: src/component/PaymentGateway.js:38
-msgid "Download & activate"
-msgstr ""
-
-#: src/component/PaymentGateway.js:44
-msgid "Installed"
-msgstr ""
-
-#: src/component/SecondStep.js:16
-msgid "Create Subscription Product"
-msgstr ""
-
-#: src/component/SecondStep.js:32
-msgid "Product Short Description"
-msgstr ""
-
-#: src/component/SecondStep.js:41
-msgid "Product Description"
-msgstr ""
-
-#: src/component/SecondStep.js:52
-msgid "Subscription Price"
-msgstr ""
-
-#: src/component/SecondStep.js:61
-msgid "Subscription Interval"
-msgstr ""
-
-#: src/component/ThirdStep.js:23
-msgid "Supported payment gateways for subscription"
 msgstr ""
 
 #: subscriptions-for-woocommerce.php:65
