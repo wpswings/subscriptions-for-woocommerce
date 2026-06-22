@@ -429,11 +429,14 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu {
     margin: 16px 15px 24px 0;
 }
 
-.wps-sfw-admin-banner,
-.wps-sfw-admin-status-bar,
-.wps-sfw-admin-notices,
 .wps-sfw-admin-surface {
     max-width: 1280px;
+}
+
+.wps-sfw-admin-banner,
+.wps-sfw-admin-status-bar,
+.wps-sfw-admin-notices {
+    max-width: none;
 }
 
 .wps-sfw-admin-banner {

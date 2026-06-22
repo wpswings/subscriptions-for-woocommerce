@@ -1,0 +1,516 @@
+/**
+ * Manage Membership — modern admin UI styles.
+ *
+ * Scoped to .wps-mem-wrap so nothing leaks into other tabs.
+ *
+ * @since 2.0.0
+ */
+
+/* ── Outer wrap ──────────────────────────────────────────────────────────── */
+
+.wps-mem-wrap {
+	width: 100%;
+}
+
+/* ── Sub-tab nav — underline tab bar ─────────────────────────────────────── */
+
+.wps-mem-tab-nav {
+	display: flex;
+	gap: 4px;
+	margin: 0 0 22px;
+	padding: 0;
+	border-bottom: 1px solid #e2e4e9;
+}
+
+.wps-mem-tab-nav .wps-mem-tab {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: -1px;
+	padding: 11px 16px 13px;
+	font-size: 13.5px;
+	font-weight: 600;
+	line-height: 1;
+	color: #646970;
+	text-decoration: none;
+	border: none;
+	border-bottom: 2.5px solid transparent;
+	background: none;
+	box-shadow: none;
+	transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.wps-mem-tab-nav .wps-mem-tab:hover,
+.wps-mem-tab-nav .wps-mem-tab:focus {
+	color: #1d2327;
+	border-bottom-color: #c9d3e0;
+	box-shadow: none;
+	outline: none;
+}
+
+.wps-mem-tab-nav .wps-mem-tab.is-active {
+	color: #2271b1;
+	border-bottom-color: #2271b1;
+}
+
+.wps-mem-tab__icon {
+	display: inline-flex;
+	flex-shrink: 0;
+}
+
+.wps-mem-tab__icon svg {
+	width: 16px;
+	height: 16px;
+	display: block;
+}
+
+.wps-mem-tab__label {
+	white-space: nowrap;
+}
+
+/* ── Inline toast (saved / status messages) ──────────────────────────────── */
+
+.wps-mem-toast {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	margin: 0 0 18px;
+	padding: 11px 15px;
+	border-radius: 8px;
+	font-size: 13.5px;
+	font-weight: 500;
+}
+
+.wps-mem-toast__icon {
+	width: 17px;
+	height: 17px;
+	flex-shrink: 0;
+}
+
+.wps-mem-toast--success {
+	background: #ecf8f1;
+	border: 1px solid #b7e3c8;
+	color: #186a3b;
+}
+
+@media ( max-width: 600px ) {
+	.wps-mem-tab__label {
+		display: none;
+	}
+
+	.wps-mem-tab-nav .wps-mem-tab {
+		padding: 11px 14px 13px;
+	}
+}
+
+/* ── Multi-step wizard ───────────────────────────────────────────────────── */
+
+.wps-wizard {
+	padding: 16px 18px;
+}
+
+.wps-wizard__steps {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin-bottom: 20px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #f0f0f1;
+	flex-wrap: wrap;
+}
+
+.wps-wizard__step {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: none;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #8c8f94;
+	cursor: pointer;
+	transition: background 0.12s, color 0.12s;
+}
+
+.wps-wizard__step:hover {
+	background: #f0f0f1;
+	color: #1d2327;
+}
+
+.wps-wizard__step-num {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #dcdcde;
+	color: #50575e;
+	font-size: 11px;
+	font-weight: 700;
+	flex-shrink: 0;
+}
+
+.wps-wizard__step--active .wps-wizard__step-num {
+	background: #2271b1;
+	color: #fff;
+}
+
+.wps-wizard__step--active {
+	color: #1d2327;
+	font-weight: 600;
+}
+
+.wps-wizard__step--done .wps-wizard__step-num {
+	background: #00a32a;
+	color: #fff;
+}
+
+.wps-wizard__step--done {
+	color: #50575e;
+}
+
+.wps-wizard__sep {
+	color: #c3c4c7;
+	font-size: 14px;
+	padding: 0 2px;
+	user-select: none;
+}
+
+.wps-wizard__panel {
+	min-height: 80px;
+	margin-bottom: 16px;
+}
+
+.wps-wizard__nav {
+	display: flex;
+	gap: 8px;
+	padding-top: 12px;
+	border-top: 1px solid #f0f0f1;
+}
+
+/* ── Content area ────────────────────────────────────────────────────────── */
+
+.wps-mem-content {
+	animation: wps-mem-fade 0.15s ease;
+}
+
+@keyframes wps-mem-fade {
+	from { opacity: 0; transform: translateY(4px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Action toolbar (Add New / Grant row) ────────────────────────────────── */
+
+.wps-mem-wrap .wps_sfw_subscription_table_inner_wrap {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	padding: 0 0 16px;
+	margin: 0 0 4px;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+/* ── All buttons ─────────────────────────────────────────────────────────── */
+
+.wps-mem-wrap .button,
+.wps-mem-wrap input[type="submit"].button,
+.wps-mem-wrap input[type="submit"] {
+	border-radius: 6px !important;
+	font-size: 13px;
+	line-height: 1;
+	height: auto;
+	padding: 7px 14px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.wps-mem-wrap .button-primary {
+	background: #2271b1 !important;
+	border-color: #2271b1 !important;
+	color: #fff !important;
+	font-weight: 600;
+	box-shadow: none;
+	text-shadow: none;
+}
+
+.wps-mem-wrap .button-primary:hover,
+.wps-mem-wrap .button-primary:focus {
+	background: #135e96 !important;
+	border-color: #135e96 !important;
+	color: #fff !important;
+}
+
+.wps-mem-wrap .button:not(.button-primary) {
+	border-color: #c3c4c7;
+	color: #2c3338;
+}
+
+.wps-mem-wrap .button:not(.button-primary):hover {
+	border-color: #8c8f94;
+	color: #1d2327;
+}
+
+/* ── List table card container ───────────────────────────────────────────── */
+
+.wps-mem-wrap .wps_sfw_list_table {
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.wps-mem-wrap .wp-list-table {
+	border: none;
+	margin: 0;
+	border-radius: 0;
+}
+
+/* Table head */
+.wps-mem-wrap .wp-list-table thead th,
+.wps-mem-wrap .wp-list-table tfoot th {
+	background: #f6f7f7;
+	border-bottom: 1px solid #e0e0e0;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #50575e;
+	padding: 10px 14px;
+}
+
+.wps-mem-wrap .wp-list-table tfoot th {
+	border-top: 1px solid #e0e0e0;
+	border-bottom: none;
+}
+
+/* Table rows */
+.wps-mem-wrap .wp-list-table tbody tr:hover td,
+.wps-mem-wrap .wp-list-table tbody tr:hover th {
+	background: #f6f7f7;
+}
+
+.wps-mem-wrap .wp-list-table tbody td,
+.wps-mem-wrap .wp-list-table tbody th {
+	padding: 11px 14px;
+	vertical-align: middle;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.wps-mem-wrap .wp-list-table tbody tr:last-child td,
+.wps-mem-wrap .wp-list-table tbody tr:last-child th {
+	border-bottom: none;
+}
+
+/* ── Tablenav (bulk actions + pagination bars) ───────────────────────────── */
+
+.wps-mem-wrap .tablenav {
+	padding: 8px 12px;
+}
+
+.wps-mem-wrap .tablenav.top {
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.wps-mem-wrap .tablenav.bottom {
+	border-top: 1px solid #f0f0f1;
+}
+
+.wps-mem-wrap .bulkactions select,
+.wps-mem-wrap .tablenav select {
+	border-radius: 6px !important;
+	font-size: 13px;
+}
+
+/* Pagination */
+.wps-mem-wrap .tablenav-pages a,
+.wps-mem-wrap .tablenav-pages .tablenav-pages-navspan {
+	border-radius: 5px !important;
+}
+
+/* ── Search box ──────────────────────────────────────────────────────────── */
+
+.wps-mem-wrap .search-box {
+	margin: 0;
+}
+
+.wps-mem-wrap .search-box input[type="search"] {
+	border-radius: 6px 0 0 6px !important;
+	border-right: none;
+	height: 30px;
+	line-height: 30px;
+}
+
+.wps-mem-wrap .search-box input[type="submit"] {
+	border-radius: 0 6px 6px 0 !important;
+	margin-left: -1px;
+	height: 32px;
+	line-height: 30px;
+}
+
+/* ── Plan filter select (members tab) ───────────────────────────────────── */
+
+.wps-mem-wrap .wps-member-plan-filter select {
+	border-radius: 6px !important;
+	font-size: 13px;
+}
+
+/* ── Access-rules save button override ───────────────────────────────────── */
+
+.wps-mem-wrap .wps-rules-save-bar .button-primary {
+	border-radius: 6px !important;
+}
+
+/* ── Grant membership form ───────────────────────────────────────────────── */
+
+.wps-mem-wrap #wps-grant-form input,
+.wps-mem-wrap #wps-grant-form select {
+	border-radius: 6px;
+}
+
+
+/* ── Plan list table — grant method chips ────────────────────────────────── */
+
+.wps-grant-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 3px 10px 3px 8px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 1.4;
+}
+
+.wps-grant-chip svg {
+	flex-shrink: 0;
+	opacity: 0.85;
+}
+
+/* Auto-enroll variant — indigo */
+.wps-grant-chip--auto {
+	background: #eef2ff;
+	color: #3730a3;
+	border: 1px solid #c7d2fe;
+}
+
+/* Subscription variant — amber */
+.wps-grant-chip--sub {
+	background: #fffbeb;
+	color: #854d0e;
+	border: 1px solid #fde68a;
+}
+
+/* Product pill tags row beneath the grant chip */
+.wps-linked-products {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-top: 6px;
+}
+
+.wps-linked-products--empty {
+	display: block;
+	margin-top: 4px;
+	font-size: 12px;
+	color: #94a3b8;
+	font-style: italic;
+}
+
+.wps-product-pill {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 9px;
+	background: #f0f9ff;
+	border: 1px solid #bae6fd;
+	border-radius: 12px;
+	font-size: 11px;
+	font-weight: 500;
+	color: #0369a1;
+	text-decoration: none;
+	white-space: nowrap;
+	line-height: 1.6;
+	transition: background 0.15s, color 0.15s;
+}
+
+.wps-product-pill:hover {
+	background: #e0f2fe;
+	color: #0c4a6e;
+	border-color: #7dd3fc;
+}
+
+.wps-product-pill--more {
+	background: #f8fafc;
+	border-color: #cbd5e1;
+	color: #64748b;
+	cursor: default;
+	pointer-events: none;
+}
+
+/* ── Members table — member identity cell (name + email) ─────────────────── */
+
+.wps-mem-wrap .wp-list-table .column-user strong {
+	display: block;
+	line-height: 1.4;
+}
+
+.wps-mem-wrap .wp-list-table .column-user .description {
+	display: block;
+	margin-top: 2px;
+	font-style: normal;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #646970;
+}
+
+/* -----------------------------------------------------------------------
+   "PRO" badge alignment for the Pro feature teasers in the membership UI.
+
+   The shared .wps_pro_settings_tag::before badge is positioned for large
+   setting cards (absolute, top/right 14px) and is clipped by the segmented
+   control's overflow:hidden. These scoped overrides realign it: an inline
+   pill centered inside the Template button, and a corner pill aligned to the
+   field label for the Drip / Exclusions / Teaser groups.
+   ----------------------------------------------------------------------- */
+
+/* Segmented "Template" behavior button — pill sits inside, vertically centered. */
+.wps-mem-wrap .wps-seg-control__option.wps_pro_settings_tag {
+	overflow: visible;
+}
+
+.wps-mem-wrap .wps-seg-control__option.wps_pro_settings_tag span {
+	padding-right: 46px;
+}
+
+.wps-mem-wrap .wps-seg-control__option.wps_pro_settings_tag::before {
+	top: 50%;
+	right: 6px;
+	transform: translateY(-50%);
+	min-height: 15px;
+	padding: 0 6px;
+	font-size: 8px;
+	box-shadow: none;
+}
+
+/* Drip / Scheduled Access, Exclusions and Teaser field groups — pill aligned
+   to the top-right, level with the uppercase field label. */
+.wps-mem-wrap .wps-field-group.wps_pro_settings_tag {
+	overflow: visible;
+}
+
+.wps-mem-wrap .wps-field-group.wps_pro_settings_tag::before {
+	top: 0;
+	right: 0;
+	min-height: 16px;
+	padding: 0 6px;
+	font-size: 8px;
+	box-shadow: none;
+}

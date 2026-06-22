@@ -213,7 +213,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Payfast_Main' ) ) {
 		public function wps_sfw_save_payfast_token() {
 
 			if ( isset( $_GET['wc-api'] ) && 'WC_Gateway_PayFast' === $_GET['wc-api'] ) {
-				$data      = $_POST;
+				$data      = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				$token     = sanitize_text_field( $data['token'] );
 				$parent_id = sanitize_text_field( $data['custom_str3'] );
 				$subscription_id    = wps_sfw_get_meta_data( $parent_id, 'wps_subscription_id', true );

@@ -1,3 +1,14 @@
+<?php
+/**
+ * Partial view for Subscriptions Pro features.
+ *
+ * @package Subscriptions_For_Woocommerce
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+?>
 <div class="wsp-secion-pro-wrap">
 									
 								

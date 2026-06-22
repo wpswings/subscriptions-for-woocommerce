@@ -361,11 +361,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		if ( $search_term ) {
 			if ( is_numeric( $search_term ) ) {
 				$search_join .= " LEFT JOIN {$meta_table} AS meta_search ON meta_search.{$order_id_field} = {$table}.{$id_field}";
+				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table/$id_field are $wpdb->prefix-based identifiers, not user input.
 				$where .= $wpdb->prepare(
 					" AND ( (meta_search.meta_key = 'wps_parent_order' AND meta_search.meta_value LIKE %s) OR {$table}.{$id_field} = %d )",
 					'%' . $wpdb->esc_like( $search_term ) . '%',
 					$search_term
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			} else {
 				$user = get_user_by( 'email', $search_term );
 				if ( ! $user ) {
@@ -395,6 +397,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		ORDER BY {$table}.{$id_field} DESC
 		LIMIT %d OFFSET %d
 	";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded; all user input ($where/$search_join) is bound via prepare() above.
 		$wps_subscriptions = $wpdb->get_col( $wpdb->prepare( $sql, $per_page, $offset ) );
 
 		// Get total count.
@@ -408,6 +411,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		AND $where
 		$valid_parent_where
 	";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- No data placeholders here; identifiers are safe and any user input in $where was bound via prepare() above.
 		$total_count = absint( $wpdb->get_var( $sql_count ) );
 
 		$wps_subscriptions_data = array();

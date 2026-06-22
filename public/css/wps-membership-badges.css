@@ -1,0 +1,584 @@
+/**
+ * Membership product badges — shop loop overlay + single product gate panel.
+ *
+ * @since 2.0.0
+ */
+
+/* -----------------------------------------------------------------------
+   Shop loop — anchor the badge to the product <li> card (works on both
+   classic templates and block-theme product grids).
+   ----------------------------------------------------------------------- */
+
+ul.products li.product {
+	position: relative;
+}
+
+/* -----------------------------------------------------------------------
+   "Members Only" pill badge — overlaid on the product thumbnail.
+   ----------------------------------------------------------------------- */
+
+.wps-members-badge {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 10;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 5px 11px 5px 9px;
+	background: linear-gradient(135deg, #1a56a8 0%, #2271b1 100%);
+	color: #ffffff;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	border-radius: 20px;
+	box-shadow: 0 2px 8px rgba(34, 113, 177, 0.45);
+	pointer-events: none;
+	white-space: nowrap;
+	line-height: 1;
+}
+
+.wps-members-badge__icon {
+	width: 11px;
+	height: 11px;
+	flex-shrink: 0;
+	opacity: 0.9;
+}
+
+/* -----------------------------------------------------------------------
+   Single product page — membership gate panel.
+   ----------------------------------------------------------------------- */
+
+.wps-membership-gate {
+	margin: 20px 0;
+	border: 1px solid #dce6f0;
+	border-radius: 8px;
+	background: #fafcff;
+	overflow: hidden;
+}
+
+/* Header row */
+.wps-membership-gate__header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 11px 16px;
+	background: #edf3fb;
+	border-bottom: 1px solid #dce6f0;
+}
+
+.wps-membership-gate__lock {
+	width: 15px;
+	height: 15px;
+	flex-shrink: 0;
+	color: #2271b1;
+}
+
+.wps-membership-gate__title {
+	font-size: 13px;
+	font-weight: 700;
+	color: #1d2327;
+}
+
+/* Intro line */
+.wps-membership-gate__intro {
+	margin: 0;
+	padding: 10px 16px 8px;
+	font-size: 13px;
+	color: #50575e;
+	border-bottom: 1px solid #e8eef6;
+}
+
+/* Plans wrapper */
+.wps-membership-gate__plans {
+	padding: 12px 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* -----------------------------------------------------------------------
+   Individual plan card.
+   ----------------------------------------------------------------------- */
+
+.wps-plan-card {
+	background: #ffffff;
+	border: 1.5px solid #e2eaf4;
+	border-radius: 8px;
+	padding: 11px 14px 12px;
+	transition: box-shadow 0.15s ease;
+}
+
+.wps-plan-card:hover {
+	box-shadow: 0 2px 10px rgba(34, 113, 177, 0.12);
+}
+
+/* Top row: dot + name + duration */
+.wps-plan-card__top {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 6px;
+}
+
+.wps-plan-card__name {
+	font-size: 14px;
+	font-weight: 700;
+	color: #1d2327;
+	flex: 1;
+}
+
+.wps-plan-card__duration {
+	display: inline-block;
+	padding: 2px 9px;
+	background: color-mix(in srgb, var(--plan-color, #2271b1) 10%, #ffffff);
+	color: var(--plan-color, #2271b1);
+	border: 1px solid color-mix(in srgb, var(--plan-color, #2271b1) 25%, #ffffff);
+	border-radius: 20px;
+	font-size: 11px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+/* Fallback for browsers without color-mix */
+@supports not (color: color-mix(in srgb, red, blue)) {
+	.wps-plan-card__duration {
+		background: #edf2f9;
+		color: #2271b1;
+		border-color: #c3d9f0;
+	}
+}
+
+/* Description text */
+.wps-plan-card__desc {
+	margin: 0 0 8px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: #50575e;
+}
+
+/* "Get access" CTA row */
+.wps-plan-card__cta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px dashed #e2eaf4;
+}
+
+.wps-plan-card__cta-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #50575e;
+	white-space: nowrap;
+}
+
+.wps-plan-card__cta-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+	padding: 4px 13px;
+	background: var(--plan-color, #2271b1);
+	color: #ffffff !important;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 20px;
+	text-decoration: none !important;
+	transition: opacity 0.15s ease, transform 0.15s ease;
+	white-space: nowrap;
+}
+
+.wps-plan-card__cta-link:hover {
+	opacity: 0.88;
+	transform: translateY(-1px);
+}
+
+/* -----------------------------------------------------------------------
+   "Unlocks Membership" badge variant — green, for plan-linked products.
+   ----------------------------------------------------------------------- */
+
+.wps-members-badge--grant {
+	background: var(--badge-color, #2271b1);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-members-badge--grant {
+		box-shadow: 0 2px 8px color-mix(in srgb, var(--badge-color, #2271b1) 55%, transparent);
+	}
+}
+
+/* -----------------------------------------------------------------------
+   "Membership Active" badge variant — shown once the visitor already holds
+   the plan that this product grants (success/green, regardless of color).
+   ----------------------------------------------------------------------- */
+
+.wps-members-badge--active {
+	background: #1a7f4b;
+	box-shadow: 0 2px 8px rgba(26, 127, 75, 0.4);
+}
+
+/* -----------------------------------------------------------------------
+   Single product page — membership grant panel (plan-linked products).
+   ----------------------------------------------------------------------- */
+
+.wps-membership-grant {
+	margin: 20px 0;
+	border: 1px solid #c6e8d3;
+	border-radius: 8px;
+	background: #f6fbf8;
+	overflow: hidden;
+}
+
+.wps-membership-grant__header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 11px 16px;
+	background: #eaf6ef;
+	border-bottom: 1px solid #c6e8d3;
+}
+
+.wps-membership-grant__icon {
+	width: 15px;
+	height: 15px;
+	flex-shrink: 0;
+	color: #1a7f4b;
+}
+
+.wps-membership-grant__title {
+	font-size: 13px;
+	font-weight: 700;
+	color: #1d2327;
+}
+
+.wps-membership-grant__intro {
+	margin: 0;
+	padding: 10px 16px 8px;
+	font-size: 13px;
+	color: #50575e;
+	border-bottom: 1px solid #d9f0e3;
+}
+
+.wps-membership-grant__plan {
+	margin: 12px 14px;
+}
+
+/* -----------------------------------------------------------------------
+   "Membership Included" card — rendered on purchase/subscription product
+   pages when the product actively grants a membership plan.
+   ----------------------------------------------------------------------- */
+
+.wps-membership-included {
+	margin: 16px 0;
+	border: 1px solid #e2eaf4;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.wps-membership-included__header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 14px;
+	background: #edf9f3;
+	border-bottom: 1px solid #e2eaf4;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-membership-included__header {
+		background: color-mix(in srgb, var(--plan-color, #1a7f4b) 8%, #ffffff);
+		border-bottom-color: color-mix(in srgb, var(--plan-color, #1a7f4b) 20%, #e0e0e0);
+	}
+}
+
+.wps-membership-included__header svg {
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+	color: var(--plan-color, #1a7f4b);
+	pointer-events: none;
+}
+
+.wps-membership-included__header span {
+	font-size: 12px;
+	font-weight: 700;
+	color: #1d2327;
+	letter-spacing: 0.02em;
+}
+
+.wps-membership-included__body {
+	padding: 12px 14px;
+	background: #ffffff;
+}
+
+.wps-membership-included__subtitle {
+	margin: 0 0 10px;
+	font-size: 13px;
+	color: #50575e;
+}
+
+.wps-membership-included__plan {
+	padding: 10px 12px;
+	background: #fafcff;
+	border: 1px solid #e2eaf4;
+	border-radius: 6px;
+	margin-bottom: 8px;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-membership-included__plan {
+		background: color-mix(in srgb, var(--plan-color, #1a7f4b) 4%, #ffffff);
+		border-color: color-mix(in srgb, var(--plan-color, #1a7f4b) 18%, #e0e0e0);
+	}
+}
+
+.wps-membership-included__plan:last-child {
+	margin-bottom: 0;
+}
+
+.wps-membership-included__plan-main {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.wps-membership-included__plan-main:not(:last-child) {
+	margin-bottom: 4px;
+}
+
+.wps-membership-included__dot {
+	display: none;
+}
+
+.wps-membership-included__plan-name {
+	font-size: 14px;
+	font-weight: 600;
+	color: #1d2327;
+	flex: 1;
+}
+
+.wps-membership-included__badge {
+	display: inline-block;
+	padding: 2px 9px;
+	border-radius: 20px;
+	background: #edf2f9;
+	color: #2271b1;
+	border: 1px solid #c3d9f0;
+	font-size: 11px;
+	font-weight: 700;
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.wps-membership-included__badge {
+		background: color-mix(in srgb, var(--plan-color, #1a7f4b) 10%, #ffffff);
+		color: var(--plan-color, #1a7f4b);
+		border-color: color-mix(in srgb, var(--plan-color, #1a7f4b) 28%, #e0e0e0);
+	}
+}
+
+/* Active state — the visitor already holds the plan this product grants. The
+   "✓ Active" badge always reads as success/green, overriding the plan color.
+   Declared after the color-mix rule above so it wins the cascade. */
+.wps-membership-included__badge--active {
+	background: #e6f4ea;
+	color: #1a7f4b;
+	border-color: #a8d5ba;
+}
+
+.wps-membership-included__desc {
+	margin: 2px 0 0;
+	font-size: 12px;
+	color: #646970;
+	line-height: 1.5;
+}
+
+/* -----------------------------------------------------------------------
+   {purchase_options} — restriction notice purchase CTA.
+   Rendered into restricted content (posts/pages/products) by
+   wps_render_plan_purchase_cta(). Markup is kses-safe.
+   ----------------------------------------------------------------------- */
+
+.wps-plan-purchase-cta {
+	margin: 18px 0;
+	padding: 20px;
+	background: #f8fafc;
+	border: 1px solid #e3e8ef;
+	border-radius: 12px;
+}
+
+.wps-plan-purchase-cta__heading {
+	margin: 0 0 4px;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.3;
+	color: #1d2327;
+}
+
+.wps-plan-purchase-cta__sub {
+	margin: 0 0 16px;
+	font-size: 13.5px;
+	line-height: 1.5;
+	color: #5d6671;
+}
+
+.wps-plan-purchase-cta__plan {
+	padding: 14px 16px;
+	background: #ffffff;
+	border: 1px solid #e3e8ef;
+	border-radius: 10px;
+}
+
+.wps-plan-purchase-cta__plan-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.wps-plan-purchase-cta__plan-name {
+	font-size: 15px;
+	font-weight: 700;
+	color: #1d2327;
+}
+
+.wps-plan-purchase-cta__plan-access {
+	display: inline-block;
+	padding: 3px 9px;
+	background: #eef2f7;
+	border-radius: 20px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: #6b7785;
+	white-space: nowrap;
+}
+
+.wps-plan-purchase-cta__plan-desc {
+	margin: 8px 0 0;
+	font-size: 13px;
+	line-height: 1.55;
+	color: #5d6671;
+}
+
+.wps-plan-purchase-cta__buys {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 12px;
+}
+
+.wps-plan-purchase-cta__buy {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 11px 16px;
+	background: #2271b1;
+	color: #ffffff !important;
+	border-radius: 8px;
+	font-size: 13.5px;
+	font-weight: 600;
+	line-height: 1.4;
+	text-align: left;
+	text-decoration: none !important;
+	box-shadow: none;
+	transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.wps-plan-purchase-cta__buy:hover,
+.wps-plan-purchase-cta__buy:focus {
+	background: #135e96;
+	color: #ffffff !important;
+	transform: translateY(-1px);
+}
+
+.wps-plan-purchase-cta__buy-name {
+	flex: 1 1 auto;
+	min-width: 0;
+	font-weight: 600;
+	text-align: left;
+}
+
+.wps-plan-purchase-cta__buy-price {
+	flex: 0 0 auto;
+	font-weight: 700;
+	text-align: right;
+	white-space: nowrap;
+}
+
+.wps-plan-purchase-cta__buy-price .amount {
+	color: #ffffff;
+}
+
+/* -----------------------------------------------------------------------
+   Restriction notice ("locked content" card).
+   Shared by the content-restriction enforcer and the Pro block notice
+   via wps_restriction_notice_html().
+   ----------------------------------------------------------------------- */
+
+.wps-restricted-content {
+	margin: 20px 0;
+	border: 1px solid #dce6f0;
+	border-radius: 12px;
+	background: #fafcff;
+	overflow: hidden;
+}
+
+.wps-restricted-content__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 18px;
+	background: #edf3fb;
+	border-bottom: 1px solid #dce6f0;
+}
+
+.wps-restricted-content__lock {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+	color: #2271b1;
+}
+
+.wps-restricted-content__title {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	color: #1d2327;
+}
+
+.wps-restricted-content__msg {
+	padding: 16px 18px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #50575e;
+}
+
+.wps-restricted-content__msg > :first-child {
+	margin-top: 0;
+}
+
+.wps-restricted-content__msg > :last-child {
+	margin-bottom: 0;
+}
+
+/* The purchase CTA sits flush inside the notice body — drop its outer frame
+   so it doesn't read as a card-within-a-card. */
+.wps-restricted-content__msg .wps-plan-purchase-cta {
+	margin: 14px 0 0;
+	padding: 0;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+}

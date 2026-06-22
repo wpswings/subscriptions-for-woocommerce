@@ -218,6 +218,33 @@ class Subscriptions_For_Woocommerce {
 		 * Include the cron file.
 		 */
 		require_once plugin_dir_path( __DIR__ ) . 'includes/class-subscriptions-for-woocommerce-scheduler.php';
+
+		/**
+		 * Membership layer — core utilities (data model constants, schema version,
+		 * product→plan map builder, slug uniqueness utility).
+		 */
+		$wps_mem_dir = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'includes/membership/';
+		require_once $wps_mem_dir . 'functions-membership-core.php';
+		require_once $wps_mem_dir . 'functions-membership-plan.php';
+		require_once $wps_mem_dir . 'functions-user-membership.php';
+		require_once $wps_mem_dir . 'class-wps-membership-sync.php';
+		require_once $wps_mem_dir . 'class-wps-membership-order-grant.php';
+		new WPS_Membership_Sync();
+		new WPS_Membership_Order_Grant();
+
+		// Membership layer — Week 2–4 stubs (hooks registered via Loader in
+		// subscriptions_for_woocommerce_admin_hooks / _public_hooks below).
+		require_once $wps_mem_dir . 'class-wps-membership-plan-cpt.php';
+		require_once $wps_mem_dir . 'functions-access-rules.php';
+		require_once $wps_mem_dir . 'class-wps-access-rules-engine.php';
+		require_once $wps_mem_dir . 'class-wps-restriction-enforcer.php';
+		require_once $wps_mem_dir . 'class-wps-myaccount-memberships.php';
+		require_once $wps_mem_dir . 'class-wps-product-badge.php';
+		require_once $wps_mem_dir . 'class-wps-membership-block-editor.php';
+		$wps_adm_mem_dir = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'admin/membership/';
+		require_once $wps_adm_mem_dir . 'class-wps-membership-plans-admin.php';
+		require_once $wps_adm_mem_dir . 'class-wps-members-admin.php';
+		require_once $wps_adm_mem_dir . 'class-wps-access-rules-admin.php';
 	}
 	/**
 	 * The function is used to include email class.
@@ -283,21 +310,13 @@ class Subscriptions_For_Woocommerce {
 		return (bool) apply_filters( 'wps_sfw_should_load_payment_integration', $should_load );
 	}
 
+
 	/**
 	 * Load payment gateway integrations when needed (once per request).
 	 *
 	 * @return void
 	 */
 	public function wps_sfw_maybe_init_payment_integration() {
-		if ( $this->wps_sfw_payment_integration_loaded ) {
-			return;
-		}
-
-		if ( ! $this->wps_sfw_should_load_payment_integration() ) {
-			return;
-		}
-
-		$this->wps_sfw_payment_integration_loaded = true;
 		$this->wps_sfw_init_payment_integration();
 	}
 
@@ -364,6 +383,10 @@ class Subscriptions_For_Woocommerce {
 		// Saving tab settings.
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'sfw_admin_save_tab_settings' );
 		$this->loader->add_action( 'admin_init', $wps_ai_settings, 'save_settings' );
+
+		// Membership feature announcement banner (dismissible).
+		$this->loader->add_action( 'admin_notices', $sfw_plugin_admin, 'wps_sfw_membership_feature_notice' );
+		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'wps_sfw_dismiss_membership_feature_notice' );
 		// Multistep.
 		$this->loader->add_action( 'wp_ajax_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
 		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
@@ -423,6 +446,63 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_filter( 'woocommerce_payment_gateways_setting_columns', $sfw_plugin_admin, 'wps_sfw_subscription_support_in_payment_gateway' );
 		// 'Upsell Support' content on payment gateways page.
 		$this->loader->add_action( 'woocommerce_payment_gateways_setting_column_wps_sub_renewal', $sfw_plugin_admin, 'wps_sfw_subscription_content_in_payment_gateway' );
+
+		// Membership admin hooks — Weeks 2–3 (stubs wired Day 5; filled in Days 6–12).
+		$wps_mem_plans_admin = new WPS_Membership_Plans_Admin();
+		$tabs_filter         = 'wps_sfw_sfw_plugin_standard_admin_settings_tabs';
+		$this->loader->add_filter( $tabs_filter, $wps_mem_plans_admin, 'register_tab', 25 );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wps_mem_plans_admin, 'enqueue_scripts' );
+
+		$wps_mem_plan_cpt = new WPS_Membership_Plan_CPT();
+		$this->loader->add_action( 'init', $wps_mem_plan_cpt, 'register', 5 );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wps_mem_plan_cpt, 'enqueue_admin_scripts' );
+		$this->loader->add_action( 'add_meta_boxes', $wps_mem_plan_cpt, 'add_meta_boxes' );
+		$this->loader->add_action( 'save_post', $wps_mem_plan_cpt, 'save_meta_boxes', 10, 2 );
+		$this->loader->add_filter( 'redirect_post_location', $wps_mem_plan_cpt, 'redirect_after_save', 10, 2 );
+		$this->loader->add_action(
+			'wp_ajax_wps_search_subscription_products',
+			$wps_mem_plan_cpt,
+			'ajax_search_subscription_products'
+		);
+		$this->loader->add_action(
+			'wp_ajax_wps_get_subscription_duration',
+			$wps_mem_plan_cpt,
+			'ajax_get_subscription_duration'
+		);
+
+		$wps_members_admin = new WPS_Members_Admin();
+		$this->loader->add_action( 'show_user_profile', $wps_members_admin, 'render_profile_section' );
+		$this->loader->add_action( 'edit_user_profile', $wps_members_admin, 'render_profile_section' );
+		$this->loader->add_action( 'personal_options_update', $wps_members_admin, 'save_profile_section' );
+		$this->loader->add_action( 'edit_user_profile_update', $wps_members_admin, 'save_profile_section' );
+		$this->loader->add_action(
+			'wp_ajax_wps_membership_admin_action',
+			$wps_members_admin,
+			'handle_admin_actions'
+		);
+
+		$wps_access_rules_admin = new WPS_Access_Rules_Admin();
+		$this->loader->add_action(
+			'wp_ajax_wps_search_plan_products',
+			$wps_access_rules_admin,
+			'ajax_search_plan_products'
+		);
+		$this->loader->add_action(
+			'wp_ajax_wps_search_rule_targets',
+			$wps_access_rules_admin,
+			'ajax_search_rule_targets'
+		);
+		$this->loader->add_action(
+			'wp_ajax_wps_preview_access_rule',
+			$wps_access_rules_admin,
+			'ajax_preview_access_rule'
+		);
+
+		// Gutenberg block restriction — editor controls (always rendered; the
+		// Pro plugin enforces on the frontend). Day 17.
+		$wps_block_editor = new WPS_Membership_Block_Editor();
+		$this->loader->add_filter( 'register_block_type_args', $wps_block_editor, 'add_block_attributes', 10, 2 );
+		$this->loader->add_action( 'enqueue_block_editor_assets', $wps_block_editor, 'enqueue_editor_assets' );
 	}
 
 	/**
@@ -476,8 +556,10 @@ class Subscriptions_For_Woocommerce {
 	 * @return array{0:string,1:string}
 	 */
 	private function wps_sfw_get_report_date_range() {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$start_date = isset( $_POST['startDate'] ) ? sanitize_text_field( wp_unslash( $_POST['startDate'] ) ) : '';
 		$end_date   = isset( $_POST['endDate'] ) ? sanitize_text_field( wp_unslash( $_POST['endDate'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		return array( $start_date, $end_date );
 	}
@@ -1058,6 +1140,19 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_action( 'wp_enqueue_scripts', $sfw_plugin_public, 'wps_sfw_public_enqueue_scripts' );
 
 			$this->loader->add_filter( 'woocommerce_get_price_html', $sfw_plugin_public, 'wps_sfw_price_html_subscription_product', 10, 2 );
+			$this->loader->add_filter(
+				'woocommerce_available_variation',
+				$sfw_plugin_public,
+				'wps_sfw_add_variation_subscription_data',
+				10,
+				3
+			);
+			$this->loader->add_action(
+				'woocommerce_single_product_summary',
+				$sfw_plugin_public,
+				'wps_sfw_variable_subscription_info_placeholder',
+				25
+			);
 			$this->loader->add_filter( 'woocommerce_product_single_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_product_add_to_cart_text', $sfw_plugin_public, 'wps_sfw_product_add_to_cart_text', 10, 2 );
 			$this->loader->add_filter( 'woocommerce_order_button_text', $sfw_plugin_public, 'wps_sfw_woocommerce_order_button_text' );
@@ -1155,6 +1250,68 @@ class Subscriptions_For_Woocommerce {
 
 			// subscription box.
 
+			// Membership public hooks — Weeks 3–4 (stubs wired Day 5; filled in Days 13–14).
+			$wps_restriction_enforcer = new WPS_Restriction_Enforcer();
+			$this->loader->add_action( 'wp_enqueue_scripts', $wps_restriction_enforcer, 'enqueue_styles' );
+			$this->loader->add_filter( 'the_content', $wps_restriction_enforcer, 'maybe_restrict_content', 99 );
+			$this->loader->add_action( 'template_redirect', $wps_restriction_enforcer, 'maybe_redirect', 99 );
+			$this->loader->add_filter(
+				'woocommerce_is_purchasable',
+				$wps_restriction_enforcer,
+				'maybe_restrict_purchasability',
+				99,
+				2
+			);
+			$this->loader->add_filter(
+				'woocommerce_variation_is_purchasable',
+				$wps_restriction_enforcer,
+				'maybe_restrict_purchasability',
+				99,
+				2
+			);
+			$this->loader->add_action( 'init', $wps_restriction_enforcer, 'register_shortcode', 5 );
+			// Note: the product-page members-only panel + buy link is rendered by
+			// WPS_Product_Badge::render_product_page_plans() (priority 25 below),
+			// so the enforcer does not add a second notice here — it only gates
+			// purchasability via the woocommerce_is_purchasable filter above.
+
+			$wps_myaccount_memberships = new WPS_Myaccount_Memberships();
+			$this->loader->add_action( 'init', $wps_myaccount_memberships, 'register_endpoint', 5 );
+			$this->loader->add_filter( 'query_vars', $wps_myaccount_memberships, 'add_query_var' );
+			$this->loader->add_action( 'wp_enqueue_scripts', $wps_myaccount_memberships, 'enqueue_styles' );
+			$this->loader->add_filter(
+				'woocommerce_account_menu_items',
+				$wps_myaccount_memberships,
+				'add_menu_item'
+			);
+			$this->loader->add_action(
+				'woocommerce_account_wps_memberships_endpoint',
+				$wps_myaccount_memberships,
+				'render_tab'
+			);
+
+			$wps_block_restriction_styles = new WPS_Membership_Block_Editor();
+			$this->loader->add_action(
+				'wp_enqueue_scripts',
+				$wps_block_restriction_styles,
+				'maybe_enqueue_frontend_styles'
+			);
+
+			$wps_product_badge = new WPS_Product_Badge();
+			$this->loader->add_action( 'wp_enqueue_scripts', $wps_product_badge, 'enqueue_styles' );
+			$this->loader->add_action(
+				'woocommerce_before_shop_loop_item_title',
+				$wps_product_badge,
+				'render_shop_badge',
+				5
+			);
+			$this->loader->add_action(
+				'woocommerce_single_product_summary',
+				$wps_product_badge,
+				'render_product_page_plans',
+				25
+			);
+
 		}
 	}
 
@@ -1166,9 +1323,23 @@ class Subscriptions_For_Woocommerce {
 	 * @param Array $emails emails.
 	 */
 	public function wps_sfw_woocommerce_email_classes( $emails ) {
-		$emails['wps_sfw_cancel_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-cancel-subscription-email.php';
-		$emails['wps_sfw_expired_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-expired-subscription-email.php';
-		$emails['wps_sfw_onhold_active_subscription'] = require_once plugin_dir_path( __DIR__ ) . 'emails/class-subscriptions-for-woocommerce-onhold-active-subscription-email.php';
+		$emails_dir = plugin_dir_path( __DIR__ ) . 'emails/';
+
+		require_once $emails_dir . 'class-subscriptions-for-woocommerce-cancel-subscription-email.php';
+		$emails['wps_sfw_cancel_subscription'] = new Subscriptions_For_Woocommerce_Cancel_Subscription_Email();
+
+		require_once $emails_dir . 'class-subscriptions-for-woocommerce-expired-subscription-email.php';
+		$emails['wps_sfw_expired_subscription'] = new Subscriptions_For_Woocommerce_Expired_Subscription_Email();
+
+		require_once $emails_dir . 'class-subscriptions-for-woocommerce-onhold-active-subscription-email.php';
+		$emails['wps_sfw_onhold_active_subscription'] =
+			new Subscriptions_For_Woocommerce_Onhold_Active_Subscription_Email();
+
+		// Membership emails (Day 10 stubs — triggers wired on Day 10).
+		$emails['wps_membership_activated'] = require_once $emails_dir . 'class-wps-membership-activated-email.php';
+		$emails['wps_membership_onhold']    = require_once $emails_dir . 'class-wps-membership-onhold-email.php';
+		$emails['wps_membership_cancelled'] = require_once $emails_dir . 'class-wps-membership-cancelled-email.php';
+		$emails['wps_membership_expired']   = require_once $emails_dir . 'class-wps-membership-expired-email.php';
 
 		return apply_filters( 'wps_sfw_email_classes', $emails );
 	}
@@ -1539,6 +1710,73 @@ class Subscriptions_For_Woocommerce {
 		}
 
 		return $markup;
+	}
+
+	/**
+	 * Allowed HTML for printing generated settings markup through wp_kses().
+	 *
+	 * The wp_kses_post() helper does not permit <input>, <select>, or <option>
+	 * (they are absent from the default post allowlist), so it silently strips
+	 * every form control out of the markup produced by wps_sfw_plug_generate_html(). That
+	 * leaves the decorative labels/spans behind, making toggles unclickable and
+	 * preventing the form from submitting any values on save. This allowlist
+	 * keeps the controls intact while still escaping the trusted markup.
+	 *
+	 * @since 2.0.0
+	 * @return array Allowed tags and attributes for wp_kses().
+	 */
+	public function wps_sfw_settings_allowed_html() {
+		$allowed = wp_kses_allowed_html( 'post' );
+
+		$allowed['input'] = array(
+			'type'         => true,
+			'name'         => true,
+			'id'           => true,
+			'class'        => true,
+			'value'        => true,
+			'placeholder'  => true,
+			'checked'      => true,
+			'required'     => true,
+			'readonly'     => true,
+			'disabled'     => true,
+			'multiple'     => true,
+			'min'          => true,
+			'max'          => true,
+			'step'         => true,
+			'role'         => true,
+			'aria-checked' => true,
+			'aria-hidden'  => true,
+			'data-*'       => true,
+		);
+
+		$allowed['select'] = array(
+			'name'     => true,
+			'id'       => true,
+			'class'    => true,
+			'multiple' => true,
+			'required' => true,
+			'disabled' => true,
+			'data-*'   => true,
+		);
+
+		$allowed['option'] = array(
+			'value'    => true,
+			'selected' => true,
+			'disabled' => true,
+		);
+
+		// Textarea (and its class/id/rows) is already allowed in the post context;
+		// only the placeholder/required attributes used by the renderer are missing.
+		$textarea_allowed    = isset( $allowed['textarea'] ) ? $allowed['textarea'] : array();
+		$allowed['textarea'] = array_merge(
+			$textarea_allowed,
+			array(
+				'placeholder' => true,
+				'required'    => true,
+			)
+		);
+
+		return $allowed;
 	}
 
 	/**

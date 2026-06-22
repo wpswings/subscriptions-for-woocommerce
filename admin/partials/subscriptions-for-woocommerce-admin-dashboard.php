@@ -28,6 +28,7 @@ $is_full_width_tab     = in_array(
 	array(
 		'subscriptions-for-woocommerce-subscriptions-table',
 		'woocommerce-subscriptions-pro-report',
+		'wps-membership-manage',
 	),
 	true
 ) || $is_renewal_table_view;
@@ -47,7 +48,7 @@ if ( $is_pro_active ) {
 
 $sfw_version_label = sprintf(
 	/* translators: 1: plugin version, 2: edition label */
-	__( 'v%s %s', 'subscriptions-for-woocommerce' ),
+	__( 'v%1$s %2$s', 'subscriptions-for-woocommerce' ),
 	$is_pro_active ? $sfw_pro_version : $sfw_lite_version,
 	$is_pro_active ? __( 'Pro', 'subscriptions-for-woocommerce' ) : __( 'Lite', 'subscriptions-for-woocommerce' )
 );

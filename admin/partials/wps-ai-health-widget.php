@@ -29,7 +29,7 @@ foreach ( $groups as $group ) {
 				printf(
 					/* translators: %d: recommendation count */
 					esc_html__( '%d recommendations', 'subscriptions-for-woocommerce' ),
-					$recommendation_count
+					esc_html( $recommendation_count )
 				);
 				?>
 			</span>

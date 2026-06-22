@@ -585,3 +585,81 @@ img.wps_go_pro_images {
     top: 50%;
     transform: translateY(-54%);
 }
+
+/* Membership feature banner */
+.wps-sfw-mem-banner.notice {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	width: auto;
+	margin: 12px 0 16px;
+	padding: 18px 24px;
+	border: 1px solid #f4e6c2;
+	border-left: 1px solid #f4e6c2;
+	border-radius: 14px;
+	background: linear-gradient(90deg, #fdeecb 0%, #fdf6ea 55%, #fbfbff 100%);
+	box-shadow: none;
+}
+
+.wps-sfw-mem-banner__badge {
+	flex-shrink: 0;
+	padding: 5px 12px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: #3d2a00;
+	background: #f5a623;
+	border-radius: 999px;
+}
+
+.wps-sfw-mem-banner__body {
+	flex: 1 1 auto;
+}
+
+.wps-sfw-mem-banner__title {
+	display: block;
+	font-size: 15.5px;
+	font-weight: 700;
+	margin-bottom: 3px;
+	color: #23243a;
+}
+
+.wps-sfw-mem-banner__text {
+	font-size: 13px;
+	color: #6b7280;
+}
+
+.wps-sfw-mem-banner__cta,
+.wps-sfw-mem-banner__cta:hover,
+.wps-sfw-mem-banner__cta:focus {
+	flex-shrink: 0;
+	padding: 11px 24px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #fff !important;
+	background: #15161f;
+	border-radius: 10px;
+	text-decoration: none !important;
+	box-shadow: none;
+}
+
+.wps-sfw-mem-banner__cta:hover,
+.wps-sfw-mem-banner__cta:focus {
+	background: #2b2c45;
+}
+
+.wps-sfw-mem-banner__dismiss,
+.wps-sfw-mem-banner__dismiss:hover,
+.wps-sfw-mem-banner__dismiss:focus {
+	flex-shrink: 0;
+	font-size: 13px;
+	color: #8a8a93 !important;
+	text-decoration: none !important;
+	box-shadow: none;
+}
+
+.wps-sfw-mem-banner__dismiss:hover,
+.wps-sfw-mem-banner__dismiss:focus {
+	color: #23243a !important;
+}

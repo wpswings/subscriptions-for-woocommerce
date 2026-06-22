@@ -182,7 +182,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 							);
 						}
 
-						// WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
+						// WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" ); // Disabled.
 
 						/*
 						 * If we're doing a retry and source is chargeable, we need to pass
@@ -199,7 +199,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 
 						// if ( $this->lock_order_payment( $renewal_order ) ) {
 						// 	return false;
-						// }
+						// } // Disabled.
 
 						$response                   = $this->create_and_confirm_intent_for_off_session( $renewal_order, $prepared_source, $amount );
 						$is_authentication_required = $this->is_authentication_required_for_payment( $response );
@@ -230,7 +230,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 							$this->process_response( ( ! empty( $latest_charge ) ) ? $latest_charge : $response, $renewal_order );
 						}
 					} catch ( WC_Stripe_Exception $e ) {
-						// WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() );
+						// WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() ); // Disabled.
 						do_action( 'wc_gateway_stripe_process_payment_error', $e, $renewal_order );
 					}
 				}

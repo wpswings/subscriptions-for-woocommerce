@@ -143,13 +143,23 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 			$wps_subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_subscription_id', true );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 
-				if ( isset( $_POST['_wcsnonce'] ) && isset( $_POST['woocommerce_change_payment'] ) && $order->get_id() === absint( $_POST['woocommerce_change_payment'] ) ) {
+				// phpcs:disable WordPress.Security.NonceVerification.Missing
+				if (
+					isset( $_POST['_wcsnonce'] ) &&
+					isset( $_POST['woocommerce_change_payment'] ) &&
+					$order->get_id() === absint( $_POST['woocommerce_change_payment'] )
+				) {
+				// phpcs:enable WordPress.Security.NonceVerification.Missing
 						$checkout_session = wc_apa()->get_gateway()->get_checkout_session();
 
 						$payload['paymentDetails']['paymentIntent'] = 'Confirm';
 						unset( $payload['paymentDetails']['canHandlePendingAuthorization'] );
 
-						$payload['paymentDetails']['chargeAmount'] = WC_Amazon_Payments_Advanced::format_amount( $checkout_session->recurringMetadata->amount ); // phpcs:ignore WordPress.NamingConventions
+						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$recurring_amount                          = $checkout_session->recurringMetadata->amount;
+						$payload['paymentDetails']['chargeAmount'] = WC_Amazon_Payments_Advanced::format_amount(
+							$recurring_amount
+						);
 
 						return $payload;
 				}

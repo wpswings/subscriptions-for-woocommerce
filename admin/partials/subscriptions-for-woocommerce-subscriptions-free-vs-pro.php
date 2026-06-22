@@ -7,6 +7,10 @@
  * @subpackage Subscriptions_For_Woocommerce/admin/partials
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 $tick = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/accept.png';
 $cross = SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL . 'admin/images/cross.png';
 ?>

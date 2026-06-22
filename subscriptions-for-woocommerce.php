@@ -15,14 +15,14 @@
  * Plugin Name:       Subscriptions For WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/subscriptions-for-woocommerce/
  * Description:       <code><strong>Subscriptions for WooCommerce</strong></code> allow collecting repeated payments through subscriptions orders on the eCommerce store for both admin and users. <a target="_blank" href="https://wpswings.com/woocommerce-plugins/?utm_source=wpswings-subs-shop&utm_medium=subs-org-backend&utm_campaign=shop-page">Elevate your e-commerce store by exploring more on WP Swings</a>
- * Version:           1.9.8
+ * Version:           2.0.0
  * Author:            WP Swings
  * Author URI:        https://wpswings.com/?utm_source=wpswings-subs-official&utm_medium=subs-org-backend&utm_campaign=official
  * Text Domain:       subscriptions-for-woocommerce
  * Domain Path:       /languages
  * Requires Plugins:  woocommerce
  *
- * Requires at least:        6.7.0
+ * Requires at least:        6.7
  * Tested up to:             7.0
  * WC requires at least:     6.5.0
  * WC tested up to:          10.8.1
@@ -36,7 +36,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
-
 use Automattic\WooCommerce\Utilities\OrderUtil;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $old_pro_exists = false;
@@ -179,7 +178,7 @@ if ( $activated ) {
 	 */
 	function define_subscriptions_for_woocommerce_constants() {
 
-		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '1.9.8' );
+		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION', '2.0.0' );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_URL', plugin_dir_url( __FILE__ ) );
 		subscriptions_for_woocommerce_constants( 'SUBSCRIPTIONS_FOR_WOOCOMMERCE_SERVER_URL', 'https://wpswings.com' );
@@ -446,8 +445,25 @@ if ( $activated ) {
 		add_rewrite_endpoint( 'wps_subscriptions', EP_PAGES );
 		add_rewrite_endpoint( 'show-subscription', EP_PAGES );
 		add_rewrite_endpoint( 'wps-add-payment-method', EP_PAGES );
+		add_rewrite_endpoint( 'wps_memberships', EP_PAGES );
 		flush_rewrite_rules();
 	}
+
+	/**
+	 * One-time deferred flush so the wps_memberships endpoint is registered on
+	 * already-active installs without requiring a re-activation or manual permalink save.
+	 * The flag is deleted immediately after the flush so it only runs once.
+	 */
+	add_action(
+		'init',
+		function () {
+			if ( get_option( 'wps_sfw_flush_memberships_endpoint' ) ) {
+				delete_option( 'wps_sfw_flush_memberships_endpoint' );
+				flush_rewrite_rules();
+			}
+		},
+		99
+	);
 
 	add_action( 'init', 'wps_sfw_register_custom_order_types', 5 );
 

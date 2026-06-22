@@ -241,11 +241,20 @@ if ( '1' === $main_enabled ) {
 	 * @return array
 	 */
 	private function add_temporary_option_filters( $provider ) {
+		$has_model    = isset( $_POST['model'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$has_endpoint = isset( $_POST['custom_endpoint'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
 		$posted_values = array(
 			'wps_ai_provider'             => $provider,
-			'wps_ai_api_key_' . $provider => '' !== trim( $this->get_posted_text( 'api_key' ) ) ? $this->get_posted_text( 'api_key' ) : get_option( 'wps_ai_api_key_' . $provider, '' ),
-			'wps_ai_model_' . $provider   => isset( $_POST['model'] ) ? $this->get_posted_text( 'model' ) : get_option( 'wps_ai_model_' . $provider, '' ),
-			'wps_ai_custom_endpoint'      => isset( $_POST['custom_endpoint'] ) ? esc_url_raw( $this->get_posted_text( 'custom_endpoint' ) ) : get_option( 'wps_ai_custom_endpoint', '' ),
+			'wps_ai_api_key_' . $provider => '' !== trim( $this->get_posted_text( 'api_key' ) )
+				? $this->get_posted_text( 'api_key' )
+				: get_option( 'wps_ai_api_key_' . $provider, '' ),
+			'wps_ai_model_' . $provider   => $has_model
+				? $this->get_posted_text( 'model' )
+				: get_option( 'wps_ai_model_' . $provider, '' ),
+			'wps_ai_custom_endpoint'      => $has_endpoint
+				? esc_url_raw( $this->get_posted_text( 'custom_endpoint' ) )
+				: get_option( 'wps_ai_custom_endpoint', '' ),
 		);
 
 		$filters = array();
@@ -281,10 +290,10 @@ if ( '1' === $main_enabled ) {
 	 * @return string
 	 */
 	private function get_posted_text( $key, $default = '' ) {
-		if ( ! isset( $_POST[ $key ] ) || is_array( $_POST[ $key ] ) ) {
+		if ( ! isset( $_POST[ $key ] ) || is_array( $_POST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return $default;
 		}
 
-		return sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+		return sanitize_text_field( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	}
 }

@@ -105,11 +105,12 @@ ob_start();
 do_action( 'wps_sfw_order_details_html_before_cancel', $wps_subscription_id );
 do_action( 'wps_sfw_order_details_html_after_cancel_button', $wps_subscription_id );
 do_action( 'wps_sfw_order_details_html_after_cancel', $wps_subscription_id );
-$pro_manage_actions_html = trim( ob_get_clean() );
+// Strip legacy table-layout HTML comments so they don't render as literal text in the aurora layout.
+$pro_manage_actions_html = trim( preg_replace( '/<!--.*?-->/s', '', (string) ob_get_clean() ) );
 
 ob_start();
 do_action( 'wps_sfw_after_subscription_details', $wps_subscription_id );
-$pro_after_details_html = trim( ob_get_clean() );
+$pro_after_details_html = trim( preg_replace( '/<!--.*?-->/s', '', (string) ob_get_clean() ) );
 ?>
 <div class="wps-sfw-aurora-detail">
 	<div class="wps-sfw-aurora-detail__back">
@@ -132,11 +133,12 @@ $pro_after_details_html = trim( ob_get_clean() );
 				<h2><?php echo esc_html( $product_name ); ?></h2>
 				<p>
 					<?php
+					$started_label = $schedule_start ? wps_sfw_get_the_wordpress_date_format( $schedule_start ) : '---';
 					printf(
 						/* translators: 1: start date, 2: quantity */
 						esc_html__( 'Started %1$s . Qty %2$d', 'subscriptions-for-woocommerce' ),
-						esc_html( $schedule_start ? wps_sfw_get_the_wordpress_date_format( $schedule_start ) : '---' ),
-						max( 1, (int) $product_qty )
+						esc_html( $started_label ),
+						esc_html( max( 1, (int) $product_qty ) )
 					);
 					?>
 				</p>
@@ -205,7 +207,7 @@ $pro_after_details_html = trim( ob_get_clean() );
 						<div class="wps-sfw-aurora-action-card__copy">
 							<h4><?php esc_html_e( 'More actions', 'subscriptions-for-woocommerce' ); ?></h4>
 							<div class="wps-sfw-aurora-pro-actions">
-								<?php echo $pro_manage_actions_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hook output is rendered markup from integrated plugins. ?>
+								<?php echo wp_kses_post( $pro_manage_actions_html ); ?>
 							</div>
 						</div>
 					</div>
@@ -224,7 +226,7 @@ $pro_after_details_html = trim( ob_get_clean() );
 				</div>
 				<ul class="wps-sfw-aurora-summary__list">
 					<li><span><?php esc_html_e( 'Started', 'subscriptions-for-woocommerce' ); ?></span><strong><?php echo esc_html( $schedule_start ? wps_sfw_get_the_wordpress_date_format( $schedule_start ) : '---' ); ?></strong></li>
-					<li><span><?php esc_html_e( 'Billing cycle', 'subscriptions-for-woocommerce' ); ?></span><strong><?php echo esc_html( $billing_cycle ? sprintf( __( 'Every %s', 'subscriptions-for-woocommerce' ), $billing_cycle ) : '---' ); ?></strong></li>
+					<li><span><?php esc_html_e( 'Billing cycle', 'subscriptions-for-woocommerce' ); ?></span><strong><?php echo esc_html( $billing_cycle ? sprintf( /* translators: %s: billing interval, e.g. "1 month" */ __( 'Every %s', 'subscriptions-for-woocommerce' ), $billing_cycle ) : '---' ); ?></strong></li>
 					<li><span><?php esc_html_e( 'Next charge', 'subscriptions-for-woocommerce' ); ?></span><strong><?php echo esc_html( $next_payment_date ? wps_sfw_get_the_wordpress_date_format( $next_payment_date ) : '---' ); ?></strong></li>
 					<li><span><?php esc_html_e( 'Next amount', 'subscriptions-for-woocommerce' ); ?></span><strong><?php echo wp_kses_post( $recurring_total_html ? $recurring_total_html : '---' ); ?></strong></li>
 					<li><span><?php esc_html_e( 'Ends', 'subscriptions-for-woocommerce' ); ?></span><strong><?php echo esc_html( $subscription_end ? wps_sfw_get_the_wordpress_date_format( $subscription_end ) : __( 'No end date', 'subscriptions-for-woocommerce' ) ); ?></strong></li>
@@ -238,7 +240,7 @@ $pro_after_details_html = trim( ob_get_clean() );
 
 	<?php if ( $pro_after_details_html ) : ?>
 		<div class="wps-sfw-aurora-extensions">
-			<?php echo $pro_after_details_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hook output is rendered markup from integrated plugins. ?>
+			<?php echo wp_kses_post( $pro_after_details_html ); ?>
 		</div>
 	<?php endif; ?>
 </div>

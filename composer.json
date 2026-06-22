@@ -22,7 +22,8 @@
         "wp-coding-standards/wpcs": "^2.3",
         "woocommerce/woocommerce-sniffs": "^0.1.0",
         "phpcompatibility/php-compatibility": "^9.3",
-        "phpcompatibility/phpcompatibility-wp": "*"
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "phpunit/phpunit": "^9.0"
     },
     "scripts": {
         "post-install-cmd": [

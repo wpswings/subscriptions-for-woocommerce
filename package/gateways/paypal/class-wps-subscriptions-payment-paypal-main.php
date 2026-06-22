@@ -466,7 +466,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Paypal_Main' ) ) {
 		public function wps_sfw_process_api_response( $response ) {
 
 			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message(), (int) $response->get_error_code() );
+				throw new Exception( esc_html( $response->get_error_message() ), (int) $response->get_error_code() );
 			}
 
 			$response_body = wp_remote_retrieve_body( $response );

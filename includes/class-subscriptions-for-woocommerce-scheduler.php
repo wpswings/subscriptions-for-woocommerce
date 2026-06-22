@@ -320,6 +320,12 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						// hook for par plugin compatible .
 						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );
+
+						// Check if reminder email has been sent, so mark is blank for future reminder .
+                        $wps_wsp_is_send = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_is_recurring_reminder_sent', true );
+                        if( 'sent' == $wps_wsp_is_send ) {
+                            wps_sfw_update_meta_data( $subscription_id, 'wps_sfw_is_recurring_reminder_sent', '' );
+                        }
 					}
 				}
 			}
@@ -893,6 +899,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 
 						// hook for par plugin compatible .
 						do_action( 'wps_sfw_compatible_points_and_rewards', $order_id );
+
+						// Check if reminder email has been sent, so mark is blank for future reminder .
+                        $wps_wsp_is_send = wps_sfw_get_meta_data( $subscription_id, 'wps_sfw_is_recurring_reminder_sent', true );
+                        if( 'sent' == $wps_wsp_is_send ) {
+                            wps_sfw_update_meta_data( $subscription_id, 'wps_sfw_is_recurring_reminder_sent', '' );
+                        }
+ 
 					}
 				}
 			}

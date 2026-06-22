@@ -1,0 +1,315 @@
+/**
+ * Membership Plans — Grant Methods meta box styles.
+ *
+ * @since 2.0.0
+ */
+
+/* Prevent SVGs from being browser-draggable, breaking click-to-select UX. */
+.wps-grant-methods svg,
+.wps-access-sub-preview__header svg {
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+/* -----------------------------------------------------------------------
+   Outer container
+   ----------------------------------------------------------------------- */
+
+.wps-grant-methods {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	margin: 0;
+}
+
+/* -----------------------------------------------------------------------
+   Method selector — 3-column card grid
+   ----------------------------------------------------------------------- */
+
+.wps-grant-selector {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 8px;
+	padding: 0 0 12px;
+}
+
+.wps-grant-option {
+	display: block;
+	cursor: pointer;
+}
+
+.wps-grant-option input[type="radio"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.wps-grant-option__inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	padding: 14px 10px 12px;
+	border: 2px solid #dcdcde;
+	border-radius: 8px;
+	background: #fafafa;
+	text-align: center;
+	transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.wps-grant-option:hover .wps-grant-option__inner {
+	border-color: #a7aaad;
+	background: #fff;
+}
+
+.wps-grant-option.is-active .wps-grant-option__inner {
+	border-color: #2271b1;
+	background: #f0f6fc;
+	box-shadow: 0 0 0 1px #2271b1;
+}
+
+/* Icon circle */
+.wps-grant-option__icon {
+	display: block;
+	box-sizing: border-box;
+	width: 40px;
+	height: 40px;
+	padding: 10px;
+	border-radius: 50%;
+	background: #e8f0fb;
+	color: #2271b1;
+	flex-shrink: 0;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.wps-grant-option.is-active .wps-grant-option__icon {
+	background: #2271b1;
+	color: #fff;
+}
+
+/* Title */
+.wps-grant-option__inner strong {
+	display: block;
+	font-size: 12px;
+	font-weight: 700;
+	color: #1d2327;
+	line-height: 1.3;
+}
+
+/* Sub-label */
+.wps-grant-option__inner span {
+	display: block;
+	font-size: 11px;
+	color: #646970;
+	line-height: 1.4;
+}
+
+/* -----------------------------------------------------------------------
+   Method body — content area below the selector
+   ----------------------------------------------------------------------- */
+
+.wps-grant-body {
+	border-top: 1px solid #dcdcde;
+	padding: 12px 0 4px;
+}
+
+.wps-grant-body .description {
+	font-size: 12px;
+	color: #646970;
+	margin: 6px 0 8px;
+}
+
+.wps-grant-body .select2-container {
+	margin-bottom: 4px;
+}
+
+/* -----------------------------------------------------------------------
+   Subscription info notice
+   ----------------------------------------------------------------------- */
+
+.wps-grant-sub-notice {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	padding: 9px 12px;
+	margin-bottom: 10px;
+	background: #f0f6fc;
+	border: 1px solid #c5d9f4;
+	border-left: 3px solid #2271b1;
+	border-radius: 4px;
+	font-size: 12px;
+	color: #1d4b8f;
+	line-height: 1.5;
+}
+
+.wps-grant-sub-notice svg {
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+	margin-top: 1px;
+	color: #2271b1;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+/* -----------------------------------------------------------------------
+   Apply-all feedback row
+   ----------------------------------------------------------------------- */
+
+.wps-apply-all-result {
+	margin-left: 6px;
+	font-size: 12px;
+	font-weight: 600;
+	vertical-align: middle;
+}
+
+/* -----------------------------------------------------------------------
+   Inline subscription billing badge (below the select in the products box)
+   ----------------------------------------------------------------------- */
+
+.wps-sub-billing-preview {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 6px;
+	padding: 4px 10px;
+	background: #f0f6fc;
+	border: 1px solid #c5d9f4;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #1d4b8f;
+}
+
+/* -----------------------------------------------------------------------
+   Access Length subscription billing preview panel
+   ----------------------------------------------------------------------- */
+
+#wps-access-sub-preview {
+	margin-top: 4px;
+}
+
+.wps-access-sub-preview__header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	background: #f0f6fc;
+	border: 1px solid #c5d9f4;
+	border-radius: 4px 4px 0 0;
+	font-size: 12px;
+	font-weight: 700;
+	color: #1d4b8f;
+}
+
+.wps-access-sub-preview__header svg {
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+	color: #2271b1;
+}
+
+#wps-access-sub-preview__body {
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid #c5d9f4;
+	border-top: none;
+	border-radius: 0 0 4px 4px;
+}
+
+.wps-access-sub-preview__empty,
+.wps-access-sub-preview__loading {
+	margin: 0;
+	font-size: 12px;
+	color: #646970;
+	font-style: italic;
+}
+
+.wps-access-sub-preview__row {
+	margin: 0 0 4px;
+	font-size: 12px;
+	color: #1d2327;
+}
+
+.wps-access-sub-preview__row:last-child {
+	margin-bottom: 0;
+}
+
+.wps-access-sub-preview__row strong {
+	color: #646970;
+	font-weight: 600;
+	margin-right: 4px;
+}
+
+/* -----------------------------------------------------------------------
+   Subscription product card (rendered inside Access Length preview panel)
+   ----------------------------------------------------------------------- */
+
+.wps-sub-product-card {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+}
+
+.wps-sub-product-card__img {
+	width: 56px;
+	height: 56px;
+	object-fit: cover;
+	border-radius: 4px;
+	border: 1px solid #dcdcde;
+	flex-shrink: 0;
+}
+
+.wps-sub-product-card__no-img {
+	display: block;
+	width: 56px;
+	height: 56px;
+	border-radius: 4px;
+	border: 1px solid #dcdcde;
+	background: #f6f7f7;
+	flex-shrink: 0;
+}
+
+.wps-sub-product-card__info {
+	flex: 1;
+	min-width: 0;
+}
+
+.wps-sub-product-card__name {
+	margin: 0 0 2px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.wps-sub-product-card__price {
+	margin: 0 0 6px;
+	font-size: 12px;
+	color: #646970;
+}
+
+.wps-sub-product-card__rows {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.wps-sub-product-card__row {
+	display: block;
+	font-size: 12px;
+	color: #1d2327;
+}
+
+.wps-sub-product-card__row strong {
+	color: #646970;
+	font-weight: 600;
+	margin-right: 4px;
+}
