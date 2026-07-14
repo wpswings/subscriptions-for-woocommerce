@@ -166,8 +166,27 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
         </div>
     </div>
-                                    
-            
+                                <div class="wps-form-group wps_pro_settings_tag">
+        <div class="wps-form-group__label">
+            <label for="wsp_dunning_retry_schedule" class="wps-form-label">Smart retry schedule (days, comma separated)</label>
+        </div>
+        <div class="wps-form-group__control">
+            <label class="mdc-text-field mdc-text-field--outlined">
+                <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                                                                </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                </span>
+                <input class="mdc-text-field__input wsp-text-class" name="wsp_dunning_retry_schedule" id="wsp_dunning_retry_schedule" type="text" value="1,3,5" placeholder="e.g. 1,3,5" min="">
+            </label>
+            <div class="mdc-text-field-helper-line">
+                <div class="mdc-text-field-helper-text--persistent wps-helper-text" id="" aria-hidden="true">Number of days to wait before each retry attempt, e.g. 1,3,5 retries 1 day after the first failure, then 3 days after the second, then 5 days after the third.</div>
+            </div>
+        </div>
+    </div>
+
+
                 <h3>Email Notification</h3>
             
         

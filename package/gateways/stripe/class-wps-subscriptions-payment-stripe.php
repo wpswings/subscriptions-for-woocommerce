@@ -232,6 +232,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 					} catch ( WC_Stripe_Exception $e ) {
 						// WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() ); // Disabled.
 						do_action( 'wc_gateway_stripe_process_payment_error', $e, $renewal_order );
+
+						$wps_wsp_stripe_message = method_exists( $e, 'getLocalizedMessage' ) ? $e->getLocalizedMessage() : $e->getMessage();
+						do_action( 'wps_sfw_recurring_payment_failed', $renewal_order->get_id(), new WP_Error( $e->getCode(), $wps_wsp_stripe_message ) );
 					}
 				}
 			}
