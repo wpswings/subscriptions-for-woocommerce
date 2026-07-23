@@ -186,7 +186,9 @@ if ( ! function_exists( 'wps_create_user_membership' ) ) {
 	 * @since 2.0.0
 	 *
 	 * @param int   $user_id WordPress user ID.
-	 * @param array $args Optional arguments. {
+	 * @param array $args {
+	 *   Optional arguments.
+	 *
 	 *   @type string   $plan_slug       Required. Plan slug.
 	 *   @type string   $status          Optional. Default 'active'.
 	 *   @type string   $source          Optional. 'subscription'|'order'|'manual'. Default 'manual'.

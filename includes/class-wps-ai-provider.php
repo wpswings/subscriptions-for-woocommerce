@@ -773,7 +773,7 @@ if ( ! function_exists( 'wps_ai_provider' ) ) {
 	 *
 	 * @return WPS_AI_Provider
 	 */
-	function wps_ai_provider() {
+	function wps_ai_provider() { // phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed -- Backward-compatible helper kept in the same file as the class it wraps.
 		return WPS_AI_Provider::instance();
 	}
 }
