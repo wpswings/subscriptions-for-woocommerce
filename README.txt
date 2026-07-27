@@ -3,10 +3,10 @@ Contributors: wpswings
 Donate link:  https://wpswings.com/
 Tags: subscriptions,subscription billing, subscription box, subscription membership, woocommerce subscriptions
 Requires at least: 6.7
-Tested up to: 7.1
+Tested up to: 7.0.2
 WC requires at least: 6.5
-WC tested up to: 10.8.1
-Stable tag: 2.0.0
+WC tested up to: 10.9.4
+Stable tag: 2.0.1
 Requires PHP: 7.4
 License: GNU General Public License v3.0 
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -320,7 +320,15 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Changelog ==
 
-= 2.0.0 - Released on 18 June 2026 =
+= 2.0.1 - Released on 27 July 2026 =
+* New - Compatbility with latest wp ( 7.0.2 ) & wc( 10.9.4)
+* Fix - Fixed Missing Authorization (CWE-862) in plugin configuration AJAX handlers. Reported by Wordfence.
+* Fix - Fixed Privilege Escalation (CWE-269) in Membership Plan role assignment. Reported by Wordfence.
+* Fix: Security vulnerability - PayPal capture path could mark an order paid without validating the captured amount against the order total or binding the PayPal token to the order.  Reported by Pedro Pinho
+* Fix: Security vulnerability - Customer subscription detail disclosure (IDOR) allowing a logged-in customer to view another customer's subscription via the My Account endpoint or [wps-subscription-dashboard] shortcode. Reported by Muni Nitish Kumar Yaddala.
+* Fix: Security vulnerability - Shop Manager role could install and activate arbitrary plugins via the wps_sfw_install_plugin_configuration AJAX action, leading to privilege escalation. Reported by Khaled Alenazi ,Nxploited
+
+= 2.0.0 - Released on 22 June 2026 =
 * New: Membership Plans management.
 * New: Members administration screen.
 * New: Access Rules for content and product restrictions.
@@ -717,7 +725,10 @@ Check out [**Subscriptions  for WooCommerce Knowledge Base**](https://support.wp
 
 == Upgrade Notice ==
 
-= 2.0.0 - Released on 18 June 2026 =
-* New: Membership Plans management.
-* New: Members administration screen.
-* New: Access Rules for content and product restrictions.
+= 2.0.1 - Released on 27 July 2026 =
+* New - Compatbility with latest wp ( 7.0.2 ) & wc( 10.9.4)
+* Fix - Fixed Missing Authorization (CWE-862) in plugin configuration AJAX handlers. Reported by Wordfence.
+* Fix - Fixed Privilege Escalation (CWE-269) in Membership Plan role assignment. Reported by Wordfence.
+* Fix: Security vulnerability - PayPal capture path could mark an order paid without validating the captured amount against the order total or binding the PayPal token to the order.  Reported by Pedro Pinho
+* Fix: Security vulnerability - Customer subscription detail disclosure (IDOR) allowing a logged-in customer to view another customer's subscription via the My Account endpoint or [wps-subscription-dashboard] shortcode. Reported by Muni Nitish Kumar Yaddala.
+* Fix: Security vulnerability - Shop Manager role could install and activate arbitrary plugins via the wps_sfw_install_plugin_configuration AJAX action, leading to privilege escalation. Reported by Khaled Alenazi ,Nxploited
