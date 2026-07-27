@@ -174,34 +174,34 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe' ) ) {
 						$wps_sfw_src_id     = ( $prepared_source && isset( $prepared_source->source ) ) ? $prepared_source->source : '';
 						$wps_sfw_src_type   = is_object( $wps_sfw_src_obj ) ? ( isset( $wps_sfw_src_obj->type ) ? $wps_sfw_src_obj->type : ( isset( $wps_sfw_src_obj->object ) ? $wps_sfw_src_obj->object : 'unknown' ) ) : 'none';
 						$wps_sfw_src_status = ( is_object( $wps_sfw_src_obj ) && isset( $wps_sfw_src_obj->status ) ) ? $wps_sfw_src_obj->status : 'n/a';
-						WC_Stripe_Logger::log(
-							sprintf(
-								'wps_sfw renewal source resolved | order=%1$s | prepared_source=%2$s | customer=%3$s | source_id=%4$s | source_type=%5$s | source_status=%6$s',
-								$order_id,
-								$prepared_source ? 'yes' : 'no',
-								( $prepared_source && ! empty( $prepared_source->customer ) ) ? $prepared_source->customer : 'missing',
-								$wps_sfw_src_id ? $wps_sfw_src_id : 'empty',
-								$wps_sfw_src_type,
-								$wps_sfw_src_status
-							)
-						);
+						// WC_Stripe_Logger::log(
+						// 	sprintf(
+						// 		'wps_sfw renewal source resolved | order=%1$s | prepared_source=%2$s | customer=%3$s | source_id=%4$s | source_type=%5$s | source_status=%6$s',
+						// 		$order_id,
+						// 		$prepared_source ? 'yes' : 'no',
+						// 		( $prepared_source && ! empty( $prepared_source->customer ) ) ? $prepared_source->customer : 'missing',
+						// 		$wps_sfw_src_id ? $wps_sfw_src_id : 'empty',
+						// 		$wps_sfw_src_type,
+						// 		$wps_sfw_src_status
+						// 	)
+						// );
 
 						if ( ! $prepared_source ) {
-							WC_Stripe_Logger::log( sprintf( 'wps_sfw renewal ABORT before POST payment_intents (no reusable source) | order=%s', $order_id ) );
+							// WC_Stripe_Logger::log( sprintf( 'wps_sfw renewal ABORT before POST payment_intents (no reusable source) | order=%s', $order_id ) );
 							throw new WC_Stripe_Exception( WC_Stripe_Helper::get_localized_messages()['missing'] );
 						}
 
 						$source_object = $prepared_source->source_object;
 
 						if ( ! $prepared_source->customer ) {
-							WC_Stripe_Logger::log( sprintf( 'wps_sfw renewal ABORT before POST payment_intents (missing Stripe customer) | order=%s', $order_id ) );
+							// WC_Stripe_Logger::log( sprintf( 'wps_sfw renewal ABORT before POST payment_intents (missing Stripe customer) | order=%s', $order_id ) );
 							throw new WC_Stripe_Exception(
 								'Failed to process renewal for order ' . $renewal_order->get_id() . '. Stripe customer id is missing in the order',
 								__( 'Customer not found', 'subscriptions-for-woocommerce' )
 							);
 						}
 
-						WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
+						// WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
 
 						/*
 						 * If we're doing a retry and source is chargeable, we need to pass
