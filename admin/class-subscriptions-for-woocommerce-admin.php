@@ -1137,6 +1137,10 @@ class Subscriptions_For_Woocommerce_Admin {
 
 		check_ajax_referer( 'ajax-nonce', 'nonce' );
 
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json( false );
+		}
+
 		$term_accpted = ! empty( $_POST['consetCheck'] ) ? sanitize_text_field( wp_unslash( $_POST['consetCheck'] ) ) : ' ';
 		if ( ! empty( $term_accpted ) && 'yes' == $term_accpted ) {
 			update_option( 'wps_sfw_enable_tracking', 'on' );
@@ -1245,6 +1249,11 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_install_plugin_configuration() {
 		check_ajax_referer( 'ajax-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json( false );
+		}
+		
 		$wps_plugin_name = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
 		$response = false;
 		if ( ! empty( $wps_plugin_name ) ) {

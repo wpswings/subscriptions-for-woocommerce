@@ -39,6 +39,14 @@ class WPS_AI_Health_Widget {
 			return;
 		}
 
+		if ( ! $this->is_ai_enabled() ) {
+			return;
+		}
+
+		if ( is_wp_error( wps_ai_provider()->get_config() ) ) {
+			return;
+		}
+
 		wp_add_dashboard_widget(
 			'wps_ai_subscription_health',
 			__( 'AI Insights', 'subscriptions-for-woocommerce' ),

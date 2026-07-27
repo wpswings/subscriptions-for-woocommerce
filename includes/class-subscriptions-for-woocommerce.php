@@ -389,10 +389,10 @@ class Subscriptions_For_Woocommerce {
 		$this->loader->add_action( 'admin_init', $sfw_plugin_admin, 'wps_sfw_dismiss_membership_feature_notice' );
 		// Multistep.
 		$this->loader->add_action( 'wp_ajax_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
-		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_save_settings_filter', $sfw_plugin_admin, 'wps_sfw_save_settings_filter' );
+	
 
 		$this->loader->add_action( 'wp_ajax_wps_sfw_install_plugin_configuration', $sfw_plugin_admin, 'wps_sfw_install_plugin_configuration' );
-		$this->loader->add_action( 'wp_ajax_nopriv_wps_sfw_install_plugin_configuration', $sfw_plugin_admin, 'wps_sfw_install_plugin_configuration' );
+
 		// Developer's Hook Listing.
 		$this->loader->add_action( 'sfw_developer_admin_hooks_array', $sfw_plugin_admin, 'wps_developer_admin_hooks_listing' );
 		$this->loader->add_action( 'sfw_developer_public_hooks_array', $sfw_plugin_admin, 'wps_developer_public_hooks_listing' );

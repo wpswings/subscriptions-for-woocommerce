@@ -1279,6 +1279,28 @@ class Subscriptions_For_Woocommerce_Public {
 		echo wp_kses_post( $price );
 	}
 
+	/**
+	 * Check whether the current user is allowed to view the given subscription's details.
+	 *
+	 * @name wps_sfw_current_user_can_view_subscription
+	 * @since 1.9.8
+	 * @param int $wps_subscription_id wps_subscription_id.
+	 * @return bool
+	 */
+	private function wps_sfw_current_user_can_view_subscription( $wps_subscription_id ) {
+		if ( current_user_can( 'manage_woocommerce' ) ) {
+			return true;
+		}
+
+		$user_id = get_current_user_id();
+		if ( empty( $user_id ) ) {
+			return false;
+		}
+
+		$wps_customer_id = (int) wps_sfw_get_meta_data( $wps_subscription_id, 'wps_customer_id', true );
+
+		return ( $wps_customer_id > 0 && $wps_customer_id === (int) $user_id );
+	}
 
 	/**
 	 * This function is used to include subscription details template on account page.
@@ -1291,6 +1313,11 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( ! wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 			echo '<div class="woocommerce-error wps_sfw_invalid_subscription">' . esc_html__( 'Not a valid subscription', 'subscriptions-for-woocommerce' ) . '</div>';
+			return;
+		}
+
+		if ( ! $this->wps_sfw_current_user_can_view_subscription( $wps_subscription_id ) ) {
+			echo '<div class="woocommerce-error wps_sfw_invalid_subscription">' . esc_html__( 'You are not allowed to view this subscription.', 'subscriptions-for-woocommerce' ) . '</div>';
 			return;
 		}
 
@@ -3335,7 +3362,11 @@ class Subscriptions_For_Woocommerce_Public {
 
 		if ( isset( $_GET['wps-show-subscription'] ) ) {
 			$wps_subscription_id = isset( $_GET['wps-show-subscription'] ) ? intval( $_GET['wps-show-subscription'] ) : 0;
-			wc_get_template( $this->wps_sfw_get_subscription_detail_template(), array( 'wps_subscription_id' => $wps_subscription_id ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) && $this->wps_sfw_current_user_can_view_subscription( $wps_subscription_id ) ) {
+				wc_get_template( $this->wps_sfw_get_subscription_detail_template(), array( 'wps_subscription_id' => $wps_subscription_id ), '', SUBSCRIPTIONS_FOR_WOOCOMMERCE_DIR_PATH . 'public/partials/templates/' );
+			} else {
+				echo '<div class="woocommerce-error wps_sfw_invalid_subscription">' . esc_html__( 'You are not allowed to view this subscription.', 'subscriptions-for-woocommerce' ) . '</div>';
+			}
 		} else {
 			$this->wps_sfw_subscription_dashboard_content();
 		}

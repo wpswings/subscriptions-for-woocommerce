@@ -543,6 +543,9 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					foreach ( $response->links as $link ) {
 						if ( 'approve' === $link->rel || 'payer-action' === $link->rel ) {
 							wps_sfw_update_meta_data( $order->get_id(), 'wps_paypal_request_id', $request_id );
+							if ( isset( $response->id ) ) {
+								wps_sfw_update_meta_data( $order->get_id(), '_wps_paypal_created_order_id', sanitize_text_field( $response->id ) );
+							}
 							return array(
 								'result'   => 'success',
 								'redirect' => $link->href,
@@ -744,6 +747,20 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 			if ( 'captured' !== $order->get_meta( '_wps_paypal_payment_status' ) ) {
 				$paypal_order_token = sanitize_text_field( wp_unslash( $_GET['token'] ) );
 				$paypal_payer_id    = sanitize_text_field( wp_unslash( $_GET['PayerID'] ) );
+
+				// Bind the token being captured to the PayPal order that was actually created for this WooCommerce order at checkout.
+				$created_paypal_order_id = $order->get_meta( '_wps_paypal_created_order_id' );
+				if ( ! empty( $created_paypal_order_id ) && $created_paypal_order_id !== $paypal_order_token ) {
+					$order->add_order_note(
+						sprintf(
+							/* translators: paypal order id. */
+							esc_html__( 'PayPal capture blocked: returned token %s does not match the PayPal order created for this order.', 'subscriptions-for-woocommerce' ),
+							esc_html( $paypal_order_token )
+						)
+					);
+					return;
+				}
+
 				$order->update_meta_data( '_wps_paypal_order_id', $paypal_order_token );
 				$order->update_meta_data( '_wps_paypal_payer_id', $paypal_payer_id );
 				$order->update_meta_data( '_wps_paypal_payment_status', 'captured' );
@@ -757,7 +774,26 @@ class WC_Gateway_Wps_Paypal_Integration extends WC_Payment_Gateway {
 					)
 				);
 				if ( 'success' === $response['result'] && 'COMPLETED' === $response['response']->status ) {
-					$txn_id = $response['response']->purchase_units[0]->payments->captures[0]->id;
+					$capture = $response['response']->purchase_units[0]->payments->captures[0];
+					$txn_id  = $capture->id;
+
+					// Validate the captured amount/currency against the order total before marking it paid, mirroring the IPN handler's amount check.
+					$captured_amount   = isset( $capture->amount->value ) ? $capture->amount->value : 0;
+					$captured_currency = isset( $capture->amount->currency_code ) ? $capture->amount->currency_code : '';
+					if ( wc_format_decimal( $order->get_total(), 2 ) !== wc_format_decimal( $captured_amount, 2 ) || $order->get_currency() !== $captured_currency ) {
+						$order->add_order_note(
+							sprintf(
+								/* translators: 1: captured amount, 2: captured currency. */
+								esc_html__( 'PayPal captured amount %1$s %2$s does not match the order total; order held for manual review.', 'subscriptions-for-woocommerce' ),
+								esc_html( $captured_amount ),
+								esc_html( $captured_currency )
+							)
+						);
+						$order->update_meta_data( '_wps_paypal_payment_status', 'amount_mismatch' );
+						$order->update_status( 'on-hold' );
+						$order->save();
+						return;
+					}
 
 					if ( isset( $response['response']->purchase_units ) ) {
 						$links = array_shift( array_shift( $response['response']->purchase_units )->payments->captures )->links;
