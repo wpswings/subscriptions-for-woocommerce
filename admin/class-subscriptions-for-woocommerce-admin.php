@@ -562,6 +562,25 @@ class Subscriptions_For_Woocommerce_Admin {
 				'class' => 'sfw-checkbox-class',
 			),
 			array(
+				// Teaser only — this field is never read anywhere and is always
+				// rendered disabled, regardless of Pro's active state. The real,
+				// functional toggle lives in the Pro plugin's own Advance Settings
+				// tab (option `wsp_enable_gift_subscription`). Including
+				// `wps_pro_settings` in the class is what makes
+				// wps_sfw_plug_generate_html() apply the "PRO" lock treatment and
+				// the click-to-upgrade popup while Pro is inactive.
+				'title' => __( 'Enable Gifting Subscription', 'subscriptions-for-woocommerce' ),
+				'type'  => 'checkbox',
+				'description'  => __( 'Let a customer buy a subscription as a gift for another registered user.', 'subscriptions-for-woocommerce' ),
+				'subtitle'  => __( 'Gift Subscription is a Pro feature: the recipient becomes the owner and can manage it themselves, while the gifter keeps visibility and pays renewals. Manage it from the Pro plugin\'s Advance Settings tab.', 'subscriptions-for-woocommerce' ),
+				'control_label' => __( 'Let a customer buy a subscription as a gift for another registered user.', 'subscriptions-for-woocommerce' ),
+				'id'    => 'wps_sfw_gift_subscription_teaser',
+				'checked' => 'off',
+				'value' => 'on',
+				'attr'  => 'disabled',
+				'class' => 'sfw-checkbox-class wps_pro_settings',
+			),
+			array(
 				'type'        => 'section',
 				'id'          => 'wps_sfw_section_customer_dashboard',
 				'eyebrow'     => __( 'Customer Dashboard', 'subscriptions-for-woocommerce' ),
