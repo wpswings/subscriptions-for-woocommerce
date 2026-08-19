@@ -2183,6 +2183,18 @@ body.wp-admin.wps-sfw-expert-modal-open {
     width: 1px;
 }
 
+/*
+ * WP core's wp-admin/css/forms.css sets `input[type="checkbox"]:disabled { opacity: 0.7; }`,
+ * which outranks the class-only rule above (extra element + pseudo-class in its selector),
+ * so a disabled toggle/checkbox re-appears as a small native box instead of staying hidden
+ * behind the styled track. Only surfaces on disabled fields (e.g. a locked Pro teaser), which
+ * is why this wasn't caught until one existed.
+ */
+.wps-sfw-check__input:disabled,
+.wps-sfw-toggle__input:disabled {
+    opacity: 0 !important;
+}
+
 .wps-sfw-check__box {
     align-items: center;
     background: #fff;
