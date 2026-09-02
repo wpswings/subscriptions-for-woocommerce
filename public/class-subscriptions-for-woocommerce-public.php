@@ -1332,14 +1332,22 @@ class Subscriptions_For_Woocommerce_Public {
 	 */
 	public function wps_sfw_cancel_susbcription() {
 
-		if ( isset( $_GET['wps_subscription_status'] ) && isset( $_GET['wps_subscription_id'] ) && isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
-			$user_id      = get_current_user_id();
+		if ( ! isset( $_GET['wps_subscription_status'], $_GET['wps_subscription_id'], $_GET['_wpnonce'] ) ) {
+			return;
+		}
 
-			$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status'] ) );
-			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
-			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
-				$this->wps_sfw_cancel_susbcription_order_by_customer( $wps_subscription_id, $wps_status, $user_id );
-			}
+		$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
+		$wps_status          = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status'] ) );
+
+		// Verify the per-subscription nonce that the cancel link is built with.
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), $wps_subscription_id . $wps_status ) ) {
+			return;
+		}
+
+		$user_id = get_current_user_id();
+
+		if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
+			$this->wps_sfw_cancel_susbcription_order_by_customer( $wps_subscription_id, $wps_status, $user_id );
 		}
 	}
 
