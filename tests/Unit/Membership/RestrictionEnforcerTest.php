@@ -137,15 +137,39 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 	}
 
 	// -----------------------------------------------------------------------
-	// maybe_restrict_content — singular context required
+	// maybe_restrict_content — enforced in all contexts (not just singular)
 	// -----------------------------------------------------------------------
 
-	/** Content passes through unchanged when the view is not singular. */
-	public function test_content_passes_through_outside_singular() {
+	/**
+	 * Content is restricted even when is_singular() is false (e.g. REST API,
+	 * feeds). This is the fix for CVE-3: the is_singular() guard was removed
+	 * so the filter applies everywhere the_content is run.
+	 */
+	public function test_content_restricted_outside_singular() {
 		$this->add_gold_rule();
 		wp_set_current_user( 0 );
 
-		// Do NOT call go_to — is_singular() will return false.
+		// Set the global post to our restricted post WITHOUT calling go_to,
+		// so is_singular() remains false — simulating a REST / feed context.
+		$GLOBALS['post'] = get_post( $this->post_id );
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		// Content must be replaced, not passed through.
+		$this->assertStringContainsString( 'wps-restricted-content', $result );
+		$this->assertStringNotContainsString( 'Secret content.', $result );
+
+		unset( $GLOBALS['post'] );
+	}
+
+	/** Content passes through when there is no global post (safety guard). */
+	public function test_content_passes_through_when_no_global_post() {
+		$this->add_gold_rule();
+		wp_set_current_user( 0 );
+
+		// No global post set — get_post() returns null.
+		unset( $GLOBALS['post'] );
+
 		$result = $this->enforcer->maybe_restrict_content( 'Hello World' );
 
 		$this->assertSame( 'Hello World', $result );
@@ -640,6 +664,72 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 
 		$this->assertFalse( $result );
 	}
+
+	// -----------------------------------------------------------------------
+	// maybe_restrict_excerpt (CVE-3 — excerpt field in REST / feeds)
+	// -----------------------------------------------------------------------
+
+	/** Excerpt is emptied for a guest when the post has a matching rule. */
+	public function test_excerpt_emptied_for_guest_with_rule() {
+		$this->add_gold_rule();
+		wp_set_current_user( 0 );
+		$GLOBALS['post'] = get_post( $this->post_id );
+
+		$result = $this->enforcer->maybe_restrict_excerpt( 'Secret excerpt.' );
+
+		$this->assertSame( '', $result );
+		unset( $GLOBALS['post'] );
+	}
+
+	/** Excerpt passes through unchanged for a member who holds the plan. */
+	public function test_excerpt_passes_through_for_member() {
+		$this->add_gold_rule();
+		wp_set_current_user( $this->member_id );
+		$GLOBALS['post'] = get_post( $this->post_id );
+
+		$result = $this->enforcer->maybe_restrict_excerpt( 'Secret excerpt.' );
+
+		$this->assertSame( 'Secret excerpt.', $result );
+		unset( $GLOBALS['post'] );
+	}
+
+	/** Excerpt passes through when no rule restricts the post. */
+	public function test_excerpt_passes_through_with_no_rules() {
+		wp_set_current_user( 0 );
+		$GLOBALS['post'] = get_post( $this->post_id );
+
+		$result = $this->enforcer->maybe_restrict_excerpt( 'Open excerpt.' );
+
+		$this->assertSame( 'Open excerpt.', $result );
+		unset( $GLOBALS['post'] );
+	}
+
+	/** Excerpt passes through when there is no global post (safety guard). */
+	public function test_excerpt_passes_through_when_no_global_post() {
+		$this->add_gold_rule();
+		wp_set_current_user( 0 );
+		unset( $GLOBALS['post'] );
+
+		$result = $this->enforcer->maybe_restrict_excerpt( 'Some excerpt.' );
+
+		$this->assertSame( 'Some excerpt.', $result );
+	}
+
+	/** Product-kind rules do not empty the excerpt (they only gate purchase). */
+	public function test_excerpt_not_emptied_for_product_rule() {
+		$this->add_gold_rule( array( 'rule_kind' => 'product', 'target_type' => 'product' ) );
+		wp_set_current_user( 0 );
+		$GLOBALS['post'] = get_post( $this->post_id );
+
+		$result = $this->enforcer->maybe_restrict_excerpt( 'Product excerpt.' );
+
+		$this->assertSame( 'Product excerpt.', $result );
+		unset( $GLOBALS['post'] );
+	}
+
+	// -----------------------------------------------------------------------
+	// maybe_close_comments (continued)
+	// -----------------------------------------------------------------------
 
 	/** Comments stay open for a member even when option is on. */
 	public function test_comments_open_for_member_when_option_on() {

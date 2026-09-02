@@ -122,7 +122,7 @@ class Subscriptions_For_Woocommerce {
 			$this->version = SUBSCRIPTIONS_FOR_WOOCOMMERCE_VERSION;
 		} else {
 
-			$this->version = '2.0.2';
+			$this->version = '2.0.3';
 		}
 
 		$this->plugin_name = 'subscriptions-for-woocommerce';
@@ -433,6 +433,10 @@ class Subscriptions_For_Woocommerce {
 			$this->loader->add_filter( 'woocommerce_shop_order_list_table_columns', $sfw_plugin_admin, 'wps_sfw_add_contains_subscription_column' );
 			$this->loader->add_action( 'manage_shop_order_posts_custom_column', $sfw_plugin_admin, 'wps_sfw_add_contains_subscription_column_content', 10, 2 );
 			$this->loader->add_action( 'woocommerce_shop_order_list_table_custom_column', $sfw_plugin_admin, 'wps_sfw_add_contains_subscription_column_content', 10, 2 );
+
+			// Retry Renewal Payment order action.
+			$this->loader->add_filter( 'woocommerce_order_actions', $sfw_plugin_admin, 'wps_sfw_add_retry_payment_order_action', 10, 2 );
+			$this->loader->add_action( 'woocommerce_order_action_wps_sfw_retry_renewal_payment', $sfw_plugin_admin, 'wps_sfw_process_retry_renewal_payment', 10, 1 );
 		}
 
 		/*cron for notification*/
@@ -1254,6 +1258,7 @@ class Subscriptions_For_Woocommerce {
 			$wps_restriction_enforcer = new WPS_Restriction_Enforcer();
 			$this->loader->add_action( 'wp_enqueue_scripts', $wps_restriction_enforcer, 'enqueue_styles' );
 			$this->loader->add_filter( 'the_content', $wps_restriction_enforcer, 'maybe_restrict_content', 99 );
+			$this->loader->add_filter( 'the_excerpt', $wps_restriction_enforcer, 'maybe_restrict_excerpt', 99 );
 			$this->loader->add_action( 'template_redirect', $wps_restriction_enforcer, 'maybe_redirect', 99 );
 			$this->loader->add_filter(
 				'woocommerce_is_purchasable',

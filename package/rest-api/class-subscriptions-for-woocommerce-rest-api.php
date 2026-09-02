@@ -115,13 +115,16 @@ class Subscriptions_For_Woocommerce_Rest_Api {
 			$wps_secret_code = wps_wsp_api_get_secret_key();
 		}
 
-		if ( '' == $wps_secretkey ) {
-			return false;
-		} elseif ( trim( $wps_secret_code ) === trim( $wps_secretkey ) ) {
-			return true;
-		} else {
+		// Normalise both values first so the emptiness test and the comparison
+		// operate on the same value. A key that trims to empty can never match.
+		$wps_secretkey   = trim( (string) $wps_secretkey );
+		$wps_secret_code = trim( (string) $wps_secret_code );
+
+		if ( '' === $wps_secretkey || '' === $wps_secret_code ) {
 			return false;
 		}
+
+		return hash_equals( $wps_secret_code, $wps_secretkey );
 	}
 
 

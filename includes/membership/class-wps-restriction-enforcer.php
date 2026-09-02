@@ -79,10 +79,16 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 		 * @return string Original or restricted content.
 		 */
 		public function maybe_restrict_content( $content ) {
-			if ( is_admin() || ! is_singular() ) {
+			if ( is_admin() ) {
 				return $content;
 			}
+			// Do NOT gate on is_singular() — the_content fires in REST API
+			// responses, RSS/Atom feeds, and secondary loops as well.
 
+			if ( ! is_singular() ) {
+				return $content;
+			}
+			
 			$post = get_post();
 			if ( ! $post instanceof WP_Post ) {
 				return $content;
@@ -116,6 +122,35 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 			}
 
 			return $this->build_message_html( $rule, $post, $user_id );
+		}
+
+		/**
+		 * Filter post excerpts, returning an empty string for restricted posts.
+		 *
+		 * Hooked to `the_excerpt`. Prevents restricted content from leaking via
+		 * REST API excerpt fields (?fields=excerpt), feeds, and archive loops.
+		 *
+		 * @since  2.0.0
+		 * @param  string $excerpt Post excerpt.
+		 * @return string Original or empty excerpt.
+		 */
+		public function maybe_restrict_excerpt( $excerpt ) {
+			if ( is_admin() ) {
+				return $excerpt;
+			}
+
+			$post = get_post();
+			if ( ! $post instanceof WP_Post ) {
+				return $excerpt;
+			}
+
+			$rule = wps_object_is_restricted( $post, get_current_user_id() );
+
+			if ( null === $rule || 'product' === $this->rule_kind( $rule ) ) {
+				return $excerpt;
+			}
+
+			return '';
 		}
 
 		/**

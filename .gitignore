@@ -5,6 +5,7 @@ vendor/*
 .history
 .codex
 .claude
+test-results/*
 # ignore compiled files
 *.com
 *.class
