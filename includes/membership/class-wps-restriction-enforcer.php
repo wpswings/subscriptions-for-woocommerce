@@ -85,10 +85,6 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 			// Do NOT gate on is_singular() — the_content fires in REST API
 			// responses, RSS/Atom feeds, and secondary loops as well.
 
-			if ( ! is_singular() ) {
-				return $content;
-			}
-			
 			$post = get_post();
 			if ( ! $post instanceof WP_Post ) {
 				return $content;
