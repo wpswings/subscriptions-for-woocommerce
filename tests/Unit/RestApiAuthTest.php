@@ -23,9 +23,16 @@
  */
 class RestApiAuthTest extends WP_UnitTestCase {
 
-	/** @var Subscriptions_For_Woocommerce_Rest_Api */
+	/**
+	 * REST API class under test.
+	 *
+	 * @var Subscriptions_For_Woocommerce_Rest_Api
+	 */
 	private $api;
 
+	/**
+	 * Set up the test fixture.
+	 */
 	public function setUp(): void {
 		parent::setUp();
 
@@ -42,6 +49,9 @@ class RestApiAuthTest extends WP_UnitTestCase {
 		delete_option( 'wps_sfw_secret_key' );
 	}
 
+	/**
+	 * Tear down the test fixture.
+	 */
 	public function tearDown(): void {
 		delete_option( 'wps_sfw_enable_api' );
 		delete_option( 'wps_sfw_secret_key' );

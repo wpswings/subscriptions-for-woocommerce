@@ -2318,13 +2318,6 @@ class Subscriptions_For_Woocommerce_Admin {
 	}
 
 	/**
-	 * Add content for 'Contains Subscription' column on orders page.
-	 *
-	 * @param mixed $column column.
-	 * @param mixed $post_id post ID.
-	 * @since 3.5.0
-	 */
-	/**
 	 * Add "Retry Renewal Payment" to the WooCommerce order actions dropdown
 	 * for failed renewal orders.
 	 *
@@ -2362,6 +2355,13 @@ class Subscriptions_For_Woocommerce_Admin {
 		do_action( 'wps_sfw_other_payment_gateway_renewal', $order, $subscription_id, $payment_method );
 	}
 
+	/**
+	 * Add content for 'Contains Subscription' column on orders page.
+	 *
+	 * @param mixed $column  Column name.
+	 * @param mixed $post_id Post ID.
+	 * @since 3.5.0
+	 */
 	public function wps_sfw_add_contains_subscription_column_content( $column, $post_id ) {
 		if ( 'wps_sfw_contains_subscription' === $column ) {
 			$wps_subscription_id = wps_sfw_get_meta_data( $post_id, 'wps_subscription_id', true );
