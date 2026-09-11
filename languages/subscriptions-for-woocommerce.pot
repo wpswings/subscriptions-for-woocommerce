@@ -1,8 +1,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriptions For WooCommerce 2.0.2\n"
-"POT-Creation-Date: 2026-08-25 18:40+0530\n"
+"Project-Id-Version: Subscriptions For WooCommerce 2.0.3\n"
+"POT-Creation-Date: 2026-09-03 17:56+0530\n"
 "PO-Revision-Date: 2023-10-03 13:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: Wp Swings\n"
@@ -147,8 +147,8 @@ msgstr ""
 #: admin/class-subscriptions-for-woocommerce-admin.php:1665
 #: admin/partials/subscriptions-for-woocommerce-welcome.php:54
 #: admin/partials/wps-subscriptions-ai-settings.php:55
-#: includes/class-subscriptions-for-woocommerce.php:1921
-#: includes/class-subscriptions-for-woocommerce.php:1952
+#: includes/class-subscriptions-for-woocommerce.php:1926
+#: includes/class-subscriptions-for-woocommerce.php:1957
 msgid "Enabled"
 msgstr ""
 
@@ -158,8 +158,8 @@ msgstr ""
 #: admin/partials/membership/access-rules-card.php:179
 #: admin/partials/subscriptions-for-woocommerce-welcome.php:55
 #: admin/partials/wps-subscriptions-ai-settings.php:55
-#: includes/class-subscriptions-for-woocommerce.php:1923
-#: includes/class-subscriptions-for-woocommerce.php:1954
+#: includes/class-subscriptions-for-woocommerce.php:1928
+#: includes/class-subscriptions-for-woocommerce.php:1959
 msgid "Disabled"
 msgstr ""
 
@@ -355,7 +355,7 @@ msgstr ""
 #: admin/class-subscriptions-for-woocommerce-admin.php:637
 #: admin/class-subscriptions-for-woocommerce-admin.php:656
 #: admin/class-subscriptions-for-woocommerce-admin.php:1709
-#: includes/class-subscriptions-for-woocommerce.php:1986
+#: includes/class-subscriptions-for-woocommerce.php:1991
 msgid "Save Settings"
 msgstr ""
 
@@ -617,7 +617,7 @@ msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:1738
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:82
-#: includes/class-subscriptions-for-woocommerce.php:1446
+#: includes/class-subscriptions-for-woocommerce.php:1451
 msgid "Subscription Box"
 msgstr ""
 
@@ -726,17 +726,17 @@ msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:2282
 #: admin/class-subscriptions-for-woocommerce-admin.php:2287
-#: includes/class-subscriptions-for-woocommerce.php:1587
-#: includes/class-subscriptions-for-woocommerce.php:1590
-#: includes/class-subscriptions-for-woocommerce.php:1593
+#: includes/class-subscriptions-for-woocommerce.php:1592
+#: includes/class-subscriptions-for-woocommerce.php:1595
+#: includes/class-subscriptions-for-woocommerce.php:1598
 msgid "Yes"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:2284
 #: admin/class-subscriptions-for-woocommerce-admin.php:2289
-#: includes/class-subscriptions-for-woocommerce.php:1587
-#: includes/class-subscriptions-for-woocommerce.php:1590
-#: includes/class-subscriptions-for-woocommerce.php:1593
+#: includes/class-subscriptions-for-woocommerce.php:1592
+#: includes/class-subscriptions-for-woocommerce.php:1595
+#: includes/class-subscriptions-for-woocommerce.php:1598
 msgid "No"
 msgstr ""
 
@@ -744,13 +744,25 @@ msgstr ""
 msgid "Subscription Relationship"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2334
+#: admin/class-subscriptions-for-woocommerce-admin.php:2333
+msgid "Retry Renewal Payment"
+msgstr ""
+
+#: admin/class-subscriptions-for-woocommerce-admin.php:2350
+msgid "Retry failed: no linked subscription found."
+msgstr ""
+
+#: admin/class-subscriptions-for-woocommerce-admin.php:2354
+msgid "Retry renewal payment triggered by admin."
+msgstr ""
+
+#: admin/class-subscriptions-for-woocommerce-admin.php:2372
 msgid "Parent Order"
 msgstr ""
 
-#: admin/class-subscriptions-for-woocommerce-admin.php:2338
-#: public/class-subscriptions-for-woocommerce-public.php:2267
-#: public/class-subscriptions-for-woocommerce-public.php:2281
+#: admin/class-subscriptions-for-woocommerce-admin.php:2376
+#: public/class-subscriptions-for-woocommerce-public.php:2275
+#: public/class-subscriptions-for-woocommerce-public.php:2289
 msgid "Renewal Order"
 msgstr ""
 
@@ -2064,13 +2076,13 @@ msgid "Lite"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:57
-#: includes/class-subscriptions-for-woocommerce.php:1427
+#: includes/class-subscriptions-for-woocommerce.php:1432
 msgid "General Settings"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:61
 #: admin/partials/subscriptions-for-woocommerce-overview.php:52
-#: includes/class-subscriptions-for-woocommerce.php:1422
+#: includes/class-subscriptions-for-woocommerce.php:1427
 msgid "Overview"
 msgstr ""
 
@@ -2105,7 +2117,7 @@ msgid "Operations"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:72
-#: includes/class-subscriptions-for-woocommerce.php:1434
+#: includes/class-subscriptions-for-woocommerce.php:1439
 msgid "Subscription Table"
 msgstr ""
 
@@ -2120,7 +2132,7 @@ msgid "Integrations"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:77
-#: includes/class-subscriptions-for-woocommerce.php:1439
+#: includes/class-subscriptions-for-woocommerce.php:1444
 msgid "API Settings"
 msgstr ""
 
@@ -2152,7 +2164,7 @@ msgid ""
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:92
-#: includes/class-subscriptions-for-woocommerce.php:1454
+#: includes/class-subscriptions-for-woocommerce.php:1459
 msgid "Advanced Settings"
 msgstr ""
 
@@ -2168,7 +2180,7 @@ msgid "Compare"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:97
-#: includes/class-subscriptions-for-woocommerce.php:1461
+#: includes/class-subscriptions-for-woocommerce.php:1466
 msgid "Free Vs Pro"
 msgstr ""
 
@@ -2183,7 +2195,7 @@ msgid "Diagnostics"
 msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:102
-#: includes/class-subscriptions-for-woocommerce.php:1468
+#: includes/class-subscriptions-for-woocommerce.php:1473
 msgid "System Status"
 msgstr ""
 
@@ -2195,7 +2207,7 @@ msgstr ""
 
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:106
 #: admin/partials/subscriptions-for-woocommerce-admin-dashboard.php:107
-#: includes/class-subscriptions-for-woocommerce.php:1473
+#: includes/class-subscriptions-for-woocommerce.php:1478
 msgid "Developer"
 msgstr ""
 
@@ -3638,7 +3650,7 @@ msgstr ""
 
 #: includes/class-subscriptions-for-woocommerce-scheduler.php:268
 #: includes/class-subscriptions-for-woocommerce-scheduler.php:847
-#: public/class-subscriptions-for-woocommerce-public.php:2251
+#: public/class-subscriptions-for-woocommerce-public.php:2259
 #, php-format
 msgid "This renewal order belongs to Subscription #%s"
 msgstr ""
@@ -3779,80 +3791,80 @@ msgstr ""
 msgid "Invalid form submission."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:619
+#: includes/class-subscriptions-for-woocommerce.php:623
 msgid "No Renewal"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1496
+#: includes/class-subscriptions-for-woocommerce.php:1501
 #, php-format
 msgid ""
 "Unable to locate file at location \"%s\". Some features may not work "
 "properly in this plugin. Please contact us!"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1563
+#: includes/class-subscriptions-for-woocommerce.php:1568
 msgid "N/A (phpversion function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1572
+#: includes/class-subscriptions-for-woocommerce.php:1577
 msgid "N/A (make sure exec function is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1575
+#: includes/class-subscriptions-for-woocommerce.php:1580
 msgid "N/A (ABSPATH constant not defined)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1578
+#: includes/class-subscriptions-for-woocommerce.php:1583
 msgid "N/A (php_uname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1581
+#: includes/class-subscriptions-for-woocommerce.php:1586
 msgid "N/A (get_bloginfo function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1584
+#: includes/class-subscriptions-for-woocommerce.php:1589
 msgid "N/A (get_option function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1596
+#: includes/class-subscriptions-for-woocommerce.php:1601
 msgid "N/A (count_users function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1602
-#: includes/class-subscriptions-for-woocommerce.php:1608
-#: includes/class-subscriptions-for-woocommerce.php:1611
-#: includes/class-subscriptions-for-woocommerce.php:1639
-#: includes/class-subscriptions-for-woocommerce.php:1642
+#: includes/class-subscriptions-for-woocommerce.php:1607
+#: includes/class-subscriptions-for-woocommerce.php:1613
+#: includes/class-subscriptions-for-woocommerce.php:1616
+#: includes/class-subscriptions-for-woocommerce.php:1644
+#: includes/class-subscriptions-for-woocommerce.php:1647
 msgid "N/A (ini_get function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1605
-#: includes/class-subscriptions-for-woocommerce.php:1646
+#: includes/class-subscriptions-for-woocommerce.php:1610
+#: includes/class-subscriptions-for-woocommerce.php:1651
 msgid "N/A"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1623
+#: includes/class-subscriptions-for-woocommerce.php:1628
 msgid "N/A (gethostname function does not exist)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1626
-#: includes/class-subscriptions-for-woocommerce.php:1635
+#: includes/class-subscriptions-for-woocommerce.php:1631
+#: includes/class-subscriptions-for-woocommerce.php:1640
 msgid "N/A (make sure exec is enabled)"
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1925
+#: includes/class-subscriptions-for-woocommerce.php:1930
 msgid "This setting is active."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1927
+#: includes/class-subscriptions-for-woocommerce.php:1932
 msgid "This setting is inactive."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1956
+#: includes/class-subscriptions-for-woocommerce.php:1961
 msgid "This setting is enabled."
 msgstr ""
 
-#: includes/class-subscriptions-for-woocommerce.php:1958
+#: includes/class-subscriptions-for-woocommerce.php:1963
 msgid "This setting is disabled."
 msgstr ""
 
@@ -4272,11 +4284,11 @@ msgstr ""
 msgid "%1$d %2$s Access"
 msgstr ""
 
-#: includes/membership/class-wps-restriction-enforcer.php:539
+#: includes/membership/class-wps-restriction-enforcer.php:570
 msgid "You must be logged in to view this content."
 msgstr ""
 
-#: includes/membership/class-wps-restriction-enforcer.php:546
+#: includes/membership/class-wps-restriction-enforcer.php:577
 msgid "Your current subscription does not include access to this content."
 msgstr ""
 
@@ -4405,9 +4417,9 @@ msgstr[1] ""
 #: includes/subscriptions-for-woocommerce-common-function.php:812
 #: public/class-subscriptions-for-woocommerce-public.php:296
 #: public/class-subscriptions-for-woocommerce-public.php:1274
-#: public/class-subscriptions-for-woocommerce-public.php:2088
-#: public/class-subscriptions-for-woocommerce-public.php:2984
+#: public/class-subscriptions-for-woocommerce-public.php:2096
 #: public/class-subscriptions-for-woocommerce-public.php:2992
+#: public/class-subscriptions-for-woocommerce-public.php:3000
 #, php-format
 msgid " / %s "
 msgstr ""
@@ -4620,13 +4632,13 @@ msgstr ""
 msgid "WPS Paypal is not setup"
 msgstr ""
 
-#: package/rest-api/class-subscriptions-for-woocommerce-rest-api.php:147
+#: package/rest-api/class-subscriptions-for-woocommerce-rest-api.php:150
 msgid "Data not found"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:305
-#: public/class-subscriptions-for-woocommerce-public.php:2097
-#: public/class-subscriptions-for-woocommerce-public.php:3002
+#: public/class-subscriptions-for-woocommerce-public.php:2105
+#: public/class-subscriptions-for-woocommerce-public.php:3010
 #, php-format
 msgid " For %s "
 msgstr ""
@@ -4642,7 +4654,7 @@ msgid " and %s free trial"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:387
-#: public/class-subscriptions-for-woocommerce-public.php:2456
+#: public/class-subscriptions-for-woocommerce-public.php:2464
 msgid "Create Subscription Box"
 msgstr ""
 
@@ -4679,182 +4691,182 @@ msgid "Not a valid subscription"
 msgstr ""
 
 #: public/class-subscriptions-for-woocommerce-public.php:1320
-#: public/class-subscriptions-for-woocommerce-public.php:3368
+#: public/class-subscriptions-for-woocommerce-public.php:3376
 msgid "You are not allowed to view this subscription."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1377
+#: public/class-subscriptions-for-woocommerce-public.php:1385
 msgid "Subscription Cancelled Successfully"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1558
+#: public/class-subscriptions-for-woocommerce-public.php:1566
 msgid "You can not add multiple subscription products in cart"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1783
-#: public/class-subscriptions-for-woocommerce-public.php:1826
-#: public/class-subscriptions-for-woocommerce-public.php:1995
-#: public/class-subscriptions-for-woocommerce-public.php:2031
+#: public/class-subscriptions-for-woocommerce-public.php:1791
+#: public/class-subscriptions-for-woocommerce-public.php:1834
+#: public/class-subscriptions-for-woocommerce-public.php:2003
+#: public/class-subscriptions-for-woocommerce-public.php:2039
 msgid "Renewal For"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1787
-#: public/class-subscriptions-for-woocommerce-public.php:1830
-#: public/class-subscriptions-for-woocommerce-public.php:1998
-#: public/class-subscriptions-for-woocommerce-public.php:2034
+#: public/class-subscriptions-for-woocommerce-public.php:1795
+#: public/class-subscriptions-for-woocommerce-public.php:1838
+#: public/class-subscriptions-for-woocommerce-public.php:2006
+#: public/class-subscriptions-for-woocommerce-public.php:2042
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:231
 msgid "Subtotal"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1789
-#: public/class-subscriptions-for-woocommerce-public.php:1832
-#: public/class-subscriptions-for-woocommerce-public.php:2000
-#: public/class-subscriptions-for-woocommerce-public.php:2036
+#: public/class-subscriptions-for-woocommerce-public.php:1797
+#: public/class-subscriptions-for-woocommerce-public.php:1840
+#: public/class-subscriptions-for-woocommerce-public.php:2008
+#: public/class-subscriptions-for-woocommerce-public.php:2044
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:247
 msgid "Tax"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1792
-#: public/class-subscriptions-for-woocommerce-public.php:1835
-#: public/class-subscriptions-for-woocommerce-public.php:2003
-#: public/class-subscriptions-for-woocommerce-public.php:2039
+#: public/class-subscriptions-for-woocommerce-public.php:1800
+#: public/class-subscriptions-for-woocommerce-public.php:1843
+#: public/class-subscriptions-for-woocommerce-public.php:2011
+#: public/class-subscriptions-for-woocommerce-public.php:2047
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:262
 msgid "Shipping"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:1794
-#: public/class-subscriptions-for-woocommerce-public.php:1837
-#: public/class-subscriptions-for-woocommerce-public.php:2005
-#: public/class-subscriptions-for-woocommerce-public.php:2041
-#: public/class-subscriptions-for-woocommerce-public.php:2700
+#: public/class-subscriptions-for-woocommerce-public.php:1802
+#: public/class-subscriptions-for-woocommerce-public.php:1845
+#: public/class-subscriptions-for-woocommerce-public.php:2013
+#: public/class-subscriptions-for-woocommerce-public.php:2049
+#: public/class-subscriptions-for-woocommerce-public.php:2708
 #: public/partials/templates/myaccount/wps-show-subscription-details.php:276
 #: public/partials/templates/myaccount/wps-subscriptions.php:29
 msgid "Total"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2079
+#: public/class-subscriptions-for-woocommerce-public.php:2087
 #, php-format
 msgid " and %1$s%2$s"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2253
+#: public/class-subscriptions-for-woocommerce-public.php:2261
 msgid "Important Information"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2311
+#: public/class-subscriptions-for-woocommerce-public.php:2319
 msgid "You will be subscribing to"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2377
+#: public/class-subscriptions-for-woocommerce-public.php:2385
 msgid "Your subscription is not active"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2377
+#: public/class-subscriptions-for-woocommerce-public.php:2385
 msgid "Please renew or purchase a subscription to access this course"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2379
+#: public/class-subscriptions-for-woocommerce-public.php:2387
 msgid "#"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2383
+#: public/class-subscriptions-for-woocommerce-public.php:2391
 msgid "You have not purchased the attached course subscription yet"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2383
-#: public/class-subscriptions-for-woocommerce-public.php:2396
+#: public/class-subscriptions-for-woocommerce-public.php:2391
+#: public/class-subscriptions-for-woocommerce-public.php:2404
 msgid ""
 "Please purchase one of the following subscriptions to access this course"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2396
+#: public/class-subscriptions-for-woocommerce-public.php:2404
 msgid "You have not purchased the subscription yet"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2571
+#: public/class-subscriptions-for-woocommerce-public.php:2579
 msgid "Step 1"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2586
+#: public/class-subscriptions-for-woocommerce-public.php:2594
 msgid "No products available for this step."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2619
+#: public/class-subscriptions-for-woocommerce-public.php:2627
 msgid "No categories configured for this step."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2665
+#: public/class-subscriptions-for-woocommerce-public.php:2673
 #, php-format
 msgid "Step %d"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2681
+#: public/class-subscriptions-for-woocommerce-public.php:2689
 msgid "Customize Your Subscription Box"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2707
+#: public/class-subscriptions-for-woocommerce-public.php:2715
 msgid "Back"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2708
-#: public/class-subscriptions-for-woocommerce-public.php:2712
+#: public/class-subscriptions-for-woocommerce-public.php:2716
+#: public/class-subscriptions-for-woocommerce-public.php:2720
 msgid "Empty Cart"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2709
+#: public/class-subscriptions-for-woocommerce-public.php:2717
 #: public/partials/templates/myaccount/wps-subscriptions-aurora.php:311
 #: public/partials/templates/myaccount/wps-subscriptions.php:136
 msgid "Next"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:2710
-#: public/class-subscriptions-for-woocommerce-public.php:2713
+#: public/class-subscriptions-for-woocommerce-public.php:2718
+#: public/class-subscriptions-for-woocommerce-public.php:2721
 msgid "Add to Basket"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3135
+#: public/class-subscriptions-for-woocommerce-public.php:3143
 msgid "View Attached Products"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3184
+#: public/class-subscriptions-for-woocommerce-public.php:3192
 msgid ""
 "You cannot add other products while a Subscription Box is in the cart. "
 "Please remove it first."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3193
+#: public/class-subscriptions-for-woocommerce-public.php:3201
 msgid ""
 "You cannot add a Subscription Box when other products are in the cart. "
 "Please remove them first."
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3259
+#: public/class-subscriptions-for-woocommerce-public.php:3267
 msgid "Subscription Interval: "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3265
-#: public/class-subscriptions-for-woocommerce-public.php:3269
+#: public/class-subscriptions-for-woocommerce-public.php:3273
+#: public/class-subscriptions-for-woocommerce-public.php:3277
 msgid "Subscription Expiry: "
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3269
+#: public/class-subscriptions-for-woocommerce-public.php:3277
 msgid "Unlimited"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3321
-#: public/class-subscriptions-for-woocommerce-public.php:3341
+#: public/class-subscriptions-for-woocommerce-public.php:3329
+#: public/class-subscriptions-for-woocommerce-public.php:3349
 msgctxt "Order status"
 msgid "Wps Renewal"
 msgstr ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3327
+#: public/class-subscriptions-for-woocommerce-public.php:3335
 #, php-format
 msgid "Wps Renewal <span class=\"count\">(%s)</span>"
 msgid_plural "Wps Renewal <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: public/class-subscriptions-for-woocommerce-public.php:3420
+#: public/class-subscriptions-for-woocommerce-public.php:3428
 #, php-format
 msgid "For %s"
 msgstr ""
