@@ -94,6 +94,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 					$subscription_id = $value->ID;
 
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
+						// Prevent concurrent Action Scheduler workers from processing the same
+						// subscription simultaneously, which would cause two separate Stripe
+						// charges for one renewal cycle with one having no visible WooCommerce order.
+						if ( ! $this->wps_sfw_acquire_renewal_lock( $subscription_id ) ) {
+							continue;
+						}
+						try {
 
 						if ( apply_filters( 'wps_sfw_recurring_allow_on_scheduler', false, $subscription_id ) ) {
 							return;
@@ -326,6 +333,9 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
                         if( 'sent' == $wps_wsp_is_send ) {
                             wps_sfw_update_meta_data( $subscription_id, 'wps_sfw_is_recurring_reminder_sent', '' );
                         }
+						} finally {
+							$this->wps_sfw_release_renewal_lock( $subscription_id );
+						}
 					}
 				}
 			}
@@ -665,6 +675,13 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
 					$subscription_id = $value;
 
 					if ( wps_sfw_check_valid_subscription( $subscription_id ) ) {
+						// Prevent concurrent Action Scheduler workers from processing the same
+						// subscription simultaneously, which would cause two separate Stripe
+						// charges for one renewal cycle with one having no visible WooCommerce order.
+						if ( ! $this->wps_sfw_acquire_renewal_lock( $subscription_id ) ) {
+							continue;
+						}
+						try {
 
 						if ( apply_filters( 'wps_sfw_recurring_allow_on_scheduler', false, $subscription_id ) ) {
 							return;
@@ -906,9 +923,53 @@ if ( ! class_exists( 'Subscriptions_For_Woocommerce_Scheduler' ) ) {
                             wps_sfw_update_meta_data( $subscription_id, 'wps_sfw_is_recurring_reminder_sent', '' );
                         }
  
+						} finally {
+							$this->wps_sfw_release_renewal_lock( $subscription_id );
+						}
 					}
 				}
 			}
+		}
+
+		/**
+		 * Acquire a per-subscription processing lock to prevent concurrent Action Scheduler
+		 * workers from charging a customer twice for the same renewal cycle.
+		 *
+		 * Uses add_option() which maps to an atomic MySQL INSERT — it returns false
+		 * without modifying the row if the option already exists, making it safe for
+		 * concurrent PHP processes to race on without external locking infrastructure.
+		 *
+		 * @param int $subscription_id Subscription ID.
+		 * @return bool True if this process acquired the lock, false if another holds it.
+		 */
+		private function wps_sfw_acquire_renewal_lock( $subscription_id ) {
+			$lock_option = 'wps_sfw_renewal_lock_' . absint( $subscription_id );
+			$now         = current_time( 'timestamp' );
+
+			// add_option() issues an atomic INSERT — returns false when the row exists.
+			if ( add_option( $lock_option, $now, '', 'no' ) ) {
+				return true;
+			}
+
+			// Lock exists. Allow takeover only when it is stale (older than 10 minutes),
+			// which guards against a lock left behind by a crashed worker.
+			$lock_time = (int) get_option( $lock_option, 0 );
+			if ( ( $now - $lock_time ) < 600 ) {
+				return false;
+			}
+
+			// Stale lock — overwrite and claim it.
+			update_option( $lock_option, $now, 'no' );
+			return true;
+		}
+
+		/**
+		 * Release the per-subscription renewal lock.
+		 *
+		 * @param int $subscription_id Subscription ID.
+		 */
+		private function wps_sfw_release_renewal_lock( $subscription_id ) {
+			delete_option( 'wps_sfw_renewal_lock_' . absint( $subscription_id ) );
 		}
 
 		/**
