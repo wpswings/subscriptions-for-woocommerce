@@ -23,6 +23,7 @@ test-results/*
 *.rar
 *.tar
 *.zip
+*.doc
 
 /script
 /docs
