@@ -1082,7 +1082,7 @@ class Subscriptions_For_Woocommerce_Admin {
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_number', $wps_sfw_subscription_free_trial_number );
 			wps_sfw_update_meta_data( $post_id, 'wps_sfw_subscription_free_trial_interval', $wps_sfw_subscription_free_trial_interval );
 
-			$learnpress_courses = isset( $_POST['wps_learnpress_course'] ) ? wp_unslash( $_POST['wps_learnpress_course'] ) : ''; //phpcs:ignore
+			$learnpress_courses = isset( $_POST['wps_learnpress_course'] ) ? wp_unslash( $_POST['wps_learnpress_course'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			if ( is_array( $learnpress_courses ) ) {
 				$learnpress_courses = array_map( 'sanitize_text_field', $learnpress_courses );
 			} else {
@@ -1105,7 +1105,8 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_admin_cancel_susbcription() {
 
-		if ( isset( $_GET['wps_subscription_status_admin'] ) && isset( $_GET['wps_subscription_id'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['wps_sfw_cancel_nonce'] ) ), sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) ) . sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin'] ) ) )  && current_user_can( 'manage_woocommerce' ) ) {
+		$wps_cancel_nonce = isset( $_GET['wps_sfw_cancel_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_cancel_nonce'] ) ) : '';
+	if ( isset( $_GET['wps_subscription_status_admin'] ) && isset( $_GET['wps_subscription_id'] ) && wp_verify_nonce( $wps_cancel_nonce, sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) ) . sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin'] ) ) ) && current_user_can( 'manage_woocommerce' ) ) {
 
 			$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin'] ) );
 			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
@@ -1877,10 +1878,10 @@ class Subscriptions_For_Woocommerce_Admin {
 					if ( $old_type || $old_label || $old_products || $old_categories ) {
 						$step_settings = array(
 							'step1' => array(
-								'type'         => $old_type ?: 'specific_products',
+								'type'         => $old_type ? $old_type : 'specific_products',
 								'product_ids'  => array_map( 'absint', $old_products ),
 								'category_ids' => array_map( 'absint', $old_categories ),
-								'label'        => $old_label ?: '',
+								'label'        => $old_label ? $old_label : '',
 
 							),
 						);
@@ -1964,7 +1965,7 @@ class Subscriptions_For_Woocommerce_Admin {
 							</select>
 						</p>
 
-						<p class="form-field wps_sfw_products_field" style="<?php echo $type === 'specific_products' ? '' : 'display:none;'; ?>">
+						<p class="form-field wps_sfw_products_field" style="<?php echo 'specific_products' === $type ? '' : 'display:none;'; ?>">
 							<label for="wps_sfw_products_<?php echo esc_attr( $step_key ); ?>">
 								<?php esc_html_e( 'Select Products', 'subscriptions-for-woocommerce' ); ?>
 							</label>
@@ -1979,7 +1980,7 @@ class Subscriptions_For_Woocommerce_Admin {
 							</select>
 						</p>
 
-						<p class="form-field wps_sfw_categories_field" style="<?php echo $type === 'specific_categories' ? '' : 'display:none;'; ?>">
+						<p class="form-field wps_sfw_categories_field" style="<?php echo 'specific_categories' === $type ? '' : 'display:none;'; ?>">
 							<label for="wps_sfw_categories_<?php echo esc_attr( $step_key ); ?>">
 								<?php esc_html_e( 'Select Categories', 'subscriptions-for-woocommerce' ); ?>
 							</label>
@@ -2197,7 +2198,7 @@ class Subscriptions_For_Woocommerce_Admin {
 						$product_ids = array();
 					}
 
-					$clean_steps[ 'step' . $i++ ] = array(
+					$clean_steps[ 'step' . ( $i++ ) ] = array(
 						'type'         => $type,
 						'product_ids'  => $product_ids,
 						'category_ids' => $category_ids,
@@ -2233,7 +2234,8 @@ class Subscriptions_For_Woocommerce_Admin {
 	 */
 	public function wps_sfw_admin_reactivate_onhold_susbcription() {
 
-		if ( isset( $_GET['wps_subscription_status_admin_reactivate'] ) && isset( $_GET['wps_subscription_id'] ) &&  wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['wps_sfw_pause_nonce'] ) ), sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) ) . sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin_reactivate'] ) )  ) && current_user_can( 'manage_woocommerce' ) ) {
+		$wps_pause_nonce = isset( $_GET['wps_sfw_pause_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_pause_nonce'] ) ) : '';
+	if ( isset( $_GET['wps_subscription_status_admin_reactivate'] ) && isset( $_GET['wps_subscription_id'] ) && wp_verify_nonce( $wps_pause_nonce, sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) ) . sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin_reactivate'] ) ) ) && current_user_can( 'manage_woocommerce' ) ) {
 			$wps_status   = sanitize_text_field( wp_unslash( $_GET['wps_subscription_status_admin_reactivate'] ) );
 			$wps_subscription_id = sanitize_text_field( wp_unslash( $_GET['wps_subscription_id'] ) );
 			if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
@@ -2305,7 +2307,7 @@ class Subscriptions_For_Woocommerce_Admin {
 
 			$new_columns[ $key ] = $label;
 
-			// Add column AFTER order status
+			// Add column AFTER order status.
 			if ( 'order_status' === $key ) {
 				$new_columns['wps_sfw_contains_subscription'] =
 					'<span class="dashicons dashicons-controls-repeat tips" data-tip="' .
@@ -2372,7 +2374,7 @@ class Subscriptions_For_Woocommerce_Admin {
 				echo '<span class="dashicons dashicons-controls-repeat tips" data-tip="' . esc_attr__( 'Parent Order', 'subscriptions-for-woocommerce' ) . '"></span>';
 				
 			} elseif( 'yes' == $wps_sfw_renewal_order && $wps_sfw_subscription ) {
-				// echo esc_html__( 'Renewal', 'subscriptions-for-woocommerce' );
+				// Removed: esc_html__( 'Renewal', 'subscriptions-for-woocommerce' ).
 				echo '<span class="dashicons dashicons-backup tips" data-tip="' . esc_attr__( 'Renewal Order', 'subscriptions-for-woocommerce' ) . '"></span>';
 			} else {
 				echo '-';

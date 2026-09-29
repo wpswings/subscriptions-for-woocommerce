@@ -41,7 +41,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_filter( 'wc_stripe_generate_create_intent_request', array( $this, 'wps_sfw_add_setup_future_usage_for_parent_order' ), 50, 4 );
 
-			add_action( 'woocommerce_payment_complete', array( $this, 'wps_sfw_attach_stripe_pm_to_customer_for_renewal' ), 20 );//fix for checout optimised suite
+			add_action( 'woocommerce_payment_complete', array( $this, 'wps_sfw_attach_stripe_pm_to_customer_for_renewal' ), 20 ); // Fix for checkout optimised suite.
 
 			// Path to Stripe's main plugin file.
 			$stripe_main_file = WP_PLUGIN_DIR . '/woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';

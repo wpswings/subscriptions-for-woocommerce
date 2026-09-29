@@ -18,7 +18,7 @@
  */
 class BlockRestrictionTest extends WP_UnitTestCase {
 
-	/** @var int */
+	/** @var int User ID for test fixtures. */
 	private $user_id;
 
 	/**

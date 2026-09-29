@@ -525,8 +525,8 @@ if ( isset( $_GET['wps_subscription_view_renewal_order'] ) && isset( $_GET['wps_
 		<!-- <form method="post"> -->
 			<!-- <form method="get"> -->
 <form method="get">
-	<input type="hidden" name="page" value="<?php echo esc_attr( $_GET['page'] ); ?>">
-	<input type="hidden" name="sfw_tab" value="<?php echo isset( $_GET['sfw_tab'] ) ? esc_attr( $_GET['sfw_tab'] ) : ''; ?>">
+	<input type="hidden" name="page" value="<?php echo esc_attr( sanitize_text_field( wp_unslash( isset( $_GET['page'] ) ? $_GET['page'] : '' ) ) ); ?>">
+	<input type="hidden" name="sfw_tab" value="<?php echo esc_attr( sanitize_text_field( wp_unslash( isset( $_GET['sfw_tab'] ) ? $_GET['sfw_tab'] : '' ) ) ); ?>">
 
 		<!-- <input type="hidden" name="page" value="susbcription_list_table"> -->
 		<?php wp_nonce_field( 'susbcription_list_table', 'susbcription_list_table' ); ?>

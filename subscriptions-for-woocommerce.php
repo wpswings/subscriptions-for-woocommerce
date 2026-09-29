@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:disable WordPress.Files.FileName.InvalidClassFileName -- Main plugin bootstrap; filename is required by WordPress plugin conventions.
 /**
  * The plugin bootstrap file
  *

@@ -334,7 +334,7 @@ class MembersAdminTest extends WP_UnitTestCase {
 		// handle_row_actions calls wp_safe_redirect + exit on success — catch it.
 		try {
 			$this->admin->handle_row_actions();
-		} catch ( Exception $e ) {
+		} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			// Intentional - exception ignored in test.
 		}
 
@@ -364,7 +364,7 @@ class MembersAdminTest extends WP_UnitTestCase {
 
 		try {
 			$this->admin->handle_row_actions();
-		} catch ( Exception $e ) {
+		} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			// Intentional - exception ignored in test.
 		}
 
