@@ -276,7 +276,7 @@ class Subscriptions_For_Woocommerce_Public {
 	 * This function is used to show subscription price and interval on subscription product page.
 	 *
 	 * @name wps_sfw_subscription_product_get_price_html
-	 * @param object $price price.
+	 * @param mixed $price price.
 	 * @param string $product product.
 	 * @param array  $cart_item cart_item.
 	 * @since    1.0.0
@@ -2118,7 +2118,7 @@ class Subscriptions_For_Woocommerce_Public {
 					array(
 						'name'   => 'wps-sfw-price-html',
 						'hidden' => true,
-						'value'  => html_entity_decode( $price ),
+						'value'  => wp_strip_all_tags( html_entity_decode( $price ) ),
 					),
 					$cart_item
 				);
@@ -3493,6 +3493,13 @@ class Subscriptions_For_Woocommerce_Public {
 		echo $this->wps_sfw_build_membership_card_html( $plans, $product->get_type() );
 	}
 
+	/**
+	 * Track affiliate commission for renewal orders.
+	 *
+	 * @param int    $order_id   Order ID.
+	 * @param string $old_status Old order status.
+	 * @param string $new_status New order status.
+	 */
 	public function wps_sfw_woocommerce_affiliate_commision_renewal( $order_id, $old_status, $new_status ) {
 		if ( ! class_exists( 'WPAM_Commission_Tracking' ) ) {
 			return;

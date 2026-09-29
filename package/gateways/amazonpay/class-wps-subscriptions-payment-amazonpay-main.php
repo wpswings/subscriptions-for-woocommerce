@@ -272,7 +272,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 					'amazon_payment_advanced_version',
 					'woocommerce_version',
 				);
-				wc_apa()->get_gateway()->log_charge_permission_status_change( $order, $response->chargePermissionId );
+				wc_apa()->get_gateway()->log_charge_permission_status_change( $order, $response->chargePermissionId ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 				foreach ( $meta_keys_to_copy as $key ) {
 					$value = $order->get_meta( $key );
@@ -369,7 +369,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Amazonpay_Main' ) ) {
 					return;
 				} else {
 					$renewal_order->update_status( 'processing' );
-					$renewal_order->set_transaction_id( $response->chargeId );
+					$renewal_order->set_transaction_id( $response->chargeId ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 					// Save the order to apply changes.
 					$renewal_order->save();
 				}
