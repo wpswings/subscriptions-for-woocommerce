@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  push:
+  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create deployment
+        id: create_deployment
+        uses: chrnorm/deployment-action@v2
+        with:
+          token: ${{ github.token }}
+          environment: production
+          description: Deploying app
+          initial-status: in_progress
+
+      - name: Debug deployment output
+        run: |
+          echo "deployment_id=${{ steps.create_deployment.outputs.deployment_id }}"
+          echo "environment_url=${{ steps.create_deployment.outputs.   }}"
+
+      - name: Deploy app
+        run: echo "replace this with your real deployment command"
+
+      - name: Mark deployment success
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ github.token }}
+          deployment-id: ${{ steps.create_deployment.outputs.deployment_id }}
+          environment-url: ${{ steps.create_deployment.outputs.environment_url }}
+          state: success
+
+      - name: Mark deployment failure
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ github.token }}
+          deployment-id: ${{ steps.create_deployment.outputs.deployment_id }}
+          environment-url: ${{ steps.create_deployment.outputs.environment_url }}
+          state: failure

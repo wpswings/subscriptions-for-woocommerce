@@ -1,0 +1,154 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ master, 'release/**' ]
+    paths:
+      - '**.php'
+      - 'e2e/**'
+      - '.github/workflows/e2e-test.yml'
+  pull_request:
+    branches: [ master, 'release/**' ]
+    paths:
+      - '**.php'
+      - 'e2e/**'
+      - '.github/workflows/e2e-test.yml'
+  workflow_dispatch: {}
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_e2e
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      WP_ROOT: ${{ github.workspace }}/wordpress
+      PLUGIN_SLUG: mwb-bookings-for-woocommerce
+      BASE_URL: http://127.0.0.1:8080
+      WP_ADMIN_USER: admin
+      WP_ADMIN_PASSWORD: admin_password
+
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+        with:
+          path: plugin-checkout
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysqli, gd, xml
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install WP-CLI
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            mysqladmin ping -h 127.0.0.1 -uroot -proot && break
+            sleep 2
+          done
+
+      - name: Download WordPress core
+        run: |
+          wp core download --path="$WP_ROOT" --version=latest --locale=en_US
+
+      - name: Configure wp-config.php
+        run: |
+          wp config create \
+            --path="$WP_ROOT" \
+            --dbname=wordpress_e2e \
+            --dbuser=root \
+            --dbpass=root \
+            --dbhost=127.0.0.1 \
+            --skip-check
+
+      - name: Install WordPress
+        run: |
+          wp core install \
+            --path="$WP_ROOT" \
+            --url="$BASE_URL" \
+            --title="Bookings E2E" \
+            --admin_user="$WP_ADMIN_USER" \
+            --admin_password="$WP_ADMIN_PASSWORD" \
+            --admin_email="e2e@example.com" \
+            --skip-email
+
+      - name: Install and activate WooCommerce
+        run: |
+          wp plugin install woocommerce --activate --path="$WP_ROOT"
+
+      - name: Copy plugin into place
+        run: |
+          rm -rf "$WP_ROOT/wp-content/plugins/$PLUGIN_SLUG"
+          cp -r "$GITHUB_WORKSPACE/plugin-checkout" "$WP_ROOT/wp-content/plugins/$PLUGIN_SLUG"
+
+      - name: Activate plugin
+        run: |
+          wp plugin activate "$PLUGIN_SLUG" --path="$WP_ROOT"
+
+      - name: Start PHP built-in server
+        run: |
+          php -S 127.0.0.1:8080 -t "$WP_ROOT" > /tmp/php-server.log 2>&1 &
+          sleep 2
+          curl -sf "$BASE_URL/wp-login.php" > /dev/null
+
+      - name: Install e2e dependencies
+        working-directory: plugin-checkout/e2e
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: plugin-checkout/e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Write .env for e2e run
+        working-directory: plugin-checkout/e2e
+        run: |
+          cat > .env <<EOF
+          BASE_URL=$BASE_URL
+          WP_ADMIN_USER=$WP_ADMIN_USER
+          WP_ADMIN_PASSWORD=$WP_ADMIN_PASSWORD
+          EOF
+
+      - name: Run Playwright tests
+        working-directory: plugin-checkout/e2e
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: plugin-checkout/e2e/playwright-report/
+          retention-days: 14
+
+      - name: Upload PHP server log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-server-log
+          path: /tmp/php-server.log
+          retention-days: 14
