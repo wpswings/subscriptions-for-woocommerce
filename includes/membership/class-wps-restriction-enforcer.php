@@ -110,9 +110,17 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 					: get_option( 'wps_access_redirect_url', '' );
 
 				if ( ! empty( $url ) ) {
-					// maybe_redirect() has already called wp_safe_redirect() + exit.
-					// We only reach here in edge cases (e.g. unit tests); pass through.
-					return $content;
+					// maybe_redirect() fires on template_redirect for singular
+					// front-end views and will have already exited before the
+					// content filter runs. In REST API and feed contexts,
+					// template_redirect never runs, so we must show the restriction
+					// message here rather than returning the real content.
+					$is_rest = defined( 'REST_REQUEST' ) && REST_REQUEST;
+					if ( ! $is_rest && ! is_feed() ) {
+						// Standard singular request — redirect already fired.
+						return $content;
+					}
+					// REST API / feed: fall through to the restriction message.
 				}
 				// No URL configured — fall through and show message instead.
 			}
@@ -408,8 +416,9 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 		/**
 		 * Exclude restricted posts from archive and search queries.
 		 *
-		 * Fires on pre_get_posts (wired in register_shortcode). Only modifies the
-		 * main query outside admin/singular views. Respects the global
+		 * Fires on pre_get_posts (wired in register_shortcode). Modifies the main
+		 * query outside admin/singular views, and also REST API collection queries
+		 * which are not the WP global main query. Respects the global
 		 * wps_access_include_in_archive option — when '1', restricted content is
 		 * shown in archives (but content is replaced on the singular view).
 		 *
@@ -421,7 +430,17 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 		 * @param  WP_Query $query The current WP_Query object.
 		 */
 		public function maybe_filter_archive( WP_Query $query ) {
-			if ( is_admin() || ! $query->is_main_query() || is_singular() ) {
+			$is_rest = defined( 'REST_REQUEST' ) && REST_REQUEST;
+
+			if ( is_admin() || is_singular() ) {
+				return;
+			}
+
+			// For standard front-end requests, only the main query is modified so
+			// that secondary loops (e.g. related-posts widgets) are unaffected.
+			// REST API collection queries are not the WP global main query but must
+			// also exclude restricted posts, so we allow them through separately.
+			if ( ! $is_rest && ! $query->is_main_query() ) {
 				return;
 			}
 

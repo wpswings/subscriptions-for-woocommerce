@@ -1346,6 +1346,13 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$user_id = get_current_user_id();
 
+		// Confirm the current user owns this subscription before acting on it.
+		// This reuses the same ownership helper used by the view path a few lines
+		// above, so the cancel and view paths enforce exactly the same rule.
+		if ( ! $this->wps_sfw_current_user_can_view_subscription( $wps_subscription_id ) ) {
+			return;
+		}
+
 		if ( wps_sfw_check_valid_subscription( $wps_subscription_id ) ) {
 			$this->wps_sfw_cancel_susbcription_order_by_customer( $wps_subscription_id, $wps_status, $user_id );
 		}
@@ -1868,6 +1875,7 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$line_subtotal_tax = 0;
 		$line_tax = 0;
+		$wps_sfw_price_overridden = false;
 
 		// Get the only item price from the cart.
 		if ( 'yes' === $include_tax ) {
@@ -1910,6 +1918,7 @@ class Subscriptions_For_Woocommerce_Public {
 			$price         = $product->get_price() * $cart_item['quantity'];
 			$line_subtotal = $price;
 			$line_total    = $price;
+			$wps_sfw_price_overridden = true;
 
 			$get_membershipprice = wps_sfw_get_meta_data( $product_id, 'wps_membership_plan_price', true );
 			if ( ! empty( $get_membershipprice ) ) {
@@ -1924,17 +1933,36 @@ class Subscriptions_For_Woocommerce_Public {
 
 		$product   = $cart_item['data'];
 		$tax_class = $product->get_tax_class();
-		$tax_rates = WC_Tax::get_rates( $tax_class );
 		if ( function_exists( 'wps_sfw_is_woocommerce_tax_enabled' ) && wps_sfw_is_woocommerce_tax_enabled() ) {
-			if ( 'yes' === $include_tax ) {
-				$line_subtotal_tax = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_rates ) );
-				$line_tax     = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_rates ) );
+			if ( $wps_sfw_price_overridden ) {
+				// The free trial / membership price above replaced the cart's own line totals,
+				// so the cart's tax split (below) no longer corresponds to this amount - it has
+				// to be re-derived for this specific overridden price.
+				$tax_rates = WC_Tax::get_rates( $tax_class );
+				if ( 'yes' === $include_tax ) {
+					$line_subtotal_tax = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_subtotal, $tax_rates ) );
+					$line_tax     = WC_Tax::get_tax_total( WC_Tax::calc_inclusive_tax( $line_total, $tax_rates ) );
 
-				$line_total    = $line_total - $line_tax;
-				$line_subtotal = $line_subtotal - $line_subtotal_tax;
+					$line_total    = $line_total - $line_tax;
+					$line_subtotal = $line_subtotal - $line_subtotal_tax;
+				} else {
+					$line_subtotal_tax = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_rates ) );
+					$line_tax     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_rates ) );
+				}
 			} else {
-				$line_subtotal_tax = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_subtotal, $tax_rates ) );
-				$line_tax     = WC_Tax::get_tax_total( WC_Tax::calc_exclusive_tax( $line_total, $tax_rates ) );
+				// Reuse the tax WooCommerce's own cart calculation already derived for this
+				// specific customer (correct destination tax rate, currency, and composite/bundle
+				// pricing) instead of re-deriving it via WC_Tax::get_rates(), which resolves to
+				// the product's default tax-class rate rather than the rate actually owed by this
+				// customer. That mismatch silently double-deducts tax whenever the two rates
+				// differ - e.g. a non-EU customer whose real rate is 0% on a store where prices
+				// are entered VAT-inclusive ends up having ~20% deducted a second time here.
+				$line_subtotal_tax = $cart_item['line_subtotal_tax'];
+				$line_tax           = $cart_item['line_tax'];
+				if ( 'yes' === $include_tax ) {
+					$line_total    = $line_total - $line_tax;
+					$line_subtotal = $line_subtotal - $line_subtotal_tax;
+				}
 			}
 		}
 
