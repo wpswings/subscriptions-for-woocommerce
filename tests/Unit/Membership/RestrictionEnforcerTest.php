@@ -241,6 +241,71 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Redirect rule with a URL must still restrict content in REST API context.
+	 *
+	 * template_redirect never fires for REST requests, so maybe_redirect() will
+	 * not have run. The content filter must show the restriction message rather
+	 * than returning the real content.
+	 */
+	public function test_redirect_rule_restricts_in_rest_context() {
+		$this->add_gold_rule(
+			array(
+				'behavior'     => 'redirect',
+				'redirect_url' => 'https://example.com/subscribe',
+			)
+		);
+		update_option( 'wps_access_redirect_url', 'https://example.com/subscribe' );
+		wp_set_current_user( 0 );
+
+		// Simulate REST API context — set global post without go_to() so
+		// is_singular() remains false, and define REST_REQUEST.
+		$GLOBALS['post'] = get_post( $this->post_id );
+		$rest_was_set     = defined( 'REST_REQUEST' );
+		if ( ! $rest_was_set ) {
+			define( 'REST_REQUEST', true );
+		}
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		unset( $GLOBALS['post'] );
+
+		$this->assertStringContainsString( 'wps-restricted-content', $result );
+		$this->assertStringNotContainsString( 'Secret content.', $result );
+	}
+
+	/**
+	 * Redirect rule with a URL must still restrict content inside a feed.
+	 *
+	 * is_feed() is true for RSS/Atom requests; template_redirect never fires
+	 * in that context so the redirect cannot have run.
+	 */
+	public function test_redirect_rule_restricts_in_feed_context() {
+		$this->add_gold_rule(
+			array(
+				'behavior'     => 'redirect',
+				'redirect_url' => 'https://example.com/subscribe',
+			)
+		);
+		update_option( 'wps_access_redirect_url', 'https://example.com/subscribe' );
+		wp_set_current_user( 0 );
+
+		// Navigate to the site feed — is_feed() returns true there.
+		$this->go_to( get_feed_link() );
+
+		// Override the global post to our restricted post so the enforcer
+		// picks it up (the feed query itself may not contain this post).
+		$GLOBALS['post'] = get_post( $this->post_id );
+		wp_cache_flush();
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		unset( $GLOBALS['post'] );
+
+		$this->assertStringContainsString( 'wps-restricted-content', $result );
+		$this->assertStringNotContainsString( 'Secret content.', $result );
+	}
+
+	/**
 	 * Content is replaced with restriction HTML when behavior is redirect but
 	 * no URL is configured (redirect has nowhere to go).
 	 */
@@ -740,5 +805,63 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 		$result = $this->enforcer->maybe_close_comments( true, $this->post_id );
 
 		$this->assertTrue( $result );
+	}
+
+	// -----------------------------------------------------------------------
+	// maybe_filter_archive — REST API collection queries
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Restricted posts are excluded from REST API collection queries.
+	 *
+	 * REST API queries are not the WP global main query (is_main_query() is
+	 * false) but must still exclude restricted posts from the response.
+	 */
+	public function test_archive_filter_excludes_restricted_posts_in_rest_query() {
+		$this->add_gold_rule();
+		update_option( 'wps_access_include_in_archive', '0' );
+		wp_set_current_user( 0 );
+
+		// Simulate a REST API collection query — not the WP global main query.
+		$query = new WP_Query();
+		$query->init();
+
+		// Mark this as if it were a REST request so the enforcer lets it through.
+		$rest_was_set = defined( 'REST_REQUEST' );
+		if ( ! $rest_was_set ) {
+			define( 'REST_REQUEST', true );
+		}
+
+		$this->enforcer->maybe_filter_archive( $query );
+
+		$not_in = (array) $query->get( 'post__not_in' );
+		$this->assertContains( $this->post_id, $not_in );
+	}
+
+	/**
+	 * Secondary front-end loops (e.g. related-posts widgets) are still skipped.
+	 *
+	 * Only the main query and REST API queries should be filtered; secondary
+	 * front-end loops must remain unaffected.
+	 */
+	public function test_archive_filter_skips_secondary_frontend_loops() {
+		$this->add_gold_rule();
+		update_option( 'wps_access_include_in_archive', '0' );
+		wp_set_current_user( 0 );
+
+		// A secondary WP_Query created outside the REST API context.
+		$query = new WP_Query();
+		$query->init();
+
+		// Ensure REST_REQUEST is not set (we're simulating a standard request).
+		// The query is also not the global main query, so the enforcer should bail.
+		if ( ! defined( 'REST_REQUEST' ) ) {
+			$this->enforcer->maybe_filter_archive( $query );
+			$not_in = (array) $query->get( 'post__not_in' );
+			$this->assertNotContains( $this->post_id, $not_in );
+		} else {
+			// REST_REQUEST is already defined (prior test defined it); skip.
+			$this->markTestSkipped( 'REST_REQUEST constant already defined; cannot unset for this test.' );
+		}
 	}
 }
