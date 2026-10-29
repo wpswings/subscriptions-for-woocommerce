@@ -1,8 +1,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriptions For WooCommerce 2.1.0\n"
-"POT-Creation-Date: 2026-09-29 16:31+0530\n"
+"Project-Id-Version: Subscriptions For WooCommerce 2.1.1\n"
+"POT-Creation-Date: 2026-10-29 16:50+0530\n"
 "PO-Revision-Date: 2023-10-03 13:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: Wp Swings\n"
@@ -4284,11 +4284,11 @@ msgstr ""
 msgid "%1$d %2$s Access"
 msgstr ""
 
-#: includes/membership/class-wps-restriction-enforcer.php:570
+#: includes/membership/class-wps-restriction-enforcer.php:566
 msgid "You must be logged in to view this content."
 msgstr ""
 
-#: includes/membership/class-wps-restriction-enforcer.php:577
+#: includes/membership/class-wps-restriction-enforcer.php:573
 msgid "Your current subscription does not include access to this content."
 msgstr ""
 

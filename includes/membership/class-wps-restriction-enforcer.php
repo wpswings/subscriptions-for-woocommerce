@@ -104,18 +104,14 @@ if ( ! class_exists( 'WPS_Restriction_Enforcer' ) ) {
 				return $content;
 			}
 
-			if ( 'redirect' === $this->rule_behavior( $rule ) ) {
-				$url = ! empty( $rule['redirect_url'] )
-					? $rule['redirect_url']
-					: get_option( 'wps_access_redirect_url', '' );
-
-				if ( ! empty( $url ) ) {
-					// maybe_redirect() has already called wp_safe_redirect() + exit.
-					// We only reach here in edge cases (e.g. unit tests); pass through.
-					return $content;
-				}
-				// No URL configured — fall through and show message instead.
-			}
+			// For redirect-behavior rules: maybe_redirect() (hooked to template_redirect)
+			// issues wp_safe_redirect() + exit before the_content runs on normal
+			// singular page loads, so this branch is unreachable in production for
+			// that context. In every other rendering context — REST API responses,
+			// feeds, secondary loops, home and search pages — maybe_redirect() does
+			// not fire and we must gate the content here. Fall through unconditionally
+			// to build_message_html() so gated content is never exposed regardless of
+			// which renderer calls the_content.
 
 			return $this->build_message_html( $rule, $post, $user_id );
 		}
