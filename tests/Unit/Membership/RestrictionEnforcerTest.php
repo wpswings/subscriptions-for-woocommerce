@@ -221,10 +221,16 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Content passes through when behavior is redirect and a URL is configured —
-	 * maybe_redirect() would already have exited in a real request.
+	 * Content is replaced when behavior is redirect and a URL is configured.
+	 *
+	 * maybe_redirect() calls exit() on template_redirect (before the_content runs)
+	 * so this filter is unreachable in production for normal singular requests.
+	 * In every other rendering context (REST, feeds, secondary loops, home, search)
+	 * maybe_redirect() never fires and maybe_restrict_content() must gate the content
+	 * itself — never exposing the gated body regardless of which renderer calls
+	 * the_content.
 	 */
-	public function test_content_passes_through_for_redirect_with_url() {
+	public function test_content_gated_for_redirect_with_url() {
 		$this->add_gold_rule(
 			array(
 				'behavior'     => 'redirect',
@@ -237,7 +243,35 @@ class RestrictionEnforcerTest extends WP_UnitTestCase {
 
 		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
 
-		$this->assertSame( 'Secret content.', $result );
+		$this->assertStringContainsString( 'wps-restricted-content', $result );
+		$this->assertStringNotContainsString( 'Secret content.', $result );
+	}
+
+	/**
+	 * Redirect rule with URL set does not expose gated content outside singular
+	 * (home page, search results, REST API, feeds, secondary loops).
+	 * maybe_redirect() is guarded by is_singular() and never fires in those
+	 * contexts, so maybe_restrict_content() must gate the body itself.
+	 */
+	public function test_content_gated_for_redirect_with_url_outside_singular() {
+		$this->add_gold_rule(
+			array(
+				'behavior'     => 'redirect',
+				'redirect_url' => 'https://example.com/subscribe',
+			)
+		);
+		wp_set_current_user( 0 );
+
+		// Set the global post WITHOUT go_to so is_singular() stays false,
+		// simulating home / search / REST / feed rendering of this post.
+		$GLOBALS['post'] = get_post( $this->post_id );
+
+		$result = $this->enforcer->maybe_restrict_content( 'Secret content.' );
+
+		$this->assertStringContainsString( 'wps-restricted-content', $result );
+		$this->assertStringNotContainsString( 'Secret content.', $result );
+
+		unset( $GLOBALS['post'] );
 	}
 
 	/**

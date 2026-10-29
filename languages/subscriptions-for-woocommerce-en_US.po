@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-09-29 16:31+0530\n"
+"POT-Creation-Date: 2026-10-29 16:50+0530\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4270,11 +4270,11 @@ msgstr ""
 msgid "%1$d %2$s Access"
 msgstr ""
 
-#: includes/membership/class-wps-restriction-enforcer.php:570
+#: includes/membership/class-wps-restriction-enforcer.php:566
 msgid "You must be logged in to view this content."
 msgstr ""
 
-#: includes/membership/class-wps-restriction-enforcer.php:577
+#: includes/membership/class-wps-restriction-enforcer.php:573
 msgid "Your current subscription does not include access to this content."
 msgstr ""
 
