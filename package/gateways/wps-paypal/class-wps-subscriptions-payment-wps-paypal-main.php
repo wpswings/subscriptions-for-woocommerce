@@ -107,23 +107,41 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Wps_Paypal_Main' ) ) {
 						}
 					}
 					if ( $client_secret && $client_id ) {
-						$saved_token = wps_sfw_get_meta_data( $wps_parent_order_id, 'wps_order_payment_token', true );
+						$saved_token = wps_sfw_get_meta_data( $subscription_id, 'wps_order_payment_token', true );
+						if ( empty( $saved_token ) && $wps_parent_order_id ) {
+							$saved_token = wps_sfw_get_meta_data( $wps_parent_order_id, 'wps_order_payment_token', true );
+						}
 						if ( empty( $saved_token ) ) {
 							$order_notes = __( 'payment token not found', 'subscriptions-for-woocommerce' );
 							$order->update_status( 'failed', $order_notes );
+							do_action( 'wps_sfw_recurring_payment_failed', $order_id );
 							return;
 						}
+
+						// Keep the token on the subscription and the renewal order so it is visible there and survives for future renewals.
+						if ( empty( wps_sfw_get_meta_data( $subscription_id, 'wps_order_payment_token', true ) ) ) {
+							wps_sfw_update_meta_data( $subscription_id, 'wps_order_payment_token', $saved_token );
+						}
+						$order->update_meta_data( 'wps_order_payment_token', $saved_token );
+						$order->save();
+
 						if ( class_exists( 'WC_Gateway_Wps_Paypal_Integration' ) ) {
 							$wps_paypal_object = new WC_Gateway_Wps_Paypal_Integration();
 							$token_response    = $wps_paypal_object->wps_validate_saved_customer_token( $saved_token );
 							$token_flag        = false;
-							if ( is_object( $token_response ) && isset( $token_response->status ) && 'CREATED' === $token_response->status && isset( $token_response->id ) && $saved_token === $token_response->id ) {
+							// Vault v3 token lookups return the token id but no "status" field.
+							if ( is_object( $token_response ) && isset( $token_response->id ) && $saved_token === $token_response->id ) {
 								$token_flag = true;
 							}
 							if ( $token_flag ) {
 								$wps_paypal_object->create_renewal_payment( $saved_token, $order );
 							} else {
-								$order->update_status( 'failed', esc_html__( 'Token Verification failed !', 'subscriptions-for-woocommerce' ) );
+								$order_notes = esc_html__( 'Token Verification failed !', 'subscriptions-for-woocommerce' );
+								if ( is_string( $token_response ) && '' !== $token_response ) {
+									$order_notes .= ' ' . esc_html( $token_response );
+								}
+								$order->update_status( 'failed', $order_notes );
+								do_action( 'wps_sfw_recurring_payment_failed', $order_id );
 							}
 						} else {
 							$order->update_status( 'failed', esc_html__( 'WPS Paypal is not setup', 'subscriptions-for-woocommerce' ) );

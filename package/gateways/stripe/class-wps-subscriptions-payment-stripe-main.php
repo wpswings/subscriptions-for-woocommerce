@@ -41,7 +41,15 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_filter( 'wc_stripe_generate_create_intent_request', array( $this, 'wps_sfw_add_setup_future_usage_for_parent_order' ), 50, 4 );
 
+			add_filter( 'wc_stripe_is_adaptive_pricing_supported', array( $this, 'wps_sfw_disable_adaptive_pricing_for_subscriptions' ), 10, 2 ); // Fix for checkout optimised suite with Adaptive Pricing.
+
+			// Fix for checkout optimised suite: make the Payment Element save the card for subscription carts.
+			add_filter( 'wc_stripe_upe_params', array( $this, 'wps_sfw_flag_subscription_cart_for_stripe_js' ) ); // Classic checkout.
+			add_filter( 'wc_stripe_params', array( $this, 'wps_sfw_flag_subscription_cart_for_stripe_js' ) ); // Block checkout.
+
 			add_action( 'woocommerce_payment_complete', array( $this, 'wps_sfw_attach_stripe_pm_to_customer_for_renewal' ), 20 ); // Fix for checkout optimised suite.
+
+			add_action( 'woocommerce_payment_complete', array( $this, 'wps_sfw_update_parent_stripe_pm_after_renewal_payment' ), 25 );
 
 			// Path to Stripe's main plugin file.
 			$stripe_main_file = WP_PLUGIN_DIR . '/woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';
@@ -137,6 +145,89 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		}
 
 		/**
+		 * Keep subscription payments out of Stripe Adaptive Pricing.
+		 *
+		 * With Optimized Checkout Suite and Adaptive Pricing enabled (turned on by default for most
+		 * merchants since Stripe 10.8), the payment runs through a Stripe Checkout Session confirmed in
+		 * the browser. That flow never applies `wc_stripe_generate_create_intent_request`, and it only
+		 * saves the card when the "Save payment information" checkbox is ticked, which is hidden for
+		 * subscription carts. The card is charged once without being attached to the Stripe customer,
+		 * so every off-session renewal fails. Stripe already opts WooCommerce Subscriptions products out
+		 * of Adaptive Pricing; this does the same for our subscription products, so the payment goes
+		 * through the PaymentIntent flow that sets `setup_future_usage: off_session`.
+		 *
+		 * @param bool         $is_supported Whether Adaptive Pricing is supported for the current cart.
+		 * @param WC_Cart|null $cart         The current cart, or null if unavailable.
+		 *
+		 * @return bool
+		 */
+		public function wps_sfw_disable_adaptive_pricing_for_subscriptions( $is_supported, $cart = null ) {
+			if ( ! $is_supported ) {
+				return $is_supported;
+			}
+
+			if ( $this->wps_sfw_is_subscription_payment_context( $cart ) ) {
+				return false;
+			}
+
+			return $is_supported;
+		}
+
+		/**
+		 * Tell the Stripe checkout script that the cart holds a subscription.
+		 *
+		 * With Optimized Checkout Suite the card is collected by the Payment Element and sent to the
+		 * server as a ConfirmationToken. The token only carries `setup_future_usage: off_session` when
+		 * the Payment Element was set up with it, and Stripe's script only does that when
+		 * `cartContainsSubscription` is true. Stripe sets that flag for WooCommerce Subscriptions
+		 * carts only, so for our subscription carts the card was charged once and never saved for
+		 * off-session renewals.
+		 *
+		 * @param array $params Stripe checkout script parameters.
+		 *
+		 * @return array
+		 */
+		public function wps_sfw_flag_subscription_cart_for_stripe_js( $params ) {
+			if ( ! is_array( $params ) || ! empty( $params['cartContainsSubscription'] ) ) {
+				return $params;
+			}
+
+			if ( $this->wps_sfw_is_subscription_payment_context() ) {
+				$params['cartContainsSubscription'] = true;
+			}
+
+			return $params;
+		}
+
+		/**
+		 * Whether the current checkout or order-pay page is paying for one of our subscriptions.
+		 *
+		 * @param WC_Cart|null $cart The cart to check. Defaults to the current cart.
+		 *
+		 * @return bool
+		 */
+		private function wps_sfw_is_subscription_payment_context( $cart = null ) {
+			if ( null === $cart && function_exists( 'WC' ) ) {
+				$cart = WC()->cart;
+			}
+
+			if ( $cart instanceof WC_Cart && ! $cart->is_empty() && function_exists( 'wps_sfw_is_cart_has_subscription_product' ) && wps_sfw_is_cart_has_subscription_product() ) {
+				return true;
+			}
+
+			// Paying a subscription or renewal order from the order-pay page.
+			$order_id = absint( get_query_var( 'order-pay' ) );
+			if ( $order_id && function_exists( 'wps_sfw_order_has_subscription' ) && wc_get_order( $order_id ) ) {
+				$is_renewal = 'yes' === wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
+				if ( $is_renewal || wps_sfw_order_has_subscription( $order_id ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
 		 * After a subscription's initial payment completes via Stripe (including Optimized Checkout /
 		 * Adaptive Pricing), ensure the payment method is attached to the Stripe customer.
 		 *
@@ -199,26 +290,122 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 				$order->save();
 			}
 
+			$this->wps_sfw_ensure_stripe_pm_attached( $payment_method_id, $customer_id );
+		}
+
+		/**
+		 * Point future renewals at the card used to pay a renewal order.
+		 *
+		 * Renewals always charge the payment method saved on the parent order. When that card stops
+		 * working (expired, detached, or consumed without a customer attachment) and the customer pays
+		 * the failed renewal manually with a new card, the parent order still holds the old card, so the
+		 * next renewal fails again. This copies the new card and its Stripe customer onto the parent
+		 * order once the renewal is paid, provided the card is attached to a customer.
+		 *
+		 * @param int $order_id The WooCommerce order ID.
+		 */
+		public function wps_sfw_update_parent_stripe_pm_after_renewal_payment( $order_id ) {
+			$order = wc_get_order( $order_id );
+			if ( ! $order instanceof WC_Order || 'stripe' !== $order->get_payment_method() ) {
+				return;
+			}
+
+			// Only renewal orders.
+			if ( 'yes' !== wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true ) ) {
+				return;
+			}
+
+			if ( ! class_exists( 'WC_Stripe_API' ) || ! class_exists( 'WC_Stripe_Order_Helper' ) ) {
+				return;
+			}
+
+			$subscription_id = wps_sfw_get_meta_data( $order_id, 'wps_sfw_subscription', true );
+			if ( empty( $subscription_id ) ) {
+				return;
+			}
+
+			$parent_order = wc_get_order( wps_sfw_get_meta_data( $subscription_id, 'wps_parent_order', true ) );
+			if ( ! $parent_order instanceof WC_Order || 'stripe' !== $parent_order->get_payment_method() ) {
+				return;
+			}
+
+			$order_helper      = WC_Stripe_Order_Helper::get_instance();
+			$payment_method_id = $order_helper->get_stripe_source_id( $order );
+
+			// Only PaymentMethod objects (pm_) support the /attach endpoint.
+			if ( empty( $payment_method_id ) || 0 !== strpos( $payment_method_id, 'pm_' ) ) {
+				return;
+			}
+
+			// Automatic renewals charge the parent's card, so this only acts when a different card was used.
+			if ( $payment_method_id === $order_helper->get_stripe_source_id( $parent_order ) ) {
+				return;
+			}
+
+			$customer_id = $order_helper->get_stripe_customer_id( $order );
+			if ( empty( $customer_id ) ) {
+				$customer_id = $order_helper->get_stripe_customer_id( $parent_order );
+			}
+			if ( empty( $customer_id ) && $order->get_user_id() && class_exists( 'WC_Stripe_Customer' ) ) {
+				$stripe_customer = new WC_Stripe_Customer( $order->get_user_id() );
+				$customer_id     = $stripe_customer->get_id();
+			}
+
+			// A card that cannot be attached to a customer cannot be charged off-session, so keep the parent as is.
+			$attached_customer_id = $this->wps_sfw_ensure_stripe_pm_attached( $payment_method_id, $customer_id );
+			if ( empty( $attached_customer_id ) ) {
+				return;
+			}
+
+			$order_helper->update_stripe_source_id( $parent_order, $payment_method_id );
+			$order_helper->update_stripe_customer_id( $parent_order, $attached_customer_id );
+			$parent_order->save();
+
+			/* translators: 1: Stripe payment method ID, 2: renewal order number */
+			$parent_order->add_order_note( sprintf( __( 'Future subscription renewals will be charged to Stripe payment method %1$s, used to pay renewal order #%2$s.', 'subscriptions-for-woocommerce' ), $payment_method_id, $order->get_order_number() ) );
+		}
+
+		/**
+		 * Make sure a Stripe payment method is attached to a customer so it can be charged off-session.
+		 *
+		 * @param string $payment_method_id The Stripe payment method ID (pm_).
+		 * @param string $customer_id       The Stripe customer ID to attach to when the payment method is unattached.
+		 *
+		 * @return string The ID of the customer the payment method is attached to, or an empty string on failure.
+		 */
+		private function wps_sfw_ensure_stripe_pm_attached( $payment_method_id, $customer_id ) {
 			try {
 				// Retrieve the payment method to check whether it is already attached.
 				$pm_object = WC_Stripe_API::retrieve( 'payment_methods/' . $payment_method_id );
 				if ( is_wp_error( $pm_object ) || ! empty( $pm_object->error ) ) {
-					return;
+					return '';
 				}
 
 				$attached_to = isset( $pm_object->customer ) ? (string) $pm_object->customer : '';
 
-				// Already attached to the correct customer — nothing to do.
-				if ( $customer_id === $attached_to ) {
-					return;
+				// Already attached — Stripe does not allow moving it to another customer.
+				if ( ! empty( $attached_to ) ) {
+					return $attached_to;
+				}
+
+				if ( empty( $customer_id ) ) {
+					return '';
 				}
 
 				// Attach to the Stripe customer so off-session renewals can charge it.
-				WC_Stripe_API::attach_payment_method_to_customer( $customer_id, $payment_method_id );
+				$response = WC_Stripe_API::attach_payment_method_to_customer( $customer_id, $payment_method_id );
+				if ( is_wp_error( $response ) || ! empty( $response->error ) ) {
+					$error_message = ( ! is_wp_error( $response ) && isset( $response->error->message ) ) ? $response->error->message : '';
+					$this->wps_sfw_stripe_log( 'WPS Subscriptions: could not attach payment method ' . $payment_method_id . ' to customer ' . $customer_id . ': ' . $error_message );
+					return '';
+				}
+
+				return $customer_id;
 
 			} catch ( Exception $e ) {
 				// Non-fatal: log and continue. The renewal will surface any actual charge error.
-				WC_Stripe_Logger::log( 'WPS Subscriptions: could not attach payment method ' . $payment_method_id . ' to customer ' . $customer_id . ': ' . $e->getMessage() );
+				$this->wps_sfw_stripe_log( 'WPS Subscriptions: could not attach payment method ' . $payment_method_id . ' to customer ' . $customer_id . ': ' . $e->getMessage() );
+				return '';
 			}
 		}
 
@@ -226,7 +413,7 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 		 * Add setup future usage for parent order if subscription exist in order and setup future usage is missing in request.
 		 *
 		 * This forces Stripe to attach the payment method to the customer during the initial subscription
-		 * payment so it can be charged off-session on renewals.
+		 * payment, or when the customer pays a renewal order manually, so it can be charged off-session on renewals.
 		 *
 		 * @param array    $request         The request array.
 		 * @param WC_Order $order           The order object.
@@ -240,19 +427,93 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 				return $request;
 			}
 
+			// SetupIntents (e.g. $0 trial checkout) reject `setup_future_usage`; they are off_session by default.
+			if ( $is_setup_intent ) {
+				return $request;
+			}
+
 			$order_id = $order->get_id();
 
-			$is_renewal       = 'yes' === wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
+			$is_renewal      = 'yes' === wps_sfw_get_meta_data( $order_id, 'wps_sfw_renewal_order', true );
 			$has_subscription = function_exists( 'wps_sfw_order_has_subscription' ) && wps_sfw_order_has_subscription( $order_id );
 
-			$is_parent_order      = $has_subscription && ! $is_renewal;
-			$missing_future_usage = empty( $request['setup_future_usage'] );
+			$is_parent_order = $has_subscription && ! $is_renewal;
 
-			if ( $is_parent_order && $missing_future_usage ) {
+			// A renewal paid by the customer (not the off-session automatic charge) saves its card for future renewals.
+			$is_manual_renewal = $is_renewal && empty( $request['off_session'] );
+
+			if ( ! $is_parent_order && ! $is_manual_renewal ) {
+				return $request;
+			}
+
+			// Optimized Checkout Suite confirms the intent with a ConfirmationToken. Stripe does not apply a
+			// top-level `setup_future_usage` to those intents, so it must go under the payment method type,
+			// the same way the Stripe plugin does it for WooCommerce Subscriptions orders.
+			if ( ! empty( $request['confirmation_token'] ) ) {
+				$payment_type = $this->wps_sfw_get_reusable_stripe_payment_type( $request, $order );
+				if ( $payment_type && empty( $request['payment_method_options'][ $payment_type ]['setup_future_usage'] ) ) {
+					$request['payment_method_options'][ $payment_type ]['setup_future_usage'] = 'off_session';
+				}
+				return $request;
+			}
+
+			if ( empty( $request['setup_future_usage'] ) ) {
 				$request['setup_future_usage'] = 'off_session';
 			}
 
 			return $request;
+		}
+
+		/**
+		 * Get the Stripe payment method type being used to pay an order, if it can be saved for renewals.
+		 *
+		 * @param array    $request The intent request.
+		 * @param WC_Order $order   The order being paid.
+		 *
+		 * @return string The payment method type (e.g. `card`), or an empty string when unknown or not reusable.
+		 */
+		private function wps_sfw_get_reusable_stripe_payment_type( $request, $order ) {
+			$payment_type = '';
+
+			// The Stripe plugin stores the selected type on the order before it creates the intent.
+			if ( class_exists( 'WC_Stripe_Order_Helper' ) && method_exists( 'WC_Stripe_Order_Helper', 'get_stripe_upe_payment_type' ) ) {
+				$payment_type = (string) WC_Stripe_Order_Helper::get_instance()->get_stripe_upe_payment_type( $order );
+			}
+
+			if ( '' === $payment_type && ! empty( $request['payment_method_types'] ) && 1 === count( (array) $request['payment_method_types'] ) ) {
+				$payment_type = (string) current( (array) $request['payment_method_types'] );
+			}
+
+			if ( '' === $payment_type || ! class_exists( 'WC_Stripe' ) ) {
+				return '';
+			}
+
+			// Stripe rejects `setup_future_usage` for payment methods that cannot be reused.
+			$gateway = WC_Stripe::get_instance()->get_main_stripe_gateway();
+			if ( ! is_object( $gateway ) || ! isset( $gateway->payment_methods[ $payment_type ] ) || ! $gateway->payment_methods[ $payment_type ]->is_reusable() ) {
+				return '';
+			}
+
+			return $payment_type;
+		}
+
+		/**
+		 * Write to the Stripe gateway log.
+		 *
+		 * WC_Stripe_Logger::log() was removed from the Stripe plugin, so calling it now causes a fatal error.
+		 *
+		 * @param string $message The message to log.
+		 */
+		private function wps_sfw_stripe_log( $message ) {
+			if ( ! class_exists( 'WC_Stripe_Logger' ) ) {
+				return;
+			}
+
+			if ( method_exists( 'WC_Stripe_Logger', 'error' ) ) {
+				WC_Stripe_Logger::error( $message );
+			} elseif ( method_exists( 'WC_Stripe_Logger', 'log' ) ) {
+				WC_Stripe_Logger::log( $message );
+			}
 		}
 
 		/**
