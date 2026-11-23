@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Subscriptions For WooCommerce 2.1.0\n"
-"POT-Creation-Date: 2026-09-29 16:31+0530\n"
+"POT-Creation-Date: 2026-11-19 13:34+0530\n"
 "PO-Revision-Date: 2023-10-03 13:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: Wp Swings\n"
@@ -11,13 +11,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.10\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
-"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
-"esc_html_e;esc_html_x:1,2c;_n;_x;_ex;_nx;esc_attr_x;esc_html;esc_html_x;"
-"_n_noop;_nx_noop;translate_nooped_plural\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n;_x;_ex;_nx;esc_attr_x;esc_html;esc_html_x;_n_noop;_nx_noop;translate_nooped_plural\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: build\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
@@ -476,6 +474,8 @@ msgid "Initial Signup fee"
 msgstr ""
 
 #: admin/class-subscriptions-for-woocommerce-admin.php:990
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
 msgid "("
 msgstr ""
 
@@ -4451,6 +4451,521 @@ msgstr ""
 msgid "Invalid subscription request."
 msgstr ""
 
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-glimmer.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-glimmer.js:1
+msgid "Broken"
+msgstr ""
+
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-typescript.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-typescript.js:1
+msgid "Error in decoding base64VLQFormatDecode, past the mapping string"
+msgstr ""
+
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-typescript.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-typescript.js:1
+msgid "Invalid character in VLQ"
+msgstr ""
+
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-typescript.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-typescript.js:1
+msgid "Elapsed:: "
+msgstr ""
+
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-typescript.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-typescript.js:1
+msgid "Project: "
+msgstr ""
+
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-typescript.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-typescript.js:1
+msgid " TS"
+msgstr ""
+
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-typescript.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-typescript.js:1
+msgid "insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces"
+msgstr ""
+
+#: node_modules/@wordpress/eslint-plugin/node_modules/prettier/parser-typescript.js:1
+#: node_modules/@wordpress/scripts/node_modules/prettier/parser-typescript.js:1
+#, javascript-format
+msgid "parserOptions.project (excluding ignored) matched projects: %s"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:105
+msgid "is not a finite number"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:172
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:188
+msgid "is not a finite floating-point value"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:198
+msgid "is outside the range of a single-precision floating-point value"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:228
+msgid "is a symbol, which cannot be converted to a string"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:239
+msgid "is not a valid ByteString"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:276
+msgid "is not an object"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:288
+msgid "is not a function"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:308
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:343
+msgid "is not a view on an ArrayBuffer object"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:320
+msgid "is not a view on an DataView object"
+msgstr ""
+
+#: node_modules/domexception/node_modules/webidl-conversions/lib/index.js:351
+msgid "is not an ArrayBuffer object or a view on one"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs-parser/index.js:302
+#: node_modules/localtunnel/node_modules/yargs-parser/build/lib/yargs-parser.js:428
+#: node_modules/localtunnel/node_modules/yargs-parser/build/lib/yargs-parser.js:442
+#: node_modules/localtunnel/node_modules/yargs-parser/build/lib/yargs-parser.js:495
+#: node_modules/stylelint/node_modules/yargs-parser/build/lib/yargs-parser.js:428
+#: node_modules/stylelint/node_modules/yargs-parser/build/lib/yargs-parser.js:442
+#: node_modules/stylelint/node_modules/yargs-parser/build/lib/yargs-parser.js:495
+#: node_modules/webpack-cli/node_modules/yargs-parser/index.js:367
+#: node_modules/yargs-parser/index.js:382
+#: node_modules/yargs-parser/index.js:392
+#: node_modules/yargs-parser/index.js:446
+#, javascript-format
+msgid "Not enough arguments following: %s"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs-parser/index.js:450
+#: node_modules/localtunnel/node_modules/yargs-parser/build/lib/yargs-parser.js:634
+#: node_modules/stylelint/node_modules/yargs-parser/build/lib/yargs-parser.js:634
+#: node_modules/webpack-cli/node_modules/yargs-parser/index.js:541
+#: node_modules/yargs-parser/index.js:591
+#, javascript-format
+msgid "Invalid JSON config file: %s"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:169
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:193
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:203
+#: node_modules/yargs/build/lib/usage.js:198
+msgid "Commands:"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:177
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:407
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:473
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:223
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:458
+#: node_modules/yargs/build/lib/usage.js:457
+msgid "default:"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:179
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:213
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:225
+#: node_modules/yargs/build/lib/usage.js:215
+msgid "aliases:"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:241
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:311
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:288
+#: node_modules/yargs/build/lib/usage.js:290
+msgid "boolean"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:242
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:313
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:289
+#: node_modules/yargs/build/lib/usage.js:292
+msgid "count"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:243
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:244
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:315
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:317
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:290
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:291
+#: node_modules/yargs/build/lib/usage.js:294
+#: node_modules/yargs/build/lib/usage.js:296
+msgid "string"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:245
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:319
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:292
+#: node_modules/yargs/build/lib/usage.js:298
+msgid "array"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:246
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:321
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:293
+#: node_modules/yargs/build/lib/usage.js:300
+msgid "number"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:250
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:330
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:297
+#: node_modules/yargs/build/lib/usage.js:307
+msgid "required"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:251
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:332
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:298
+#: node_modules/yargs/build/lib/usage.js:308
+msgid "choices:"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:270
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:351
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:317
+#: node_modules/yargs/build/lib/usage.js:321
+msgid "Examples:"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/usage.js:385
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:456
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:436
+#: node_modules/yargs/build/lib/usage.js:438
+msgid "generated-value"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:26
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:49
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:29
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:52
+#, javascript-format
+msgid "Not enough non-option arguments: got %s, need at least %s"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:37
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:40
+#, javascript-format
+msgid "Too many non-option arguments: got %s, maximum of %s"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:185
+#: node_modules/localtunnel/node_modules/yargs/build/lib/validation.js:160
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:147
+#: node_modules/yargs/build/lib/validation.js:155
+msgid "Invalid values:"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:188
+#: node_modules/localtunnel/node_modules/yargs/build/lib/validation.js:162
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:150
+#: node_modules/yargs/build/lib/validation.js:157
+#, javascript-format
+msgid "Argument: %s, Given: %s, Choices: %s"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:218
+#: node_modules/localtunnel/node_modules/yargs/build/lib/yargs-factory.js:174
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:180
+#: node_modules/yargs/build/lib/validation.js:181
+#, javascript-format
+msgid "Argument check failed: %s"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:283
+#: node_modules/localtunnel/node_modules/yargs/build/lib/validation.js:221
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:256
+#: node_modules/yargs/build/lib/validation.js:248
+msgid "Implications failed:"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:313
+#: node_modules/localtunnel/node_modules/yargs/build/lib/validation.js:255
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:295
+#: node_modules/yargs/build/lib/validation.js:284
+#, javascript-format
+msgid "Arguments %s and %s are mutually exclusive"
+msgstr ""
+
+#: node_modules/gulp-cli/node_modules/yargs/lib/validation.js:332
+#: node_modules/localtunnel/node_modules/yargs/build/lib/validation.js:274
+#: node_modules/webpack-cli/node_modules/yargs/lib/validation.js:316
+#: node_modules/yargs/build/lib/validation.js:303
+#, javascript-format
+msgid "Did you mean %s?"
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs-parser/build/lib/yargs-parser.js:419
+#: node_modules/stylelint/node_modules/yargs-parser/build/lib/yargs-parser.js:419
+#: node_modules/yargs-parser/index.js:372
+#, javascript-format
+msgid "Argument unexpected for: %s"
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs-parser/build/lib/yargs-parser.js:963
+#: node_modules/stylelint/node_modules/yargs-parser/build/lib/yargs-parser.js:963
+#: node_modules/yargs-parser/index.js:941
+#, javascript-format
+msgid "Invalid configuration: %s, opts.count excludes opts.array."
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs-parser/build/lib/yargs-parser.js:967
+#: node_modules/stylelint/node_modules/yargs-parser/build/lib/yargs-parser.js:967
+#: node_modules/yargs-parser/index.js:944
+#, javascript-format
+msgid "Invalid configuration: %s, opts.count excludes opts.narg."
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:90
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:92
+#: node_modules/yargs/build/lib/usage.js:90
+msgid "Positionals:"
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:184
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:187
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:192
+#: node_modules/webpack-cli/node_modules/yargs/lib/usage.js:194
+#: node_modules/yargs/build/lib/usage.js:187
+#: node_modules/yargs/build/lib/usage.js:190
+msgid "command"
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:211
+#: node_modules/yargs/build/lib/usage.js:213
+msgid "default"
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:217
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:323
+#: node_modules/yargs/build/lib/usage.js:219
+#: node_modules/yargs/build/lib/usage.js:302
+#, javascript-format
+msgid "deprecated: %s"
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:220
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:324
+#: node_modules/yargs/build/lib/usage.js:222
+#: node_modules/yargs/build/lib/usage.js:303
+msgid "deprecated"
+msgstr ""
+
+#: node_modules/localtunnel/node_modules/yargs/build/lib/usage.js:239
+#: node_modules/yargs/build/lib/usage.js:241
+msgid "Options:"
+msgstr ""
+
+#: node_modules/playwright-core/lib/vite/dashboard/assets/index-CyWAfh-p.js:8
+msgid "onChange"
+msgid_plural "change"
+msgstr[0] ""
+msgstr[1] ""
+
+#: node_modules/playwright-core/lib/vite/dashboard/assets/index-CyWAfh-p.js:8
+msgid "onSelect"
+msgid_plural "select"
+msgstr[0] ""
+msgstr[1] ""
+
+#: node_modules/playwright-core/lib/vite/dashboard/assets/index-CyWAfh-p.js:8
+msgid "action"
+msgid_plural "action"
+msgstr[0] ""
+msgstr[1] ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "num"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "regexp"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "name"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "privateId"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "eof"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "["
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "]"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "{"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "}"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid ")"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid ","
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid ";"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: node_modules/terser/dist/bundle.min.js:1
+msgid ":"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+#: subscriptions-for-woocommerce.php:814
+msgid "."
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "?"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "?."
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "=>"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "template"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "invalidTemplate"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "..."
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "`"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "${"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "="
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "_="
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "++/--"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "!/~"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "+/-"
+msgstr ""
+
+#: node_modules/prettier/plugins/acorn.js:3
+msgid "**"
+msgstr ""
+
+#: node_modules/prettier/plugins/angular.js:1
+msgid "Cannot "
+msgstr ""
+
+#: node_modules/prettier/plugins/angular.js:1
+msgid "Cannot add the same private member more than once"
+msgstr ""
+
+#: node_modules/prettier/standalone.js:9
+msgid " \t"
+msgstr ""
+
+#: node_modules/prettier/standalone.js:9
+msgid ",; \t"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "big_int"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "template_head"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "comment2"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "operator"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "expand"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "punc"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "arrow"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "atom"
+msgstr ""
+
+#: node_modules/terser/dist/bundle.min.js:1
+msgid "keyword"
+msgstr ""
+
 #: onboarding/templates/subscriptions-for-woocommerce-deactivation-template.php:37
 msgid "Before You Go"
 msgstr ""
@@ -4607,6 +5122,13 @@ msgstr ""
 msgid "Stripe charge awaiting authentication by user: %s."
 msgstr ""
 
+#: package/gateways/stripe/class-wps-subscriptions-payment-stripe-main.php:365
+#, php-format
+msgid ""
+"Future subscription renewals will be charged to Stripe payment method %1$s, "
+"used to pay renewal order #%2$s."
+msgstr ""
+
 #: package/gateways/woocybs/class-wps-subscriptions-payment-woocybs-main.php:154
 #, php-format
 msgid "Payment token not found %s"
@@ -4619,16 +5141,16 @@ msgid ""
 "%2$s"
 msgstr ""
 
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:112
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:115
 msgid "payment token not found"
 msgstr ""
 
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:126
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:139
 msgid "Token Verification failed !"
 msgstr ""
 
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:129
-#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:132
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:147
+#: package/gateways/wps-paypal/class-wps-subscriptions-payment-wps-paypal-main.php:150
 msgid "WPS Paypal is not setup"
 msgstr ""
 
@@ -5377,8 +5899,4 @@ msgstr ""
 
 #: subscriptions-for-woocommerce.php:814
 msgid "WooCommerce Subscripiton Pro"
-msgstr ""
-
-#: subscriptions-for-woocommerce.php:814
-msgid "."
 msgstr ""
