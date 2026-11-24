@@ -112,9 +112,15 @@ jobs:
 
       - name: Start PHP built-in server
         run: |
-          php -S 127.0.0.1:8080 -t "$WP_ROOT" > /tmp/php-server.log 2>&1 &
-          sleep 2
-          curl -sf "$BASE_URL/wp-login.php" > /dev/null
+          # Pass the router script so WordPress URL rewrites work correctly.
+          php -S 127.0.0.1:8080 -t "$WP_ROOT" \
+            "$GITHUB_WORKSPACE/plugin-checkout/e2e/wp-router.php" \
+            > /tmp/php-server.log 2>&1 &
+          # Poll until WordPress responds (up to 30 s) instead of a fixed sleep.
+          for i in $(seq 1 15); do
+            curl -sf "$BASE_URL/wp-login.php" > /dev/null && break
+            sleep 2
+          done
 
       - name: Install e2e dependencies
         working-directory: plugin-checkout/e2e

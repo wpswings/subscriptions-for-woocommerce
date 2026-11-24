@@ -9,6 +9,9 @@
 /**
  * Log in to the WordPress admin dashboard.
  *
+ * Uses 'domcontentloaded' so we don't block waiting for all WooCommerce
+ * assets to finish loading through the single-threaded PHP built-in server.
+ *
  * @param {import('@playwright/test').Page} page
  */
 async function loginAsAdmin( page ) {
@@ -19,8 +22,8 @@ async function loginAsAdmin( page ) {
 	await page.fill( '#user_login', user );
 	await page.fill( '#user_pass', password );
 	await page.click( '#wp-submit' );
-	// Wait until we land on any wp-admin page.
-	await page.waitForURL( /\/wp-admin\// );
+	// Wait until the browser lands on any wp-admin page.
+	await page.waitForURL( /\/wp-admin\//, { waitUntil: 'domcontentloaded' } );
 }
 
 module.exports = { loginAsAdmin };
