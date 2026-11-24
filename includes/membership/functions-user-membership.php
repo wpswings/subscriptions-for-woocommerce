@@ -220,9 +220,11 @@ if ( ! function_exists( 'wps_create_user_membership' ) ) {
 		$new_row     = wps_sanitize_membership_row( array_merge( array( 'plan_slug' => $plan_slug ), $args ) );
 		$memberships = wps_read_user_memberships_meta( $user_id );
 
+		$previous_status = null;
 		if ( isset( $memberships[ $plan_slug ] ) ) {
-			$existing = $memberships[ $plan_slug ];
-			$new_row  = wps_merge_membership_rows( $existing, $new_row );
+			$existing        = $memberships[ $plan_slug ];
+			$previous_status = $existing['status'];
+			$new_row         = wps_merge_membership_rows( $existing, $new_row );
 		}
 
 		$memberships[ $plan_slug ] = $new_row;
@@ -242,11 +244,12 @@ if ( ! function_exists( 'wps_create_user_membership' ) ) {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param int    $user_id   WordPress user ID.
-		 * @param string $plan_slug Plan slug.
-		 * @param array  $row       The saved membership row.
+		 * @param int         $user_id         WordPress user ID.
+		 * @param string      $plan_slug       Plan slug.
+		 * @param array       $row             The saved membership row.
+		 * @param string|null $previous_status Status before a merge, or null for a new membership.
 		 */
-		do_action( 'wps_membership_created', $user_id, $plan_slug, $new_row );
+		do_action( 'wps_membership_created', $user_id, $plan_slug, $new_row, $previous_status );
 
 		return true;
 	}

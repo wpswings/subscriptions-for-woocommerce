@@ -51,6 +51,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			add_action( 'woocommerce_payment_complete', array( $this, 'wps_sfw_update_parent_stripe_pm_after_renewal_payment' ), 25 );
 
+			// A card added, or made default, in My Account > Payment methods becomes the card for the customer's subscriptions.
+			add_action( 'woocommerce_stripe_add_payment_method', array( $this, 'wps_sfw_update_subscriptions_stripe_pm_on_card_added' ), 20, 2 );
+			add_action( 'woocommerce_payment_token_set_default', array( $this, 'wps_sfw_update_subscriptions_stripe_pm_on_default_set' ), 20, 2 );
+
 			// Path to Stripe's main plugin file.
 			$stripe_main_file = WP_PLUGIN_DIR . '/woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';
 
@@ -363,6 +367,135 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Main' ) ) {
 
 			/* translators: 1: Stripe payment method ID, 2: renewal order number */
 			$parent_order->add_order_note( sprintf( __( 'Future subscription renewals will be charged to Stripe payment method %1$s, used to pay renewal order #%2$s.', 'subscriptions-for-woocommerce' ), $payment_method_id, $order->get_order_number() ) );
+		}
+
+		/**
+		 * Use a card added in My Account > Payment methods for the customer's Stripe subscriptions.
+		 *
+		 * The Stripe plugin fires this action for checkout payments too, so it only acts on the My Account pages.
+		 * Changing the card of one subscription (`wps_subscription_id` in the request) is handled by the Pro plugin.
+		 *
+		 * @param int    $user_id               The user ID.
+		 * @param object $payment_method_object The Stripe PaymentMethod object.
+		 */
+		public function wps_sfw_update_subscriptions_stripe_pm_on_card_added( $user_id, $payment_method_object ) {
+			// phpcs:disable WordPress.Security.NonceVerification -- Read-only checks; the Stripe plugin has already verified the request.
+			if ( isset( $_REQUEST['wps_subscription_id'] ) ) {
+				return;
+			}
+			$is_my_account_request = isset( $_POST['woocommerce_add_payment_method'] ) || is_add_payment_method_page() || is_wc_endpoint_url( 'payment-methods' );
+			// phpcs:enable WordPress.Security.NonceVerification
+			if ( ! $is_my_account_request ) {
+				return;
+			}
+
+			if ( ! is_object( $payment_method_object ) || empty( $payment_method_object->id ) || ( isset( $payment_method_object->type ) && 'card' !== $payment_method_object->type ) ) {
+				return;
+			}
+
+			$customer_id = isset( $payment_method_object->customer ) ? (string) $payment_method_object->customer : '';
+			$this->wps_sfw_update_user_stripe_subscriptions_pm( $user_id, $payment_method_object->id, $customer_id );
+		}
+
+		/**
+		 * Use a Stripe card made default in My Account > Payment methods for the customer's Stripe subscriptions.
+		 *
+		 * @param int              $token_id The token ID.
+		 * @param WC_Payment_Token $token    The token.
+		 */
+		public function wps_sfw_update_subscriptions_stripe_pm_on_default_set( $token_id, $token = null ) {
+			global $wp;
+
+			// Only when the customer clicks "Make default", not when WooCommerce picks a default itself.
+			if ( empty( $wp->query_vars['set-default-payment-method'] ) ) {
+				return;
+			}
+
+			if ( ! $token instanceof WC_Payment_Token ) {
+				$token = WC_Payment_Tokens::get( $token_id );
+			}
+			if ( ! $token || 'stripe' !== $token->get_gateway_id() || 'CC' !== $token->get_type() ) {
+				return;
+			}
+
+			$this->wps_sfw_update_user_stripe_subscriptions_pm( $token->get_user_id(), $token->get_token(), '' );
+		}
+
+		/**
+		 * Point the parent order of each of a user's live Stripe subscriptions at a new payment method.
+		 *
+		 * Renewals charge the card saved on the parent order, so that is where the new card is stored.
+		 *
+		 * @param int    $user_id           The user ID.
+		 * @param string $payment_method_id The Stripe payment method ID (pm_).
+		 * @param string $customer_id       The Stripe customer the payment method is attached to, if known.
+		 */
+		private function wps_sfw_update_user_stripe_subscriptions_pm( $user_id, $payment_method_id, $customer_id ) {
+			if ( ! $user_id || 0 !== strpos( (string) $payment_method_id, 'pm_' ) || ! class_exists( 'WC_Stripe_API' ) || ! class_exists( 'WC_Stripe_Order_Helper' ) ) {
+				return;
+			}
+
+			// Cards added in My Account are already attached; this also resolves the customer when it is not known yet.
+			if ( empty( $customer_id ) && class_exists( 'WC_Stripe_Customer' ) ) {
+				$stripe_customer = new WC_Stripe_Customer( $user_id );
+				$customer_id     = $stripe_customer->get_id();
+			}
+			$customer_id = $this->wps_sfw_ensure_stripe_pm_attached( $payment_method_id, $customer_id );
+			if ( empty( $customer_id ) ) {
+				return;
+			}
+
+			$meta_query = array(
+				array(
+					'key'   => 'wps_customer_id',
+					'value' => $user_id,
+				),
+			);
+			if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$subscription_ids = wc_get_orders(
+					array(
+						'return'     => 'ids',
+						'type'       => 'wps_subscriptions',
+						'limit'      => -1,
+						'meta_query' => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					)
+				);
+			} else {
+				$subscription_ids = get_posts(
+					array(
+						'fields'      => 'ids',
+						'numberposts' => -1,
+						'post_type'   => 'wps_subscriptions',
+						'post_status' => 'any',
+						'meta_query'  => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					)
+				);
+			}
+
+			$order_helper = WC_Stripe_Order_Helper::get_instance();
+
+			foreach ( (array) $subscription_ids as $subscription_id ) {
+				$status = wps_sfw_get_meta_data( $subscription_id, 'wps_subscription_status', true );
+				if ( in_array( $status, array( 'cancelled', 'expired' ), true ) ) {
+					continue;
+				}
+
+				$parent_order = wc_get_order( wps_sfw_get_meta_data( $subscription_id, 'wps_parent_order', true ) );
+				if ( ! $parent_order instanceof WC_Order || 'stripe' !== $parent_order->get_payment_method() ) {
+					continue;
+				}
+
+				if ( $payment_method_id === $order_helper->get_stripe_source_id( $parent_order ) ) {
+					continue;
+				}
+
+				$order_helper->update_stripe_source_id( $parent_order, $payment_method_id );
+				$order_helper->update_stripe_customer_id( $parent_order, $customer_id );
+				$parent_order->save();
+
+				/* translators: 1: Stripe payment method ID, 2: subscription ID */
+				$parent_order->add_order_note( sprintf( __( 'Future renewals of subscription #%2$s will be charged to Stripe payment method %1$s, saved by the customer in My Account.', 'subscriptions-for-woocommerce' ), $payment_method_id, $subscription_id ) );
+			}
 		}
 
 		/**

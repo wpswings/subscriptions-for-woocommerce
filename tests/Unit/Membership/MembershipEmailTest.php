@@ -294,8 +294,18 @@ class MembershipEmailTest extends WP_UnitTestCase {
 		$email = new WPS_Membership_Activated_Email();
 		$this->assertGreaterThan(
 			0,
-			has_action( 'wps_membership_created', array( $email, 'trigger' ) )
+			has_action( 'wps_membership_created', array( $email, 'trigger_on_create' ) )
 		);
+	}
+
+	/**
+	 * Tests that a merge into an already-active membership does not email again.
+	 */
+	public function test_trigger_on_create_ignores_merge_into_active_membership() {
+		$email       = new WPS_Membership_Activated_Email();
+		$email->object = null;
+		$email->trigger_on_create( 999999, 'gold', array( 'status' => 'active' ), 'active' );
+		$this->assertNull( $email->object );
 	}
 
 	/**
