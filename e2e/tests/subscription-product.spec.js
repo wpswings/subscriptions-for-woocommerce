@@ -41,14 +41,21 @@ test.describe( 'Subscriptions for WooCommerce – product integration', () => {
 		await page.waitForSelector( '#poststuff', { timeout: 45_000 } );
 
 		/**
-		 * WooCommerce registers its product-data-tab click handler inside a
-		 * jQuery $(document).ready() callback.  Wait for window.onload so every
-		 * deferred script – including meta-boxes-product.js – has fully executed
-		 * and the click handler is attached.
+		 * Wait for WooCommerce to render the product data tabs.  This mirrors
+		 * the pattern in the first test and ensures the DOM is ready before we
+		 * interact with it.  Waiting for 'load' state is intentionally avoided:
+		 * the config uses waitUntil:'domcontentloaded' because the PHP built-in
+		 * server is single-threaded and can take minutes to serve all assets.
 		 */
-		await page.waitForLoadState( 'load', { timeout: 90_000 } );
+		await page.waitForSelector( '.product_data_tabs', { timeout: 45_000 } );
 
-		await page.locator( 'li.wps_sfw_product_options a' ).click();
+		/**
+		 * WooCommerce registers its tab click handler in $(document).ready().
+		 * Use dispatchEvent instead of .click() so Playwright's actionability
+		 * checks (visibility, coverage by sticky admin bar, etc.) cannot block
+		 * the interaction — the native DOM event still triggers jQuery handlers.
+		 */
+		await page.locator( 'li.wps_sfw_product_options a' ).dispatchEvent( 'click' );
 
 		/**
 		 * WooCommerce's tab JS always adds the CSS class "active" to the <li>
