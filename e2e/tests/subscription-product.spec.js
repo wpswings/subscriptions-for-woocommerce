@@ -17,7 +17,7 @@ test.describe( 'Subscriptions for WooCommerce – product integration', () => {
 	test.slow();
 
 	test( '"Subscription Settings" tab is present on the product edit page', async ( { page } ) => {
-		await page.goto( '/wp-admin/post-new.php?post_type=product' );
+		await page.goto( '/wp-admin/post-new.php?post_type=product', { timeout: 90_000 } );
 
 		/**
 		 * WordPress creates an auto-draft and 302-redirects to post.php.
@@ -37,7 +37,7 @@ test.describe( 'Subscriptions for WooCommerce – product integration', () => {
 	} );
 
 	test( 'clicking the "Subscription Settings" tab reveals the settings panel', async ( { page } ) => {
-		await page.goto( '/wp-admin/post-new.php?post_type=product' );
+		await page.goto( '/wp-admin/post-new.php?post_type=product', { timeout: 90_000 } );
 		await page.waitForSelector( '#poststuff',          { timeout: 45_000 } );
 		await page.waitForSelector( '.product_data_tabs',  { timeout: 45_000 } );
 
@@ -48,7 +48,7 @@ test.describe( 'Subscriptions for WooCommerce – product integration', () => {
 	} );
 
 	test( 'subscription product type is available in the product-type dropdown', async ( { page } ) => {
-		await page.goto( '/wp-admin/post-new.php?post_type=product' );
+		await page.goto( '/wp-admin/post-new.php?post_type=product', { timeout: 90_000 } );
 		await page.waitForSelector( '#poststuff',        { timeout: 45_000 } );
 		await page.waitForSelector( 'select#product-type', { timeout: 45_000 } );
 

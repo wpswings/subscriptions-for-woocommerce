@@ -101,6 +101,17 @@ jobs:
         run: |
           wp plugin install woocommerce --activate --path="$WP_ROOT"
 
+      - name: Configure WooCommerce for CI
+        run: |
+          # Remove the activation-redirect transient so the first admin visit
+          # loads the normal dashboard instead of the WooCommerce Core Profiler
+          # (React SPA that hides #wpadminbar and breaks the login assertion).
+          wp eval --path="$WP_ROOT" '
+            delete_transient( "_wc_activation_redirect" );
+            update_option( "woocommerce_onboarding_opt_in", "yes" );
+            update_option( "woocommerce_task_list_hidden", "yes" );
+          '
+
       - name: Copy plugin into place
         run: |
           rm -rf "$WP_ROOT/wp-content/plugins/$PLUGIN_SLUG"
@@ -112,13 +123,24 @@ jobs:
 
       - name: Start PHP built-in server
         run: |
-          # Pass the router script so WordPress URL rewrites work correctly.
-          php -S 127.0.0.1:8080 -t "$WP_ROOT" \
+          # Raise memory limit: WordPress + WooCommerce need well above the default 128M.
+          php -d memory_limit=256M \
+            -S 127.0.0.1:8080 \
+            -t "$WP_ROOT" \
             "$GITHUB_WORKSPACE/plugin-checkout/e2e/wp-router.php" \
             > /tmp/php-server.log 2>&1 &
-          # Poll until WordPress responds (up to 30 s) instead of a fixed sleep.
+          # Poll until WordPress responds (up to 30 s).
+          # Fail the step immediately if the server never becomes healthy so the
+          # error is obvious in the CI log rather than surfacing as a test failure.
           for i in $(seq 1 15); do
-            curl -sf "$BASE_URL/wp-login.php" > /dev/null && break
+            if curl -sf "$BASE_URL/wp-login.php" > /dev/null; then
+              echo "PHP server ready after $((i * 2))s"
+              break
+            fi
+            if [ "$i" -eq 15 ]; then
+              echo "ERROR: PHP server did not respond within 30 s" >&2
+              exit 1
+            fi
             sleep 2
           done
 
@@ -133,11 +155,8 @@ jobs:
       - name: Write .env for e2e run
         working-directory: plugin-checkout/e2e
         run: |
-          cat > .env <<EOF
-          BASE_URL=$BASE_URL
-          WP_ADMIN_USER=$WP_ADMIN_USER
-          WP_ADMIN_PASSWORD=$WP_ADMIN_PASSWORD
-          EOF
+          printf 'BASE_URL=%s\nWP_ADMIN_USER=%s\nWP_ADMIN_PASSWORD=%s\n' \
+            "$BASE_URL" "$WP_ADMIN_USER" "$WP_ADMIN_PASSWORD" > .env
 
       - name: Run Playwright tests
         working-directory: plugin-checkout/e2e
