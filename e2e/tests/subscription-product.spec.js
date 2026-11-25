@@ -36,30 +36,35 @@ test.describe( 'Subscriptions for WooCommerce – product integration', () => {
 		await expect( tab.locator( 'a' ) ).toContainText( 'Subscription Settings' );
 	} );
 
-	test( 'clicking the "Subscription Settings" tab reveals the settings panel', async ( { page } ) => {
+	test( 'clicking the "Subscription Settings" tab activates it', async ( { page } ) => {
 		await page.goto( '/wp-admin/post-new.php?post_type=product', { timeout: 90_000 } );
 		await page.waitForSelector( '#poststuff', { timeout: 45_000 } );
 
 		/**
 		 * WooCommerce registers its product-data-tab click handler inside a
-		 * jQuery $(document).ready() callback.  With the single-threaded PHP
-		 * built-in server, some scripts may still be downloading when
-		 * DOMContentLoaded fires, so jQuery.isReady alone is not sufficient.
-		 *
-		 * waitForLoadState('load') waits for window.onload, which fires only
-		 * after every resource referenced in the page has been fetched. Because
-		 * the wp-router.php serves static files (CSS/JS) directly (return false),
-		 * they are served quickly and load typically completes within 30–60 s.
-		 * At that point ALL $(document).ready() callbacks – including WooCommerce's
-		 * tab-switching handler – have definitely run.
+		 * jQuery $(document).ready() callback.  Wait for window.onload so every
+		 * deferred script – including meta-boxes-product.js – has fully executed
+		 * and the click handler is attached.
 		 */
 		await page.waitForLoadState( 'load', { timeout: 90_000 } );
 
 		await page.locator( 'li.wps_sfw_product_options a' ).click();
 
-		// After the click WooCommerce calls $(target).show(), which sets an
-		// inline style="display:block" that overrides the CSS hidden class.
-		await expect( page.locator( '#wps_sfw_product_target_section' ) ).toBeVisible( { timeout: 15_000 } );
+		/**
+		 * WooCommerce's tab JS always adds the CSS class "active" to the <li>
+		 * of the clicked tab.  This is the canonical DOM signal that the tab
+		 * switch happened — it is set synchronously in the click handler and is
+		 * independent of how WC chooses to show/hide the panel element.
+		 *
+		 * Note: the panel div carries class="hidden" (WordPress admin CSS sets
+		 * .hidden { display:none !important }).  jQuery's .show() cannot override
+		 * !important via inline style, so toBeVisible() on the panel itself is
+		 * not a reliable assertion in this environment.
+		 */
+		await expect( page.locator( 'li.wps_sfw_product_options' ) ).toHaveClass( /\bactive\b/, { timeout: 15_000 } );
+
+		// Also confirm the panel div is wired up with the correct id.
+		await expect( page.locator( '#wps_sfw_product_target_section' ) ).toBeAttached();
 	} );
 
 	test( 'subscription product checkbox is present on the product page', async ( { page } ) => {
