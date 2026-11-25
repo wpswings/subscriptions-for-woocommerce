@@ -38,20 +38,27 @@ test.describe( 'Subscriptions for WooCommerce – product integration', () => {
 
 	test( 'clicking the "Subscription Settings" tab reveals the settings panel', async ( { page } ) => {
 		await page.goto( '/wp-admin/post-new.php?post_type=product', { timeout: 90_000 } );
-		await page.waitForSelector( '#poststuff',          { timeout: 45_000 } );
-		await page.waitForSelector( '.product_data_tabs',  { timeout: 45_000 } );
+		await page.waitForSelector( '#poststuff', { timeout: 45_000 } );
 
 		/**
-		 * Wait for jQuery to be ready before clicking.  With the single-threaded
-		 * PHP built-in server, some WooCommerce scripts are loaded with the
-		 * `defer` strategy and execute after DOMContentLoaded.  Clicking the tab
-		 * before the tab-switching handler is attached does nothing.
+		 * WooCommerce registers its product-data-tab click handler inside a
+		 * jQuery $(document).ready() callback.  With the single-threaded PHP
+		 * built-in server, some scripts may still be downloading when
+		 * DOMContentLoaded fires, so jQuery.isReady alone is not sufficient.
+		 *
+		 * waitForLoadState('load') waits for window.onload, which fires only
+		 * after every resource referenced in the page has been fetched. Because
+		 * the wp-router.php serves static files (CSS/JS) directly (return false),
+		 * they are served quickly and load typically completes within 30–60 s.
+		 * At that point ALL $(document).ready() callbacks – including WooCommerce's
+		 * tab-switching handler – have definitely run.
 		 */
-		await page.waitForFunction( 'typeof window.jQuery !== "undefined" && jQuery.isReady', { timeout: 60_000 } );
+		await page.waitForLoadState( 'load', { timeout: 90_000 } );
 
 		await page.locator( 'li.wps_sfw_product_options a' ).click();
 
-		// The target panel should become visible after the click.
+		// After the click WooCommerce calls $(target).show(), which sets an
+		// inline style="display:block" that overrides the CSS hidden class.
 		await expect( page.locator( '#wps_sfw_product_target_section' ) ).toBeVisible( { timeout: 15_000 } );
 	} );
 

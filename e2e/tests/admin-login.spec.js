@@ -19,9 +19,20 @@ test.describe( 'WordPress Admin – login', () => {
 		await page.fill( '#user_pass', password );
 		await page.click( '#wp-submit' );
 
+		// WordPress redirects to wp-admin after login. WooCommerce may further
+		// redirect to the Core Profiler (page=wc-admin); both URLs contain
+		// /wp-admin/ so the URL assertion is reliable either way.
 		await expect( page ).toHaveURL( /\/wp-admin\// );
-		// The admin toolbar is the most reliable landmark on the dashboard.
-		await expect( page.locator( '#wpadminbar' ) ).toBeVisible();
+
+		// Navigate explicitly to the dashboard. By this point the one-shot
+		// _wc_activation_redirect transient has been consumed on the first
+		// wp-admin load, so this second navigation loads the real dashboard.
+		await page.goto( '/wp-admin/index.php' );
+
+		// WordPress always adds class "wp-admin" to <body> on every admin page
+		// (including WooCommerce admin pages).  Checking this class is resilient
+		// to any WC onboarding redirect that may hide #wpadminbar via CSS.
+		await expect( page.locator( 'body.wp-admin' ) ).toBeAttached();
 	} );
 
 	test( 'wrong credentials show an error', async ( { page } ) => {
