@@ -3074,3 +3074,21 @@ body.wp-admin.wp-swings_page_subscriptions_for_woocommerce_menu .wps_wsp_list_ta
         border-radius: 14px;
     }
 }
+
+/* Subscription table: renewal day column and filters. */
+.wps_sfw_list_table .wp-list-table .column-renewal_day {
+    width: 90px;
+}
+
+.wps_sfw_list_table .tablenav .actions #wps_sfw_filter_renewal_day,
+.wps_sfw_list_table .tablenav .actions #wps_sfw_filter_next_payment_on {
+    margin-right: 6px;
+}
+
+@media (max-width: 782px) {
+    .wps_sfw_list_table .tablenav .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+}

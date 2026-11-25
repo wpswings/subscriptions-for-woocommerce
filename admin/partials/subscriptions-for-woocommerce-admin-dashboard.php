@@ -25,10 +25,13 @@ $is_multistep_pending = ! wps_sfw_check_multistep();
 $is_renewal_table_view = isset( $_GET['wps_subscription_view_renewal_order'] ) && ! empty( $_GET['wps_subscription_view_renewal_order'] );
 $is_full_width_tab     = in_array(
 	$sfw_active_tab,
-	array(
-		'subscriptions-for-woocommerce-subscriptions-table',
-		'woocommerce-subscriptions-pro-report',
-		'wps-membership-manage',
+	apply_filters(
+		'wps_sfw_full_width_tabs',
+		array(
+			'subscriptions-for-woocommerce-subscriptions-table',
+			'woocommerce-subscriptions-pro-report',
+			'wps-membership-manage',
+		)
 	),
 	true
 ) || $is_renewal_table_view;

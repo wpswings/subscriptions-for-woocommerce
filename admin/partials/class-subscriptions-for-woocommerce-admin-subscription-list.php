@@ -60,6 +60,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			'payment_type'                  => __( 'Payment Method', 'subscriptions-for-woocommerce' ),
 			'user_name'                     => __( 'User Name', 'subscriptions-for-woocommerce' ),
 			'next_payment_date'             => __( 'Next Payment Date', 'subscriptions-for-woocommerce' ),
+			'renewal_day'                   => __( 'Renewal Day', 'subscriptions-for-woocommerce' ),
 			'subscriptions_expiry_date'     => __( 'Subscription Expiry Date', 'subscriptions-for-woocommerce' ),
 		);
 		return apply_filters( 'wps_sfw_column_subscription_table', $columns );
@@ -154,6 +155,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			case 'payment_type':
 			case 'user_name':
 			case 'next_payment_date':
+			case 'renewal_day':
 			case 'subscriptions_expiry_date':
 				return $item[ $column_name ];
 			default:
@@ -230,6 +232,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			'subscription_id'   => array( 'subscription_id', false ),
 			'parent_order_id'  => array( 'parent_order_id', false ),
 			'status' => array( 'status', false ),
+			'next_payment_date' => array( 'next_payment_date', false ),
 		);
 		return $sortable_columns;
 	}
@@ -250,7 +253,9 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 		$this->example_data = $this->wps_sfw_get_subscription_list();
 		$data               = $this->example_data;
-		usort( $data, array( $this, 'wps_sfw_usort_reorder' ) );
+		if ( 'next_payment_date' !== $this->wps_sfw_get_orderby() ) {
+			usort( $data, array( $this, 'wps_sfw_usort_reorder' ) );
+		}
 		$total_items = $this->wps_total_count;
 		$this->items  = $data;
 		$this->set_pagination_args(
@@ -384,9 +389,64 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 			}
 		}
 
+		// Renewal day / exact next-payment date filters and next-payment sort.
+		// wps_next_payment_date is a site-local ("fake UTC") timestamp, so convert it with
+		// DATE_ADD on the epoch instead of FROM_UNIXTIME(), which applies the MySQL session timezone.
+		$renewal_day_filter = $this->wps_sfw_get_renewal_day_filter();
+		$next_payment_on    = $this->wps_sfw_get_next_payment_on_filter();
+		$sort_by_next       = 'next_payment_date' === $this->wps_sfw_get_orderby();
+		$next_ts_sql        = 'CAST( meta_next.meta_value AS UNSIGNED )';
+
+		if ( $renewal_day_filter || $next_payment_on || $sort_by_next ) {
+			$search_join .= " LEFT JOIN {$meta_table} AS meta_next ON meta_next.{$order_id_field} = {$table}.{$id_field} AND meta_next.meta_key = 'wps_next_payment_date' ";
+		}
+		if ( $renewal_day_filter ) {
+			$where .= $wpdb->prepare(
+				" AND {$next_ts_sql} > 0 AND DAYOFMONTH( DATE_ADD( '1970-01-01', INTERVAL {$next_ts_sql} SECOND ) ) = %d ", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- hardcoded SQL fragment.
+				$renewal_day_filter
+			);
+		}
+		if ( $next_payment_on ) {
+			$where .= $wpdb->prepare(
+				" AND {$next_ts_sql} BETWEEN %d AND %d ", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- hardcoded SQL fragment.
+				$next_payment_on['start'],
+				$next_payment_on['end']
+			);
+		}
+
+		$order_select = '';
+		$order_by     = "{$table}.{$id_field} DESC";
+		if ( $sort_by_next ) {
+			$order_dir = 'asc' === $this->wps_sfw_get_order() ? 'ASC' : 'DESC';
+			// Selected so ORDER BY works with DISTINCT; empty dates always last.
+			$order_select = ", COALESCE( {$next_ts_sql}, 0 ) AS wps_next_ts, ( COALESCE( {$next_ts_sql}, 0 ) = 0 ) AS wps_next_empty";
+			$order_by     = "wps_next_empty ASC, wps_next_ts {$order_dir}, {$table}.{$id_field} DESC";
+		}
+
+		/**
+		 * Filter the JOIN/WHERE parts shared by the paged and count queries.
+		 * Values must already be prepared with $wpdb->prepare().
+		 *
+		 * @since 2.1.4
+		 */
+		$query_parts = apply_filters(
+			'wps_sfw_subscription_list_query_parts',
+			array(
+				'join'  => $search_join,
+				'where' => $where,
+			),
+			$is_hpos,
+			$table,
+			$meta_table,
+			$id_field,
+			$order_id_field
+		);
+		$search_join = isset( $query_parts['join'] ) ? $query_parts['join'] : $search_join;
+		$where       = isset( $query_parts['where'] ) ? $query_parts['where'] : $where;
+
 		// Fetch paginated data.
 		$sql = "
-		SELECT DISTINCT {$table}.{$id_field}
+		SELECT DISTINCT {$table}.{$id_field} $order_select
 		FROM {$table}
 		INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
 		$valid_parent_join
@@ -394,7 +454,7 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 		WHERE meta.meta_key = 'wps_customer_id'
 		AND $where
 		$valid_parent_where
-		ORDER BY {$table}.{$id_field} DESC
+		ORDER BY $order_by
 		LIMIT %d OFFSET %d
 	";
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Identifiers are $wpdb->prefix + hardcoded; all user input ($where/$search_join) is bound via prepare() above.
@@ -447,6 +507,14 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					$wps_recurring_total = '---';
 				}
 
+				$wps_next_payment_ts = absint( $wps_next_payment_date );
+				$wps_renewal_day     = '---';
+				if ( $wps_next_payment_ts > 0 && ! in_array( $wps_subscription_status, array( 'cancelled', 'expired', 'pending' ), true ) ) {
+					// Stored value is already site-local, so date_i18n() (not wp_date()) gives the right day.
+					$wps_renewal_day = esc_html( date_i18n( 'jS', $wps_next_payment_ts ) );
+				}
+				$wps_renewal_day = apply_filters( 'wps_sfw_renewal_day_column_html', $wps_renewal_day, $id, $wps_next_payment_ts );
+
 				$wps_customer_id = wps_sfw_get_meta_data( $id, 'wps_customer_id', true );
 				$user = get_user_by( 'id', $wps_customer_id );
 				$parent_order = wc_get_order( $parent_order_id );
@@ -462,6 +530,8 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 					'payment_type'              => $payment_type,
 					'user_name'                 => $user_nicename,
 					'next_payment_date'         => wps_sfw_get_the_wordpress_date_format( $wps_next_payment_date ),
+					'next_payment_ts'           => $wps_next_payment_ts,
+					'renewal_day'               => $wps_renewal_day,
 					'subscriptions_expiry_date' => wps_sfw_get_the_wordpress_date_format( $wps_susbcription_end ),
 				);
 			}
@@ -473,6 +543,56 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 
 	/**
+	 * Current orderby request value.
+	 *
+	 * @return string
+	 */
+	public function wps_sfw_get_orderby() {
+		return ! empty( $_REQUEST['orderby'] ) ? sanitize_key( wp_unslash( $_REQUEST['orderby'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only list sorting.
+	}
+
+	/**
+	 * Current order request value.
+	 *
+	 * @return string
+	 */
+	public function wps_sfw_get_order() {
+		return ! empty( $_REQUEST['order'] ) ? strtolower( sanitize_key( wp_unslash( $_REQUEST['order'] ) ) ) : 'desc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only list sorting.
+	}
+
+	/**
+	 * Renewal day (1-31) selected in the list filter, or 0.
+	 *
+	 * @return int
+	 */
+	public function wps_sfw_get_renewal_day_filter() {
+		$day = isset( $_GET['wps_sfw_filter_renewal_day'] ) ? absint( $_GET['wps_sfw_filter_renewal_day'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only list filter.
+		return ( $day >= 1 && $day <= 31 ) ? $day : 0;
+	}
+
+	/**
+	 * Exact next payment date filter (Y-m-d) as site-local day start/end timestamps.
+	 *
+	 * @return array|false
+	 */
+	public function wps_sfw_get_next_payment_on_filter() {
+		$value = isset( $_GET['wps_sfw_filter_next_payment_on'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_filter_next_payment_on'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only list filter.
+		if ( '' === $value ) {
+			return false;
+		}
+		$date = DateTime::createFromFormat( '!Y-m-d', $value, new DateTimeZone( 'UTC' ) );
+		if ( ! $date || $date->format( 'Y-m-d' ) !== $value ) {
+			return false;
+		}
+		$start = $date->getTimestamp();
+		return array(
+			'value' => $value,
+			'start' => $start,
+			'end'   => $start + DAY_IN_SECONDS - 1,
+		);
+	}
+
+	/**
 	 * This function is used to create extra tablenav in subscription table.
 	 *
 	 * @param string $which as which.
@@ -482,10 +602,13 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 
 			// Add this line here — build a clean base URL for the Clear button.
 			$current_url = remove_query_arg(
-				array( 'wps_sfw_filter_status', 'paged', '_wp_http_referer', '_wpnonce', 'susbcription_list_table' )
+				array( 'wps_sfw_filter_status', 'wps_sfw_filter_renewal_day', 'wps_sfw_filter_next_payment_on', 'paged', '_wp_http_referer', '_wpnonce', 'susbcription_list_table' )
 			);
 
 			$selected_status = isset( $_GET['wps_sfw_filter_status'] ) ? sanitize_text_field( wp_unslash( $_GET['wps_sfw_filter_status'] ) ) : '';
+			$selected_day    = $this->wps_sfw_get_renewal_day_filter();
+			$next_payment_on = $this->wps_sfw_get_next_payment_on_filter();
+			$selected_date   = $next_payment_on ? $next_payment_on['value'] : '';
 			?>
 		<div class="alignleft actions">
 			<label for="wps_sfw_filter_status" class="screen-reader-text"><?php esc_html_e( 'Filter by Status', 'subscriptions-for-woocommerce' ); ?></label>
@@ -498,8 +621,22 @@ class Subscriptions_For_Woocommerce_Admin_Subscription_List extends WP_List_Tabl
 				<option value="paused" <?php selected( $selected_status, 'paused' ); ?>><?php esc_html_e( 'Paused', 'subscriptions-for-woocommerce' ); ?></option>
 				<option value="expired" <?php selected( $selected_status, 'expired' ); ?>><?php esc_html_e( 'Expired', 'subscriptions-for-woocommerce' ); ?></option>
 			</select>
+			<label for="wps_sfw_filter_renewal_day" class="screen-reader-text"><?php esc_html_e( 'Filter by Renewal Day', 'subscriptions-for-woocommerce' ); ?></label>
+			<select name="wps_sfw_filter_renewal_day" id="wps_sfw_filter_renewal_day">
+				<option value=""><?php esc_html_e( 'All Renewal Days', 'subscriptions-for-woocommerce' ); ?></option>
+				<?php for ( $wps_day = 1; $wps_day <= 31; $wps_day++ ) : ?>
+					<option value="<?php echo esc_attr( $wps_day ); ?>" <?php selected( $selected_day, $wps_day ); ?>>
+						<?php
+						/* translators: %d: day of month. */
+						echo esc_html( sprintf( __( 'Day %d', 'subscriptions-for-woocommerce' ), $wps_day ) );
+						?>
+					</option>
+				<?php endfor; ?>
+			</select>
+			<label for="wps_sfw_filter_next_payment_on" class="screen-reader-text"><?php esc_html_e( 'Next payment on', 'subscriptions-for-woocommerce' ); ?></label>
+			<input type="date" name="wps_sfw_filter_next_payment_on" id="wps_sfw_filter_next_payment_on" value="<?php echo esc_attr( $selected_date ); ?>" title="<?php esc_attr_e( 'Next payment on', 'subscriptions-for-woocommerce' ); ?>" />
 			<input type="submit" id="wps_sfw_filter_submit" class="button" value="<?php esc_attr_e( 'Apply', 'subscriptions-for-woocommerce' ); ?>" />
-			<?php if ( ! empty( $selected_status ) ) : ?>
+			<?php if ( ! empty( $selected_status ) || $selected_day || $selected_date ) : ?>
 				<a href="<?php echo esc_url( $current_url ); ?>" class="button"><?php esc_html_e( 'Clear', 'subscriptions-for-woocommerce' ); ?></a>
 			<?php endif; ?>
 		</div>
