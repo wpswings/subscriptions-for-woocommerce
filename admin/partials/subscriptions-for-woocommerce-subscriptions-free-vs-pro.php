@@ -267,5 +267,10 @@ tr:nth-child(even) {
 	<td><img class="cross" src="<?php echo esc_attr( $cross ); ?>"></td>
 	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
   </tr>
+  <tr>
+	<td><?php esc_html_e( 'Upcoming Renewals & Failed Renewals View', 'subscriptions-for-woocommerce' ); ?></td>
+	<td><img class="cross" src="<?php echo esc_attr( $cross ); ?>"></td>
+	<td><img class="tick" src="<?php echo esc_attr( $tick ); ?>"></td>
+  </tr>
 
 </table>
