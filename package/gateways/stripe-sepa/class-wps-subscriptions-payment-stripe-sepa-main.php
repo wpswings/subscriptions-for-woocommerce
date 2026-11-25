@@ -50,6 +50,9 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa_Main' ) ) {
 			if ( class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) ) {
 				$obj = new Wps_Subscriptions_Payment_Stripe_Sepa();
 				$obj->wps_sfw_process_stripe_sepa_renewal_payment( $renewal_order, $subscription_id, $payment_method );
+			} elseif ( $renewal_order instanceof WC_Order && ( 'stripe_sepa' === $payment_method || 'stripe_sepa_debit' === $payment_method ) ) {
+				// Don't leave the renewal order pending without any trace of why no charge was attempted.
+				$renewal_order->add_order_note( __( 'Stripe SEPA renewal payment could not be attempted: the WooCommerce Stripe Gateway plugin is not active or is not supported.', 'subscriptions-for-woocommerce' ) );
 			}
 		}
 
