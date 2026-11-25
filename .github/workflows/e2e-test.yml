@@ -36,7 +36,7 @@ jobs:
 
     env:
       WP_ROOT: ${{ github.workspace }}/wordpress
-      PLUGIN_SLUG: mwb-bookings-for-woocommerce
+      PLUGIN_SLUG: subscriptions-for-woocommerce
       BASE_URL: http://127.0.0.1:8080
       WP_ADMIN_USER: admin
       WP_ADMIN_PASSWORD: admin_password
@@ -101,6 +101,20 @@ jobs:
         run: |
           wp plugin install woocommerce --activate --path="$WP_ROOT"
 
+      - name: Configure WooCommerce for CI
+        run: |
+          # Remove the activation-redirect transient so the first admin visit
+          # loads the normal dashboard instead of the WooCommerce Core Profiler
+          # (React SPA that hides #wpadminbar and breaks the login assertion).
+          # Also mark the onboarding profile as skipped so WC does not re-redirect
+          # on subsequent admin_init calls.
+          wp eval --path="$WP_ROOT" '
+            delete_transient( "_wc_activation_redirect" );
+            update_option( "woocommerce_onboarding_opt_in", "yes" );
+            update_option( "woocommerce_task_list_hidden", "yes" );
+            update_option( "woocommerce_onboarding_profile", array( "skipped" => true ) );
+          '
+
       - name: Copy plugin into place
         run: |
           rm -rf "$WP_ROOT/wp-content/plugins/$PLUGIN_SLUG"
@@ -110,11 +124,37 @@ jobs:
         run: |
           wp plugin activate "$PLUGIN_SLUG" --path="$WP_ROOT"
 
+      - name: Enable subscription plugin
+        run: |
+          # The plugin guards all product-tab / product-type registration behind
+          # the wps_sfw_enable_plugin option (set via the General Settings toggle).
+          # On a fresh install this option is empty, so wps_sfw_check_plugin_enable()
+          # returns false and the "Subscription Settings" tab is never added to the
+          # product editor. Set it here so e2e tests see the full plugin UI.
+          wp option update wps_sfw_enable_plugin on --path="$WP_ROOT"
+
       - name: Start PHP built-in server
         run: |
-          php -S 127.0.0.1:8080 -t "$WP_ROOT" > /tmp/php-server.log 2>&1 &
-          sleep 2
-          curl -sf "$BASE_URL/wp-login.php" > /dev/null
+          # Raise memory limit: WordPress + WooCommerce need well above the default 128M.
+          php -d memory_limit=256M \
+            -S 127.0.0.1:8080 \
+            -t "$WP_ROOT" \
+            "$GITHUB_WORKSPACE/plugin-checkout/e2e/wp-router.php" \
+            > /tmp/php-server.log 2>&1 &
+          # Poll until WordPress responds (up to 30 s).
+          # Fail the step immediately if the server never becomes healthy so the
+          # error is obvious in the CI log rather than surfacing as a test failure.
+          for i in $(seq 1 15); do
+            if curl -sf "$BASE_URL/wp-login.php" > /dev/null; then
+              echo "PHP server ready after $((i * 2))s"
+              break
+            fi
+            if [ "$i" -eq 15 ]; then
+              echo "ERROR: PHP server did not respond within 30 s" >&2
+              exit 1
+            fi
+            sleep 2
+          done
 
       - name: Install e2e dependencies
         working-directory: plugin-checkout/e2e
@@ -127,11 +167,8 @@ jobs:
       - name: Write .env for e2e run
         working-directory: plugin-checkout/e2e
         run: |
-          cat > .env <<EOF
-          BASE_URL=$BASE_URL
-          WP_ADMIN_USER=$WP_ADMIN_USER
-          WP_ADMIN_PASSWORD=$WP_ADMIN_PASSWORD
-          EOF
+          printf 'BASE_URL=%s\nWP_ADMIN_USER=%s\nWP_ADMIN_PASSWORD=%s\n' \
+            "$BASE_URL" "$WP_ADMIN_USER" "$WP_ADMIN_PASSWORD" > .env
 
       - name: Run Playwright tests
         working-directory: plugin-checkout/e2e

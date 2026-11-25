@@ -45,9 +45,29 @@ if ( ! class_exists( 'WPS_Membership_Activated_Email' ) ) {
 			$this->recipient = $this->get_option( 'recipient', get_option( 'admin_email' ) );
 
 			// New membership grant.
-			add_action( 'wps_membership_created', array( $this, 'trigger' ), 10, 3 );
+			add_action( 'wps_membership_created', array( $this, 'trigger_on_create' ), 10, 4 );
 			// Reactivation (status change → active). Priority 20 ensures cache is busted first.
 			add_action( 'wps_membership_status_changed', array( $this, 'trigger_on_reactivate' ), 20, 4 );
+		}
+
+		/**
+		 * Proxy for wps_membership_created — skips merges into an already-active membership.
+		 *
+		 * Subscription activation writes the membership twice (activation hook, then
+		 * order-status hook), and renewals merge into it again; only the first write
+		 * should email the member.
+		 *
+		 * @since 2.0.0
+		 * @param int         $user_id         WordPress user ID.
+		 * @param string      $plan_slug       Plan slug.
+		 * @param array       $row             Membership row data.
+		 * @param string|null $previous_status Status before the merge, or null when new.
+		 */
+		public function trigger_on_create( $user_id, $plan_slug, $row, $previous_status = null ) {
+			if ( 'active' === $previous_status ) {
+				return;
+			}
+			$this->trigger( $user_id, $plan_slug, $row );
 		}
 
 		/**

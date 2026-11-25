@@ -1,0 +1,15 @@
+{
+  "name": "subscriptions-for-woocommerce-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright e2e tests for Subscriptions for WooCommerce",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}

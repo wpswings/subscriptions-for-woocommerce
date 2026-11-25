@@ -27,7 +27,7 @@ jobs:
       - name: Debug deployment output
         run: |
           echo "deployment_id=${{ steps.create_deployment.outputs.deployment_id }}"
-          echo "environment_url=${{ steps.create_deployment.outputs.   }}"
+          echo "environment_url=${{ steps.create_deployment.outputs.environment_url }}"
 
       - name: Deploy app
         run: echo "replace this with your real deployment command"

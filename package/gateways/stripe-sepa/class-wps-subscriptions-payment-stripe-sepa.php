@@ -20,11 +20,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 use Automattic\WooCommerce\Utilities\OrderUtil;
-if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) && class_exists( 'WC_Gateway_Stripe_Sepa' ) ) {
+
+// WooCommerce Stripe Gateway 10.3.0 removed the legacy WC_Gateway_Stripe_Sepa class; SEPA now runs through
+// the UPE gateway (WC_Gateway_Stripe), so extend that instead when the legacy class is not available.
+if ( ! class_exists( 'Wps_Sfw_Stripe_Sepa_Base_Gateway' ) ) {
+	if ( class_exists( 'WC_Gateway_Stripe_Sepa' ) ) {
+		class_alias( 'WC_Gateway_Stripe_Sepa', 'Wps_Sfw_Stripe_Sepa_Base_Gateway' );
+	} elseif ( class_exists( 'WC_Gateway_Stripe' ) ) {
+		class_alias( 'WC_Gateway_Stripe', 'Wps_Sfw_Stripe_Sepa_Base_Gateway' );
+	}
+}
+
+if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) && class_exists( 'Wps_Sfw_Stripe_Sepa_Base_Gateway' ) ) {
 	/**
 	 * Extending the existing stripe sepa class.
 	 */
-	class Wps_Subscriptions_Payment_Stripe_Sepa extends WC_Gateway_Stripe_Sepa {
+	class Wps_Subscriptions_Payment_Stripe_Sepa extends Wps_Sfw_Stripe_Sepa_Base_Gateway {
 		/**
 		 * Instance of Wps_Subscriptions_Payment_Stripe_Sepa
 		 *
@@ -159,8 +170,10 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) && class_exists( 
 							return false;
 						}
 
-						$this->lock_order_payment( $renewal_order );
-						$response                   = $this->create_and_confirm_intent_for_off_session( $renewal_order, $prepared_source, $amount );
+						// Reuse the SEPA mandate from the parent order so the off-session charge is authorised by it.
+						$this->wps_sfw_copy_parent_mandate_to_renewal( $renewal_order, $parent_order );
+
+						$response                  = $this->create_and_confirm_intent_for_off_session( $renewal_order, $prepared_source, $amount );
 						$is_authentication_required = $this->is_authentication_required_for_payment( $response );
 
 						if ( ! empty( $response->error ) && ! $is_authentication_required ) {
@@ -191,10 +204,37 @@ if ( ! class_exists( 'Wps_Subscriptions_Payment_Stripe_Sepa' ) && class_exists( 
 							$this->process_response( ( ! empty( $latest_charge ) ) ? $latest_charge : $response, $renewal_order );
 						}
 					} catch ( WC_Stripe_Exception $e ) {
-						
+
 						do_action( 'wc_gateway_stripe_process_payment_error', $e, $renewal_order );
+
+						$wps_sfw_stripe_message = method_exists( $e, 'getLocalizedMessage' ) ? $e->getLocalizedMessage() : $e->getMessage();
+						/* translators: %s: Stripe error message */
+						$renewal_order->add_order_note( sprintf( __( 'Stripe SEPA renewal payment failed: %s', 'subscriptions-for-woocommerce' ), $wps_sfw_stripe_message ) );
+						do_action( 'wps_sfw_recurring_payment_failed', $renewal_order->get_id(), new WP_Error( $e->getCode(), $wps_sfw_stripe_message ) );
 					}
 				}
+			}
+		}
+
+		/**
+		 * Copy the Stripe mandate ID from the parent order to the renewal order.
+		 *
+		 * Stripe reads the mandate from the order being charged, but it is only stored on the parent order.
+		 *
+		 * @param WC_Order $renewal_order renewal order.
+		 * @param WC_Order $parent_order  parent order.
+		 */
+		public function wps_sfw_copy_parent_mandate_to_renewal( $renewal_order, $parent_order ) {
+			if ( ! $parent_order instanceof WC_Order || ! class_exists( 'WC_Stripe_Order_Helper' ) ) {
+				return;
+			}
+
+			$order_helper = WC_Stripe_Order_Helper::get_instance();
+			$mandate_id   = $order_helper->get_stripe_mandate_id( $parent_order );
+
+			if ( ! empty( $mandate_id ) && empty( $order_helper->get_stripe_mandate_id( $renewal_order ) ) ) {
+				$order_helper->update_stripe_mandate_id( $renewal_order, $mandate_id );
+				$renewal_order->save_meta_data();
 			}
 		}
 
